@@ -1,0 +1,508 @@
+# Plano Técnico e de Produto — QUERO COMPRAR
+> Versão 1.0 | Arquiteto: Staff Engineer | Data: 2026-06-23
+
+---
+
+## Executive Summary
+
+O "QUERO COMPRAR" é um produto com um diferencial competitivo muito claro: **dados públicos de alta qualidade (CONAB) + granularidade municipal + UX ridiculamente simples**. A maioria dos concorrentes mostra preços do dia; nós mostramos se *vale a pena comprar hoje*. Essa virada conceitual — de informação para recomendação — é o que transforma dados agrícolas chatos em um app que a dona Maria usa na fila do caixa.
+
+A arquitetura segue um princípio central: **backend pesado, frontend burro**. Todo o custo computacional (download, parsing, cálculo do índice, classificação do semáforo) acontece no pipeline de dados. A API entrega JSON pré-mastigado. O React apenas pinta a tela. Isso garante sub-500ms de resposta e Lighthouse ≥ 95 mesmo em 4G fraco.
+
+A escolha tecnológica é deliberadamente conservadora e barata. Polars em vez de Spark (overkill absurdo para ~200MB de CSV). PostgreSQL em vez de BigQuery (DW para 50 mil linhas é canhão contra mosquito). FastAPI em vez de Django (performance async + zero boilerplate). Um servidor de €20/mês na Hetzner aguenta o MVP com folga. Escalar depois é mais fácil do que explicar para um investidor por que você gastou R$5.000/mês em infraestrutura antes de ter 100 usuários.
+
+---
+
+## Fase 1 — Engenharia de Dados: Ingestão, Processamento e Modelagem
+
+### 1.1 Fontes de Dados CONAB
+
+Dois arquivos `.txt` delimitados por `;`, atualizados mensalmente:
+
+| Arquivo | URL | Granularidade |
+|---|---|---|
+| `PrecosMensalUF.txt` | `https://portaldeinformacoes.conab.gov.br/downloads/arquivos/PrecosMensalUF.txt` | Estado (UF) |
+| `PrecosMensalMunicipio.txt` | `https://portaldeinformacoes.conab.gov.br/downloads/arquivos/PrecosMensalMunicipio.txt` | Município |
+
+**O arquivo de Município é o ouro.** É ele que permite dizer "em Palmas-TO, a banana está na safra; em Araguaína-TO, não". Esse nível de localização é o diferencial competitivo real.
+
+### 1.2 Estratégia de Ingestão — Sem Over-Engineering
+
+**Escolha: GitHub Actions (cron) + script Python puro.**
+
+Por quê não Airflow/Prefect/Dagster? Porque são plataformas para orquestrar dezenas de pipelines interdependentes. Para dois downloads mensais, é usar bazuca para matar formiga. O custo de manutenção de um servidor Airflow em uma startup é um salário de júnior.
+
+**Alternativa de produção:** AWS EventBridge (cron) → Lambda → S3 → RDS. Custo: ~$2/mês.
+
+**Lógica de download resiliente:**
+
+```python
+import httpx
+import time
+from pathlib import Path
+
+URLS = {
+    "uf": "https://portaldeinformacoes.conab.gov.br/downloads/arquivos/PrecosMensalUF.txt",
+    "municipio": "https://portaldeinformacoes.conab.gov.br/downloads/arquivos/PrecosMensalMunicipio.txt",
+}
+
+def download_with_retry(url: str, dest: Path, retries: int = 3, timeout: int = 120) -> Path:
+    for attempt in range(retries):
+        try:
+            with httpx.stream("GET", url, timeout=timeout, follow_redirects=True) as r:
+                r.raise_for_status()
+                with open(dest, "wb") as f:
+                    for chunk in r.iter_bytes(chunk_size=65536):
+                        f.write(chunk)
+            return dest
+        except (httpx.TimeoutException, httpx.HTTPStatusError) as e:
+            if attempt == retries - 1:
+                raise
+            time.sleep(2 ** attempt)  # backoff exponencial
+```
+
+**Por que `httpx` e não `requests`?** Suporte nativo a streaming e async. Para arquivos que podem ter 50–200 MB, streaming evita OOM.
+
+**Agendamento (GitHub Actions):**
+
+```yaml
+# .github/workflows/ingest.yml
+on:
+  schedule:
+    - cron: '0 3 5 * *'  # 5º dia de cada mês, 03h UTC
+  workflow_dispatch:       # disparo manual para emergências
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install httpx polars psycopg2-binary
+      - run: python pipeline/ingest.py
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+```
+
+### 1.3 Tecnologia de Processamento — Polars, não Pandas, não Spark
+
+**Escolha: Polars.**
+
+- **vs Pandas:** Polars é 5–20x mais rápido em operações de groupby/join. Para arquivos de 100+ MB com groupby por produto + município + mês, a diferença é real. Além disso, Polars é lazy por padrão (execução adiada, otimização automática do plano de query).
+- **vs DuckDB:** DuckDB é excelente para exploração SQL interativa, mas Polars é mais idiomático para pipelines Python lineares. Para este caso, Polars vence em legibilidade.
+- **vs Spark:** Absurdo. Spark tem overhead de cluster. Para 200MB de CSV, Spark leva mais tempo para inicializar do que para processar.
+
+**Leitura e limpeza dos arquivos:**
+
+```python
+import polars as pl
+
+def load_conab_file(path: str) -> pl.DataFrame:
+    df = pl.read_csv(
+        path,
+        separator=";",
+        encoding="latin-1",          # arquivos governamentais raramente são UTF-8
+        infer_schema_length=10000,
+        ignore_errors=True,
+    )
+    # Normalizar nomes de colunas
+    df = df.rename({c: c.strip().upper().replace(" ", "_") for c in df.columns})
+    
+    # Converter preço: "6,50" → 6.50
+    df = df.with_columns(
+        pl.col("PRECO").str.replace(",", ".").cast(pl.Float64, strict=False)
+    )
+    
+    # Remover linhas sem preço ou sem produto
+    df = df.filter(pl.col("PRECO").is_not_null() & pl.col("PRODUTO").is_not_null())
+    
+    return df
+```
+
+> **Armadilhas comuns com dados governamentais:**
+> - Encoding Latin-1 (não UTF-8)
+> - Separador decimal é vírgula, não ponto
+> - Linhas de cabeçalho duplicadas no meio do arquivo
+> - Meses faltando para municípios pequenos (normal — tratar com interpolação ou `null`)
+> - Nomes de produtos inconsistentes ("Tomate" vs "TOMATE" vs "Tomate Salada")
+
+### 1.4 A Matemática da Sazonalidade — O Coração do Projeto
+
+**Índice de Sazonalidade (IS):**
+
+```
+IS(produto, município, mês) = Preço_Médio_Mês_Atual / Média_Móvel_12_Meses
+```
+
+- `IS < 0.90` → 🟢 **Verde** (preço ≥ 10% abaixo da média anual → safra)
+- `0.90 ≤ IS ≤ 1.10` → 🟡 **Amarelo** (dentro da variação normal)
+- `IS > 1.10` → 🔴 **Vermelho** (preço ≥ 10% acima da média → entressafra)
+
+**Implementação Polars:**
+
+```python
+def calculate_seasonality(df: pl.DataFrame) -> pl.DataFrame:
+    # Calcular média por produto+municipio por mês
+    monthly_avg = df.group_by(["MUNICIPIO_ID", "PRODUTO", "ANO", "MES"]).agg(
+        pl.col("PRECO").mean().alias("PRECO_MEDIO")
+    )
+    
+    # Calcular média móvel 12 meses por produto+municipio
+    result = monthly_avg.sort(["MUNICIPIO_ID", "PRODUTO", "ANO", "MES"]).with_columns(
+        pl.col("PRECO_MEDIO")
+          .rolling_mean(window_size=12, min_periods=6)  # min 6 meses de histórico
+          .over(["MUNICIPIO_ID", "PRODUTO"])
+          .alias("MEDIA_MOVEL_12M")
+    ).with_columns(
+        (pl.col("PRECO_MEDIO") / pl.col("MEDIA_MOVEL_12M")).alias("INDICE_SAZONALIDADE")
+    ).with_columns(
+        pl.when(pl.col("INDICE_SAZONALIDADE") < 0.90).then(pl.lit("VERDE"))
+          .when(pl.col("INDICE_SAZONALIDADE") <= 1.10).then(pl.lit("AMARELO"))
+          .otherwise(pl.lit("VERMELHO"))
+          .alias("STATUS_SEMAFORO")
+    )
+    
+    return result
+```
+
+**Problema crítico: dados faltando para municípios pequenos.**
+
+Se um município não tem preço reportado em 3 meses consecutivos, a média móvel fica distorcida. Estratégia:
+
+1. Se `min_periods < 6` → não classificar; retornar `null` com flag `"DADOS_INSUFICIENTES"`.
+2. Fallback hierárquico: sem dado no município → usar dado da microrregião do IBGE → usar dado da UF. Isso garante que o usuário sempre vê *algo*, mas com transparência sobre a origem.
+
+**Proteção contra distorções climáticas (ex: geada que dobra o preço do tomate):**
+
+Usar **desvio padrão** como filtro de outlier antes do cálculo:
+
+```python
+# Remover outliers (Z-score > 3) antes de calcular médias
+df = df.with_columns(
+    pl.col("PRECO").mean().over(["MUNICIPIO_ID", "PRODUTO"]).alias("_mean"),
+    pl.col("PRECO").std().over(["MUNICIPIO_ID", "PRODUTO"]).alias("_std"),
+).filter(
+    ((pl.col("PRECO") - pl.col("_mean")) / pl.col("_std")).abs() < 3.0
+).drop(["_mean", "_std"])
+```
+
+Isso evita que um único preço absurdo (erro de digitação ou evento climático extremo) contamine a média anual.
+
+### 1.5 Modelagem PostgreSQL — One Big Table (OBT) para leitura rápida
+
+**Não use Star Schema aqui.** Star Schema é ótimo para DW analítico com dezenas de dimensões e bilhões de fatos. Para uma API que serve filtros simples (produto + cidade + mês), a OBT é a escolha correta: menos JOINs, menos latência, índices diretos.
+
+**Schema da tabela principal:**
+
+```sql
+CREATE TABLE seasonality_index (
+    id              BIGSERIAL PRIMARY KEY,
+    municipio_id    VARCHAR(10) NOT NULL,   -- código IBGE
+    municipio_nome  VARCHAR(100) NOT NULL,
+    uf              CHAR(2) NOT NULL,
+    produto         VARCHAR(100) NOT NULL,
+    ano             SMALLINT NOT NULL,
+    mes             SMALLINT NOT NULL,      -- 1-12
+    preco_medio     NUMERIC(10, 2),
+    media_movel_12m NUMERIC(10, 2),
+    indice_sazonalidade NUMERIC(6, 4),
+    status_semaforo VARCHAR(10) NOT NULL,   -- VERDE | AMARELO | VERMELHO | INSUFICIENTE
+    fonte           VARCHAR(5) NOT NULL,    -- 'UF' | 'MUN'
+    updated_at      TIMESTAMPTZ DEFAULT NOW(),
+    CONSTRAINT uq_seasonality UNIQUE (municipio_id, produto, ano, mes)
+);
+
+-- Índices para as queries da API
+CREATE INDEX idx_season_uf_prod_mes ON seasonality_index (uf, produto, mes);
+CREATE INDEX idx_season_mun_prod_mes ON seasonality_index (municipio_id, produto, mes);
+CREATE INDEX idx_season_produto ON seasonality_index USING gin(to_tsvector('portuguese', produto));
+```
+
+**Tabela de referência de municípios (populada via IBGE):**
+
+```sql
+CREATE TABLE municipios (
+    codigo_ibge  VARCHAR(10) PRIMARY KEY,
+    nome         VARCHAR(100) NOT NULL,
+    uf           CHAR(2) NOT NULL,
+    latitude     NUMERIC(9,6),
+    longitude    NUMERIC(9,6)
+);
+CREATE INDEX idx_mun_uf ON municipios (uf);
+```
+
+---
+
+## Fase 2 — Arquitetura Backend (FastAPI)
+
+### 2.1 Design dos Endpoints (Implementado)
+
+```
+GET /api/v1/sazonalidade?uf=SP&municipio=São Paulo&produto=tomate&status_cor=VERDE&ano=2026&mes=6
+    → Lista produtos com filtros combinados (UF, município, produto, status_cor, ano, mês)
+      Paginação: pagina=1&por_pagina=100 (max 500)
+
+GET /api/v1/sazonalidade/{uf}/{municipio}
+    → Atalho por localidade (encaminha para o endpoint acima)
+
+GET /api/v1/municipios?uf=SP
+    → Lista de municípios disponíveis para uma UF (distinct da view materializada)
+
+GET /api/v1/_internal/cache-clear
+    → Limpa cache in-memory (uso interno do Ghost DBA)
+```
+
+**Tipagem Pydantic (Implementada):**
+
+```python
+class SazonalidadeResponse(BaseModel):
+    id_produto: int
+    nome_produto: str
+    icone_url: Optional[str] = None
+    uf: str
+    municipio: Optional[str] = None
+    municipio_id: Optional[str] = None
+    ano: int
+    mes: int
+    preco_medio: Decimal
+    media_movel_12m: Optional[Decimal] = None
+    indice_sazonalidade: Optional[Decimal] = None
+    status_cor: str  # VERDE | AMARELO | VERMELHO | INSUFICIENTE
+    fonte: str
+
+class SazonalidadeListResponse(BaseModel):
+    data: list[SazonalidadeResponse]
+    total: int
+    pagina: int = 1
+    por_pagina: int = 100
+
+class MunicipioListResponse(BaseModel):
+    data: list[str]
+    total: int
+```
+
+### 2.2 Otimização B2C — Cache e Connection Pooling
+
+**Cache:** Implementado com cache in-memory thread-safe e TTL configurável (padrão 24h). Dispensa Redis no MVP — para o volume esperado de requisições B2C, o cache local é suficiente e elimina latência de rede.
+
+```python
+# backend/app/core/cache.py
+import time
+import threading
+from collections import OrderedDict
+
+class TTLCache:
+    def __init__(self, capacity: int = 500):
+        self._lock = threading.Lock()
+        self._cache: OrderedDict[str, tuple[float, dict]] = OrderedDict()
+        self._capacity = capacity
+
+    def get(self, key: str) -> dict | None:
+        with self._lock:
+            if key not in self._cache:
+                return None
+            expires, value = self._cache[key]
+            if time.monotonic() > expires:
+                del self._cache[key]
+                return None
+            self._cache.move_to_end(key)
+            return value
+
+    def set(self, key: str, value: dict, ttl: int) -> None:
+        with self._lock:
+            self._cache[key] = (time.monotonic() + ttl, value)
+            self._cache.move_to_end(key)
+            if len(self._cache) > self._capacity:
+                self._cache.popitem(last=False)
+```
+
+**Connection Pooling:** asyncpg com pool de 10–50 conexões, configurável via env.
+
+```python
+# backend/app/db/session.py
+async def get_pool() -> asyncpg.Pool:
+    global _pool
+    if _pool is None:
+        settings = get_settings()
+        _pool = await asyncpg.create_pool(
+            settings.database_url,
+            min_size=min(settings.pool_min_size, settings.pool_max_size // 2),
+            max_size=min(settings.pool_max_size, 50),
+            command_timeout=30,
+        )
+    return _pool
+```
+
+**Cache interno + asyncpg eliminam a dependência de Redis para o MVP.** Se houver necessidade futura, a migração para Redis é trivial — basta substituir o dicionário por uma chamada Redis.
+
+---
+
+## Fase 3 — Frontend React/PWA (Implementado)
+
+### 3.1 Stack Decisão: Vite + React, NÃO Next.js
+
+Diferente do plano inicial, o frontend foi implementado como **PWA puramente estático** com Vite + React 18, sem Next.js. Motivo:
+
+- O app é uma tela única (Dashboard + LocationSelector). SSR não traz benefício real de LCP para um app transacional que depende de dados de API.
+- PWA estático pode ser hospedado em S3/Cloudflare Pages por centavos, sem servidor Node.
+- Service Worker + TanStack Query substituem qualquer benefício de SSR para dados dinâmicos.
+
+### 3.2 Arquitetura de Componentes
+
+```
+App
+└── Dashboard                ← Tela única, condicional
+    ├── [sem localização] → LocationSelector (UF dropdown + city input com datalist)
+    └── [com localização] → Header (localização + botão alterar)
+                            └── ProductGrid (grid-cols-2 md:3 lg:4)
+                                ├── ProductCard (status visual + emoji fallback)
+                                └── ProductCardSkeleton (enquanto isLoading)
+```
+
+**User Journey:**
+1. App abre → `useUserStore` checa localStorage
+2. Sem localização salva → `LocationSelector` (fullscreen)
+3. Seleciona UF → `useMunicipios(uf)` busca lista via API → `<datalist>` no input
+4. Digita/autocomplete cidade → debounce 600ms → `prefetchQuery` aquece cache
+5. Clica "Ver Sazonalidade" → salva na store → `useSazonalidade(uf, municipio)` dispara
+6. Loading → 8 `ProductCardSkeleton` pulsantes (grid)
+7. Dados carregados → grid ordenado: VERDE (topo) → AMARELO → VERMELHO
+
+### 3.3 O ProductCard e a Lógica de Cores (Implementado)
+
+```tsx
+// STATUS_MAP usado no ProductCard
+const STATUS_MAP = {
+  VERDE: {
+    bg: 'bg-sazonal-verde-50',
+    border: 'border-sazonal-verde-400',
+    text: 'text-sazonal-verde-700',
+    label: 'Melhor Época!',
+    icon: <CheckCircle2 className="h-5 w-5 text-sazonal-verde-600" />,
+    opacity: 'opacity-100',
+  },
+  AMARELO: {
+    bg: 'bg-sazonal-amarelo-50',
+    border: 'border-sazonal-amarelo-400',
+    text: 'text-sazonal-amarelo-600',
+    label: 'Preço Normal',
+    icon: <AlertTriangle className="h-5 w-5 text-sazonal-amarelo-600" />,
+    opacity: 'opacity-100',
+  },
+  VERMELHO: {
+    bg: 'bg-sazonal-vermelho-50',
+    border: 'border-sazonal-vermelho-400',
+    text: 'text-sazonal-vermelho-600',
+    label: 'Péssima Época',
+    icon: <XCircle className="h-5 w-5 text-sazonal-vermelho-600" />,
+    opacity: 'opacity-60',  // reduz opacidade para desincentivar clique
+  },
+}
+```
+
+Características implementadas no ProductCard:
+- **Nunca mostra preços em R$** — apenas o label textual (Melhor Época! / Preço Normal / Péssima Época)
+- **Emoji fallback**: se a imagem WebP falhar (`onError`), renderiza emoji gigante em círculo cinza (`getProdutoEmoji()`)
+- **Skeleton view**: componente `ProductCardSkeleton` com `animate-pulse-soft` mantém o layout estável
+
+### 3.4 Gerenciamento de Estado e Cache
+
+```tsx
+// Zustand store (persist no localStorage)
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      uf: null,
+      municipio: null,
+      setLocation: (uf, municipio) => set({ uf, municipio }),
+      clearLocation: () => set({ uf: null, municipio: null }),
+    }),
+    { name: 'qcomprar-user' },
+  ),
+)
+```
+
+```tsx
+// TanStack Query — sazonalidade (staleTime 12h)
+export function useSazonalidade(uf, municipio) {
+  return useQuery({
+    queryKey: ['sazonalidade', uf, municipio],
+    queryFn: () => api.get(`/sazonalidade/${uf}/${municipio}`).then(r => r.data),
+    enabled: !!uf && !!municipio,
+    staleTime: 1000 * 60 * 60 * 12,  // 12h — dados mudam 1x/mês
+    retry: 2,
+  })
+}
+
+// TanStack Query — municipios (staleTime 24h)
+export function useMunicipios(uf) {
+  return useQuery({
+    queryKey: ['municipios', uf],
+    queryFn: () => api.get('/municipios', { params: { uf } }).then(r => r.data.data),
+    enabled: !!uf && uf.length === 2,
+    staleTime: 1000 * 60 * 60 * 24,  // 24h
+  })
+}
+```
+
+### 3.5 Estratégia de Prefetch
+
+Quando o usuário digita a cidade (≥3 caracteres), o `LocationSelector` dispara prefetch com debounce de 600ms:
+
+```tsx
+const handleCityChange = useCallback((value: string) => {
+  setLocalCity(value)
+  clearTimeout(debounceRef.current)
+  debounceRef.current = setTimeout(() => doPrefetch(value), 600)
+}, [doPrefetch])
+```
+
+Isso aquece o cache do TanStack Query e o Service Worker antes do submit.
+
+### 3.6 Performance Mobile — PWA
+
+**vite-plugin-pwa** configurado com:
+- `StaleWhileRevalidate` para `/api/v1/sazonalidade` (cache por 24h no Service Worker)
+- `globPatterns` para assets estáticos (JS/CSS/HTML)
+- `display: standalone` + `orientation: portrait` para experiência de app nativo
+
+**Tailwind config** com cores de negócio no lugar de nomes genéricos:
+```js
+colors: {
+  sazonal: {
+    verde:    { 50, 100, 400, 600, 700 },
+    amarelo:  { 50, 100, 400, 600 },
+    vermelho: { 50, 100, 400, 600 },
+  },
+}
+```
+
+**Metas Lighthouse:** Performance ≥ 95, LCP < 2.5s, CLS = 0, PWA instalável.
+
+---
+
+## Fase 4 — Cronograma MVP (6 Sprints)
+
+| Sprint | Semana | Meta | Risco Principal | Mitigação |
+|---|---|---|---|---|
+| **1** | 1 | Download + parsing dos .txt CONAB. Limpeza Polars. Calculo IS. Script funcional localmente. | Formato do arquivo mudar sem aviso | Versionar os .txt baixados; alertar se schema mudar |
+| **2** | 2 | Modelagem PostgreSQL. Carga dos dados processados. Script de ingestion end-to-end. | Dados faltando para muitos municípios | Implementar fallback UF imediatamente |
+| **3** | 3 | FastAPI: endpoints `/locations` e `/products`. Testes com Postman/pytest. | Query lenta sem índice | Adicionar índices antes dos testes de carga |
+| **4** | 4 | React: LocationSelector + ProductGrid + ProductCard com semáforo. Mobile-first. | Complexidade de estado (UF + Cidade + Mês) | Zustand desde o início; não improvisar com useState global |
+| **5** | 5 | Redis cache. PWA manifest + service worker. WebP nas imagens. Deploy (Hetzner/Fly.io). | Deploy com variáveis de ambiente erradas | Usar docker-compose com `.env.example` documentado |
+| **6** | 6 | Busca full-text. Polish UX (skeletons, empty states, error states). Teste no celular real. Lighthouse ≥ 90. | Lighthouse falhar por imagens grandes | Testar WebP desde Sprint 4; não deixar para o final |
+
+**Maior gargalo do projeto:** A qualidade dos dados da CONAB. Municípios pequenos têm histórico incompleto. A solução de fallback hierárquico (município → UF) deve ser implementada no Sprint 2, não como "nice to have" futuro.
+
+---
+
+## Stack Definitiva (Resumo Executivo Técnico)
+
+| Camada | Tecnologia | Alternativa Descartada | Motivo |
+|---|---|---|---|
+| Ingestão | GitHub Actions + httpx | Airflow, Prefect | Overkill para 2 arquivos/mês |
+| Processamento | Polars | Spark, Dask | Spark = overhead absurdo para 200MB |
+| Banco | PostgreSQL + OBT | BigQuery, Star Schema | DW analytics para OLTP é errado |
+| Cache | In-memory (TTL thread-safe) | Redis, Memcached | Elimina latência de rede e dependência externa no MVP; migração trivial para Redis se necessário |
+| Backend | FastAPI + asyncpg | Django, Flask | Performance async + Pydantic nativo |
+| Frontend | Vite + React 18 + PWA | Next.js, CRA, Material-UI | PWA estático (S3/CF Pages); SSR não agrega para app de tela única |
+| Imagens | S3/Cloudinary + WebP | PNG/JPEG no banco | Banco de dados não é CDN |
+| Hosting | Hetzner CX21 (€5/mês) | AWS EC2 t3.medium | 70% mais barato para o mesmo hardware |

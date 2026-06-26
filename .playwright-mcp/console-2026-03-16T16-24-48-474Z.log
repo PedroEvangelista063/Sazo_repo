@@ -1,0 +1,29 @@
+[     741ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[    3012ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[    5353ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[    7681ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   10008ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   12327ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   12996ms] NotFoundError: Failed to execute 'insertBefore' on 'Node': The node before which the new node is to be inserted is not a child of this node.
+    at insertOrAppendPlacementNode (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:9712:50)
+    at commitPlacement (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:9743:13)
+    at runWithFiberInDEV (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:995:72)
+    at commitReconciliationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10770:13)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10571:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10394:13)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10545:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10394:13)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10403:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10394:13)
+[   12989ms] [WARNING] %s
+
+%s
+ An error occurred in the <Text> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:6963
+[   14664ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   16990ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   19335ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   21690ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   24023ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   26372ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034
+[   28716ms] [ERROR] WebSocket connection to 'ws://localhost:3000/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/@vite/client:1034

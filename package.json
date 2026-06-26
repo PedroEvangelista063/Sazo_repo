@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "typescript": "^6.0.3"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}

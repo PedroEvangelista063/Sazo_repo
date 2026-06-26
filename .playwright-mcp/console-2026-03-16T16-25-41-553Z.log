@@ -1,0 +1,16 @@
+[    6398ms] NotFoundError: Failed to execute 'insertBefore' on 'Node': The node before which the new node is to be inserted is not a child of this node.
+    at insertOrAppendPlacementNode (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:9712:50)
+    at commitPlacement (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:9743:13)
+    at runWithFiberInDEV (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:995:72)
+    at commitReconciliationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10770:13)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10571:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10394:13)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10545:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10394:13)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10545:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:10394:13)
+[    6398ms] [WARNING] %s
+
+%s
+ An error occurred in the <Text> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/react-dom_client.js?v=fb1c298c:6963

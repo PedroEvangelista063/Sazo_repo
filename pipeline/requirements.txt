@@ -1,0 +1,9 @@
+polars==1.31.0
+httpx==0.28.1
+requests==2.32.3
+tenacity==9.1.2
+psycopg2-binary==2.9.10
+python-dotenv==1.1.1
+beautifulsoup4==4.12.2
+pytest==8.4.0
+pytest-cov==6.1.0

@@ -128,47 +128,82 @@ def load_conab_file(path: str) -> pl.DataFrame:
 
 **Índice de Sazonalidade (IS):**
 
+O semáforo adota uma **banda de ±15%** em torno da referência (e não os ±10% comuns em modelos financeiros). Essa escolha reflete a volatilidade típica de hortifrutigranjeiros: variações de 10-15% são rotineiras (safra/entressafra, clima, logística), e usar uma banda mais estreita geraria falsos positivos (🟡 classificado como 🟢 ou 🔴).
+
 ```
-IS(produto, município, mês) = Preço_Médio_Mês_Atual / Média_Móvel_12_Meses
+IS(produto, localidade) = Preço_Atual / Preço_Referência
 ```
 
-- `IS < 0.90` → 🟢 **Verde** (preço ≥ 10% abaixo da média anual → safra)
-- `0.90 ≤ IS ≤ 1.10` → 🟡 **Amarelo** (dentro da variação normal)
-- `IS > 1.10` → 🔴 **Vermelho** (preço ≥ 10% acima da média → entressafra)
+Onde `Preço_Referência` = média de 2025 (Ano Âncora Absoluto), ou fallback de 12 meses se o produto não existia em 2025.
 
-**Implementação Polars:**
+- `IS < 0.85` → 🟢 **Verde** (preço ≥ 15% abaixo da referência → safra/barato)
+- `0.85 ≤ IS ≤ 1.15` → 🟡 **Amarelo** (dentro da variação normal)
+- `IS > 1.15` → 🔴 **Vermelho** (preço ≥ 15% acima da referência → entressafra/caro)
+
+**Implementação Polars** (réplica da SP `sp_calcular_sazonalidade_baseline`):
 
 ```python
-def calculate_seasonality(df: pl.DataFrame) -> pl.DataFrame:
-    # Calcular média por produto+municipio por mês
-    monthly_avg = df.group_by(["MUNICIPIO_ID", "PRODUTO", "ANO", "MES"]).agg(
-        pl.col("PRECO").mean().alias("PRECO_MEDIO")
-    )
-    
-    # Calcular média móvel 12 meses por produto+municipio
-    result = monthly_avg.sort(["MUNICIPIO_ID", "PRODUTO", "ANO", "MES"]).with_columns(
-        pl.col("PRECO_MEDIO")
-          .rolling_mean(window_size=12, min_periods=6)  # min 6 meses de histórico
-          .over(["MUNICIPIO_ID", "PRODUTO"])
-          .alias("MEDIA_MOVEL_12M")
-    ).with_columns(
-        (pl.col("PRECO_MEDIO") / pl.col("MEDIA_MOVEL_12M")).alias("INDICE_SAZONALIDADE")
-    ).with_columns(
-        pl.when(pl.col("INDICE_SAZONALIDADE") < 0.90).then(pl.lit("VERDE"))
-          .when(pl.col("INDICE_SAZONALIDADE") <= 1.10).then(pl.lit("AMARELO"))
-          .otherwise(pl.lit("VERMELHO"))
-          .alias("STATUS_SEMAFORO")
-    )
-    
-    return result
+THRESHOLD_GREEN = 0.85
+THRESHOLD_RED = 1.15
+
+# Baseline 2025
+base_2025 = (
+    df.filter(pl.col("ano") == 2025)
+    .group_by(["produto", "uf"])
+    .agg(pl.col("preco_medio").mean().alias("preco_referencia_2025"))
+)
+
+# Último preço de cada produto+UF
+ultimos = (
+    df.sort(["produto", "uf", "ano", "mes"])
+    .group_by(["produto", "uf"])
+    .agg([
+        pl.col("preco_medio").last().alias("preco_atual"),
+        pl.col("ano").last().alias("ultimo_ano"),
+        pl.col("mes").last().alias("ultimo_mes"),
+    ])
+)
+
+# Fallback 12m (para produtos NOVOS sem 2025)
+periodos = df.group_by(["produto", "uf"]).agg(
+    (pl.col("ano") * 12 + pl.col("mes")).max().alias("ultimo_periodo")
+)
+fallback = df.join(periodos, on=["produto", "uf"], how="inner")
+fallback = fallback.filter(
+    (fallback["ano"] * 12 + fallback["mes"]) > (fallback["ultimo_periodo"] - 12)
+)
+fallback = fallback.group_by(["produto", "uf"]).agg(
+    pl.col("preco_medio").mean().alias("preco_fallback_12m")
+)
+
+# Master join + semáforo
+resultado = ultimos.join(base_2025, on=["produto", "uf"], how="left")
+resultado = resultado.join(fallback, on=["produto", "uf"], how="left")
+resultado = resultado.with_columns(
+    pl.coalesce(pl.col("preco_referencia_2025"), pl.col("preco_fallback_12m"))
+      .alias("preco_referencia"),
+    pl.col("preco_referencia_2025").is_null().alias("usou_fallback_12m"),
+)
+razao = pl.col("preco_atual") / pl.col("preco_referencia")
+resultado = resultado.with_columns(
+    pl.when(pl.col("preco_referencia").is_null() | (pl.col("preco_referencia") == 0))
+      .then(pl.lit("INSUFICIENTE"))
+    .when(pl.col("preco_atual").is_null())
+      .then(pl.lit("INSUFICIENTE"))
+    .when(razao < THRESHOLD_GREEN).then(pl.lit("VERDE"))
+    .when(razao > THRESHOLD_RED).then(pl.lit("VERMELHO"))
+    .otherwise(pl.lit("AMARELO"))
+    .alias("status_cor"),
+)
 ```
 
 **Problema crítico: dados faltando para municípios pequenos.**
 
-Se um município não tem preço reportado em 3 meses consecutivos, a média móvel fica distorcida. Estratégia:
+A CONAB nem sempre cobre todos os municípios em todos os meses. Estratégia de fallback:
 
-1. Se `min_periods < 6` → não classificar; retornar `null` com flag `"DADOS_INSUFICIENTES"`.
-2. Fallback hierárquico: sem dado no município → usar dado da microrregião do IBGE → usar dado da UF. Isso garante que o usuário sempre vê *algo*, mas com transparência sobre a origem.
+1. **Dados insuficientes** → `INSUFICIENTE`: sem preço de 2025 E com menos de 3 meses de histórico nos últimos 12 meses.
+2. **Fallback 12m**: para produtos que NÃO existiam em 2025, calcula a média dos ÚLTIMOS 12 MESES disponíveis como âncora provisória. A flag `usou_fallback_12m` permite que o frontend exiba "*Comparado aos últimos 12 meses".
+3. **Produto sem nenhum histórico** → `INSUFICIENTE` — melhor não classificar do que classificar errado.
 
 **Proteção contra distorções climáticas (ex: geada que dobra o preço do tomate):**
 

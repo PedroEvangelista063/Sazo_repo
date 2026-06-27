@@ -1,0 +1,50 @@
+[
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

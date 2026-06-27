@@ -1,0 +1,2522 @@
+[
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 11.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 13.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 19.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 13.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 18.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 19.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 17.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 20.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 17.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 19.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 15.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 16.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 12.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 15.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 15.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 17.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 13.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 22.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 18.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 19.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 17.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 21.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 17.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 20.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 13.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 16.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 15.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 12.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 17.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 11.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 13.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 10.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 20.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 18.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 19.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 17.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 21.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 18.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 19.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 13.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 15.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 12.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 15.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 15.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 17.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 14.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 15.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 13.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 14.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 16.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 20.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 19.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 20.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 16.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 15.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 14.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 19.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 15.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 19.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 14.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 15.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 10.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 14.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 16.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 11.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 19.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 14.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 15.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 13.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 14.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 16.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 20.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 17.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 20.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 16.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 15.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 14.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 15.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 14.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 15.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 10.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 15.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 16.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 11.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 14.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 13.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 16.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 20.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 17.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 20.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 16.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 14.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 14.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 10.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 16.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 12.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 14.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 13.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 16.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 20.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 19.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 20.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 16.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 14.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 19.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 19.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 14.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 10.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 16.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 12.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 19.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 17.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 14.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 15.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 13.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 16.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 16.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 20.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 18.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 20.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 18.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 18.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 18.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 17.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 20.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 16.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 15.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 14.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 19.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 16.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 20.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 14.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 15.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 10.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 15.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 17.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 12.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 19.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 17.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 14.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 15.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 13.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 16.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 16.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 21.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 18.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 19.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 18.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 18.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 18.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 18.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 20.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 16.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 15.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 14.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 19.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 16.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 20.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 14.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 15.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 11.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 15.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 17.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 12.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 19.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 17.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 14.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 15.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 13.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 16.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 16.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 21.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 18.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 20.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 18.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 18.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 19.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 17.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 20.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 16.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 15.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 14.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 19.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 16.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 20.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 15.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 15.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 11.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 15.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 17.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 12.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 19.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 18.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 14.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 15.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 13.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 16.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 16.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 21.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 18.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 20.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 18.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 18.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 19.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 18.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 21.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 16.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 15.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 14.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 19.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 16.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 20.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 15.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 15.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 11.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 15.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 17.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 12.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 19.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 18.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 14.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 15.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 14.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 16.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 17.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 21.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 18.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 20.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 19.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 19.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 19.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 17.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 21.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 16.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 15.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 14.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 19.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 16.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 20.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 15.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 15.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 15.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 17.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 19.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 18.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

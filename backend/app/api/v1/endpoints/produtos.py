@@ -9,17 +9,16 @@ import json
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
 
 
-@router.get("", response_model=SazonalidadeListResponse)
-async def listar_sazonalidade(
-    uf: str | None = Query(None, min_length=2, max_length=2, description="UF (BR-2)"),
-    municipio: str | None = Query(None, description="Nome do município"),
-    produto: str | None = Query(None, description="Nome do produto"),
-    status_cor: str | None = Query(None, pattern=r'^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$'),
-    ano: int | None = Query(None, ge=2020, le=2030),
-    mes: int | None = Query(None, ge=1, le=12),
-    pagina: int = Query(1, ge=1),
-    por_pagina: int = Query(100, ge=1, le=500),
-):
+async def _query_sazonalidade(
+    uf: str | None = None,
+    municipio: str | None = None,
+    produto: str | None = None,
+    status_cor: str | None = None,
+    ano: int | None = None,
+    mes: int | None = None,
+    pagina: int = 1,
+    por_pagina: int = 100,
+) -> SazonalidadeListResponse:
     settings = get_settings()
     cache_key = hashlib.md5(
         json.dumps({"uf": uf, "municipio": municipio, "produto": produto,
@@ -73,9 +72,10 @@ async def listar_sazonalidade(
             v.municipio_id,
             v.ano,
             v.mes,
-            v.preco_medio,
-            v.media_movel_12m,
-            v.indice_sazonalidade,
+            v.preco_referencia,
+            v.preco_atual,
+            v.data_referencia_atual,
+            v.usou_fallback_12m,
             v.status_cor,
             v.fonte
         FROM mart.vw_api_produtos_sazonalidade v
@@ -83,8 +83,8 @@ async def listar_sazonalidade(
         ORDER BY v.status_cor, v.uf, v.produto
         OFFSET ${idx} LIMIT ${idx + 1}
     """
-    offset = (pagina - 1) * por_pagina
-    params.extend([offset, por_pagina])
+    offset_val = (pagina - 1) * por_pagina
+    params.extend([offset_val, por_pagina])
 
     total_row = await fetchrow(count_query, *params[:idx-1])
     total = total_row["total"] if total_row else 0
@@ -108,9 +108,10 @@ async def listar_sazonalidade(
             municipio_id=r.get("municipio_id"),
             ano=r["ano"],
             mes=r["mes"],
-            preco_medio=r["preco_medio"],
-            media_movel_12m=r.get("media_movel_12m"),
-            indice_sazonalidade=r.get("indice_sazonalidade"),
+            data_referencia_atual=r["data_referencia_atual"],
+            preco_referencia=r.get("preco_referencia"),
+            preco_atual=r.get("preco_atual"),
+            usou_fallback_12m=r.get("usou_fallback_12m", False),
             status_cor=r["status_cor"],
             fonte=r["fonte"],
         ))
@@ -120,6 +121,23 @@ async def listar_sazonalidade(
     return result
 
 
+@router.get("", response_model=SazonalidadeListResponse)
+async def listar_sazonalidade(
+    uf: str | None = Query(None, min_length=2, max_length=2, description="UF (BR-2)"),
+    municipio: str | None = Query(None, description="Nome do município"),
+    produto: str | None = Query(None, description="Nome do produto"),
+    status_cor: str | None = Query(None, pattern=r'^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$'),
+    ano: int | None = Query(None, ge=2020, le=2030),
+    mes: int | None = Query(None, ge=1, le=12),
+    pagina: int = Query(1, ge=1),
+    por_pagina: int = Query(100, ge=1, le=500),
+):
+    return await _query_sazonalidade(
+        uf=uf, municipio=municipio, produto=produto, status_cor=status_cor,
+        ano=ano, mes=mes, pagina=pagina, por_pagina=por_pagina,
+    )
+
+
 @router.get("/{uf}/{municipio}", response_model=SazonalidadeListResponse)
 async def listar_por_localidade(
     uf: str,
@@ -127,4 +145,6 @@ async def listar_por_localidade(
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=500),
 ):
-    return await listar_sazonalidade(uf=uf, municipio=municipio, pagina=pagina, por_pagina=por_pagina)
+    return await _query_sazonalidade(
+        uf=uf, municipio=municipio, pagina=pagina, por_pagina=por_pagina,
+    )

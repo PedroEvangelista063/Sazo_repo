@@ -26,6 +26,7 @@ Dependências:
 
 from __future__ import annotations
 
+import io
 import logging
 import os
 import time
@@ -187,6 +188,22 @@ def _sanitizar_texto(series: pl.Series) -> pl.Series:
     return series.str.strip_chars().str.to_uppercase()
 
 
+COLUNAS_COM_HEADER: list[str] = [
+    "produto", "classificao_produto", "id_produto", "uf",
+    "regiao", "ano", "mes", "dsc_nivel_comercializacao", "valor_produto_kg",
+]
+
+
+def _detecta_header(primeira_linha: str) -> bool:
+    """Detecta se a primeira linha do arquivo é um cabeçalho.
+
+    Cabeçalho sempre começa com ``produto`` (case-insensitive).
+    Dados reais começam com nome de produto (ex: ``BOTA``, ``00-18-18``, ``TRATOR``).
+    """
+    primeira_col = primeira_linha.split(";")[0].strip().lower()
+    return primeira_col == "produto"
+
+
 def ler_arquivo_local(caminho: str | Path) -> pl.DataFrame:
     """Lê um arquivo ``LISTA*.txt`` e retorna DataFrame semi-bruto.
 
@@ -203,14 +220,38 @@ def ler_arquivo_local(caminho: str | Path) -> pl.DataFrame:
         DataFrame com colunas normalizadas. A coluna ``valor_produto_kg`` é
         mantida como string (a conversão para Float64 ocorre depois).
     """
-    raw = Path(caminho).read_bytes().decode("latin-1")
-    df = pl.read_csv(
+    raw = Path(caminho).read_text(encoding="utf-8")
+    linhas = raw.splitlines()
+    if not linhas:
+        return pl.DataFrame()
+
+    tem_header = _detecta_header(linhas[0])
+    if not tem_header:
+        colunas = COLUNAS_COM_HEADER[:]
+        if len(linhas[0].split(";")) > len(colunas):
+            colunas = [
+                "produto", "classificao_produto", "id_produto",
+                "municipio", "codigo_ibge", "uf",
+                "regiao", "ano", "mes", "dsc_nivel_comercializacao",
+                "valor_produto_kg",
+            ]
+        df = pl.read_csv(
         io.StringIO(raw),
-        separator=";",
-        infer_schema_length=0,
-        ignore_errors=True,
-        truncate_ragged_lines=True,
-    )
+            separator=";",
+            has_header=False,
+            new_columns=colunas[:len(linhas[0].split(";"))],
+            infer_schema_length=0,
+            ignore_errors=True,
+            truncate_ragged_lines=True,
+        )
+    else:
+        df = pl.read_csv(
+            io.StringIO(raw),
+            separator=";",
+            infer_schema_length=0,
+            ignore_errors=True,
+            truncate_ragged_lines=True,
+        )
     # Normaliza nomes de colunas: espaços → underscore, lowercase
     df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
                      for c in df.columns})
@@ -257,7 +298,7 @@ class CarregadorMedalhao:
             cur.execute(
                 "SELECT id_produto, nome_produto FROM staging.dim_produto"
             )
-            prod_map = dict(cur.fetchall())
+            prod_map = {nome: pid for pid, nome in cur.fetchall()}
 
             localidades = set()
             for row in df.select(["uf"]).unique().iter_rows():
@@ -453,6 +494,15 @@ class IngestaoInteligente:
         if df.height == 0:
             return None, {}
 
+        # Normaliza colunas de municipio
+        rename_mun = {}
+        if "municipio" in df.columns and "municipio_nome" not in df.columns:
+            rename_mun["municipio"] = "municipio_nome"
+        if "codigo_ibge" in df.columns and "municipio_id" not in df.columns:
+            rename_mun["codigo_ibge"] = "municipio_id"
+        if rename_mun:
+            df = df.rename(rename_mun)
+
         # Preserva nome original + combina com classificacao para unicidade
         df = df.with_columns(pl.col("produto").alias("_produto_original"))
         if "classificao_produto" in df.columns:
@@ -512,7 +562,11 @@ class IngestaoInteligente:
             )
             return None, categorias
 
-        df_out = df_b2c.select([*cols, "categoria_b2c"])
+        cols_out = ["produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio", "categoria_b2c"]
+        for c in cols_out:
+            if c not in df_b2c.columns:
+                df_b2c = df_b2c.with_columns(pl.lit(None, dtype=pl.Utf8).alias(c))
+        df_out = df_b2c.select(cols_out)
 
         logger.info(
             "  %s: %d B2C + %d B2B",

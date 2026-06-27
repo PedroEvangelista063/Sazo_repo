@@ -1,0 +1,1402 @@
+[
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 6.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 6.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 6.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 4.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 4.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 4.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 5.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 4.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 4.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 5.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 5.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 4.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 4.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 5.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 6.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 5.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 4.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 5.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 1.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 1.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 1.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 0.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 1.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 1.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 0.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 1.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 1.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 1.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 1.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 0.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 1.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 1.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 0.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

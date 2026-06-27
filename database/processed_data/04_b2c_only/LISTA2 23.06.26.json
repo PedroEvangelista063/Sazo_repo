@@ -1,0 +1,6666 @@
+[
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 26.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 21.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 18.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 19.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 19.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 19.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 28.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 44.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 38.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA MANTA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 38.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 46.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - ACÃM",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 36.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 20.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 25.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 34.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 34.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - JERKED BEEF",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 58.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 21.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 25.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 18.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 17.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 18.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 18.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 28.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 46.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 41.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA MANTA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 38.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 47.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - ACÃM",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 36.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 19.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 24.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 34.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 37.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - JERKED BEEF",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 60.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 21.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 24.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 18.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 17.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 18.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 18.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 28.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 48.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 43.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA MANTA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 41.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 47.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - ACÃM",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 36.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 19.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 24.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 36.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 38.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - JERKED BEEF",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 61.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 30.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 34.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 36.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 44.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 38.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 37.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 37.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 50.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 49.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 20.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 27.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 46.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 47.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 37.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 43.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 44.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 17.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 19.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 43.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 39.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 38.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 28.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 44.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 39.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 43.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 39.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 46.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 50.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 50.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 19.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 25.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 47.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 47.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 44.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 45.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 43.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 35.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 36.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 32.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 40.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 44.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 43.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 48.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 54.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 52.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 38.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 37.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 54.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 53.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 48.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 39.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 41.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 50.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 48.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 51.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 42.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 43.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 46.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 31.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 34.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 36.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 39.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 38.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 43.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 37.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 36.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 48.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 50.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 26.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 43.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 47.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 48.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 38.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 43.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 17.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 16.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 46.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 39.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 38.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 28.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 39.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 39.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 50.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 46.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 50.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 18.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 25.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 46.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 47.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 44.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 43.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 32.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 36.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 35.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 43.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 45.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 40.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 48.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 54.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 52.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 35.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 35.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 53.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 49.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 54.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 41.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 37.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 50.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 47.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 51.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 42.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 46.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 43.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 35.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 32.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 37.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 40.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 37.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 37.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 38.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 45.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 50.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 49.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 20.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 28.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 48.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 48.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 38.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 45.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 45.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 18.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 46.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 46.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 40.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 39.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 27.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 40.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 39.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 50.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 47.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 50.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 20.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 26.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 46.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 47.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 47.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 45.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 46.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 35.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 36.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 32.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 44.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 40.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 46.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 51.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 48.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 53.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 38.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 34.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 48.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 53.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 53.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 41.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 39.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 48.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 52.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 51.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 43.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 42.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 46.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 38.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 32.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 36.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 41.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 39.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 37.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 39.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 51.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 47.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 49.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 20.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 28.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 49.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 49.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 38.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 47.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 19.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 41.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 40.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 28.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 40.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 40.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 51.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 50.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 19.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 26.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 47.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 48.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 46.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 36.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 37.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 33.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 45.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 40.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 48.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 53.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 53.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 35.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 36.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 48.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 53.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 55.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 42.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 40.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 43.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 52.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 53.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 50.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 47.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 44.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 37.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 38.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 33.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 41.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 46.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 40.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 38.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 40.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 52.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 49.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 42.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 48.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 42.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 38.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 46.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 46.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 18.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 19.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 40.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 41.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 41.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 42.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 46.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 42.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 41.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 51.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 50.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 49.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 49.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 42.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 35.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 33.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 37.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 40.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 45.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 49.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 54.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 53.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 54.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 54.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 43.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 40.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 41.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 52.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 53.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 49.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 44.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 47.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 38.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 40.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 34.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 42.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 40.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 38.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 40.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 52.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 50.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 47.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 42.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 49.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 49.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 42.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 38.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 47.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 48.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 19.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 19.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 40.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 41.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 42.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 41.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 51.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 47.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 51.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 50.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 47.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 49.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 42.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 46.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 33.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 36.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 38.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 41.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 45.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 49.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 52.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 54.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 55.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 49.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 53.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 41.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 43.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 49.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 53.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 53.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 47.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 44.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 38.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 40.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 35.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 48.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 48.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 38.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 52.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 47.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 53.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 50.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 50.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 43.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 38.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 43.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 43.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 48.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 47.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 48.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 19.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 20.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 43.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 47.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 43.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 52.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 52.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 49.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 48.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 50.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 50.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 37.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 34.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 38.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 41.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 45.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 54.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 52.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 49.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 53.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 55.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 51.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 42.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 44.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 54.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 51.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 54.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 49.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 46.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 39.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 41.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 35.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 48.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 42.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 39.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 41.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 55.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 54.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 43.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 50.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 43.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 43.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 43.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 38.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 42.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 48.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 48.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 48.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 19.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 21.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 43.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 42.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 48.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 43.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 53.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 53.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 52.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 51.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 47.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 38.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 37.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 34.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 41.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 54.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 52.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 54.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 51.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 55.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 42.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 44.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 51.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 55.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 55.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 45.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 49.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 46.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 36.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 40.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 42.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 43.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 40.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 42.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 56.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 52.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 58.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 43.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 50.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 51.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 44.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 44.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 39.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 42.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 44.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 20.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 19.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 43.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 43.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 51.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 54.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 54.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 53.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 53.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 51.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 37.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 41.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 40.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 42.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 48.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 55.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 50.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 54.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 57.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 55.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 49.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 42.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 46.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 45.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 56.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 56.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 53.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 47.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

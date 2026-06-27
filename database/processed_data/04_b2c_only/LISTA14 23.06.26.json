@@ -1,0 +1,1658 @@
+[
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 9.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 9.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 11.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - RESFRIADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 11.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 12.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 12.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 11.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 11.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 11.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 9.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 9.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 9.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 11.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 12.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - RESFRIADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 12.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 12.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 12.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 11.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 9.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 8.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 11.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 10.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - RESFRIADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 11.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 12.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 12.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 13.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 11.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 9.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 9.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 11.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 9.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 10.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 9.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 9.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 10.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 9.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 10.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 9.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 9.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 9.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 10.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 9.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 11.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 9.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 9.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 9.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 10.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 9.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 10.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 9.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 25.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 28.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 29.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 29.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 28.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 30.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 30.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 15.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 12.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO RESF",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 20.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 12.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 13.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 20.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 16.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 12.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO RESF",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 21.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 13.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 14.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 19.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 16.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 12.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO RESF",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 22.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 13.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 14.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 19.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 17.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 13.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 14.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 15.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 18.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 16.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 13.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 14.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 15.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 19.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 16.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 13.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 14.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 15.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 19.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 16.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 13.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 14.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 15.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 18.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 14.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CEBOLA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 0.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 0.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 0.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

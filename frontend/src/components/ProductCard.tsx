@@ -1,7 +1,16 @@
 import { useState } from 'react'
-import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react'
-import type { ProductSeasonality } from '../types'
-import { getProdutoEmoji } from '../types'
+import { CheckCircle2, MinusCircle, XCircle } from 'lucide-react'
+import type { ProdutoVarejo } from '../types/domain'
+
+const PRODUTO_EMOJI: Record<string, string> = {
+  ARROZ: '🍚', BANANA: '🍌', BATATA: '🥔', CAFE: '☕',
+  CEBOLA: '🧅', CENOURA: '🥕', FEIJAO: '🫘', LARANJA: '🍊',
+  LEITE: '🥛', MACA: '🍎', MANDIOCA: '🌿', MILHO: '🌽',
+  OVO: '🥚', REPOLHO: '🥬', SOJA: '🫘', TOMATE: '🍅',
+  UVA: '🍇', ALFACE: '🥬', BETERRABA: '🥗', PIMENTAO: '🫑',
+  FRANGO: '🍗', CARNE: '🥩', QUEIJO: '🧀', IOGURTE: '🥛',
+  OLEO: '🫒', ACUCAR: '🍚', FARINHA: '🌾', MACARRAO: '🍝',
+}
 
 type StatusConfig = {
   bg: string
@@ -9,7 +18,7 @@ type StatusConfig = {
   text: string
   label: string
   icon: React.ReactNode
-  opacity: string
+  imgClass: string
 }
 
 const STATUS_MAP: Record<string, StatusConfig> = {
@@ -19,15 +28,15 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     text: 'text-sazonal-verde-700',
     label: 'Melhor Época!',
     icon: <CheckCircle2 className="h-5 w-5 text-sazonal-verde-600" aria-hidden />,
-    opacity: 'opacity-100',
+    imgClass: 'opacity-100',
   },
   AMARELO: {
     bg: 'bg-sazonal-amarelo-50',
     border: 'border-sazonal-amarelo-400',
     text: 'text-sazonal-amarelo-600',
     label: 'Preço Normal',
-    icon: <AlertTriangle className="h-5 w-5 text-sazonal-amarelo-600" aria-hidden />,
-    opacity: 'opacity-100',
+    icon: <MinusCircle className="h-5 w-5 text-sazonal-amarelo-600" aria-hidden />,
+    imgClass: 'opacity-100',
   },
   VERMELHO: {
     bg: 'bg-sazonal-vermelho-50',
@@ -35,55 +44,68 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     text: 'text-sazonal-vermelho-600',
     label: 'Péssima Época',
     icon: <XCircle className="h-5 w-5 text-sazonal-vermelho-600" aria-hidden />,
-    opacity: 'opacity-60',
+    imgClass: 'opacity-60 grayscale-[50%]',
   },
   INSUFICIENTE: {
     bg: 'bg-gray-50',
     border: 'border-gray-300',
     text: 'text-gray-500',
     label: 'Dados Insuficientes',
-    icon: null,
-    opacity: 'opacity-80',
+    icon: <MinusCircle className="h-5 w-5 text-gray-400" aria-hidden />,
+    imgClass: 'opacity-80',
   },
 }
 
-function getProductImageUrl(id: number): string {
-  return `https://cdn.querocomprar.com/produtos/${id}.webp`
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 }
 
-export function ProductCardSkeleton() {
-  return (
-    <div className="animate-pulse-soft rounded-xl border-2 border-gray-200 bg-white p-4 shadow-sm">
-      <div className="mx-auto mb-3 h-20 w-20 rounded-full bg-gray-200" />
-      <div className="mx-auto mb-2 h-4 w-24 rounded bg-gray-200" />
-      <div className="mx-auto h-3 w-32 rounded bg-gray-200" />
-    </div>
-  )
+function getCdnUrl(name: string): string {
+  const slug = slugify(name)
+  return `https://cdn.querocomprar.com/produtos/alimento_varejo/${slug}.webp`
+}
+
+function getEmoji(name: string): string {
+  const key = name
+    .toUpperCase()
+    .replace(/[^A-Z ]/g, '')
+    .trim()
+    .split(/\s+/)[0] ?? ''
+  return PRODUTO_EMOJI[key] ?? '🛒'
 }
 
 interface ProductCardProps {
-  product: ProductSeasonality
+  product: ProdutoVarejo
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   const [imgFailed, setImgFailed] = useState(false)
   const config = STATUS_MAP[product.status_cor] ?? STATUS_MAP.INSUFICIENTE
-  const emoji = getProdutoEmoji(product.nome_produto)
+  const emoji = getEmoji(product.nome_produto)
 
   return (
     <div
-      className={`rounded-xl border-2 p-4 shadow-sm transition-shadow hover:shadow-md ${config.bg} ${config.border} ${config.opacity}`}
+      className={`rounded-xl border-2 p-4 shadow-sm transition-shadow hover:shadow-md ${config.bg} ${config.border}`}
     >
       <div className="mb-3 flex justify-center">
         {imgFailed ? (
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-3xl">
-            <span role="img" aria-label={product.nome_produto}>{emoji}</span>
+          <div
+            className={`flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-3xl ${config.imgClass}`}
+            role="img"
+            aria-label={product.nome_produto}
+          >
+            {emoji}
           </div>
         ) : (
           <img
-            src={getProductImageUrl(product.id_produto)}
+            src={getCdnUrl(product.nome_produto)}
             alt={product.nome_produto}
-            className="h-20 w-20 rounded-full object-cover"
+            className={`h-20 w-20 rounded-full object-cover ${config.imgClass}`}
             loading="lazy"
             onError={() => setImgFailed(true)}
           />
@@ -96,8 +118,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <div className={`flex items-center justify-center gap-1 text-xs font-medium ${config.text}`}>
         {config.icon}
-        <span>{config.label}</span>
+        <span>{config.label}{product.usou_fallback_12m ? '*' : ''}</span>
       </div>
+
+      {product.usou_fallback_12m && (
+        <p className="mt-2 text-center text-[10px] leading-tight text-gray-400">
+          * Comparação baseada na média dos últimos 12 meses (novo produto).
+        </p>
+      )}
     </div>
   )
 }

@@ -1,9 +1,15 @@
 {
   "devDependencies": {
+    "concurrently": "^9.2.3",
     "husky": "^9.1.7",
     "typescript": "^6.0.3"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "install:all": "npm install && npm --prefix frontend install && pip install -r backend/requirements.txt",
+    "dev:backend": "python -m uvicorn backend.app.main:app --reload --port 8000",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:all": "concurrently -n BE,FE -c cyan,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "npm --prefix frontend run build"
   }
 }

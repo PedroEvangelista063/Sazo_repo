@@ -1,5 +1,5 @@
-import { Dashboard } from './pages/Dashboard'
+import { SupermercadoView } from './pages/SupermercadoView'
 
 export default function App() {
-  return <Dashboard />
+  return <SupermercadoView />
 }

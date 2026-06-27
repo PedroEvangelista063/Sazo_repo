@@ -19,54 +19,74 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class MunicipioResponse(BaseModel):
-    """Retorno do endpoint ``GET /api/v1/municipios``.
+class CacheClearResponse(BaseModel):
+    success: bool
+    message: str
 
-    A API retorna a lista de municípios disponı́veis para uma UF.
-    O frontend usa ``municipio_id`` para fazer a query de sazonalidade.
-    """
+    model_config = ConfigDict(frozen=True)
 
-    municipio: str = Field(
-        ..., description="Nome do município (ex: 'SÃO PAULO')"
-    )
-    municipio_id: str | None = Field(
-        None, description="Código IBGE do município (7 dígitos)"
-    )
 
-    model_config = ConfigDict(from_attributes=True, frozen=True)
+class MunicipioListResponse(BaseModel):
+    """Retorno do endpoint ``GET /api/v1/municipios``."""
+
+    data: list[str]
+    total: int
+
+    model_config = ConfigDict(frozen=True)
 
 
 class SazonalidadeResponse(BaseModel):
     """Retorno do endpoint ``GET /api/v1/sazonalidade``.
-
-    Este é o contrato central entre a Cozinha e a Sala de Estar.
-    **NENHUM CAMPO DE PREÇO EM REAIS DEVE EXISTIR AQUI.**
 
     O frontend React usa ``status_cor`` para renderizar os cartões:
         - ``VERDE``    → fundo verde + texto "Melhor Época!"
         - ``VERMELHO`` → fundo vermelho + opacidade reduzida (evite)
         - ``AMARELO``  → fundo amarelo + texto "Preço estável"
 
-    Attributes:
-        id_sazonalidade: Identificador único do registro.
-        produto: Nome do produto (ex: "TOMATE SALADA").
-        status_cor: Semáforo — VERDE, AMARELO ou VERMELHO.
-        fonte: Origem do dado ("municipio" ou "uf").
+    Nota: O campo ``preco_referencia_2025`` permite ao frontend calcular
+    a variação percentual ("X% mais barato que em 2025") sem expor
+    preços em reais como valor principal.
     """
 
-    id_sazonalidade: int
-    produto: str = Field(..., description="Nome do produto")
+    id_produto: int = Field(..., description="Identificador único do produto")
+    nome_produto: str = Field(..., description="Nome do produto")
+    icone_url: str | None = Field(None, description="URL do ícone do produto")
     uf: str = Field(..., min_length=2, max_length=2)
     municipio: str | None = Field(None, description="Nome do município")
-    ano: int = Field(..., ge=2000, le=2100)
-    mes: int = Field(..., ge=1, le=12)
+    municipio_id: str | None = Field(None, description="Código IBGE do município")
+    ano: int = Field(..., ge=2000, le=2100, description="Ano do preço atual (derivado de data_referencia_atual)")
+    mes: int = Field(..., ge=1, le=12, description="Mês do preço atual (derivado de data_referencia_atual)")
+    data_referencia_atual: str = Field(
+        ..., pattern=r"^\d{4}-\d{2}$",
+        description="Data do último preço registrado (YYYY-MM)",
+    )
+    preco_referencia: float | None = Field(
+        None, description="Preço âncora: COALESCE(media 2025, fallback 12m)"
+    )
+    preco_atual: float | None = Field(
+        None, description="Último preço registrado do produto na localidade"
+    )
+    usou_fallback_12m: bool = Field(
+        ..., description="True se a âncora veio do fallback 12m (produto sem 2025)"
+    )
     status_cor: str = Field(
-        ..., pattern=r"^(VERDE|AMARELO|VERMELHO)$",
+        ..., pattern=r"^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$",
         description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra)",
     )
     fonte: str | None = Field(None, pattern=r"^(municipio|uf)$")
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
+
+
+class SazonalidadeListResponse(BaseModel):
+    """Retorno paginado do endpoint ``GET /api/v1/sazonalidade``."""
+
+    data: list[SazonalidadeResponse]
+    total: int
+    pagina: int
+    por_pagina: int
+
+    model_config = ConfigDict(frozen=True)
 
 
 class ErrorResponse(BaseModel):
@@ -80,21 +100,7 @@ class ErrorResponse(BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
-# ══════════════════════════════════════════════════════════════════════
-# Auditoria interna (não exposto ao frontend B2C)
-# ══════════════════════════════════════════════════════════════════════
-
 class SazonalidadeComPreco(SazonalidadeResponse):
-    """Schema interno com preço — APENAS PARA USO INTERNO (logs, admin).
+    """Schema interno com preço — APENAS PARA USO INTERNO (logs, admin)."""
 
-    NUNCA retorne este schema para o frontend B2C. Ele existe apenas para
-    que a Cozinha possa logar diagnósticos sem expor dados sensı́veis.
-    """
-
-    preco_medio: float | None = Field(None, description="APENAS USO INTERNO")
-    media_movel_12m: float | None = Field(
-        None, description="APENAS USO INTERNO"
-    )
-    indice_sazonalidade: float | None = Field(
-        None, description="APENAS USO INTERNO"
-    )
+    model_config = ConfigDict(from_attributes=True, frozen=True)

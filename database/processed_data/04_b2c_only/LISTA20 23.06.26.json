@@ -1,0 +1,3874 @@
+[
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 10.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 7.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 6.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 14.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - LONGA VIDA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 10.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 6.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 6.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 13.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - LONGA VIDA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 11.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 13.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 8.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 4.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 8.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 10.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 4.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 7.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 7.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 8.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 7.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 7.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 4.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 8.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 10.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 13.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 7.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 7.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 4.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 8.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 9.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 10.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 5.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 5.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 5.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 5.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 5.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 5.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 9.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 13.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 9.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 9.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 7.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 7.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 7.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 7.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 9.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 10.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 6.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 0.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 8.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 5.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 8.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 6.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 6.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 8.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 11.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - LONGA VIDA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 5.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 4.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 7.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 9.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.14,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.82,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 7.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 9.47,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 7.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 4.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 9.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 7.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 8.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 8.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 8.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 8.79,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 9.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 9.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.46,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 4.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 8.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 8.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 9.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 7.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 11.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 9.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 7.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 10.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 6.99,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 10.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 7.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 10.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 9.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 9.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 6.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 7.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 12.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.35,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 10.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 7.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 8.06,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 6.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 10.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 9.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 10.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 7.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 12.36,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 10.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 8.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 10.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 11.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 7.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 10.49,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 8.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 12.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 10.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 8.66,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 7.78,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.01,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 11.4,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 10.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 12.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 7.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 8.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 7.77,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 11.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.02,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 10.45,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 13.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 10.98,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 10.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 9.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 10.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 7.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 9.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 14.15,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.29,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 10.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.73,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 13.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.41,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 12.27,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 10.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 13.55,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 11.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 9.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 6.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 6.54,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 9.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 5.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 6.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 6.37,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 9.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 10.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 8.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 7.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 10.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 8.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 8.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 6.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 10.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 6.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 8.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 11.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

@@ -6,7 +6,11 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://role_api_reader:senha@localhost:5432/quero_comprar"
     redis_url: str = ""
     cache_ttl_seconds: int = 86400
-    cors_origins: list[str] = ["http://localhost:3000"]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
     pool_min_size: int = 10
     pool_max_size: int = 50
     api_v1_prefix: str = "/api/v1"

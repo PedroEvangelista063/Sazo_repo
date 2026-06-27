@@ -4,7 +4,7 @@
 
 | Documento | Descrição |
 |---|---|
-| [README.md](./README.md) | Visão geral, setup, semáforo de sazonalidade |
+| [README.md](./README.md) | Visão geral, setup, user journey, semáforo de sazonalidade |
 | [AGENTS.md](./AGENTS.md) | Regras da casa para OpenCode/GGA |
 
 ## Arquitetura
@@ -14,67 +14,187 @@
 | [Plano Técnico](./quero_comprar_plano_tecnico.md) | Arquitetura completa — Fase 1, 2 e 3 |
 | [Fase 2 — Autocura](./fase2_arquitetura_autocura.md) | Observability, Self-Healing DB, FastAPI |
 
-## Database
+---
+
+## 🏗️ Taxonomia do Projeto (Micro-Monorepo)
+
+O projeto segue o padrão de **micro-monorepo**: três serviços independentes que se comunicam via PostgreSQL.
+
+```
+quero_comprar_vg/
+├── pipeline/     # Garagem  — ETL Worker (Polars, Python puro)
+├── database/     # Despensa — DDLs, Migrations, Triggers (PostgreSQL)
+├── backend/      # Cozinha  — FastAPI (asyncpg, Pydantic)
+├── frontend/     # Sala de Estar — PWA React (Vite, Zustand, TanStack Query)
+└── docs/         # Plantas da Casa — documentação
+```
+
+---
+
+## 🚗 Garagem (Pipeline de Ingestão — ETL Worker)
+
+**Propósito**: Ingerir dados brutos CONAB, limpar, categorizar e carregar no banco ou em arquivos estáticos.
+
+**Regras**:
+- Nunca usa pandas → Polars para performance
+- COPY ou `execute_values` → nunca INSERT linha por linha
+- Motor semântico de regex separa `ALIMENTO_VAREJO` de `MAQUINARIO_FERRAMENTA` (tratores não entram no app B2C)
+- Categoria `ALIMENTO_VAREJO` é a única que chega ao consumidor
+- Variação de formato CONAB: arquivos podem ter 9 ou 11 colunas e podem ou não incluir linha de cabeçalho. O motor detecta automaticamente via `_ler_csv()` e normaliza para o schema padrão.
 
 | Caminho | Descrição |
 |---|---|
-| `database/01_ddl_medalhao.sql` | DDL: schemas raw/staging/mart, tabelas, índices, roles |
-| `database/02_observability.sql` | Observabilidade: schema ops, erro DDL, auditoria LLM |
-
-## Pipeline
-
-| Caminho | Descrição |
-|---|---|
-| `pipeline/ingestao_conab.py` | Pipeline ETL: download → transform → COPY |
-| `pipeline/transform.py` | Limpeza e normalização com Polars |
+| `pipeline/ingestao_conab.py` | Pipeline principal: extract → transform → load → medalhão |
 | `pipeline/seasonality.py` | Cálculo do IS por município + fallback UF |
-| `pipeline/load.py` | UPSERT em lote no PostgreSQL |
 | `pipeline/ghost_dba_agent.py` | Agente de autocura com LLM |
-| `pipeline/requirements.txt` | Dependências Python do pipeline |
-| `pipeline/tests/` | Testes unitários (validação, sazonalidade) |
+| `pipeline/audit_local_db.py` | Auditoria de integridade: compara TXT locais vs banco |
+| `pipeline/process_to_files.py` | **NOVO** — ETL offline: processa LISTA*.txt → JSON/Parquet/SQL estáticos |
+| `pipeline/ingest.py` | Módulo auxiliar de download com httpx |
+| `pipeline/load.py` | (DEPRECATED) Carga antiga em tabelas legadas |
+| `pipeline/run.py` | (DEPRECATED) Redireciona para ingestao_conab |
+| `pipeline/transform.py` | (DEPRECATED) Fundido em ingestao_conab.py |
+| `pipeline/requirements.txt` | Dependências: polars, httpx, psycopg2-binary, tenacity |
+| `pipeline/tests/` | Testes unitários (validação, sazonalidade, baseline) |
 
-## Backend (FastAPI)
+---
+
+## 🗄️ Despensa (Banco de Dados — PostgreSQL 16+)
+
+**Propósito**: Esquema Medalhão (raw → staging → mart) com observabilidade e artefatos estáticos.
+
+### Banco Online
+
+Acessado pelo pipeline (`ingestao_conab.py`) e pela API FastAPI.
+
+**Regras**:
+- `role_etl_writer` para pipeline, `role_api_reader` para API (SELECT only)
+- Semáforo calculado EXCLUSIVAMENTE na stored procedure — o frontend nunca calcula nada
+- Frontend B2C nunca recebe preço em R$ — apenas `status_cor`
+- Migration管理器: scripts SQL versionados (01, 02, 03...)
+
+| Migration | Descrição |
+|---|---|
+| `database/01_ddl_medalhao.sql` | Schemas raw/staging/mart, tabelas, índices, roles, SP de sazonalidade (rolling window) |
+| `database/02_observability.sql` | Schema `ops` — controle_erros_ddl, audit_llm_queries, config_agente |
+| `database/03_ajustes_fase4.sql` | Dimensão produto: `categoria_b2c`, `classificao_produto`, `conab_id_produto`; trigger de anomalia corrigida; MV com filtro ALIMENTO_VAREJO |
+| `database/04_reestruturacao_b2c.sql` | Reestruturação B2C com documentação das regras da Sala de Estar |
+| `database/05_recalibracao_baseline_2025.sql` | Baseline 2025 com fallback híbrido de 12 meses. Abandono da média móvel contínua. SP `sp_calcular_sazonalidade_baseline()` com 4 CTEs |
+| `database/06_audit_triggers.sql` | **NOVO** — Tabela `ops.audit_logs` + trigger de mudança de `status_cor` em `mart.sazonalidade_produto` |
+
+### Artefatos Estáticos (Camada de Auditoria)
+
+Gerados pelo `process_to_files.py` — ETL offline que não depende de conexão PostgreSQL. Útil para CI, validação local, e geração de relatórios.
+
+```
+database/processed_data/
+├── 01_raw/              JSON/Parquet brutos por arquivo LISTA
+├── 02_cleaned/          Dados limpos e normalizados
+├── 03_categorized/      Com categoria_b2c (ALIMENTO_VAREJO / B2B)
+├── 04_b2c_only/         Apenas ALIMENTO_VAREJO (o que vai pro app)
+├── 05_aggregated/       Agregado mensal por produto+UF
+├── 06_seasonality/      Sazonalidade calculada (baseline 2025 + fallback 12m)
+├── sql/                 Scripts INSERT para PostgreSQL
+├── consolidated.parquet Dados B2C completos em Parquet
+├── summary.json         Resumo consolidado
+└── ETL_REPORT.md        Relatório legível
+```
+
+**Fluxo do motor offline:** Raw → Cleaned → Categorized → B2C_Only → Aggregated → Seasonality
+
+```
+LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c_only
+                                                                        ↓
+                                                                05_aggregated
+                                                                        ↓
+                                                              06_seasonality
+                                                                        ↓
+                                                            sql/*.sql + summary.json
+```
+
+**Nota sobre formato CONAB:** Os arquivos `LISTA*.txt` da CONAB não seguem um schema único. Eles variam entre 9 colunas (sem município/IBGE) e 11 colunas (com município/IBGE). Além disso, alguns incluem cabeçalho e outros não. A função `_ler_csv()` em `process_to_files.py` detecta automaticamente os 4 casos e normaliza para colunas padronizadas.
+
+---
+
+## 🍳 Cozinha (Backend — FastAPI)
+
+**Propósito**: API RESTful B2C — fornece sazonalidade filtrada para o PWA.
+
+**Regras**:
+- URLs no plural (`/api/v1/sazonalidade`, `/api/v1/municipios`)
+- Conexão via **connection string URI** `postgresql://user:pass@host:port/dbname`
+- Cache in-memory thread-safe com TTL (24h)
+- Nunca expõe preço em R$ como campo principal — `preco_referencia` e `preco_atual` existem apenas para o schema interno
+- Rate limiting por IP (60 req/min)
+- Zero ORM — raw SQL com asyncpg
 
 | Caminho | Descrição |
 |---|---|
 | `backend/app/main.py` | Bootstrap FastAPI com CORS, lifespan, routers |
-| `backend/app/core/config.py` | Settings via pydantic-settings (env_file) |
+| `backend/app/core/config.py` | Settings via pydantic-settings (`DATABASE_URL` do `.env`) |
 | `backend/app/core/cache.py` | Cache in-memory thread-safe com TTL |
 | `backend/app/core/ratelimit.py` | Rate limiting por IP |
-| `backend/app/db/session.py` | Pool asyncpg (10-50 conexões) |
+| `backend/app/db/session.py` | Pool asyncpg (10-50 conexões) via connection string URI |
 | `backend/app/schemas/responses.py` | Pydantic V2: SazonalidadeResponse, MunicipioListResponse |
-| `backend/app/api/v1/endpoints/produtos.py` | `GET /api/v1/sazonalidade` com filtros |
+| `backend/app/api/v1/endpoints/produtos.py` | `GET /api/v1/sazonalidade` com filtros por UF, município, mês |
 | `backend/app/api/v1/endpoints/municipios.py` | `GET /api/v1/municipios?uf=SP` |
 | `backend/app/api/v1/endpoints/internal.py` | `GET/POST /api/v1/_internal/cache-clear` |
-| `backend/requirements.txt` | Dependências Python do backend |
+| `backend/requirements.txt` | Dependências: fastapi, uvicorn, asyncpg, pydantic-settings |
 
-## Frontend (PWA)
+---
+
+## 🛋️ Sala de Estar (Frontend — PWA React)
+
+**Propósito**: Aplicativo B2C instalável (PWA) — funcionamento offline-first.
+
+**Regras**:
+- **Nunca exibe R$** — apenas o semáforo (🟢🟡🔴)
+- `staleTime` de 12h para sazonalidade, 24h para municípios
+- Service Worker com Cache-First (assets) e Stale-While-Revalidate (API)
+- IndexedDB para cache persistente (em vez de localStorage)
+- Background Sync para ações offline futuras
+- Mobile-first com skeletons (sem spinners bloqueantes)
+
+### Fluxo de Interação (User Journey Pipeline)
+
+O usuário percorre 4 etapas implementadas dentro da `SupermercadoView`:
+
+| Etapa | Funcionalidade | Descrição |
+|---|---|---|
+| 1. 📍 Localização | `LocationModal` | Modal de onboarding: seleção de UF e Município |
+| 2. 🛒 Lista | Seletor de produtos (inline) | Botões toggle com +/X; filtro por categorias de varejo |
+| 3. 📅 Mês | Seletor de período (inline) | Chips de mês extraídos do `data_referencia_atual` da API |
+| 4. 🚦 Resultado | Grid de `ProductCard` (inline) | Ordenação por status: 🟢 VERDE → 🟡 AMARELO → 🔴 VERMELHO |
+
+### Arquivos
 
 | Caminho | Descrição |
 |---|---|
-| `frontend/vite.config.ts` | Vite + PWA Plugin (Service Worker) + proxy dev |
-| `frontend/tailwind.config.js` | Cores sazonais personalizadas |
-| `frontend/src/store/useUserStore.ts` | Zustand + persist (UF/Cidade no localStorage) |
+| `frontend/vite.config.ts` | Vite + PWA Plugin (Manifest, Workbox, Background Sync) + manualChunks |
+| `frontend/tailwind.config.js` | Cores sazonais personalizadas (verde/amarelo/vermelho) |
+| `frontend/src/store/useUserStore.ts` | Zustand + persist via IndexedDB (idb-keyval) — UF/Cidade |
 | `frontend/src/services/api.ts` | Axios + hooks TanStack Query |
+| `frontend/src/components/LocationModal.tsx` | Modal de onboarding: UF dropdown + city datalist + prefetch |
 | `frontend/src/components/ProductCard.tsx` | Card com semáforo visual + emoji fallback + skeleton |
-| `frontend/src/components/LocationSelector.tsx` | UF dropdown + city datalist + prefetch |
-| `frontend/src/pages/Dashboard.tsx` | Grid ordenado (VERDE → AMARELO → VERMELHO) |
-| `frontend/src/types.ts` | Interfaces, UF_LIST, emoji map, STATUS_ORDER |
+| `frontend/src/components/SkeletonCard.tsx` | Skeleton loading para cards |
+| `frontend/src/pages/SupermercadoView.tsx` | View principal única: onboarding → multi-select → mês → dashboard |
+| `frontend/src/hooks/useHortifruti.ts` | Hook TanStack Query para dados de sazonalidade |
+| `frontend/src/hooks/useMunicipios.ts` | Hook TanStack Query para lista de municípios |
+| `frontend/src/types/domain.ts` | Interfaces TypeScript: ProdutoVarejo, StatusCor, SazonalidadeResponse |
+| `frontend/src/types/index.ts` | Barrel export dos tipos |
 
-## Mapa do Projeto
+---
 
-```
-quero_comprar_vg/
-├── pipeline/               # ETL + Agentes Python
-├── backend/                # FastAPI B2C
-├── frontend/               # React + Vite PWA
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   └── src/
-│       ├── components/     # ProductCard, LocationSelector
-│       ├── pages/          # Dashboard
-│       ├── services/       # api.ts (Axios + React Query)
-│       └── store/          # useUserStore (Zustand)
-├── database/               # DDLs PostgreSQL
-└── docs/                   # Documentação
+## 🔍 Auditoria de Integridade
+
+Para verificar se os dados locais (LISTA*.txt) bateram corretamente no banco:
+
+```bash
+# Executa o script de auditoria local
+python -m pipeline.audit_local_db
+
+# O script:
+#   a) Conta linhas ALIMENTO_VAREJO nos TXT locais
+#   b) Conta linhas em staging.fact_precos_mensais
+#   c) Testa o endpoint /api/v1/sazonalidade
+#   d) Exit code 0 se OK, 1 se divergência
 ```

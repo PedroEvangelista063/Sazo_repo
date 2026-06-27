@@ -1,0 +1,1170 @@
+[
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 5.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 9.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 6.53,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.18,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 9.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 6.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.86,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.72,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 4.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 9.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 5.39,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 5.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 9.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 6.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 8.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 4.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 6.3,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 10.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 7.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 8.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 4.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 7.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 10.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 8.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 8.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 4.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 6.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 7.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 1.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 10.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 7.51,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 4.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA BR",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 8.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 4.28,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 6.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 5.32,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 3.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 3.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 2.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA BR",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "MG",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 4.6,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 6.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 7.19,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 3.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 2.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 3.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 7.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 4.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 6.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 9.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 3.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 3.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 2.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 1.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 7.23,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 5.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 6.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 9.67,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 2.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 3.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 3.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 1.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 7.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 4.89,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 6.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 9.31,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 2.43,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 3.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 3.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 2.16,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 1.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

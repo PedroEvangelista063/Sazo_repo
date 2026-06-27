@@ -1,0 +1,5272 @@
+[
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SE",
+    "preco_referencia": 41.88249999999999,
+    "preco_atual": 45.49,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "MG",
+    "preco_referencia": 2.7090476190476194,
+    "preco_atual": 5.82,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "MA",
+    "preco_referencia": 4.148571428571429,
+    "preco_atual": 4.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "MG",
+    "preco_referencia": 4.489285714285715,
+    "preco_atual": 4.56,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "PB",
+    "preco_referencia": 0.7675000000000001,
+    "preco_atual": 0.46,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "MG",
+    "preco_referencia": 3.437142857142857,
+    "preco_atual": 2.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "BA",
+    "preco_referencia": 15.758571428571429,
+    "preco_atual": 17.09,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "SC",
+    "preco_referencia": 0.7725000000000001,
+    "preco_atual": 0.77,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "AC",
+    "preco_referencia": 6.103571428571428,
+    "preco_atual": 8.2,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "MS",
+    "preco_referencia": 3.1542857142857152,
+    "preco_atual": 5.28,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "PB",
+    "preco_referencia": 6.097142857142858,
+    "preco_atual": 6.11,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "TO",
+    "preco_referencia": 5.9,
+    "preco_atual": 11.25,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SP",
+    "preco_referencia": 17.548571428571428,
+    "preco_atual": 19.78,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "RS",
+    "preco_referencia": 0.805,
+    "preco_atual": 0.78,
+    "data_referencia_atual": "2026-03",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "DF",
+    "preco_referencia": 0.895,
+    "preco_atual": 0.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RR",
+    "preco_referencia": 44.3025,
+    "preco_atual": 46.7,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MT",
+    "preco_referencia": 19.427142857142858,
+    "preco_atual": 21.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "PA",
+    "preco_referencia": 1.589904761904762,
+    "preco_atual": 1.74,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "AL",
+    "preco_referencia": 2.5982142857142856,
+    "preco_atual": 3.34,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SP",
+    "preco_referencia": 51.339999999999996,
+    "preco_atual": 56.07,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "MT",
+    "preco_referencia": 7.242142857142858,
+    "preco_atual": 6.64,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "CE",
+    "preco_referencia": 45.904999999999994,
+    "preco_atual": 52.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RJ",
+    "preco_referencia": 17.767142857142854,
+    "preco_atual": 20.85,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "SC",
+    "preco_referencia": 5.2942857142857145,
+    "preco_atual": 5.11,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AC",
+    "preco_referencia": 35.4075,
+    "preco_atual": 40.27,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "PA",
+    "preco_referencia": 3.7971428571428567,
+    "preco_atual": 4.09,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AL",
+    "preco_referencia": 45.27,
+    "preco_atual": 49.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "ES",
+    "preco_referencia": 6.715714285714286,
+    "preco_atual": 6.02,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - TRASEIRA",
+    "uf": "DF",
+    "preco_referencia": 35.01571428571429,
+    "preco_atual": 35.0,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "BA",
+    "preco_referencia": 0.8425,
+    "preco_atual": 0.47,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "TO",
+    "preco_referencia": 9.89,
+    "preco_atual": 9.89,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "MA",
+    "preco_referencia": 6.35,
+    "preco_atual": 6.35,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "PR",
+    "preco_referencia": 1.3771428571428572,
+    "preco_atual": 1.35,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE OVINA - CARCAÃA",
+    "uf": "SE",
+    "preco_referencia": 28.68142857142857,
+    "preco_atual": 28.71,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "AL",
+    "preco_referencia": 3.454285714285714,
+    "preco_atual": 3.42,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RS",
+    "preco_referencia": 52.48,
+    "preco_atual": 54.87,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "DF",
+    "preco_referencia": 3.481428571428571,
+    "preco_atual": 4.87,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "DF",
+    "preco_referencia": 41.894999999999996,
+    "preco_atual": 43.72,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "PE",
+    "preco_referencia": 5.098571428571428,
+    "preco_atual": 5.44,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "RS",
+    "preco_referencia": 0.5,
+    "preco_atual": 0.5,
+    "data_referencia_atual": "2026-03",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PIMENTAO - VERDE",
+    "uf": "ES",
+    "preco_referencia": 4.743333333333333,
+    "preco_atual": 4.0,
+    "data_referencia_atual": "2025-11",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PA",
+    "preco_referencia": 15.741428571428571,
+    "preco_atual": 16.92,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "MA",
+    "preco_referencia": 6.19,
+    "preco_atual": 5.95,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AP",
+    "preco_referencia": 9.0475,
+    "preco_atual": 10.98,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "AM",
+    "preco_referencia": 5.942142857142857,
+    "preco_atual": 7.77,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SC",
+    "preco_referencia": 4.359999999999999,
+    "preco_atual": 4.85,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "MS",
+    "preco_referencia": 9.16,
+    "preco_atual": 9.16,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "PE",
+    "preco_referencia": 5.655714285714287,
+    "preco_atual": 6.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "MS",
+    "preco_referencia": 9.385714285714286,
+    "preco_atual": 9.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "BA",
+    "preco_referencia": 6.055714285714285,
+    "preco_atual": 5.35,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "AM",
+    "preco_referencia": 4.400714285714286,
+    "preco_atual": 2.783333333333333,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "DF",
+    "preco_referencia": 1.2357142857142855,
+    "preco_atual": 3.21,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "BA",
+    "preco_referencia": 41.315,
+    "preco_atual": 45.36,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "MS",
+    "preco_referencia": 1.88625,
+    "preco_atual": 1.7066666666666668,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "CE",
+    "preco_referencia": 20.560000000000002,
+    "preco_atual": 21.65,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "PE",
+    "preco_referencia": 6.828571428571428,
+    "preco_atual": 6.34,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RS",
+    "preco_referencia": 48.33,
+    "preco_atual": 50.31,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "MA",
+    "preco_referencia": 0.7,
+    "preco_atual": 0.6,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RN",
+    "preco_referencia": 15.422857142857142,
+    "preco_atual": 15.04,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "RJ",
+    "preco_referencia": 4.99,
+    "preco_atual": 6.09,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "SE",
+    "preco_referencia": 6.96857142857143,
+    "preco_atual": 6.21,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "BA",
+    "preco_referencia": 0.6571428571428573,
+    "preco_atual": 0.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "AL",
+    "preco_referencia": 11.29,
+    "preco_atual": 11.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AP",
+    "preco_referencia": 43.2675,
+    "preco_atual": 45.96,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "CE",
+    "preco_referencia": 5.117857142857142,
+    "preco_atual": 4.88,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "ES",
+    "preco_referencia": 3.4428571428571426,
+    "preco_atual": 3.76,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "AP",
+    "preco_referencia": 7.4,
+    "preco_atual": 7.4,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "BA",
+    "preco_referencia": 3.474571428571429,
+    "preco_atual": 6.91,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RS",
+    "preco_referencia": 7.1000000000000005,
+    "preco_atual": 11.41,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "MA",
+    "preco_referencia": 5.627857142857143,
+    "preco_atual": 6.58,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "RO",
+    "preco_referencia": 6.296666666666667,
+    "preco_atual": 6.19,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AP",
+    "preco_referencia": 15.354999999999999,
+    "preco_atual": 16.49,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MG",
+    "preco_referencia": 45.135,
+    "preco_atual": 49.57,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "PA",
+    "preco_referencia": 0.81,
+    "preco_atual": 0.71,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "MG",
+    "preco_referencia": 4.4125,
+    "preco_atual": 9.82,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "SP",
+    "preco_referencia": 1.0474999999999999,
+    "preco_atual": 0.55,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MT",
+    "preco_referencia": 10.928571428571429,
+    "preco_atual": 10.53,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "AM",
+    "preco_referencia": 4.038571428571428,
+    "preco_atual": 3.66,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "GO",
+    "preco_referencia": 3.559285714285714,
+    "preco_atual": 6.66,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MA",
+    "preco_referencia": 7.2775,
+    "preco_atual": 7.17,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "RR",
+    "preco_referencia": 4.851428571428571,
+    "preco_atual": 4.2,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO",
+    "uf": "PR",
+    "preco_referencia": 2.045714285714286,
+    "preco_atual": 3.32,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "PI",
+    "preco_referencia": 5.8792857142857144,
+    "preco_atual": 5.29,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "GO",
+    "preco_referencia": 41.62,
+    "preco_atual": 44.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "CE",
+    "preco_referencia": 16.388571428571428,
+    "preco_atual": 16.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "BA",
+    "preco_referencia": 41.75,
+    "preco_atual": 45.9,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "CE",
+    "preco_referencia": 4.341428571428571,
+    "preco_atual": 10.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "MG",
+    "preco_referencia": 0.6142857142857142,
+    "preco_atual": 0.66,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "preco_referencia": 3.53,
+    "preco_atual": 2.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - LONGA VIDA",
+    "uf": "RS",
+    "preco_referencia": 4.443333333333333,
+    "preco_atual": 6.25,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RN",
+    "preco_referencia": 4.692857142857143,
+    "preco_atual": 10.233333333333334,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "DF",
+    "preco_referencia": 5.344285714285713,
+    "preco_atual": 8.873333333333333,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "RS",
+    "preco_referencia": 1.85,
+    "preco_atual": 1.8,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA",
+    "uf": "RS",
+    "preco_referencia": 0.6574285714285715,
+    "preco_atual": 0.4,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "RR",
+    "preco_referencia": 6.631428571428571,
+    "preco_atual": 6.3,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "SC",
+    "preco_referencia": 13.812857142857142,
+    "preco_atual": 14.79,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 PA",
+    "uf": "SC",
+    "preco_referencia": 3.8664285714285715,
+    "preco_atual": 3.06,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "AL",
+    "preco_referencia": 1.01,
+    "preco_atual": 1.32,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - ITALIANO",
+    "uf": "PR",
+    "preco_referencia": 3.2078571428571427,
+    "preco_atual": 6.32,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "RS",
+    "preco_referencia": 4.686428571428571,
+    "preco_atual": 4.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - DA TERRA",
+    "uf": "ES",
+    "preco_referencia": 3.5071428571428567,
+    "preco_atual": 3.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "SP",
+    "preco_referencia": 7.184642857142856,
+    "preco_atual": 10.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "PR",
+    "preco_referencia": 1.2519047619047619,
+    "preco_atual": 1.21,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PB",
+    "preco_referencia": 46.74,
+    "preco_atual": 48.94,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 58",
+    "uf": "RS",
+    "preco_referencia": 1.231038961038961,
+    "preco_atual": 1.21,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - PARBOILIZADO LONGO F",
+    "uf": "SP",
+    "preco_referencia": 4.367142857142857,
+    "preco_atual": 3.72,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "RS",
+    "preco_referencia": 2.7942857142857145,
+    "preco_atual": 1.4100000000000001,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RR",
+    "preco_referencia": 11.547142857142859,
+    "preco_atual": 11.02,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "BA",
+    "preco_referencia": 0.6557142857142857,
+    "preco_atual": 0.79,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "PI",
+    "preco_referencia": 10.86,
+    "preco_atual": 10.86,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "CE",
+    "preco_referencia": 7.456428571428572,
+    "preco_atual": 8.6,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RN",
+    "preco_referencia": 43.205,
+    "preco_atual": 47.35,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - AMARELA",
+    "uf": "RS",
+    "preco_referencia": 1.442,
+    "preco_atual": 1.58,
+    "data_referencia_atual": "2025-10",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PR",
+    "preco_referencia": 19.674285714285713,
+    "preco_atual": 19.19,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "TO",
+    "preco_referencia": 6.716428571428572,
+    "preco_atual": 9.85,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "AC",
+    "preco_referencia": 1.4225,
+    "preco_atual": 0.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "RR",
+    "preco_referencia": 4.1866666666666665,
+    "preco_atual": 1.24,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "SP",
+    "preco_referencia": 5.167857142857143,
+    "preco_atual": 4.8,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO ORGÃNICO(",
+    "uf": "RS",
+    "preco_referencia": 1.55,
+    "preco_atual": 1.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MA",
+    "preco_referencia": 38.260000000000005,
+    "preco_atual": 39.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "MS",
+    "preco_referencia": 3.6375,
+    "preco_atual": 7.35,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "GO",
+    "preco_referencia": 43.25,
+    "preco_atual": 46.14,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AC",
+    "preco_referencia": 12.897142857142857,
+    "preco_atual": 14.32,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "RO",
+    "preco_referencia": 3.6214285714285714,
+    "preco_atual": 4.37,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "RS",
+    "preco_referencia": 36.26285714285714,
+    "preco_atual": 35.15,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AP",
+    "preco_referencia": 42.4175,
+    "preco_atual": 46.07,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "PI",
+    "preco_referencia": 1.3728571428571428,
+    "preco_atual": 1.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "AP",
+    "preco_referencia": 4.886666666666667,
+    "preco_atual": 5.0,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "AL",
+    "preco_referencia": 6.169999999999999,
+    "preco_atual": 5.85,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "CE",
+    "preco_referencia": 5.515,
+    "preco_atual": 8.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "TO",
+    "preco_referencia": 6.055714285714286,
+    "preco_atual": 5.64,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "GO",
+    "preco_referencia": 2.177142857142857,
+    "preco_atual": 3.4,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SP",
+    "preco_referencia": 1.1325714285714288,
+    "preco_atual": 0.74,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "AP",
+    "preco_referencia": 3.117142857142857,
+    "preco_atual": 1.7400000000000002,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RO",
+    "preco_referencia": 7.6225,
+    "preco_atual": 11.9,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "PR",
+    "preco_referencia": 0.7975,
+    "preco_atual": 0.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "BA",
+    "preco_referencia": 11.38,
+    "preco_atual": 11.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "MA",
+    "preco_referencia": 3.435714285714286,
+    "preco_atual": 3.5,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "SC",
+    "preco_referencia": 4.02,
+    "preco_atual": 9.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "MG",
+    "preco_referencia": 6.6066666666666665,
+    "preco_atual": 6.66,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "SE",
+    "preco_referencia": 1.02625,
+    "preco_atual": 0.55,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PR",
+    "preco_referencia": 47.120000000000005,
+    "preco_atual": 47.9,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "AL",
+    "preco_referencia": 3.5685714285714285,
+    "preco_atual": 3.26,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "BA",
+    "preco_referencia": 6.335714285714286,
+    "preco_atual": 5.72,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PR",
+    "preco_referencia": 50.83,
+    "preco_atual": 54.22,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AL",
+    "preco_referencia": 40.4025,
+    "preco_atual": 45.17,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "PA",
+    "preco_referencia": 0.9125,
+    "preco_atual": 0.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO",
+    "uf": "SC",
+    "preco_referencia": 1.965,
+    "preco_atual": 2.77,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "PR",
+    "preco_referencia": 4.641428571428571,
+    "preco_atual": 5.19,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "AC",
+    "preco_referencia": 0.4014285714285714,
+    "preco_atual": 0.7,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MS",
+    "preco_referencia": 18.93142857142857,
+    "preco_atual": 19.5,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "AL",
+    "preco_referencia": 0.79,
+    "preco_atual": 0.48,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "ES",
+    "preco_referencia": 4.745,
+    "preco_atual": 10.92,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "AC",
+    "preco_referencia": 4.613571428571428,
+    "preco_atual": 4.79,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "PB",
+    "preco_referencia": 5.284999999999999,
+    "preco_atual": 5.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PI",
+    "preco_referencia": 43.195,
+    "preco_atual": 47.24,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "RJ",
+    "preco_referencia": 8.877142857142855,
+    "preco_atual": 8.26,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "SC",
+    "preco_referencia": 3.0725,
+    "preco_atual": 3.11,
+    "data_referencia_atual": "2025-09",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "AC",
+    "preco_referencia": 3.1064285714285718,
+    "preco_atual": 2.82,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "MT",
+    "preco_referencia": 0.40857142857142853,
+    "preco_atual": 0.48,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "PA",
+    "preco_referencia": 6.083571428571429,
+    "preco_atual": 5.06,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "RN",
+    "preco_referencia": 4.1875,
+    "preco_atual": 3.83,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "RN",
+    "preco_referencia": 7.085714285714286,
+    "preco_atual": 6.2,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RS",
+    "preco_referencia": 53.8925,
+    "preco_atual": 55.78,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - ENRIQUECIDO",
+    "uf": "BA",
+    "preco_referencia": 3.44,
+    "preco_atual": 3.5,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "AL",
+    "preco_referencia": 5.217142857142856,
+    "preco_atual": 4.8,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "DF",
+    "preco_referencia": 2.2157142857142857,
+    "preco_atual": 1.73,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "MG",
+    "preco_referencia": 1.0942857142857143,
+    "preco_atual": 0.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "SP",
+    "preco_referencia": 9.75357142857143,
+    "preco_atual": 9.81,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "PB",
+    "preco_referencia": 3.0385714285714287,
+    "preco_atual": 2.93,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "PR",
+    "preco_referencia": 4.03,
+    "preco_atual": 4.03,
+    "data_referencia_atual": "2026-03",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "AL",
+    "preco_referencia": 7.468571428571429,
+    "preco_atual": 6.76,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - AMARELA",
+    "uf": "PB",
+    "preco_referencia": 3.9942857142857138,
+    "preco_atual": 3.77,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SP",
+    "preco_referencia": 4.353571428571429,
+    "preco_atual": 10.979999999999999,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "MG",
+    "preco_referencia": 4.915,
+    "preco_atual": 5.13,
+    "data_referencia_atual": "2026-02",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PI",
+    "preco_referencia": 3.2050000000000005,
+    "preco_atual": 10.44,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "RO",
+    "preco_referencia": 4.241666666666667,
+    "preco_atual": 2.7066666666666666,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "PA",
+    "preco_referencia": 9.01,
+    "preco_atual": 9.01,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "RR",
+    "preco_referencia": 7.94,
+    "preco_atual": 7.94,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "SP",
+    "preco_referencia": 3.8633333333333337,
+    "preco_atual": 6.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "MT",
+    "preco_referencia": 2.2278571428571428,
+    "preco_atual": 2.33,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "PE",
+    "preco_referencia": 4.090142857142857,
+    "preco_atual": 4.54,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AM",
+    "preco_referencia": 9.202857142857143,
+    "preco_atual": 13.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RJ",
+    "preco_referencia": 45.707499999999996,
+    "preco_atual": 51.08,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "PA",
+    "preco_referencia": 5.692142857142857,
+    "preco_atual": 5.05,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MA",
+    "preco_referencia": 41.2875,
+    "preco_atual": 42.75,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "SC",
+    "preco_referencia": 1.1629999999999998,
+    "preco_atual": 1.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - EXTRA PACOVAN",
+    "uf": "RN",
+    "preco_referencia": 2.568571428571428,
+    "preco_atual": 2.58,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "MS",
+    "preco_referencia": 2.177380952380952,
+    "preco_atual": 0.44,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "TO",
+    "preco_referencia": 46.7925,
+    "preco_atual": 51.05,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "AM",
+    "preco_referencia": 41.495,
+    "preco_atual": 46.41,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "ES",
+    "preco_referencia": 43.1375,
+    "preco_atual": 45.55,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "BA",
+    "preco_referencia": 1.6485714285714284,
+    "preco_atual": 4.23,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - RESFRIADO",
+    "uf": "PE",
+    "preco_referencia": 11.866666666666665,
+    "preco_atual": 11.87,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AM",
+    "preco_referencia": 38.41,
+    "preco_atual": 43.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "DF",
+    "preco_referencia": 1.8771428571428572,
+    "preco_atual": 1.9,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "RJ",
+    "preco_referencia": 1.1,
+    "preco_atual": 0.5,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "PI",
+    "preco_referencia": 0.96,
+    "preco_atual": 0.5,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "TO",
+    "preco_referencia": 17.75428571428571,
+    "preco_atual": 18.86,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "PA",
+    "preco_referencia": 28.52285714285714,
+    "preco_atual": 28.53,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PA",
+    "preco_referencia": 0.58,
+    "preco_atual": 0.3,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "RS",
+    "preco_referencia": 12.123333333333335,
+    "preco_atual": 13.0,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RR",
+    "preco_referencia": 12.093571428571426,
+    "preco_atual": 11.36,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "RJ",
+    "preco_referencia": 0.4090952380952381,
+    "preco_atual": 0.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "AM",
+    "preco_referencia": 5.59,
+    "preco_atual": 5.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "RN",
+    "preco_referencia": 0.755,
+    "preco_atual": 0.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 2 BE",
+    "uf": "GO",
+    "preco_referencia": 4.15,
+    "preco_atual": 3.97,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "DF",
+    "preco_referencia": 5.759285714285715,
+    "preco_atual": 5.4,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MG",
+    "preco_referencia": 6.195,
+    "preco_atual": 11.2,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "MA",
+    "preco_referencia": 6.006428571428572,
+    "preco_atual": 5.45,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - CARCAÃA",
+    "uf": "RN",
+    "preco_referencia": 25.68904761904762,
+    "preco_atual": 25.28,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RN",
+    "preco_referencia": 46.022499999999994,
+    "preco_atual": 49.08,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - VERMELHO EM CASCA",
+    "uf": "PB",
+    "preco_referencia": 3.3979999999999997,
+    "preco_atual": 0.76,
+    "data_referencia_atual": "2026-04",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "PI",
+    "preco_referencia": 4.845952380952381,
+    "preco_atual": 6.0,
+    "data_referencia_atual": "2026-02",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MS",
+    "preco_referencia": 18.634285714285713,
+    "preco_atual": 20.98,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "CE",
+    "preco_referencia": 49.2925,
+    "preco_atual": 56.79,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "RS",
+    "preco_referencia": 5.312142857142857,
+    "preco_atual": 6.1,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "MG",
+    "preco_referencia": 1.8800000000000001,
+    "preco_atual": 4.12,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PB",
+    "preco_referencia": 42.0275,
+    "preco_atual": 46.63,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - ENRIQUECIDO",
+    "uf": "MT",
+    "preco_referencia": 6.82,
+    "preco_atual": 6.46,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "BA",
+    "preco_referencia": 4.95,
+    "preco_atual": 5.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO RESF",
+    "uf": "RS",
+    "preco_referencia": 21.676666666666666,
+    "preco_atual": 22.37,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "PR",
+    "preco_referencia": 1.092857142857143,
+    "preco_atual": 0.81,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "PE",
+    "preco_referencia": 6.583333333333333,
+    "preco_atual": 6.73,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SP",
+    "preco_referencia": 19.27285714285714,
+    "preco_atual": 18.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - CARCAÃA",
+    "uf": "PI",
+    "preco_referencia": 26.033428571428573,
+    "preco_atual": 29.0,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "ES",
+    "preco_referencia": 4.854285714285715,
+    "preco_atual": 6.3,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA MANTA",
+    "uf": "PE",
+    "preco_referencia": 39.71,
+    "preco_atual": 41.9,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "TO",
+    "preco_referencia": 1.005,
+    "preco_atual": 0.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SE",
+    "preco_referencia": 11.077142857142858,
+    "preco_atual": 12.31,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "SC",
+    "preco_referencia": 3.005,
+    "preco_atual": 2.25,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "preco_referencia": 2.123888888888889,
+    "preco_atual": 1.7433333333333334,
+    "data_referencia_atual": "2025-11",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "AM",
+    "preco_referencia": 5.282857142857144,
+    "preco_atual": 4.73,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE SUINA - CARCAÃA CONGELADA",
+    "uf": "MG",
+    "preco_referencia": 12.994285714285715,
+    "preco_atual": 13.04,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "ES",
+    "preco_referencia": 4.642857142857143,
+    "preco_atual": 4.94,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - CARCAÃA",
+    "uf": "PB",
+    "preco_referencia": 26.616666666666667,
+    "preco_atual": 28.0,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO SEM OSSO",
+    "uf": "CE",
+    "preco_referencia": 26.49142857142857,
+    "preco_atual": 28.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MG",
+    "preco_referencia": 43.3575,
+    "preco_atual": 47.0,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "RO",
+    "preco_referencia": 5.560714285714285,
+    "preco_atual": 5.44,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "AM",
+    "preco_referencia": 6.622142857142856,
+    "preco_atual": 6.01,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 58",
+    "uf": "SP",
+    "preco_referencia": 1.2942857142857143,
+    "preco_atual": 1.33,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "PB",
+    "preco_referencia": 10.75,
+    "preco_atual": 10.75,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "PI",
+    "preco_referencia": 1.712142857142857,
+    "preco_atual": 1.2266666666666666,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA BORDÃ",
+    "uf": "RS",
+    "preco_referencia": 2.22,
+    "preco_atual": 2.16,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "PE",
+    "preco_referencia": 5.842499999999999,
+    "preco_atual": 5.44,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "SE",
+    "preco_referencia": 0.7857142857142858,
+    "preco_atual": 0.56,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "PI",
+    "preco_referencia": 5.989999999999999,
+    "preco_atual": 4.62,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "SE",
+    "preco_referencia": 6.429285714285714,
+    "preco_atual": 9.65,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "RN",
+    "preco_referencia": 12.03,
+    "preco_atual": 12.03,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - CEBOLA",
+    "uf": "SC",
+    "preco_referencia": 1.97,
+    "preco_atual": 1.97,
+    "data_referencia_atual": "2025-09",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PE",
+    "preco_referencia": 12.546666666666667,
+    "preco_atual": 12.48,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "RS",
+    "preco_referencia": 0.9724999999999999,
+    "preco_atual": 0.49,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "GO",
+    "preco_referencia": 18.502857142857145,
+    "preco_atual": 19.14,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "RN",
+    "preco_referencia": 3.301428571428571,
+    "preco_atual": 3.07,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PR",
+    "preco_referencia": 50.425000000000004,
+    "preco_atual": 54.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "TO",
+    "preco_referencia": 1.2285714285714284,
+    "preco_atual": 1.32,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SC",
+    "preco_referencia": 48.932500000000005,
+    "preco_atual": 49.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PA",
+    "preco_referencia": 10.01,
+    "preco_atual": 9.7,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "GO",
+    "preco_referencia": 1.4502857142857142,
+    "preco_atual": 1.42,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "DF",
+    "preco_referencia": 16.575714285714284,
+    "preco_atual": 18.98,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "PR",
+    "preco_referencia": 5.265714285714286,
+    "preco_atual": 4.93,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - INDÃSTRIA PERA",
+    "uf": "SE",
+    "preco_referencia": 0.4871428571428572,
+    "preco_atual": 0.3,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "BA",
+    "preco_referencia": 10.299999999999999,
+    "preco_atual": 9.96,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "GO",
+    "preco_referencia": 2.3799999999999994,
+    "preco_atual": 7.24,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - DE MESA PERA",
+    "uf": "GO",
+    "preco_referencia": 1.7214285714285713,
+    "preco_atual": 1.44,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA BR",
+    "uf": "MG",
+    "preco_referencia": 7.965,
+    "preco_atual": 7.93,
+    "data_referencia_atual": "2026-02",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - ENRIQUECIDO",
+    "uf": "DF",
+    "preco_referencia": 3.8133333333333326,
+    "preco_atual": 3.36,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "BA",
+    "preco_referencia": 2.0685714285714285,
+    "preco_atual": 1.2433333333333334,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "AP",
+    "preco_referencia": 0.9624999999999999,
+    "preco_atual": 0.57,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "PA",
+    "preco_referencia": 5.067142857142857,
+    "preco_atual": 8.65,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "TO",
+    "preco_referencia": 1.5314285714285716,
+    "preco_atual": 1.0733333333333333,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "RN",
+    "preco_referencia": 6.740000000000001,
+    "preco_atual": 9.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PR",
+    "preco_referencia": 46.745,
+    "preco_atual": 51.07,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MS",
+    "preco_referencia": 6.067857142857142,
+    "preco_atual": 8.92,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PB",
+    "preco_referencia": 4.9025,
+    "preco_atual": 11.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SE",
+    "preco_referencia": 2.6262499999999998,
+    "preco_atual": 10.09,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "preco_referencia": 2.0766666666666667,
+    "preco_atual": 1.5775000000000001,
+    "data_referencia_atual": "2025-11",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "SE",
+    "preco_referencia": 0.86,
+    "preco_atual": 0.5,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "RR",
+    "preco_referencia": 5.89,
+    "preco_atual": 5.11,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "PR",
+    "preco_referencia": 2.224761904761905,
+    "preco_atual": 1.32,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - DA TERRA",
+    "uf": "AL",
+    "preco_referencia": 2.903809523809524,
+    "preco_atual": 2.9,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "CE",
+    "preco_referencia": 4.117857142857143,
+    "preco_atual": 3.5,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - DE MESA ITÃLIA",
+    "uf": "BA",
+    "preco_referencia": 6.409999999999999,
+    "preco_atual": 7.21,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SP",
+    "preco_referencia": 48.552499999999995,
+    "preco_atual": 53.43,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "ES",
+    "preco_referencia": 2.4357142857142855,
+    "preco_atual": 3.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "TO",
+    "preco_referencia": 4.995,
+    "preco_atual": 6.18,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PACOVAN",
+    "uf": "PB",
+    "preco_referencia": 1.897142857142857,
+    "preco_atual": 2.07,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "RJ",
+    "preco_referencia": 5.865714285714286,
+    "preco_atual": 5.25,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO",
+    "uf": "RS",
+    "preco_referencia": 1.872857142857143,
+    "preco_atual": 2.8,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "GO",
+    "preco_referencia": 6.897857142857142,
+    "preco_atual": 11.174999999999999,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "SE",
+    "preco_referencia": 6.392142857142857,
+    "preco_atual": 5.37,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "RR",
+    "preco_referencia": 7.928571428571429,
+    "preco_atual": 8.31,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "RR",
+    "preco_referencia": 1.3599999999999999,
+    "preco_atual": 0.69,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "PB",
+    "preco_referencia": 4.17,
+    "preco_atual": 3.71,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO",
+    "uf": "RJ",
+    "preco_referencia": 2.953333333333333,
+    "preco_atual": 3.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "PA",
+    "preco_referencia": 5.874547619047618,
+    "preco_atual": 4.98,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RO",
+    "preco_referencia": 14.965714285714286,
+    "preco_atual": 15.74,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "SC",
+    "preco_referencia": 7.035000000000001,
+    "preco_atual": 6.59,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "GO",
+    "preco_referencia": 4.7507142857142854,
+    "preco_atual": 9.14,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "ES",
+    "preco_referencia": 4.34,
+    "preco_atual": 5.03,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "PB",
+    "preco_referencia": 6.126666666666668,
+    "preco_atual": 6.17,
+    "data_referencia_atual": "2025-10",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA NIÃGARA",
+    "uf": "RS",
+    "preco_referencia": 1.8499999999999999,
+    "preco_atual": 1.8,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "RS",
+    "preco_referencia": 36.39142857142857,
+    "preco_atual": 36.23,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CHARDONNAY",
+    "uf": "RS",
+    "preco_referencia": 3.52,
+    "preco_atual": 3.42,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "AP",
+    "preco_referencia": 5.427142857142857,
+    "preco_atual": 8.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PE",
+    "preco_referencia": 44.975,
+    "preco_atual": 48.35,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "DF",
+    "preco_referencia": 0.42857142857142855,
+    "preco_atual": 0.55,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AM",
+    "preco_referencia": 42.214999999999996,
+    "preco_atual": 47.72,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "PR",
+    "preco_referencia": 3.645,
+    "preco_atual": 8.15,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MA",
+    "preco_referencia": 19.002857142857142,
+    "preco_atual": 19.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SC",
+    "preco_referencia": 53.745000000000005,
+    "preco_atual": 57.93,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "MG",
+    "preco_referencia": 18.40142857142857,
+    "preco_atual": 18.42,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "GO",
+    "preco_referencia": 4.392857142857143,
+    "preco_atual": 4.08,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "DF",
+    "preco_referencia": 5.667857142857143,
+    "preco_atual": 9.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "BA",
+    "preco_referencia": 3.3021428571428575,
+    "preco_atual": 9.353333333333333,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PACOVAN",
+    "uf": "PE",
+    "preco_referencia": 1.1838095238095236,
+    "preco_atual": 1.49,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "MA",
+    "preco_referencia": 0.9199999999999999,
+    "preco_atual": 0.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "TO",
+    "preco_referencia": 43.7525,
+    "preco_atual": 47.4,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "PI",
+    "preco_referencia": 5.932142857142857,
+    "preco_atual": 8.83,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "DF",
+    "preco_referencia": 45.315,
+    "preco_atual": 45.74,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RO",
+    "preco_referencia": 36.902499999999996,
+    "preco_atual": 41.22,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "MS",
+    "preco_referencia": 4.402857142857142,
+    "preco_atual": 4.09,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "GO",
+    "preco_referencia": 41.0775,
+    "preco_atual": 44.31,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PB",
+    "preco_referencia": 15.014285714285714,
+    "preco_atual": 15.89,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AL",
+    "preco_referencia": 4.275,
+    "preco_atual": 10.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "TO",
+    "preco_referencia": 11.945714285714287,
+    "preco_atual": 11.9,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "SP",
+    "preco_referencia": 52.05499999999999,
+    "preco_atual": 56.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - DIANTEIRA",
+    "uf": "DF",
+    "preco_referencia": 35.01571428571429,
+    "preco_atual": 35.0,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "SC",
+    "preco_referencia": 16.091428571428573,
+    "preco_atual": 17.61,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "ES",
+    "preco_referencia": 0.4257142857142857,
+    "preco_atual": 0.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - CARCAÃA",
+    "uf": "PE",
+    "preco_referencia": 27.306190476190476,
+    "preco_atual": 29.48,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "MT",
+    "preco_referencia": 1.5368571428571427,
+    "preco_atual": 1.0199999999999998,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - CHARQUE PA CRAY-O-VA",
+    "uf": "PE",
+    "preco_referencia": 40.99333333333333,
+    "preco_atual": 43.22,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AC",
+    "preco_referencia": 37.06999999999999,
+    "preco_atual": 42.19,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PB",
+    "preco_referencia": 44.72,
+    "preco_atual": 49.25,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "TO",
+    "preco_referencia": 42.9325,
+    "preco_atual": 47.3,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "ES",
+    "preco_referencia": 47.99249999999999,
+    "preco_atual": 50.27,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA ISABEL",
+    "uf": "SC",
+    "preco_referencia": 1.6166666666666665,
+    "preco_atual": 1.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "ES",
+    "preco_referencia": 8.782142857142857,
+    "preco_atual": 9.38,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "RR",
+    "preco_referencia": 4.640714285714286,
+    "preco_atual": 4.39,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AC",
+    "preco_referencia": 31.73,
+    "preco_atual": 36.8,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - DIANTEIRO COM OSSO",
+    "uf": "CE",
+    "preco_referencia": 20.42571428571429,
+    "preco_atual": 20.0,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "MA",
+    "preco_referencia": 2.38,
+    "preco_atual": 2.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - DE MESA NIÃGARA",
+    "uf": "PR",
+    "preco_referencia": 9.543571428571429,
+    "preco_atual": 9.31,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "RO",
+    "preco_referencia": 4.835,
+    "preco_atual": 8.02,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "MG",
+    "preco_referencia": 3.725,
+    "preco_atual": 7.16,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "LARANJA - DE MESA LIMA",
+    "uf": "AL",
+    "preco_referencia": 0.17857142857142858,
+    "preco_atual": 0.34,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "PR",
+    "preco_referencia": 3.1948809523809527,
+    "preco_atual": 6.11,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "BA",
+    "preco_referencia": 38.105,
+    "preco_atual": 42.51,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "ES",
+    "preco_referencia": 1.9067261904761905,
+    "preco_atual": 0.9766666666666666,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "ES",
+    "preco_referencia": 19.6625,
+    "preco_atual": 20.2,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - JERKED BEEF",
+    "uf": "SP",
+    "preco_referencia": 60.14333333333334,
+    "preco_atual": 61.73,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "MA",
+    "preco_referencia": 1.3993877551020408,
+    "preco_atual": 1.365,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PB",
+    "preco_referencia": 45.212500000000006,
+    "preco_atual": 48.85,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA MOSCATO",
+    "uf": "RS",
+    "preco_referencia": 2.5,
+    "preco_atual": 2.43,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "preco_referencia": 2.2525,
+    "preco_atual": 2.3325,
+    "data_referencia_atual": "2025-11",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "RN",
+    "preco_referencia": 5.002857142857144,
+    "preco_atual": 5.11,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - NÃO INFORMADO",
+    "uf": "DF",
+    "preco_referencia": 1.4957142857142858,
+    "preco_atual": 2.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "GO",
+    "preco_referencia": 8.025,
+    "preco_atual": 8.41,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "MT",
+    "preco_referencia": 3.222214285714286,
+    "preco_atual": 5.95,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "PI",
+    "preco_referencia": 3.4899999999999998,
+    "preco_atual": 3.7,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "MT",
+    "preco_referencia": 6.895714285714285,
+    "preco_atual": 6.3,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "MG",
+    "preco_referencia": 3.5373333333333337,
+    "preco_atual": 0.61,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "SC",
+    "preco_referencia": 0.62,
+    "preco_atual": 0.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "SP",
+    "preco_referencia": 0.2785714285714286,
+    "preco_atual": 0.28,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "AC",
+    "preco_referencia": 2.106666666666667,
+    "preco_atual": 2.106666666666667,
+    "data_referencia_atual": "2025-07",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "RO",
+    "preco_referencia": 1.2850000000000001,
+    "preco_atual": 0.6,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PE",
+    "preco_referencia": 44.362500000000004,
+    "preco_atual": 48.53,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "RJ",
+    "preco_referencia": 1.891142857142857,
+    "preco_atual": 1.23,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RO",
+    "preco_referencia": 35.73,
+    "preco_atual": 40.66,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA GAMAY SAIN",
+    "uf": "RS",
+    "preco_referencia": 2.22,
+    "preco_atual": 2.16,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PE",
+    "preco_referencia": 39.9275,
+    "preco_atual": 43.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "SC",
+    "preco_referencia": 1.4866938775510206,
+    "preco_atual": 0.9566666666666667,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PI",
+    "preco_referencia": 43.050000000000004,
+    "preco_atual": 46.92,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "MT",
+    "preco_referencia": 3.7814285714285716,
+    "preco_atual": 4.4,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "RN",
+    "preco_referencia": 6.134285714285714,
+    "preco_atual": 5.69,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "AL",
+    "preco_referencia": 4.102222222222222,
+    "preco_atual": 4.83,
+    "data_referencia_atual": "2026-03",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "DF",
+    "preco_referencia": 4.300714285714285,
+    "preco_atual": 4.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AM",
+    "preco_referencia": 12.442857142857141,
+    "preco_atual": 14.54,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PR",
+    "preco_referencia": 14.924285714285714,
+    "preco_atual": 16.43,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "AL",
+    "preco_referencia": 14.689999999999998,
+    "preco_atual": 15.01,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "AL",
+    "preco_referencia": 0.6468571428571429,
+    "preco_atual": 0.67,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "RS",
+    "preco_referencia": 9.332857142857142,
+    "preco_atual": 9.34,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MS",
+    "preco_referencia": 19.30857142857143,
+    "preco_atual": 17.93,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RJ",
+    "preco_referencia": 47.65,
+    "preco_atual": 53.54,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MG",
+    "preco_referencia": 45.25,
+    "preco_atual": 48.09,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "CE",
+    "preco_referencia": 12.01,
+    "preco_atual": 12.01,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "PR",
+    "preco_referencia": 1.5214285714285718,
+    "preco_atual": 5.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "SE",
+    "preco_referencia": 1.1633333333333333,
+    "preco_atual": 1.37,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "AM",
+    "preco_referencia": 6.665714285714286,
+    "preco_atual": 5.8,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "SP",
+    "preco_referencia": 2.448571428571429,
+    "preco_atual": 1.4100000000000001,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "AL",
+    "preco_referencia": 6.654285714285714,
+    "preco_atual": 8.89,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "SP",
+    "preco_referencia": 4.392857142857143,
+    "preco_atual": 4.46,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "PR",
+    "preco_referencia": 1.1385714285714286,
+    "preco_atual": 3.42,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - TRASEIRO COM OSSO",
+    "uf": "PR",
+    "preco_referencia": 25.495714285714286,
+    "preco_atual": 26.98,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "CE",
+    "preco_referencia": 50.745000000000005,
+    "preco_atual": 58.91,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - AMARELA",
+    "uf": "SP",
+    "preco_referencia": 0.9414285714285714,
+    "preco_atual": 3.94,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "RS",
+    "preco_referencia": 15.031428571428572,
+    "preco_atual": 15.95,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "PA",
+    "preco_referencia": 42.0075,
+    "preco_atual": 45.37,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "BA",
+    "preco_referencia": 2.3985714285714286,
+    "preco_atual": 5.85,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - INDÃSTRIA CABERNET S",
+    "uf": "RS",
+    "preco_referencia": 3.329999999999999,
+    "preco_atual": 3.24,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "SC",
+    "preco_referencia": 9.244285714285715,
+    "preco_atual": 8.92,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "AC",
+    "preco_referencia": 5.686190476190475,
+    "preco_atual": 10.93,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "AM",
+    "preco_referencia": 0.9857142857142858,
+    "preco_atual": 1.05,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MA",
+    "preco_referencia": 41.362500000000004,
+    "preco_atual": 44.02,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - CARCAÃA",
+    "uf": "AL",
+    "preco_referencia": 20.54952380952381,
+    "preco_atual": 29.5,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "MT",
+    "preco_referencia": 5.476428571428571,
+    "preco_atual": 8.04,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "AP",
+    "preco_referencia": 1.8633333333333333,
+    "preco_atual": 2.05,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO",
+    "uf": "ES",
+    "preco_referencia": 4.711904761904762,
+    "preco_atual": 5.6,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "RJ",
+    "preco_referencia": 1.5471428571428572,
+    "preco_atual": 1.3,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "RS",
+    "preco_referencia": 4.0575,
+    "preco_atual": 7.72,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "SC",
+    "preco_referencia": 6.370833333333334,
+    "preco_atual": 9.463333333333333,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PR",
+    "preco_referencia": 6.57,
+    "preco_atual": 11.73,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "TO",
+    "preco_referencia": 6.904285714285714,
+    "preco_atual": 6.99,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "SP",
+    "preco_referencia": 5.969285714285713,
+    "preco_atual": 9.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "GO",
+    "preco_referencia": 7.281428571428572,
+    "preco_atual": 7.36,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "BA",
+    "preco_referencia": 3.0614285714285714,
+    "preco_atual": 2.15,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "RN",
+    "preco_referencia": 44.985,
+    "preco_atual": 49.95,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "DF",
+    "preco_referencia": 45.2425,
+    "preco_atual": 46.79,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MT",
+    "preco_referencia": 40.18,
+    "preco_atual": 45.27,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "AC",
+    "preco_referencia": 8.760000000000002,
+    "preco_atual": 12.02,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "SE",
+    "preco_referencia": 0.3228571428571429,
+    "preco_atual": 0.44,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "SE",
+    "preco_referencia": 3.6799999999999997,
+    "preco_atual": 3.83,
+    "data_referencia_atual": "2025-10",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MT",
+    "preco_referencia": 42.035000000000004,
+    "preco_atual": 47.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "AL",
+    "preco_referencia": 44.6225,
+    "preco_atual": 49.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 2, EXTRA AMAR",
+    "uf": "SC",
+    "preco_referencia": 0.58375,
+    "preco_atual": 1.98,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "MS",
+    "preco_referencia": 6.026428571428572,
+    "preco_atual": 5.48,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA",
+    "uf": "SC",
+    "preco_referencia": 1.54,
+    "preco_atual": 1.39,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "RJ",
+    "preco_referencia": 3.9488095238095235,
+    "preco_atual": 10.156666666666666,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "MG",
+    "preco_referencia": 5.226428571428571,
+    "preco_atual": 4.87,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "MT",
+    "preco_referencia": 6.017142857142857,
+    "preco_atual": 5.69,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "MG",
+    "preco_referencia": 9.389285714285716,
+    "preco_atual": 9.66,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "DF",
+    "preco_referencia": 3.1128571428571425,
+    "preco_atual": 1.64,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - SEM MIÃDOS CONGELADA",
+    "uf": "SC",
+    "preco_referencia": 11.135714285714286,
+    "preco_atual": 10.74,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RR",
+    "preco_referencia": 45.35,
+    "preco_atual": 48.07,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - ACÃM",
+    "uf": "PR",
+    "preco_referencia": 36.403333333333336,
+    "preco_atual": 36.03,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "MG",
+    "preco_referencia": 0.89,
+    "preco_atual": 0.38,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "PI",
+    "preco_referencia": 4.795714285714285,
+    "preco_atual": 4.72,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "MT",
+    "preco_referencia": 4.7225,
+    "preco_atual": 9.76,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "CE",
+    "preco_referencia": 5.1975,
+    "preco_atual": 5.5,
+    "data_referencia_atual": "2025-09",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - VERMELHO EM CASCA",
+    "uf": "RN",
+    "preco_referencia": 2.138571428571429,
+    "preco_atual": 1.78,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "SC",
+    "preco_referencia": 0.27,
+    "preco_atual": 0.4,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 58",
+    "uf": "MG",
+    "preco_referencia": 1.5885714285714285,
+    "preco_atual": 1.6,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "AP",
+    "preco_referencia": 5.256428571428572,
+    "preco_atual": 5.12,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "PE",
+    "preco_referencia": 3.8037500000000004,
+    "preco_atual": 0.65,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "MS",
+    "preco_referencia": 44.084999999999994,
+    "preco_atual": 45.51,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "CE",
+    "preco_referencia": 1.1300000000000001,
+    "preco_atual": 1.18,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "CE",
+    "preco_referencia": 1.0412380952380953,
+    "preco_atual": 0.8300000000000001,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "SP",
+    "preco_referencia": 5.850476190476191,
+    "preco_atual": 5.33,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "ES",
+    "preco_referencia": 48.6375,
+    "preco_atual": 51.17,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "MT",
+    "preco_referencia": 1.1749999999999998,
+    "preco_atual": 0.96,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "MG",
+    "preco_referencia": 6.102857142857142,
+    "preco_atual": 10.46,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "AM",
+    "preco_referencia": 1.665,
+    "preco_atual": 0.83,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE CAPRINA - CARCAÃA",
+    "uf": "CE",
+    "preco_referencia": 21.362380952380953,
+    "preco_atual": 24.49,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "RO",
+    "preco_referencia": 7.52,
+    "preco_atual": 7.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "SP",
+    "preco_referencia": 8.112857142857143,
+    "preco_atual": 8.22,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO EM CASCA",
+    "uf": "MT",
+    "preco_referencia": 1.0941428571428573,
+    "preco_atual": 1.62,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "SE",
+    "preco_referencia": 10.69,
+    "preco_atual": 10.69,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "GO",
+    "preco_referencia": 0.88,
+    "preco_atual": 0.42,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "PE",
+    "preco_referencia": 10.71,
+    "preco_atual": 10.71,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PE",
+    "preco_referencia": 5.1274999999999995,
+    "preco_atual": 11.9,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MT",
+    "preco_referencia": 42.9925,
+    "preco_atual": 48.47,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI TIPO 1",
+    "uf": "PB",
+    "preco_referencia": 7.872857142857143,
+    "preco_atual": 7.49,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "MT",
+    "preco_referencia": 3.4499999999999997,
+    "preco_atual": 11.543333333333335,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "SC",
+    "preco_referencia": 2.3965714285714284,
+    "preco_atual": 4.46,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "GO",
+    "preco_referencia": 4.445,
+    "preco_atual": 9.63,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "PB",
+    "preco_referencia": 7.105000000000001,
+    "preco_atual": 9.93,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "ES",
+    "preco_referencia": 4.15447619047619,
+    "preco_atual": 9.333333333333334,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "AC",
+    "preco_referencia": 8.55,
+    "preco_atual": 8.55,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "PR",
+    "preco_referencia": 6.317857142857143,
+    "preco_atual": 6.33,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "RS",
+    "preco_referencia": 8.057142857142855,
+    "preco_atual": 8.2,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PI",
+    "preco_referencia": 39.9375,
+    "preco_atual": 45.49,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "AP",
+    "preco_referencia": 37.3975,
+    "preco_atual": 40.23,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "AC",
+    "preco_referencia": 1.6854285714285715,
+    "preco_atual": 1.5733333333333333,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "MS",
+    "preco_referencia": 46.4025,
+    "preco_atual": 48.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "TO",
+    "preco_referencia": 2.4442857142857144,
+    "preco_atual": 2.5,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "UVA - DE MESA ISABEL",
+    "uf": "PB",
+    "preco_referencia": 4.128571428571428,
+    "preco_atual": 4.89,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PE",
+    "preco_referencia": 14.085,
+    "preco_atual": 14.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "RJ",
+    "preco_referencia": 4.305,
+    "preco_atual": 10.46,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "RJ",
+    "preco_referencia": 47.315,
+    "preco_atual": 53.24,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - FLOCÃO",
+    "uf": "SE",
+    "preco_referencia": 3.322857142857143,
+    "preco_atual": 3.3,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RO",
+    "preco_referencia": 32.88,
+    "preco_atual": 37.36,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE SUINA - PERNIL COM OSSO CONG",
+    "uf": "SC",
+    "preco_referencia": 15.021428571428572,
+    "preco_atual": 15.9,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "PA",
+    "preco_referencia": 4.453571428571428,
+    "preco_atual": 4.73,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "MG",
+    "preco_referencia": 18.235714285714288,
+    "preco_atual": 19.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "PE",
+    "preco_referencia": 6.39,
+    "preco_atual": 6.29,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM PRETO TIPO 1",
+    "uf": "SC",
+    "preco_referencia": 4.9764285714285705,
+    "preco_atual": 6.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "MS",
+    "preco_referencia": 6.694285714285714,
+    "preco_atual": 9.97,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "PR",
+    "preco_referencia": 0.44,
+    "preco_atual": 0.41,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FRANGO - VIVO",
+    "uf": "GO",
+    "preco_referencia": 5.851428571428572,
+    "preco_atual": 5.14,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "TO",
+    "preco_referencia": 3.192857142857143,
+    "preco_atual": 3.52,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "BA",
+    "preco_referencia": 6.4628571428571435,
+    "preco_atual": 9.65,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "PE",
+    "preco_referencia": 3.1021428571428564,
+    "preco_atual": 2.9,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ERVA MATE - IN NATURA",
+    "uf": "RS",
+    "preco_referencia": 1.127142857142857,
+    "preco_atual": 1.11,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "BA",
+    "preco_referencia": 4.5625,
+    "preco_atual": 3.64,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": true,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "ES",
+    "preco_referencia": 0.825,
+    "preco_atual": 0.39,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - INGLESA BRANCA",
+    "uf": "RS",
+    "preco_referencia": 1.0799999999999998,
+    "preco_atual": 0.93,
+    "data_referencia_atual": "2026-01",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "TOMATE - NÃO INFORMADO",
+    "uf": "PA",
+    "preco_referencia": 7.842500000000001,
+    "preco_atual": 12.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "RR",
+    "preco_referencia": 40.6525,
+    "preco_atual": 42.94,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "PAO - FRANCÃS",
+    "uf": "PI",
+    "preco_referencia": 19.867142857142856,
+    "preco_atual": 19.95,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "PA",
+    "preco_referencia": 42.105,
+    "preco_atual": 46.26,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - CAUPI",
+    "uf": "CE",
+    "preco_referencia": 5.5633333333333335,
+    "preco_atual": 4.34,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - NANICA",
+    "uf": "CE",
+    "preco_referencia": 0.86,
+    "preco_atual": 0.48,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "SE",
+    "preco_referencia": 5.222857142857143,
+    "preco_atual": 5.03,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BANANA - PRATA",
+    "uf": "GO",
+    "preco_referencia": 1.5492857142857142,
+    "preco_atual": 0.96,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERDE",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "MG",
+    "preco_referencia": 6.165714285714286,
+    "preco_atual": 6.38,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "DF",
+    "preco_referencia": 4.04,
+    "preco_atual": 10.07,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "GO",
+    "preco_referencia": 9.611428571428572,
+    "preco_atual": 9.66,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "RJ",
+    "preco_referencia": 5.180714285714286,
+    "preco_atual": 5.45,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "RN",
+    "preco_referencia": 0.30428571428571427,
+    "preco_atual": 0.43,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CEBOLA - CLASSE 3, EXTRA AMAR",
+    "uf": "SC",
+    "preco_referencia": 0.89125,
+    "preco_atual": 2.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - ENRIQUECIDO",
+    "uf": "PI",
+    "preco_referencia": 3.766666666666667,
+    "preco_atual": 3.88,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE DE FRANGO - CONGELADO",
+    "uf": "PR",
+    "preco_referencia": 12.32,
+    "preco_atual": 12.24,
+    "data_referencia_atual": "2025-08",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "PR",
+    "preco_referencia": 7.53142857142857,
+    "preco_atual": 7.4,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PONTA DE AGULHA",
+    "uf": "MG",
+    "preco_referencia": 17.59142857142857,
+    "preco_atual": 18.15,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FLOCOS DE MILHO - PRE-COZIDO",
+    "uf": "RO",
+    "preco_referencia": 4.8621428571428575,
+    "preco_atual": 5.11,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "ARROZ - LONGO FINO TIPO 1 BE",
+    "uf": "CE",
+    "preco_referencia": 4.618571428571428,
+    "preco_atual": 5.05,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SE",
+    "preco_referencia": 42.33,
+    "preco_atual": 46.29,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA - NÃO INFORMADO",
+    "uf": "SP",
+    "preco_referencia": 5.8325,
+    "preco_atual": 9.97,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "PR",
+    "preco_referencia": 4.58,
+    "preco_atual": 5.69,
+    "data_referencia_atual": "2026-03",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES TIPO 1",
+    "uf": "PE",
+    "preco_referencia": 6.11357142857143,
+    "preco_atual": 9.92,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "VERMELHO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "FEIJAO - COMUM CORES",
+    "uf": "PE",
+    "preco_referencia": 3.861666666666667,
+    "preco_atual": 3.71,
+    "data_referencia_atual": "2025-12",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "SE",
+    "preco_referencia": 39.295,
+    "preco_atual": 42.82,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO MOLE S/OSSO",
+    "uf": "SC",
+    "preco_referencia": 54.38249999999999,
+    "preco_atual": 55.13,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - PATINHO S/OSSO",
+    "uf": "MS",
+    "preco_referencia": 45.792500000000004,
+    "preco_atual": 47.59,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "BATATA-DOCE - NÃO INFORMADO",
+    "uf": "PE",
+    "preco_referencia": 0.42857142857142855,
+    "preco_atual": 0.44,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  },
+  {
+    "produto": "CARNE BOVINA - COXÃO DURO S/OSSO",
+    "uf": "PA",
+    "preco_referencia": 39.3425,
+    "preco_atual": 43.57,
+    "data_referencia_atual": "2026-05",
+    "usou_fallback_12m": false,
+    "status_cor": "AMARELO",
+    "fonte": "municipio"
+  }
+]

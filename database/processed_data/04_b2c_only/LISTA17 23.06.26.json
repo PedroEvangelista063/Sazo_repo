@@ -1,0 +1,386 @@
+[
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 0.97,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.26,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.93,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.91,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.76,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.1,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.81,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.63,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.21,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.71,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.42,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.05,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 2.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.12,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.44,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.88,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.13,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.61,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.85,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.07,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.22,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.57,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.95,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.84,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.0,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.48,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.75,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

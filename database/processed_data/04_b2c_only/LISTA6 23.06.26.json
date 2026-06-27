@@ -1,0 +1,362 @@
+[
+  {
+    "produto": "MACA - FUJI",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 4.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 3.68,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.96,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.9,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "PR",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 4.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.59,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 3.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.11,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "SC",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 3.04,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 3.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 3.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2025,
+    "mes": 12,
+    "preco_medio": 3.38,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 1,
+    "preco_medio": 3.5,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 5.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 4.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 2,
+    "preco_medio": 3.17,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - FUJI",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 5.69,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "PR",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 4.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 3,
+    "preco_medio": 2.87,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 4,
+    "preco_medio": 2.64,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "RS",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 2.52,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MACA - GALA",
+    "uf": "SC",
+    "ano": 2026,
+    "mes": 5,
+    "preco_medio": 2.25,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.08,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 2.56,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 6,
+    "preco_medio": 1.2,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 2.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.03,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 7,
+    "preco_medio": 3.83,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.92,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.94,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 8,
+    "preco_medio": 1.34,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.24,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 1.8,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 9,
+    "preco_medio": 2.09,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.7,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 1.65,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 10,
+    "preco_medio": 2.62,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - NÃO INFORMADO",
+    "uf": "BA",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.74,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - PAPAIA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 2.33,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  },
+  {
+    "produto": "MAMAO - FORMOSA",
+    "uf": "ES",
+    "ano": 2025,
+    "mes": 11,
+    "preco_medio": 1.58,
+    "categoria_b2c": "ALIMENTO_VAREJO"
+  }
+]

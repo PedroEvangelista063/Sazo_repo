@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { CheckCircle2, MinusCircle, XCircle } from 'lucide-react'
-import type { ProdutoVarejo } from '../types/domain'
+import { CheckCircle2, MinusCircle, XCircle, TrendingDown, TrendingUp, Equal } from 'lucide-react'
+import type { ProdutoVarejo, StatusOferta } from '../types/domain'
 
 const PRODUTO_EMOJI: Record<string, string> = {
   ARROZ: '🍚', BANANA: '🍌', BATATA: '🥔', CAFE: '☕',
@@ -19,6 +19,41 @@ type StatusConfig = {
   label: string
   icon: React.ReactNode
   imgClass: string
+}
+
+const OFERTA_MAP: Record<StatusOferta, StatusConfig> = {
+  OFERTA: {
+    bg: 'bg-sazonal-verde-50',
+    border: 'border-sazonal-verde-400',
+    text: 'text-sazonal-verde-700',
+    label: 'Em Oferta!',
+    icon: <TrendingDown className="h-5 w-5 text-sazonal-verde-600" aria-hidden />,
+    imgClass: 'opacity-100',
+  },
+  EQUILIBRADO: {
+    bg: 'bg-sazonal-amarelo-50',
+    border: 'border-sazonal-amarelo-400',
+    text: 'text-sazonal-amarelo-600',
+    label: 'Preço Equilibrado',
+    icon: <Equal className="h-5 w-5 text-sazonal-amarelo-600" aria-hidden />,
+    imgClass: 'opacity-100',
+  },
+  ALTA: {
+    bg: 'bg-sazonal-vermelho-50',
+    border: 'border-sazonal-vermelho-400',
+    text: 'text-sazonal-vermelho-600',
+    label: 'Pouca Oferta',
+    icon: <TrendingUp className="h-5 w-5 text-sazonal-vermelho-600" aria-hidden />,
+    imgClass: 'opacity-60 grayscale-[50%]',
+  },
+  INSUFICIENTE: {
+    bg: 'bg-gray-50',
+    border: 'border-gray-300',
+    text: 'text-gray-500',
+    label: 'Dados Insuficientes',
+    icon: <MinusCircle className="h-5 w-5 text-gray-400" aria-hidden />,
+    imgClass: 'opacity-80',
+  },
 }
 
 const STATUS_MAP: Record<string, StatusConfig> = {
@@ -85,7 +120,10 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [imgFailed, setImgFailed] = useState(false)
-  const config = STATUS_MAP[product.status_cor] ?? STATUS_MAP.INSUFICIENTE
+  const oferta = product.status_oferta
+  const config = oferta
+    ? OFERTA_MAP[oferta] ?? OFERTA_MAP.INSUFICIENTE
+    : STATUS_MAP[product.status_cor] ?? STATUS_MAP.INSUFICIENTE
   const emoji = getEmoji(product.nome_produto)
 
   return (

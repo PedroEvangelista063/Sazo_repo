@@ -16,6 +16,8 @@ class ScraperAdapter(ABC):
     uf: str = ""
     municipio: str = ""
     semaforo: asyncio.Semaphore | None = None
+    ano: int | None = None
+    mes: int | None = None
 
     @abstractmethod
     async def fetch(self) -> list[CotacaoHistorica]: ...
@@ -110,6 +112,11 @@ class PriceCollector:
 
     def total_adapters(self) -> int:
         return len(self._adapters)
+
+    def definir_mes_alvo(self, ano: int | None, mes: int | None) -> None:
+        for adp in self._adapters.values():
+            adp.ano = ano
+            adp.mes = mes
 
     async def collect_all(self, max_concorrencia: int = 3) -> tuple[list[CotacaoHistorica], QualidadeMetricas]:
         self._semaforo = asyncio.Semaphore(max_concorrencia)

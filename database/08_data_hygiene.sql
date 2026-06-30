@@ -59,8 +59,12 @@ COMMENT ON COLUMN raw.scraper_data._batch_id        IS 'UUID do lote de extraç�
 COMMENT ON COLUMN raw.scraper_data._loaded_at       IS 'Timestamp da inserção no banco';
 
 -- Unique constraint: mesmo produto + mesmo local + mesmo dia = duplicata
-CREATE UNIQUE INDEX IF NOT EXISTS uq_scraper_data_dia
-    ON raw.scraper_data (nome_produto, COALESCE(id_localidade, 0), data_referencia);
+-- NOTA: id_localidade é nullable (sem NOT NULL). UNIQUE CONSTRAINT trata
+--       NULLs como distintos (permite duplicatas com NULL). Se quiser
+--       tratar NULL como conflito, trocar por UNIQUE INDEX com
+--       COALESCE(id_localidade, 0). O SP já filtra id_localidade IS NOT NULL.
+ALTER TABLE raw.scraper_data ADD CONSTRAINT unique_produto_local_data
+    UNIQUE (nome_produto, id_localidade, data_referencia);
 
 -- Índice para a GC diária (DELETE WHERE data_extracao < cutoff)
 CREATE INDEX IF NOT EXISTS idx_scraper_data_extracao

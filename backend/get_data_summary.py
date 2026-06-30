@@ -108,19 +108,93 @@ async def main() -> None:
                       "SELECT count(DISTINCT l.uf) FROM staging.fact_precos_mensais f JOIN staging.dim_localidade l ON f.id_localidade = l.id_localidade")
         await _fetch(conn, "Municipios with data",
                       "SELECT count(DISTINCT l.municipio_nome) FROM staging.fact_precos_mensais f JOIN staging.dim_localidade l ON f.id_localidade = l.id_localidade WHERE l.municipio_nome IS NOT NULL")
-        await _fetch(conn, "Products (ALIMENTO_VAREJO)",
-                      "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c = 'ALIMENTO_VAREJO'")
+        total_mapeado = await conn.fetchval(
+            "SELECT count(*) FROM staging.dim_produto WHERE status_fonte = 'MAPEADA'")
+        total_cat = await conn.fetchval(
+            "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c = 'ALIMENTO_VAREJO'")
+        print(f"  Total MAPEADO (status_fonte): {total_mapeado}")
+        print(f"  Total ALIMENTO_VAREJO (categoria_b2c): {total_cat}")
         await _fetch(conn, "Products (B2B/other)",
                       "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c != 'ALIMENTO_VAREJO' OR categoria_b2c IS NULL")
+
+        # ── Monthly Coverage Matrix (MAPEADOS apenas) ──────────────────
+        print(f"\n{'=' * 60}")
+        print("  MONTHLY COVERAGE MATRIX  (status_fonte = MAPEADA)")
+        print(f"{'=' * 60}")
+        cov_rows = await conn.fetch("""
+            SELECT
+                f.ano,
+                f.mes,
+                count(DISTINCT f.id_produto) AS cnt
+            FROM staging.fact_precos_mensais f
+            JOIN staging.dim_produto p ON p.id_produto = f.id_produto
+            WHERE p.status_fonte = 'MAPEADA'
+            GROUP BY f.ano, f.mes
+            ORDER BY f.ano, f.mes
+        """)
+        for r in cov_rows:
+            pct = r['cnt'] / total_mapeado * 100
+            print(f"  {r['ano']}-{r['mes']:02d}: {r['cnt']:>3d}/{total_mapeado} ({pct:5.1f}%)")
+
+        # ── Orphan Products (MAPEADOS): have 2025 data but ZERO in 2026 ──
+        print(f"\n{'=' * 60}")
+        print("  TOP 20 ORPHAN PRODUCTS  (MAPEADOS — present in 2025, absent in 2026)")
+        print(f"{'=' * 60}")
+        orphan_rows = await conn.fetch("""
+            WITH produtos_2025 AS (
+                SELECT DISTINCT f.id_produto, p.nome_produto
+                FROM staging.fact_precos_mensais f
+                JOIN staging.dim_produto p ON p.id_produto = f.id_produto
+                WHERE p.status_fonte = 'MAPEADA'
+                  AND f.ano = 2025
+            ),
+            produtos_2026 AS (
+                SELECT DISTINCT f.id_produto
+                FROM staging.fact_precos_mensais f
+                JOIN staging.dim_produto p ON p.id_produto = f.id_produto
+                WHERE p.status_fonte = 'MAPEADA'
+                  AND f.ano = 2026
+            )
+            SELECT p25.id_produto, p25.nome_produto
+            FROM produtos_2025 p25
+            LEFT JOIN produtos_2026 p26 ON p26.id_produto = p25.id_produto
+            WHERE p26.id_produto IS NULL
+            ORDER BY p25.nome_produto
+            LIMIT 20
+        """)
+        if orphan_rows:
+            for i, r in enumerate(orphan_rows, 1):
+                print(f"  {i:2d}. id_produto={r['id_produto']:>4d}  {r['nome_produto']}")
+        else:
+            print("  (none — all 2025 MAPEADOS also appear in 2026)")
+
+        # ── SEM_FONTE summary ─────────────────────────────────────────
+        n_sem_fonte = await conn.fetchval(
+            "SELECT count(*) FROM staging.dim_produto WHERE status_fonte = 'SEM_FONTE_MAPEDADA'")
+        n_sf_2025 = await conn.fetchval("""
+            SELECT count(DISTINCT f.id_produto)
+            FROM staging.fact_precos_mensais f
+            JOIN staging.dim_produto p ON p.id_produto = f.id_produto
+            WHERE p.status_fonte = 'SEM_FONTE_MAPEDADA' AND f.ano = 2025
+        """)
+        n_sf_2026 = await conn.fetchval("""
+            SELECT count(DISTINCT f.id_produto)
+            FROM staging.fact_precos_mensais f
+            JOIN staging.dim_produto p ON p.id_produto = f.id_produto
+            WHERE p.status_fonte = 'SEM_FONTE_MAPEDADA' AND f.ano = 2026
+        """)
+        print(f"\n  SEM_FONTE_MAPEDADA (total): {n_sem_fonte}")
+        print(f"  SEM_FONTE with 2025 data:    {n_sf_2025}")
+        print(f"  SEM_FONTE with 2026 data:    {n_sf_2026}")
 
         # ── Data freshness ───────────────────────────────────────────
         print(f"\n{'=' * 60}")
         print("  DATA FRESHNESS")
         print(f"{'=' * 60}")
         await _fetch(conn, "Latest data (staging)",
-                      "SELECT max(data_referencia) FROM staging.fact_precos_mensais")
+                      "SELECT max(ano::text || '-' || lpad(mes::text, 2, '0')) FROM staging.fact_precos_mensais")
         await _fetch(conn, "Earliest data (staging)",
-                      "SELECT min(data_referencia) FROM staging.fact_precos_mensais")
+                      "SELECT min(ano::text || '-' || lpad(mes::text, 2, '0')) FROM staging.fact_precos_mensais")
         await _fetch(conn, "Latest sazonalidade calc",
                       "SELECT max(data_referencia_atual) FROM mart.sazonalidade_produto")
 

@@ -163,16 +163,16 @@ class HFBrasilRegionalScraper(ScraperCEASA):
     }
 
     async def coletar_periodo(self, data_inicio: date, data_fim: date | None = None) -> list[CotacaoHistorica]:
-        hoje = date.today()
-        ano_mes_unico = (hoje.year, hoje.month)
-        async with self.semaforo:
-            try:
-                items = await self.coletar_mes(*ano_mes_unico)
-                logger.info("%s %s-%s %04d/%02d: %d cotacoes (snapshot unico)", type(self).__name__, self.uf, self.municipio, *ano_mes_unico, len(items))
-                return items
-            except Exception as exc:
-                logger.warning("%s %s-%s falhou: %s", type(self).__name__, self.uf, self.municipio, exc)
-                return []
+        todas: list[CotacaoHistorica] = []
+        for ano, mes in iterar_meses(data_inicio, data_fim):
+            async with self.semaforo:
+                try:
+                    items = await self.coletar_mes(ano, mes)
+                    logger.info("%s %s-%s %04d/%02d: %d cotacoes", type(self).__name__, self.uf, self.municipio, ano, mes, len(items))
+                    todas.extend(items)
+                except Exception as exc:
+                    logger.warning("%s %s-%s %04d/%02d falhou: %s", type(self).__name__, self.uf, self.municipio, ano, mes, exc)
+        return todas
 
     async def coletar_mes(self, ano: int, mes: int) -> list[CotacaoHistorica]:
         resultados: list[CotacaoHistorica] = []
@@ -297,9 +297,15 @@ def _resolver_scraper(uf: str, municipio: str, fonte: str, semaforo: asyncio.Sem
 async def executar_coleta_regional(
     localidades: list[dict] | None = None,
     max_concorrencia: int = 3,
+    data_inicio: date | None = None,
+    data_fim: date | None = None,
 ) -> list[CotacaoHistorica]:
     if localidades is None:
         localidades = LOCALIDADES_ALVO
+    if data_inicio is None:
+        data_inicio = date.today()
+    if data_fim is None:
+        data_fim = date.today()
 
     semaforo = asyncio.Semaphore(max_concorrencia)
     scrapers = [_resolver_scraper(**loc, semaforo=semaforo) for loc in localidades]
@@ -308,7 +314,7 @@ async def executar_coleta_regional(
     todas: list[CotacaoHistorica] = []
     for sc in scrapers:
         try:
-            items = await sc.coletar_periodo(date.today(), date.today())
+            items = await sc.coletar_periodo(data_inicio, data_fim)
             todas.extend(items)
         except Exception as exc:
             logger.error("Scraper %s %s-%s falhou: %s", type(sc).__name__, sc.uf, sc.municipio, exc)

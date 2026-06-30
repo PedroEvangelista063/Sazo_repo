@@ -14,6 +14,7 @@ async def _query_sazonalidade(
     municipio: str | None = None,
     produto: str | None = None,
     status_cor: str | None = None,
+    categoria: str | None = None,
     ano: int | None = None,
     mes: int | None = None,
     pagina: int = 1,
@@ -22,7 +23,8 @@ async def _query_sazonalidade(
     settings = get_settings()
     cache_key = hashlib.md5(
         json.dumps({"uf": uf, "municipio": municipio, "produto": produto,
-                     "status_cor": status_cor, "ano": ano, "mes": mes,
+                     "status_cor": status_cor, "categoria": categoria,
+                     "ano": ano, "mes": mes,
                      "pagina": pagina, "por_pagina": por_pagina},
                     sort_keys=True, default=str).encode()
     ).hexdigest()
@@ -51,6 +53,10 @@ async def _query_sazonalidade(
         where_clauses.append(f"v.status_cor = ${idx}")
         params.append(status_cor.upper())
         idx += 1
+    if categoria:
+        where_clauses.append(f"v.categoria = ${idx}")
+        params.append(categoria.upper())
+        idx += 1
     if ano:
         where_clauses.append(f"v.ano = ${idx}")
         params.append(ano)
@@ -67,6 +73,7 @@ async def _query_sazonalidade(
         SELECT
             v.id_sazonalidade,
             v.produto,
+            v.categoria,
             v.uf,
             v.municipio,
             v.municipio_id,
@@ -114,6 +121,7 @@ async def _query_sazonalidade(
             usou_fallback_12m=r.get("usou_fallback_12m", False),
             status_cor=r["status_cor"],
             fonte=r["fonte"],
+            categoria=r.get("categoria"),
         ))
 
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
@@ -124,9 +132,10 @@ async def _query_sazonalidade(
 @router.get("", response_model=SazonalidadeListResponse)
 async def listar_sazonalidade(
     uf: str | None = Query(None, min_length=2, max_length=2, description="UF (BR-2)"),
-    municipio: str | None = Query(None, description="Nome do município"),
+    municipio: str | None = Query(None, description="Nome do municipio"),
     produto: str | None = Query(None, description="Nome do produto"),
     status_cor: str | None = Query(None, pattern=r'^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$'),
+    categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
     ano: int | None = Query(None, ge=2020, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
@@ -134,6 +143,7 @@ async def listar_sazonalidade(
 ):
     return await _query_sazonalidade(
         uf=uf, municipio=municipio, produto=produto, status_cor=status_cor,
+        categoria=categoria,
         ano=ano, mes=mes, pagina=pagina, por_pagina=por_pagina,
     )
 
@@ -142,9 +152,11 @@ async def listar_sazonalidade(
 async def listar_por_localidade(
     uf: str,
     municipio: str,
+    categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=500),
 ):
     return await _query_sazonalidade(
-        uf=uf, municipio=municipio, pagina=pagina, por_pagina=por_pagina,
+        uf=uf, municipio=municipio, categoria=categoria,
+        pagina=pagina, por_pagina=por_pagina,
     )

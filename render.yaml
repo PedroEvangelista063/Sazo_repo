@@ -9,13 +9,14 @@ databases:
 services:
   - type: web
     name: qcomprar-api
-    env: docker
-    dockerfilePath: backend/Dockerfile
-    repo: https://github.com/user/quero_comprar_vg
+    env: python
+    repo: https://github.com/PedroEvangelista063/Quero_Comprar_ext
     branch: main
     plan: free
     region: ohio
     healthCheckPath: /health
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -27,5 +28,5 @@ services:
         value: "120"
       - key: INTERNAL_API_KEY
         sync: false
-      - key: RUN_SCRAPER
-        value: "false"
+      - key: PYTHON_VERSION
+        value: "3.11"

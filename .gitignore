@@ -1,1 +1,35 @@
 node_modules
+
+# Ambiente
+.env
+.env.local
+.env.production
+backend/.env
+frontend/.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Build
+frontend/dist/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+pg_start.log
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+

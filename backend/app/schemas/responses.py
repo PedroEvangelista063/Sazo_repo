@@ -74,8 +74,29 @@ class SazonalidadeResponse(BaseModel):
         description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra)",
     )
     fonte: str | None = Field(None, pattern=r"^(municipio|uf)$")
+    categoria: str | None = Field(None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)")
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
+
+
+class CategoriaResponse(BaseModel):
+    """Categoria com contagem de produtos disponiveis."""
+
+    nome: str = Field(..., description="Nome da categoria")
+    descricao: str | None = Field(None, description="Descricao da categoria")
+    total_produtos: int = Field(..., ge=0, description="Total de produtos na categoria")
+    icone: str | None = Field(None, description="Emoji/icone sugestivo para o frontend")
+
+    model_config = ConfigDict(frozen=True)
+
+
+class CategoriaListResponse(BaseModel):
+    """Retorno do endpoint ``GET /api/v1/categorias``."""
+
+    data: list[CategoriaResponse]
+    total: int
+
+    model_config = ConfigDict(frozen=True)
 
 
 class SazonalidadeListResponse(BaseModel):

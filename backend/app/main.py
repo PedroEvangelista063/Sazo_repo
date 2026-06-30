@@ -5,6 +5,7 @@ from backend.app.core.config import get_settings
 from backend.app.core.ratelimit import RateLimitMiddleware
 from backend.app.db.session import get_pool, close_pool
 from backend.app.api.v1.endpoints.produtos import router as produtos_router
+from backend.app.api.v1.endpoints.categorias import router as categorias_router
 from backend.app.api.v1.endpoints.internal import router as internal_router
 from backend.app.api.v1.endpoints.municipios import router as municipios_router
 
@@ -39,6 +40,7 @@ app.add_middleware(
 )
 
 app.include_router(produtos_router, prefix=settings.api_v1_prefix)
+app.include_router(categorias_router, prefix=settings.api_v1_prefix)
 app.include_router(internal_router, prefix=settings.api_v1_prefix)
 app.include_router(municipios_router, prefix=settings.api_v1_prefix)
 

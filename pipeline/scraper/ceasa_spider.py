@@ -171,13 +171,15 @@ class HFBrasilSpider(BaseSpiderCEASA):
         "goiania": "GO", "goias": "GO",
     }
 
-    async def coletar_snapshot(self) -> list[CotacaoHistorica]:
+    async def coletar_snapshot(self, ano: int | None = None, mes: int | None = None) -> list[CotacaoHistorica]:
         from pipeline.scraper.ceasa_engine import HFBrasilRegionalScraper as EngineScraper
         from pipeline.scraper.ceasa_engine import CotacaoHistorica as EngineCotacao
 
         engine = EngineScraper(self.uf, self.municipio, self.semaforo)
-        hoje = date.today()
-        items = await engine.coletar_mes(hoje.year, hoje.month)
+        if ano is None or mes is None:
+            hoje = date.today()
+            ano, mes = hoje.year, hoje.month
+        items = await engine.coletar_mes(ano, mes)
 
         return [
             CotacaoHistorica(

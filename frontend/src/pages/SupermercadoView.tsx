@@ -1,45 +1,62 @@
-import { useState, useMemo, useEffect } from 'react'
-import { MapPin, Home, Plus, X, Calendar, Search } from 'lucide-react'
-import { useUserStore } from '../store/useUserStore'
+import { useState, useMemo } from 'react'
+import { Calendar, Search, X, Plus, ChevronDown, TrendingUp, Salad, Layers } from 'lucide-react'
 import { useHortifruti } from '../hooks/useHortifruti'
 import { ProductCard } from '../components/ProductCard'
 import { SkeletonCard } from '../components/SkeletonCard'
-import { LocationModal } from '../components/LocationModal'
+import { CategoriesModal } from '../components/CategoriesModal'
 
-const formatMonth = (dateStr: string) => {
-  if (!dateStr) return 'Atual'
-  try {
-    const [year, month] = dateStr.split('-')
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-    return `${months[parseInt(month, 10) - 1]}/${year}`
-  } catch {
-    return dateStr
-  }
-}
+const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 
 export function SupermercadoView() {
-  const { uf, municipio, clearLocation, isOnboarded } = useUserStore()
-  const [changingCity, setChangingCity] = useState(false)
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
+  const [selectedYear, setSelectedYear] = useState<number | null>(null)
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
+  const [categoriesOpen, setCategoriesOpen] = useState(false)
 
-  const { products: produtos, isLoading, isError } = useHortifruti(uf, municipio)
+  const { products: produtos, isLoading, isError } = useHortifruti()
 
-  const availableMonths = useMemo(() => {
-    const months = produtos.map((p) => p.data_referencia_atual).filter(Boolean)
-    return Array.from(new Set(months)).sort().reverse()
+  const { availableYears, monthsByYear } = useMemo(() => {
+    const years = new Set<number>()
+    const months: Record<number, Set<number>> = {}
+
+    for (const p of produtos) {
+      if (!p.ano) continue
+      years.add(p.ano)
+      if (!months[p.ano]) months[p.ano] = new Set()
+      if (p.mes) months[p.ano].add(p.mes)
+    }
+
+    return {
+      availableYears: Array.from(years).sort((a, b) => b - a),
+      monthsByYear: months,
+    }
   }, [produtos])
+
+  const currentYear = useMemo(() => {
+    if (selectedYear !== null) return selectedYear
+    return availableYears[0] ?? null
+  }, [selectedYear, availableYears])
+
+  const monthsInYear = useMemo(() => {
+    if (!currentYear) return new Set<number>()
+    return monthsByYear[currentYear] ?? new Set()
+  }, [currentYear, monthsByYear])
 
   const availableProducts = useMemo(() => {
-    const names = produtos.map((p) => p.nome_produto)
-    return Array.from(new Set(names)).sort()
-  }, [produtos])
+    const filtered = currentYear
+      ? produtos.filter((p) => p.ano === currentYear)
+      : produtos
+    return Array.from(new Set(filtered.map((p) => p.nome_produto))).sort()
+  }, [produtos, currentYear])
 
-  useEffect(() => {
-    if (availableMonths.length > 0 && !selectedMonth) {
-      setSelectedMonth(availableMonths[0])
-    }
-  }, [availableMonths, selectedMonth])
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year)
+    setSelectedMonth(null)
+  }
+
+  const handleMonthClick = (month: number) => {
+    setSelectedMonth((prev) => (prev === month ? null : month))
+  }
 
   const toggleProduct = (produto: string) => {
     setSelectedProducts((prev) =>
@@ -51,67 +68,42 @@ export function SupermercadoView() {
 
   const displayProducts = useMemo(() => {
     let filtered = produtos
-
-    if (selectedMonth) {
-      filtered = filtered.filter((p) => p.data_referencia_atual === selectedMonth)
-    }
-
+    if (currentYear) filtered = filtered.filter((p) => p.ano === currentYear)
+    if (selectedMonth) filtered = filtered.filter((p) => p.mes === selectedMonth)
     if (selectedProducts.length > 0) {
       filtered = filtered.filter((p) => selectedProducts.includes(p.nome_produto))
     }
-
-    const orderMap: Record<string, number> = {
-      VERDE: 1, AMARELO: 2, VERMELHO: 3, INSUFICIENTE: 4,
-    }
-    return [...filtered].sort(
-      (a, b) => (orderMap[a.status_cor] || 99) - (orderMap[b.status_cor] || 99),
-    )
-  }, [produtos, selectedMonth, selectedProducts])
-
-  if (!isOnboarded || !uf || !municipio) {
-    return <LocationModal />
-  }
-
-  if (changingCity) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <LocationModal />
-      </div>
-    )
-  }
+    return filtered
+  }, [produtos, currentYear, selectedMonth, selectedProducts])
 
   return (
-    <div className="min-h-dvh bg-gray-50">
-      <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/80 shadow-sm backdrop-blur-lg">
+    <div className="min-h-dvh bg-gradient-to-b from-green-50 to-white">
+      <header className="sticky top-0 z-40 border-b border-green-100 bg-white/90 shadow-sm backdrop-blur-lg">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-green-600" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-500">
+              <TrendingUp className="h-5 w-5 text-white" />
+            </div>
             <div>
-              <p className="text-xs font-medium text-gray-500">Sua Feira em</p>
-              <p className="text-sm font-bold text-gray-900">
-                {municipio} - {uf}
+              <h1 className="text-lg font-bold leading-tight text-gray-900">
+                Sazonalidade
+              </h1>
+              <p className="text-xs text-gray-500">
+                Preços de Alimentos &mdash; CONAB &middot; SP
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setChangingCity(true)}
-              className="rounded-full bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-200"
-            >
-              Trocar
-            </button>
-            <button
-              onClick={() => clearLocation()}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200"
-              aria-label="Início"
-            >
-              <Home size={18} />
-            </button>
-          </div>
+          <button
+            onClick={() => setCategoriesOpen(true)}
+            className="flex items-center gap-1.5 rounded-xl bg-green-500 px-4 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-green-600"
+          >
+            <Layers size={14} />
+            Categorias
+          </button>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pt-6">
+      <main className="mx-auto max-w-5xl px-4 pb-12 pt-6">
         {isLoading && (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -121,66 +113,109 @@ export function SupermercadoView() {
         )}
 
         {isError && !isLoading && (
-          <div className="mt-12 rounded-xl border border-red-100 bg-red-50 p-6 text-center">
-            <p className="font-medium text-red-600">
-              Ops! Não conseguimos carregar os dados da feira.
+          <div className="mt-12 rounded-xl border border-red-100 bg-red-50 p-8 text-center">
+            <p className="font-semibold text-red-600">
+              Não foi possível carregar os dados. Tente novamente mais tarde.
             </p>
           </div>
         )}
 
         {!isLoading && !isError && produtos.length === 0 && (
-          <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center shadow-sm">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-3xl">
-              🛒
+          <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center shadow-sm">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <Salad className="h-8 w-8 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800">Prateleira Vazia</h3>
-            <p className="mt-2 max-w-sm text-sm text-gray-500">
-              Ainda não existem dados de sazonalidade registrados pela CONAB
-              para os alimentos na região de{' '}
-              <strong>
-                {municipio}-{uf}
-              </strong>
-              .
+            <h3 className="text-xl font-bold text-gray-800">Nenhum dado disponível</h3>
+            <p className="mt-2 text-sm text-gray-500">
+              Ainda não existem dados de sazonalidade registrados pela CONAB.
             </p>
           </div>
         )}
 
         {!isLoading && produtos.length > 0 && (
           <>
-            <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-              <h2 className="mb-3 flex items-center text-sm font-bold uppercase tracking-wider text-gray-700">
-                <Calendar className="mr-2 text-green-600" size={18} />{' '}
-                Período de Pesquisa
-              </h2>
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                {availableMonths.map((month) => (
-                  <button
-                    key={month}
-                    onClick={() => setSelectedMonth(month)}
-                    className={`whitespace-nowrap rounded-xl px-5 py-2 text-sm font-bold transition-all ${
-                      selectedMonth === month
-                        ? 'bg-green-500 text-white shadow-md shadow-green-200'
-                        : 'border border-gray-200 bg-gray-50 text-gray-600 hover:border-green-300 hover:bg-green-50'
-                    }`}
+            <div className="mb-6 rounded-2xl border border-green-100 bg-white p-5 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="flex items-center text-sm font-bold uppercase tracking-wider text-gray-700">
+                  <Calendar className="mr-2 h-4 w-4 text-green-600" />
+                  Período de Análise
+                </h2>
+                <div className="relative">
+                  <select
+                    value={currentYear ?? ''}
+                    onChange={(e) => handleYearChange(Number(e.target.value))}
+                    className="appearance-none rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 pr-8 text-sm font-semibold text-gray-700 outline-none transition-colors hover:border-green-300 focus:border-green-400 focus:ring-2 focus:ring-green-100"
                   >
-                    {formatMonth(month)}
+                    {availableYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12">
+                {MONTHS_SHORT.map((name, idx) => {
+                  const monthNum = idx + 1
+                  const hasData = monthsInYear.has(monthNum)
+                  const isActive = selectedMonth === monthNum
+
+                  return (
+                    <button
+                      key={monthNum}
+                      onClick={() => handleMonthClick(monthNum)}
+                      className={`relative flex flex-col items-center justify-center rounded-xl px-2 py-3 text-xs font-bold transition-all ${
+                        isActive
+                          ? 'bg-green-500 text-white shadow-md shadow-green-200'
+                          : hasData
+                            ? 'cursor-pointer border border-green-200 bg-green-50 text-green-700 hover:border-green-300 hover:bg-green-100'
+                            : 'cursor-pointer border border-gray-200 bg-gray-50 text-gray-400 hover:border-gray-300 hover:bg-gray-100'
+                      }`}
+                    >
+                      <span className="text-[10px] opacity-70">{String(monthNum).padStart(2, '0')}</span>
+                      <span className="mt-0.5">{name}</span>
+                      {hasData && !isActive && (
+                        <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-400" />
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="mt-3 flex items-center gap-4 text-xs text-gray-400">
+                <span className="flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-full bg-green-400" />
+                  Com dados
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-full bg-gray-300" />
+                  Sem dados
+                </span>
+                {selectedMonth && (
+                  <button
+                    onClick={() => setSelectedMonth(null)}
+                    className="ml-auto font-semibold text-green-600 hover:text-green-800"
+                  >
+                    Visão Completa
                   </button>
-                ))}
+                )}
               </div>
             </div>
 
-            <div className="mb-8 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="flex items-center text-sm font-bold uppercase tracking-wider text-gray-700">
-                  <Search className="mr-2 text-green-600" size={18} />{' '}
+                  <Search className="mr-2 h-4 w-4 text-green-600" />
                   Monte sua Lista
                 </h2>
                 {selectedProducts.length > 0 && (
                   <button
                     onClick={() => setSelectedProducts([])}
-                    className="text-xs font-semibold text-red-500 hover:text-red-700"
+                    className="text-xs font-semibold text-red-400 transition-colors hover:text-red-600"
                   >
-                    Limpar
+                    Limpar ({selectedProducts.length})
                   </button>
                 )}
               </div>
@@ -191,17 +226,17 @@ export function SupermercadoView() {
                     <button
                       key={prod}
                       onClick={() => toggleProduct(prod)}
-                      className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
+                      className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
                         isSelected
-                          ? 'border-green-500 bg-green-50 text-green-800 shadow-sm'
-                          : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-green-300'
+                          ? 'border-green-500 bg-green-50 text-green-700 shadow-sm'
+                          : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-green-300 hover:text-green-600'
                       }`}
                     >
                       {prod}
                       {isSelected ? (
-                        <X size={14} className="text-green-700" />
+                        <X size={12} className="text-green-600" />
                       ) : (
-                        <Plus size={14} className="text-gray-400" />
+                        <Plus size={12} className="text-gray-400" />
                       )}
                     </button>
                   )
@@ -210,11 +245,16 @@ export function SupermercadoView() {
             </div>
 
             <div className="mb-4">
-              <h2 className="mb-4 text-lg font-bold text-gray-900">
-                {selectedProducts.length > 0
-                  ? 'Resultado da sua lista'
-                  : 'Todos os produtos em oferta'}
-              </h2>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-base font-bold text-gray-900">
+                  {selectedProducts.length > 0
+                    ? 'Produtos Selecionados'
+                    : 'Todos os Produtos'}
+                </h2>
+                <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                  {displayProducts.length} {displayProducts.length === 1 ? 'item' : 'itens'}
+                </span>
+              </div>
 
               {displayProducts.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -225,7 +265,7 @@ export function SupermercadoView() {
               ) : (
                 <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
                   <p className="text-sm font-medium text-gray-500">
-                    Nenhum produto cadastrado para este mês específico.
+                    Nenhum produto encontrado para este período.
                   </p>
                 </div>
               )}
@@ -233,6 +273,14 @@ export function SupermercadoView() {
           </>
         )}
       </main>
+
+      <CategoriesModal
+        open={categoriesOpen}
+        onClose={() => setCategoriesOpen(false)}
+        produtos={produtos}
+        selectedProducts={selectedProducts}
+        onToggleProduct={toggleProduct}
+      />
     </div>
   )
 }

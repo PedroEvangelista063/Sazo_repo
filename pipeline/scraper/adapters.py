@@ -53,7 +53,7 @@ class HFBrasilAdapter(ScraperAdapter):
 
     async def fetch(self) -> list[CotacaoHistorica]:
         spider = HFBrasilSpider(self.uf, self.municipio, self.semaforo)
-        return await spider.coletar_snapshot()
+        return await spider.coletar_snapshot(ano=self.ano, mes=self.mes)
 
 
 class CEAGESPAdapter(ScraperAdapter):

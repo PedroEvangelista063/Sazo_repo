@@ -1,0 +1,61 @@
+name: Data Pipeline — Scraper CEASA + Ingestão CONAB
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'   # toda segunda-feira 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Instalar dependências do pipeline
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Instalar dependências extras (scraper)
+        run: pip install playwright beautifulsoup4 lxml rapidfuzz
+
+      - name: Instalar navegadores Playwright (Chromium)
+        run: playwright install chromium
+
+      - name: Coletar cotações CEASA
+        env:
+          PYTHONPATH: .
+        run: python -m pipeline.run_scraper_historico --concorrencia 4
+
+      - name: Upload artefato (scraper parquet)
+        uses: actions/upload-artifact@v4
+        with:
+          name: scraper-parquet
+          path: database/processed_data/01_raw/scraper_hortifruti_historico.parquet
+          retention-days: 15
+
+      - name: Executar ingestão CONAB (inteligente)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PYTHONPATH: .
+        run: python -m pipeline.ingestao_conab_inteligente
+
+      - name: Notificar falha
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Data Pipeline falhou — ' + new Date().toISOString().split('T')[0],
+              body: 'O pipeline semanal (scraper + ingestão) falhou. Verifique os logs em Actions.',
+              labels: ['bug', 'pipeline']
+            })

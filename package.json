@@ -7,9 +7,11 @@
   "scripts": {
     "prepare": "husky",
     "install:all": "npm install && npm --prefix frontend install && pip install -r backend/requirements.txt",
+    "scraper": "python -m pipeline.run_scraper_historico --concorrencia 4",
     "dev:backend": "python -m uvicorn backend.app.main:app --reload --port 8000",
     "dev:frontend": "npm --prefix frontend run dev",
-    "dev:all": "concurrently -n BE,FE -c cyan,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:all": "npm run scraper && concurrently -n BE,FE -c cyan,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "start": "./backend/start.sh",
     "build:frontend": "npm --prefix frontend run build"
   }
 }

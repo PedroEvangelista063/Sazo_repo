@@ -1,0 +1,7 @@
+{
+  "fonte": "CEAGESP/PESCADOS",
+  "url": "https://ceagesp.gov.br/cotacoes/",
+  "timestamp": "20260629_092756",
+  "xpath_tentado": "[\"//table[contains(., 'Produto')]\", \"//table[contains(., 'Preco')]\", '//table']",
+  "html_path": "D:\\D\\PROJETOS EM ANDAMENTO\\quero_comprar_vg\\logs\\scraping_failures\\20260629_092756_ceagesp_pescados.html"
+}

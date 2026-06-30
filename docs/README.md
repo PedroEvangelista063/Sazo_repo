@@ -7,13 +7,13 @@ Uma ferramenta desenhada para ajudar o consumidor a economizar na feira e no sup
 
 | Camada | Tecnologia |
 |---|---|
-| Pipeline ETL | Python 3.11+, Polars, httpx, psycopg2 |
+| Pipeline ETL | Python 3.11+, Polars, httpx, psycopg2, rapidfuzz |
 | Backend | FastAPI + asyncpg (Raw SQL) |
 | Cache | In-memory thread-safe com TTL (24h) |
 | Database | PostgreSQL 16+ (Arquitetura Medalhão) |
-| Frontend | React 18 + Vite + PWA (Service Worker) |
+| Frontend | React 18.3 + Vite 6 + PWA (Service Worker) |
 | Estilização | Tailwind CSS 3.4 (utility-first) |
-| Estado | Zustand com persist (localStorage) |
+| Estado | Zustand 5 com persist (IndexedDB via idb-keyval) |
 | API Data Fetching | TanStack Query v5 (stale-while-revalidate) |
 | Autocura | Ghost DBA Agent (LLM-driven SQL repair) |
 
@@ -45,31 +45,49 @@ Por ser um **PWA (Progressive Web App)**, depois do primeiro acesso o aplicativo
 ```
 quero_comprar_vg/
 ├── pipeline/               # ETL: ingestão CONAB → IS → PostgreSQL / arquivos
-│   ├── ingestao_conab.py   # Pipeline principal: extract → transform → load
-│   ├── seasonality.py      # Cálculo do IS (baseline 2025 + fallback 12m)
-│   ├── process_to_files.py # ETL offline: LISTA*.txt → JSON/Parquet/SQL
-│   ├── ghost_dba_agent.py  # Agente de autocura com LLM
-│   ├── audit_local_db.py   # Auditoria: TXT locais vs banco
-│   ├── ingest.py           # Módulo auxiliar de download com httpx
-│   └── tests/              # Testes unitários (validação, sazonalidade)
+│   ├── ingestao_conab.py           # Pipeline principal: extract → transform → load
+│   ├── ingestao_conab_inteligente.py # Leitura lazy Polars + semantic engine (regex)
+│   ├── seasonality.py              # Cálculo do IS (baseline 2025 + fallback 12m)
+│   ├── process_to_files.py         # ETL offline: LISTA*.txt → JSON/Parquet/SQL
+│   ├── ghost_dba_agent.py          # Agente de autocura com LLM
+│   ├── audit_local_db.py           # Auditoria: TXT locais vs banco
+│   ├── enrich_master_list.py       # Enriquece lista mestre com cotações CEASA
+│   ├── run_scraper_historico.py    # Runner de coleta histórica CEASA
+│   ├── ingest.py                   # Módulo auxiliar de download com httpx
+│   ├── scraper/                    # Scrapers CEASA (HFBrasil, CEAGESP, etc.)
+│   │   ├── ceasa_engine.py         # Engine core: ABC ScraperCEASA + adapters regionais
+│   │   ├── ceasa_spider.py         # Spider: CotacaoHistorica, parsers
+│   │   ├── data_normalizer.py      # Normalizador fuzzy (rapidfuzz)
+│   │   ├── price_collector.py      # Orquestrador paralelo com asyncio
+│   │   ├── adapters.py             # Adaptadores HFBrasil, CEAGESP, Agrolink
+│   │   ├── buscador_fontes.py      # Descoberta de URLs por UF
+│   │   ├── fuzzy_matcher.py        # ConciliadorSemantico contra CSV mestre
+│   │   └── aliases.json            # 54 aliases de produtos
+│   ├── utils/
+│   │   └── entity_matcher.py       # EntityMatcher: fuzzy match com rapidfuzz
+│   └── tests/                      # Testes unitários (validação, sazonalidade)
 ├── backend/                # FastAPI B2C
-│   └── app/
-│       ├── api/v1/
-│       │   └── endpoints/
-│       │       ├── produtos.py     # GET /api/v1/sazonalidade
-│       │       ├── municipios.py   # GET /api/v1/municipios?uf=SP
-│       │       └── internal.py     # GET/POST /api/v1/_internal/cache-clear
-│       ├── core/           # config, cache, ratelimit
-│       ├── db/             # conexão asyncpg (pool 10-50)
-│       └── schemas/        # Pydantic V2 responses
+│   ├── app/
+│   │   ├── api/v1/
+│   │   │   └── endpoints/
+│   │   │       ├── produtos.py     # GET /api/v1/sazonalidade
+│   │   │       ├── municipios.py   # GET /api/v1/municipios?uf=SP
+│   │   │       └── internal.py     # GET/POST /api/v1/_internal/cache-clear
+│   │   ├── core/           # config, cache, ratelimit
+│   │   ├── db/             # conexão asyncpg (pool 10-50)
+│   │   └── schemas/        # Pydantic V2 responses
+│   ├── get_data_summary.py # Script ad-hoc de health check do banco
+│   ├── run_migration.py    # Executa migração SQL
+│   └── requirements.txt    # Dependências
 ├── frontend/               # PWA React + Vite Mobile-First
 │   ├── src/
-│   │   ├── store/          # Zustand: useUserStore (UF/Cidade)
+│   │   ├── store/          # Zustand 5: useUserStore (UF/Cidade, persist IndexedDB)
 │   │   ├── services/       # Axios + hooks TanStack Query
-│   │   ├── components/     # ProductCard, LocationSelector
-│   │   ├── pages/          # Dashboard
-│   │   └── types.ts        # ProductSeasonality, UF_LIST, emojis
-│   ├── vite.config.ts      # PWA plugin + proxy dev
+│   │   ├── components/     # ProductCard, LocationModal, SkeletonCard
+│   │   ├── pages/          # SupermercadoView (tela única)
+│   │   ├── hooks/          # useHortifruti, useMunicipios
+│   │   └── types/          # domain.ts: ProdutoVarejo, StatusCor, etc.
+│   ├── vite.config.ts      # PWA plugin (Workbox) + proxy dev
 │   └── tailwind.config.js  # Cores sazonais (verde/amarelo/vermelho)
 ├── database/               # DDLs + migrations + artefatos estáticos
 │   └── processed_data/     # Output do ETL offline (auditoria, relatórios)
@@ -153,6 +171,15 @@ Saída em `database/processed_data/`:
 ### Variação de formato CONAB
 
 Os arquivos `LISTA*.txt` têm schemas inconsistentes: 9 ou 11 colunas, com ou sem cabeçalho. O motor detecta automaticamente os 4 casos via `_ler_csv()` — nenhuma configuração manual é necessária.
+
+### Data Health Check
+
+```bash
+python backend/get_data_summary.py
+python backend/get_data_summary.py --verbose
+```
+
+Mostra counts por schema, distribuição do semáforo (VERDE/AMARELO/VERMELHO), data freshness, anomalias rejeitadas, e top localidades.
 
 ## PWA (Offline-First)
 

@@ -47,6 +47,12 @@ jobs:
           PYTHONPATH: .
         run: python -m pipeline.ingestao_conab_inteligente
 
+      - name: Executar manutenção do banco (upsert + GC)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PYTHONPATH: .
+        run: python -m pipeline.db_maintenance --retention 30
+
       - name: Notificar falha
         if: failure()
         uses: actions/github-script@v7

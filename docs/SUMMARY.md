@@ -50,6 +50,7 @@ quero_comprar_vg/
 | `pipeline/ghost_dba_agent.py` | Agente de autocura com LLM (polling 300s, self-heal, webhook) |
 | `pipeline/audit_local_db.py` | Auditoria de integridade: compara TXT locais vs banco |
 | `pipeline/process_to_files.py` | ETL offline: processa LISTA*.txt → JSON/Parquet/SQL estáticos |
+| `pipeline/db_maintenance.py` | "Gari" do banco: upsert scraper raw → staging + GC de 30 dias |
 | `pipeline/enrich_master_list.py` | Enriquece lista mestre com cotações CEASA (parquet em `01_raw/`) |
 | `pipeline/run_scraper_historico.py` | Runner de coleta histórica CEASA (multi-UF, asyncio) |
 | `pipeline/ingest.py` | Módulo auxiliar de download com httpx |
@@ -81,7 +82,9 @@ Acessado pelo pipeline (`ingestao_conab.py`) e pela API FastAPI.
 | `database/03_ajustes_fase4.sql` | Dimensão produto: `categoria_b2c`, `classificao_produto`, `conab_id_produto`; trigger de anomalia corrigida; MV com filtro ALIMENTO_VAREJO |
 | `database/04_reestruturacao_b2c.sql` | Reestruturação B2C com documentação das regras da Sala de Estar |
 | `database/05_recalibracao_baseline_2025.sql` | Baseline 2025 com fallback híbrido de 12 meses. Abandono da média móvel contínua. SP `sp_calcular_sazonalidade_baseline()` com 4 CTEs |
-| `database/06_audit_triggers.sql` | **NOVO** — Tabela `ops.audit_logs` + trigger de mudança de `status_cor` em `mart.sazonalidade_produto` |
+| `database/06_audit_triggers.sql` | Tabela `ops.audit_logs` + trigger de mudança de `status_cor` em `mart.sazonalidade_produto` |
+| `database/07_refatoracao_categorias.sql` | **NOVO** — Normalização: `staging.dim_categoria` + FK `id_categoria` em `dim_produto` + migração de dados existentes |
+| `database/08_data_hygiene.sql` | **NOVO** — Landing Zone: `raw.scraper_data` (append-only log, row_hash, UNIQUE por dia) + `ops.sp_limpeza_diaria_scraper()` (upsert + GC 30 dias) |
 
 ### Artefatos Estáticos (Camada de Auditoria)
 

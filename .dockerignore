@@ -16,7 +16,9 @@ __pycache__
 
 frontend/
 database/
-pipeline/
+pipeline/tests/
+pipeline/scraper/_probe_sources.py
+pipeline/*.pyc
 docs/
 dados_sazonliza_dados_bruto/
 .husky/

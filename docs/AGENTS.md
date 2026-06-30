@@ -4,9 +4,9 @@ Contexto para OpenCode, GGA e agentes AI
 
 Tech Stack
 
-Backend: Python 3.11+ (FastAPI, Polars, psycopg2, asyncpg)
+Backend: Python 3.11+ (FastAPI, Polars, psycopg2, asyncpg, rapidfuzz)
 
-Frontend: React 18+ com Vite (PWA, TailwindCSS, Zustand, React Query v5)
+Frontend: React 18.3+ com Vite 6 (PWA, TailwindCSS 3.4, Zustand 5, TanStack Query v5)
 
 Database: PostgreSQL 16+
 
@@ -88,7 +88,7 @@ Velocidade: PWA puramente client-side. Zero SSR pesado (Sem Next.js).
 
 Proibido exibir preços: O Frontend B2C nunca mostra R$. Apenas status visual (Verde, Amarelo, Vermelho).
 
-Estado e Cache: Zustand estritamente para estado persistente do usuário (UF/Cidade). React Query estritamente para cache de API (Offline-first).
+Estado e Cache: Zustand 5 estritamente para estado persistente do usuário (UF/Cidade, persist via IndexedDB com idb-keyval). TanStack Query v5 estritamente para cache de API (Offline-first, stale-while-revalidate).
 
 UI: Mobile-first, uso de Skeletons (sem spinners bloqueantes), suporte a fallback com Emojis gigantes caso imagens WebP falhem.
 

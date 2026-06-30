@@ -221,48 +221,23 @@ df = df.with_columns(
 
 Isso evita que um único preço absurdo (erro de digitação ou evento climático extremo) contamine a média anual.
 
-### 1.5 Modelagem PostgreSQL — One Big Table (OBT) para leitura rápida
+### 1.5 Modelagem PostgreSQL — Arquitetura Medalhão
 
-**Não use Star Schema aqui.** Star Schema é ótimo para DW analítico com dezenas de dimensões e bilhões de fatos. Para uma API que serve filtros simples (produto + cidade + mês), a OBT é a escolha correta: menos JOINs, menos latência, índices diretos.
+O schema segue o padrão medalhão (raw → staging → mart) com acesso via views materializadas.
 
-**Schema da tabela principal:**
+**Organização:**
 
-```sql
-CREATE TABLE seasonality_index (
-    id              BIGSERIAL PRIMARY KEY,
-    municipio_id    VARCHAR(10) NOT NULL,   -- código IBGE
-    municipio_nome  VARCHAR(100) NOT NULL,
-    uf              CHAR(2) NOT NULL,
-    produto         VARCHAR(100) NOT NULL,
-    ano             SMALLINT NOT NULL,
-    mes             SMALLINT NOT NULL,      -- 1-12
-    preco_medio     NUMERIC(10, 2),
-    media_movel_12m NUMERIC(10, 2),
-    indice_sazonalidade NUMERIC(6, 4),
-    status_semaforo VARCHAR(10) NOT NULL,   -- VERDE | AMARELO | VERMELHO | INSUFICIENTE
-    fonte           VARCHAR(5) NOT NULL,    -- 'UF' | 'MUN'
-    updated_at      TIMESTAMPTZ DEFAULT NOW(),
-    CONSTRAINT uq_seasonality UNIQUE (municipio_id, produto, ano, mes)
-);
+- **`raw`**: dados como chegam da CONAB (COPY direto, schema flexível)
+- **`staging`**: dimensões + fato limpos. Anomalias >500% da média histórica vão para `staging.precos_rejeitados`
+- **`mart`**: sazonalidade materializada. `mart.sazonalidade_produto` é a tabela âncora do semáforo. `mart.vw_api_produtos_sazonalidade` é a view materializada que alimenta a API
+- **`ops`**: observabilidade monitorada pelo Ghost DBA (audit logs, controle de erros)
 
--- Índices para as queries da API
-CREATE INDEX idx_season_uf_prod_mes ON seasonality_index (uf, produto, mes);
-CREATE INDEX idx_season_mun_prod_mes ON seasonality_index (municipio_id, produto, mes);
-CREATE INDEX idx_season_produto ON seasonality_index USING gin(to_tsvector('portuguese', produto));
-```
+**Modelo híbrido de sazonalidade (baseline 2025 + fallback 12m):**
 
-**Tabela de referência de municípios (populada via IBGE):**
-
-```sql
-CREATE TABLE municipios (
-    codigo_ibge  VARCHAR(10) PRIMARY KEY,
-    nome         VARCHAR(100) NOT NULL,
-    uf           CHAR(2) NOT NULL,
-    latitude     NUMERIC(9,6),
-    longitude    NUMERIC(9,6)
-);
-CREATE INDEX idx_mun_uf ON municipios (uf);
-```
+- Baseline primário: média do produto em 2025 (Ano Âncora Absoluto). Prevalece sempre que existir
+- Fallback condicional: para produtos que NÃO existiam em 2025, média dos últimos 12 meses disponíveis (mínimo 3 meses de histórico)
+- Flag `usou_fallback_12m` indica se a âncora veio do fallback (não de 2025)
+- SP principal: `sp_calcular_sazonalidade_baseline()` com 4 CTEs (base_2025 → ultimos_precos → fallback_12m → master_join)
 
 ---
 
@@ -291,23 +266,24 @@ GET /api/v1/_internal/cache-clear
 class SazonalidadeResponse(BaseModel):
     id_produto: int
     nome_produto: str
-    icone_url: Optional[str] = None
+    icone_url: str | None = None
     uf: str
-    municipio: Optional[str] = None
-    municipio_id: Optional[str] = None
+    municipio: str | None = None
+    municipio_id: str | None = None
     ano: int
     mes: int
-    preco_medio: Decimal
-    media_movel_12m: Optional[Decimal] = None
-    indice_sazonalidade: Optional[Decimal] = None
-    status_cor: str  # VERDE | AMARELO | VERMELHO | INSUFICIENTE
-    fonte: str
+    data_referencia_atual: str       # "YYYY-MM"
+    preco_referencia: float | None   # âncora: COALESCE(media 2025, fallback 12m)
+    preco_atual: float | None        # último preço registrado
+    usou_fallback_12m: bool          # True se âncora veio do fallback 12m
+    status_cor: str                  # VERDE | AMARELO | VERMELHO | INSUFICIENTE
+    fonte: str | None                # "municipio" | "uf"
 
 class SazonalidadeListResponse(BaseModel):
     data: list[SazonalidadeResponse]
     total: int
-    pagina: int = 1
-    por_pagina: int = 100
+    pagina: int
+    por_pagina: int
 
 class MunicipioListResponse(BaseModel):
     data: list[str]

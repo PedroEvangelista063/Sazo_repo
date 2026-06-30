@@ -1,0 +1,485 @@
+﻿Categoria,Produto,Jan,Fev,Mar,Abr,Mai,Jun,Jul,Ago,Set,Out,Nov,Dez
+FRUTAS,Abacate Avocado,B,B,B,B,M,M,A,A,A,A,A,B
+FRUTAS,Abacate Breda,B,B,B,B,B,B,B,M,A,A,A,M
+FRUTAS,Abacate Fortuna,B,B,A,A,A,A,A,M,B,B,B,B
+FRUTAS,Abacate Geada,A,A,B,B,B,B,B,B,B,B,B,B
+FRUTAS,Abacate Margarida,B,B,B,B,B,M,M,M,A,A,A,A
+FRUTAS,Abacate Quintal,B,B,M,A,A,A,A,M,B,B,B,B
+FRUTAS,Abacaxi Havai,M,B,B,B,B,A,B,B,B,B,B,M
+FRUTAS,Abacaxi Pérola,M,B,M,B,B,B,B,B,M,M,A,A
+FRUTAS,Abiu,A,B,B,M,B,B,B,B,M,B,M,M
+FRUTAS,Acerola,A,A,A,A,M,B,B,B,M,A,A,A
+FRUTAS,Ameixa Imp. Americana,B,B,B,B,B,A,B,B,B,B,B,B
+FRUTAS,Ameixa Imp. Argentina,B,M,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Ameixa Imp. Chilena,B,A,A,M,B,B,B,B,B,B,B,B
+FRUTAS,Ameixa Imp. Espanhola,B,B,B,B,B,B,A,A,A,A,M,B
+FRUTAS,Ameixa Nacional,M,M,B,B,B,B,B,B,B,B,M,A
+FRUTAS,Ameixa Seca Importada,B,B,B,B,B,A,M,M,M,A,A,A
+FRUTAS,Amêndoa Importada,A,B,B,B,B,M,B,B,B,M,M,M
+FRUTAS,Amora,B,B,B,B,B,B,B,M,A,M,A,A
+FRUTAS,Atemoia,B,B,B,M,A,A,A,A,M,B,B,B
+FRUTAS,Avelã,B,B,B,B,B,B,B,A,M,B,B,B
+FRUTAS,Banana Maçã,M,M,B,B,B,B,M,A,A,A,A,M
+FRUTAS,Banana Nanica,M,M,M,B,A,B,B,M,B,M,M,B
+FRUTAS,Banana Ouro,A,A,B,B,B,M,A,B,B,M,M,A
+FRUTAS,Banana Prata MG,B,B,M,M,M,M,A,M,M,A,A,M
+FRUTAS,Banana Prata SP,M,M,A,B,B,B,M,A,A,B,M,B
+FRUTAS,Banana Terra,A,B,M,B,B,B,B,M,M,M,A,A
+FRUTAS,Cacau,B,B,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Caju,A,B,B,B,B,B,B,B,M,A,B,M
+FRUTAS,Caqui Chocolate - Kyoto,B,M,M,A,A,M,M,B,B,B,B,B
+FRUTAS,Caqui Fuyu,B,B,A,A,A,A,M,B,B,B,B,B
+FRUTAS,Caqui Giombo,B,B,M,A,A,A,B,B,B,B,B,B
+FRUTAS,Caqui Rama Forte,B,B,A,A,A,M,B,B,B,B,B,B
+FRUTAS,Carambola,A,A,A,M,M,A,A,A,B,B,B,M
+FRUTAS,Castanha imp. Portuguesa,B,B,B,B,B,B,B,B,B,B,M,A
+FRUTAS,Castanha Nacional,M,B,B,B,B,M,B,B,M,A,M,A
+FRUTAS,Cereja Importada,B,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Coco Verde,A,M,M,B,B,B,B,B,M,M,A,A
+FRUTAS,Cupuaçu,A,A,A,A,A,A,A,A,A,A,B,B
+FRUTAS,Damasco Importado,B,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Embu,A,A,B,B,B,B,B,B,B,B,B,B
+FRUTAS,Figo,A,A,A,A,M,M,B,B,B,B,B,A
+FRUTAS,Framboesa,M,M,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Goiaba,M,A,A,M,B,B,B,B,B,B,B,B
+FRUTAS,Granadilla Imp Colômbia,M,M,M,A,B,B,B,B,M,M,B,A
+FRUTAS,Grapefruit,B,B,M,B,B,B,B,B,B,B,A,M
+FRUTAS,Graviola,M,B,B,B,A,B,B,B,B,A,A,B
+FRUTAS,Jabuticaba,B,B,B,B,B,B,B,A,M,A,B,B
+FRUTAS,Jaca,A,A,A,A,M,B,B,B,B,M,A,A
+FRUTAS,Jambo,A,B,B,B,B,B,B,B,M,M,A,M
+FRUTAS,Jatobá,B,B,M,B,B,B,B,A,A,B,B,B
+FRUTAS,Jenipapo,A,B,B,B,M,B,B,M,B,B,B,B
+FRUTAS,Kiwi Gold NZL Importado,B,B,B,B,M,M,A,A,A,A,M,B
+FRUTAS,Kiwi Importado,A,A,M,B,B,B,B,B,B,M,M,A
+FRUTAS,Kiwi Imp Chile,B,B,B,B,M,M,M,A,A,M,B,B
+FRUTAS,Kiwi Imp Itália,A,A,A,M,M,B,B,B,B,B,M,B
+FRUTAS,Kiwi Green NZL Importado,B,B,B,B,A,B,M,M,A,M,M,B
+FRUTAS,Kiwi Nacional,B,B,M,A,A,A,M,B,B,B,B,B
+FRUTAS,Laranja Baia,B,B,B,B,M,M,A,A,A,M,B,B
+FRUTAS,Laranja Baia Importada,M,M,A,A,B,B,B,B,B,B,B,M
+FRUTAS,Laranja Lima,A,B,B,B,B,B,A,A,A,A,A,B
+FRUTAS,Laranja Pera,A,M,M,B,B,B,B,M,M,M,M,M
+FRUTAS,Laranja Valência,A,M,M,M,B,B,B,B,M,A,A,A
+FRUTAS,Lichia,A,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Lima Pérsia,B,B,B,B,B,B,M,A,A,A,M,B
+FRUTAS,Limão Galego,A,A,M,M,B,B,B,B,B,B,B,B
+FRUTAS,Limão Rosa,B,B,B,M,A,A,A,A,A,M,B,B
+FRUTAS,Limão Siciliano,M,M,B,B,B,B,M,A,A,A,M,A
+FRUTAS,Limão Siciliano Importado,M,M,B,B,B,B,B,B,M,A,A,A
+FRUTAS,Limão Taiti,A,M,M,M,B,B,B,B,B,B,M,A
+FRUTAS,Longan,B,A,A,M,B,B,B,B,B,B,B,B
+FRUTAS,Maçã Eva,A,B,B,B,B,B,B,B,B,B,B,M
+FRUTAS,Maçã Fuji,M,B,B,M,A,A,A,A,A,A,A,M
+FRUTAS,Maça Fuji Importada,A,B,B,B,B,B,B,B,B,B,B,B
+FRUTAS,Maçã Gala,A,M,B,B,B,B,M,M,M,A,A,A
+FRUTAS,Maça Gala Importada,B,B,B,B,B,A,A,A,A,A,A,A
+FRUTAS,Maçã Golden Del,B,B,B,B,B,A,A,A,A,A,A,A
+FRUTAS,Maça Golden Importada,B,B,B,B,B,A,A,A,A,A,A,A
+FRUTAS,Maça Granny Smith Importada,B,B,B,B,B,B,B,M,A,A,M,M
+FRUTAS,Maça Pink Lady Importada,B,B,B,B,A,M,M,A,A,A,A,M
+FRUTAS,Maça Red Del Importada,B,M,A,B,B,B,M,B,B,M,M,M
+FRUTAS,Mamão Formosa,A,M,B,M,A,M,M,A,M,M,M,B
+FRUTAS,Mamão Havaí,M,M,B,M,M,B,B,B,M,A,A,M
+FRUTAS,Manga Bourbon,B,B,B,B,B,B,B,B,B,A,A,A
+FRUTAS,Manga Coquinho,B,B,B,B,B,B,B,B,B,M,A,M
+FRUTAS,Manga Espada,B,B,B,B,B,B,B,B,B,A,A,B
+FRUTAS,Manga Haden,B,B,B,B,B,M,M,M,A,M,A,M
+FRUTAS,Manga Keity,M,A,A,A,A,A,A,M,A,A,B,A
+FRUTAS,Manga Lolita,B,B,B,B,B,B,B,B,B,M,A,A
+FRUTAS,Manga Palmer,A,M,B,B,B,B,B,B,B,M,M,A
+FRUTAS,Manga Rosa,M,B,B,M,M,M,M,M,M,A,A,A
+FRUTAS,Manga Shelly,B,B,B,B,B,B,B,B,M,A,M,B
+FRUTAS,Manga Tommy,B,B,B,B,B,B,A,B,B,M,M,M
+FRUTAS,Mangostim,B,B,A,M,B,B,A,A,A,A,B,B
+FRUTAS,Maracujá Azedo,M,M,M,M,B,B,M,A,A,A,B,B
+FRUTAS,Maracujá Doce,A,B,B,A,A,A,M,M,B,B,B,M
+FRUTAS,Melancia Baby,A,M,B,B,B,B,B,M,M,M,A,A
+FRUTAS,Melancia,M,M,M,M,B,B,B,B,M,M,M,A
+FRUTAS,Melão Amarelo,A,M,B,M,B,B,B,M,M,A,A,A
+FRUTAS,Melão Gália,A,M,B,B,B,B,B,M,A,A,A,A
+FRUTAS,Melão Net Melon,B,B,B,A,B,B,B,B,B,B,B,B
+FRUTAS,Melão Orange,M,M,B,B,B,B,M,M,M,A,A,A
+FRUTAS,Melão Pele de Sapo,M,M,M,B,B,B,B,B,B,M,A,A
+FRUTAS,Mexerica Mandarina Importada,A,A,A,M,B,M,B,B,M,M,B,B
+FRUTAS,Mexerica Rio,B,B,B,B,M,M,A,A,A,M,B,B
+FRUTAS,Mirtilo,B,B,B,B,B,B,B,B,M,M,B,A
+FRUTAS,Morango Comum,B,B,B,B,B,B,A,A,A,M,M,M
+FRUTAS,Nectarina Importada,A,A,A,B,B,B,B,B,B,B,B,M
+FRUTAS,Nectarina Imp Argentina,A,B,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Nectarina Imp Chile,A,M,A,B,B,B,B,B,B,B,B,A
+FRUTAS,Nectarina Imp Espanha,B,B,B,B,B,B,A,A,M,B,B,B
+FRUTAS,Nectarina Imp Estados Unidos,B,B,B,B,B,M,B,B,B,B,B,A
+FRUTAS,Nectarina Nacional,B,B,B,B,B,B,B,B,B,M,A,A
+FRUTAS,Nêspera,B,B,B,B,B,M,A,A,A,A,B,B
+FRUTAS,Nozes Importada,B,B,B,B,B,B,M,M,M,A,A,A
+FRUTAS,Nozes Pecan,B,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Pera Danjou Importada,A,M,B,B,M,A,B,M,A,A,M,B
+FRUTAS,Pera Ercolini Importada,B,A,B,B,B,B,B,M,A,M,M,B
+FRUTAS,Pera Forelli Importada,B,B,B,B,M,M,M,A,M,B,B,B
+FRUTAS,Pera Hosui Importada,B,B,B,B,M,M,M,M,A,M,M,A
+FRUTAS,Pera Nacional,B,A,A,M,A,A,A,M,B,B,B,B
+FRUTAS,Pera Packhams Triumph Importada,M,B,B,B,B,B,M,A,A,A,A,A
+FRUTAS,Pera Red Bartlett Importada,M,A,M,M,A,A,M,B,B,B,A,M
+FRUTAS,Pera Rocha Importada,A,A,M,M,B,B,B,B,A,M,A,A
+FRUTAS,Pera William Importada,B,A,A,A,A,A,M,M,B,B,B,B
+FRUTAS,Pêssego Aurora                  ,B,B,B,B,B,B,B,B,B,M,A,M
+FRUTAS,Pêssego Chimarrita,A,B,B,B,B,B,B,B,B,B,A,A
+FRUTAS,Pêssego Dourado,B,B,B,B,B,B,B,B,B,A,A,B
+FRUTAS,Pêssego Eragil,A,B,B,B,B,B,B,B,B,B,B,B
+FRUTAS,Pêssego Fascinio,B,B,B,B,B,B,B,B,B,B,A,M
+FRUTAS,Pêssego Importado,M,A,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Pêssego Importado Argentina,B,A,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Pêssego Importado Chile,M,A,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Pêssego Importado Espanha,B,B,B,B,B,B,A,A,A,B,B,B
+FRUTAS,Pêssego Imp Estados Unidos,B,A,A,B,M,A,B,B,B,B,B,A
+FRUTAS,Pêssego Kampai,B,B,B,B,B,B,B,B,B,A,A,B
+FRUTAS,Pêssego Nacional,M,B,B,B,B,B,B,B,B,B,M,A
+FRUTAS,Pêssego Rubimel,B,B,B,B,B,B,B,B,B,M,A,B
+FRUTAS,Pêssego Tropic Beauty,B,B,B,B,B,B,B,B,M,A,B,B
+FRUTAS,Pêssego Xiripa,M,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Physalis,B,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Pinha,A,M,B,M,M,M,B,B,B,B,B,B
+FRUTAS,Pitaia,A,A,A,M,B,B,B,B,B,B,B,M
+FRUTAS,Pitanga,B,M,B,B,B,B,B,B,M,A,M,B
+FRUTAS,Quincam,B,M,M,M,A,A,A,A,A,B,B,B
+FRUTAS,Rambutã,M,B,B,M,M,A,A,M,B,B,B,M
+FRUTAS,Romã,B,M,B,B,B,B,B,B,M,A,M,B
+FRUTAS,Sapoti,M,B,B,B,B,B,B,M,A,A,A,A
+FRUTAS,Seriguela,M,A,A,B,B,B,B,B,B,B,B,B
+FRUTAS,Tâmara Seca Importada,B,B,B,B,M,B,B,M,B,M,A,A
+FRUTAS,Tamarillo,M,M,B,B,B,B,B,M,A,A,M,M
+FRUTAS,Tangerina Cravo,B,M,A,A,M,M,B,B,B,B,B,B
+FRUTAS,Tangerina Decopom,B,B,B,B,B,M,M,A,A,A,A,B
+FRUTAS,Tangerina Importada,B,M,A,B,A,A,M,M,A,M,B,B
+FRUTAS,Tangerina Murcote,B,B,B,B,B,B,M,A,A,A,A,M
+FRUTAS,Tangerina Ole,B,B,B,B,M,A,A,M,A,M,B,B
+FRUTAS,Tangerina Poncã,B,B,B,M,A,A,A,M,B,B,B,B
+FRUTAS,Uva Arra 15,B,B,B,M,A,A,A,M,M,M,A,A
+FRUTAS,Uva Benitaka,M,M,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Uva Brasil,A,A,M,B,B,B,B,M,B,B,B,M
+FRUTAS,Uva Centenial,A,B,B,B,B,B,B,B,B,B,B,M
+FRUTAS,Uva Crinsom,B,B,B,B,B,B,M,M,A,A,A,A
+FRUTAS,Uva Crimson Importada,B,M,A,A,M,B,B,B,B,B,B,B
+FRUTAS,Uva Isabel,M,M,B,B,M,M,B,M,B,M,A,A
+FRUTAS,Uva Isis,B,B,B,B,A,A,A,A,M,A,A,A
+FRUTAS,Uva Italia,M,M,M,B,B,B,B,B,B,B,B,A
+FRUTAS,Uva Melodia,B,B,B,B,M,B,M,M,B,M,A,A
+FRUTAS,Uva Moscatel Importada,B,B,A,M,M,B,B,B,B,B,B,B
+FRUTAS,Uva Niagara,M,B,B,B,B,B,B,B,B,B,B,A
+FRUTAS,Uva Passa Importada,B,B,B,M,B,B,M,B,A,A,A,A
+FRUTAS,Uva Red Globe,B,B,B,B,B,B,A,A,A,M,M,B
+FRUTAS,Uva Red Globe Importada,B,M,M,A,A,A,B,B,B,B,B,B
+FRUTAS,Uva Rubi,M,M,A,M,B,B,B,M,B,B,B,M
+FRUTAS,Uva Thompson,M,B,B,B,B,B,B,B,B,M,A,A
+FRUTAS,Uva Thompson Importada,M,M,A,M,M,M,B,B,B,B,M,A
+FRUTAS,Uva Vitoria,M,B,B,B,M,M,M,M,M,M,A,A
+---,,,,,,,,,,,,,
+LEGUMES,Abóbora D´Agua,M,A,A,M,M,B,B,B,B,B,B,M
+LEGUMES,Abóbora Japonesa,M,M,A,A,A,A,B,B,B,B,B,B
+LEGUMES,Abóbora Moranga,B,B,B,B,B,B,B,A,A,A,M,B
+LEGUMES,Abóbora Paulista,M,M,A,A,A,M,M,M,M,A,A,B
+LEGUMES,Abóbora Seca,M,M,A,A,A,A,B,B,B,B,M,M
+LEGUMES,Abobrinha Brasileira,A,A,M,A,B,M,B,B,B,M,M,B
+LEGUMES,Abobrinha Italiana,M,B,M,M,A,A,B,M,M,A,A,B
+LEGUMES,Alcachofra,B,B,B,B,B,B,B,M,A,A,M,B
+LEGUMES,Batata Doce Amarela,B,B,M,A,A,A,M,M,B,B,B,B
+LEGUMES,Batata Doce Branca,A,A,A,M,M,A,B,M,M,A,A,M
+LEGUMES,Batata Doce Rosada,M,A,A,M,M,B,B,B,B,B,B,M
+LEGUMES,Batata Doce Roxa,B,M,M,M,A,A,B,A,M,M,B,B
+LEGUMES,Batata Yakon,A,A,M,M,M,M,B,B,B,B,M,B
+LEGUMES,Berinjela Comum,A,M,M,M,M,M,B,M,M,M,A,M
+LEGUMES,Berinjela Japonesa,B,M,M,M,B,B,B,B,M,A,A,M
+LEGUMES,Beterraba,A,M,M,M,M,M,B,A,A,A,A,M
+LEGUMES,Cará,M,B,M,A,A,A,M,A,A,A,M,B
+LEGUMES,Cenoura,A,M,M,M,M,M,B,M,M,M,M,A
+LEGUMES,Chuchu,M,M,A,A,M,M,B,M,M,A,A,B
+LEGUMES,Ervilha Torta,B,B,B,M,M,A,M,A,A,B,B,B
+LEGUMES,Feijão de Corda,A,A,M,A,M,B,B,B,B,B,M,A
+LEGUMES,Gengibre,A,B,B,M,A,A,B,B,B,B,B,B
+LEGUMES,Inhame,A,B,M,A,A,A,M,A,M,M,M,B
+LEGUMES,Jiló,A,A,A,A,A,A,M,M,M,B,A,M
+LEGUMES,Lakio,M,B,B,B,B,B,B,B,M,A,A,M
+LEGUMES,Lenkon,B,M,A,A,A,A,M,A,M,B,B,B
+LEGUMES,Mandioca,B,B,M,M,A,A,A,A,A,M,M,B
+LEGUMES,Mandioquinha,B,B,B,M,A,A,A,A,M,M,B,B
+LEGUMES,Maxixe,A,A,M,M,B,B,B,B,A,A,A,A
+LEGUMES,Miyoga,A,B,B,B,B,B,B,B,B,B,B,A
+LEGUMES,Nigagori,M,A,A,M,B,B,B,B,B,B,B,B
+LEGUMES,Pepino Caipira,M,M,A,A,M,B,B,B,B,M,M,B
+LEGUMES,Pepino Comum,A,M,A,A,B,B,M,B,B,M,M,B
+LEGUMES,Pepino Japonês,A,A,M,M,M,B,B,B,B,M,A,M
+LEGUMES,Pimenta Cambuci,A,A,M,M,B,M,B,B,M,A,A,M
+LEGUMES,Pimenta Dedo de Moça,B,B,B,B,M,M,M,A,M,A,M,M
+LEGUMES,Pimenta Malagueta/Malaguetão,B,B,B,B,B,M,A,A,A,M,M,M
+LEGUMES,Pimenta Verde,M,B,B,B,M,M,A,M,B,B,M,B
+LEGUMES,Pimenta Verde Americana,A,B,M,B,B,B,B,B,B,M,M,A
+LEGUMES,Pimentão Amarelo,M,B,B,B,B,B,B,B,M,B,M,A
+LEGUMES,Pimentão Verde,A,B,B,M,M,B,B,B,B,M,M,A
+LEGUMES,Pimentão Vermelho,M,B,B,B,B,B,B,B,B,B,B,A
+LEGUMES,Quiabo,A,A,A,M,B,B,B,B,M,M,M,M
+LEGUMES,Taquenoco,B,B,B,B,B,B,B,B,B,M,A,M
+LEGUMES,Tomate Caqui,A,M,B,M,M,A,A,B,M,M,M,M
+LEGUMES,Tomate Carmem,A,M,B,B,M,M,B,B,B,B,A,M
+LEGUMES,Tomate Cereja,A,A,M,B,B,B,B,B,B,M,A,A
+LEGUMES,Tomate Debora,A,A,M,B,M,M,M,B,B,M,A,A
+LEGUMES,Tomate Holandês,A,B,B,B,B,B,B,B,M,M,A,A
+LEGUMES,Tomate Italiano - Pizzadoro,A,M,M,B,M,M,B,B,B,B,A,A
+LEGUMES,Tomate Rasteiro,B,B,B,B,B,M,A,A,A,A,B,B
+LEGUMES,Tomate Sweet Grape,M,B,B,B,B,B,M,M,M,A,M,A
+LEGUMES,Ume,B,B,B,B,A,M,B,B,A,M,B,B
+LEGUMES,Vagem Macarrão,A,B,B,B,M,B,B,M,B,B,A,A
+LEGUMES,Vagem Manteiga,M,B,B,M,M,B,B,A,M,A,A,A
+LEGUMES,Vagem Metro,A,A,M,A,M,M,B,B,B,B,B,M
+---,,,,,,,,,,,,,
+VERDURAS,Acelga Chinesa,B,B,B,B,M,B,M,A,M,M,M,M
+VERDURAS,Acelga,M,A,A,A,M,B,B,B,B,B,M,M
+VERDURAS,Agrião,B,A,A,A,M,M,B,B,B,B,B,B
+VERDURAS,Agrião Hidropônico,M,A,A,A,M,M,B,B,B,B,B,B
+VERDURAS,Alecrim,B,B,B,B,M,B,A,M,M,M,B,M
+VERDURAS,Alface Americana,M,A,M,M,B,B,B,B,B,B,M,A
+VERDURAS,Alface Crespa,M,A,A,A,M,M,B,B,B,B,M,B
+VERDURAS,Alface Crespa Hidropônica,M,A,A,A,M,M,B,B,B,B,M,M
+VERDURAS,Alface Lisa,A,A,M,M,M,B,B,B,M,M,M,B
+VERDURAS,Alface Lisa Hidropônica,B,B,B,B,M,B,M,A,M,M,M,B
+VERDURAS,Alface Mimosa,A,A,M,B,M,B,B,B,B,M,B,B
+VERDURAS,Alface Mimosa Hidropônica,M,B,B,B,M,B,M,A,M,M,M,B
+VERDURAS,Alface Romana,A,B,B,B,M,B,M,A,M,M,M,B
+VERDURAS,Alface Romana Hidropônica,B,B,B,B,B,M,B,B,A,M,M,B
+VERDURAS,Alfavaca,M,M,B,B,M,A,A,A,M,M,M,M
+VERDURAS,Alho Porro,B,B,M,M,A,M,A,M,B,M,B,A
+VERDURAS,Almeirão,A,A,A,A,M,B,B,M,B,M,M,B
+VERDURAS,Almeirão Hidropônico,B,B,M,B,M,M,M,A,A,A,A,A
+VERDURAS,Almeirão Pão de Açucar,M,A,A,M,A,A,B,B,B,M,A,B
+VERDURAS,Aspargo,M,B,B,M,M,M,M,B,B,B,A,M
+VERDURAS,Beterraba com Folhas,M,B,B,B,B,B,M,A,A,A,A,M
+VERDURAS,Brócolos Ninja,B,B,B,B,B,B,M,A,A,A,M,M
+VERDURAS,Brócolos Ramoso,B,B,B,B,M,A,A,A,M,B,B,B
+VERDURAS,Broto de Alfafa,M,M,B,B,M,A,A,A,A,M,A,M
+VERDURAS,Capim Cidreira,B,B,B,B,B,B,M,A,A,M,B,B
+VERDURAS,Catalonha,M,M,A,A,A,A,A,A,A,M,M,B
+VERDURAS,Cebolete,B,B,B,B,B,B,B,B,M,A,A,A
+VERDURAS,Cebolinha,M,B,A,A,A,M,A,A,M,M,M,B
+VERDURAS,Cenoura com Folhas,M,B,M,B,M,B,A,M,A,A,A,M
+VERDURAS,Chicória,A,B,M,B,M,B,B,A,M,M,M,B
+VERDURAS,Coentro,B,B,B,B,B,M,A,A,A,B,A,A
+VERDURAS,Cogumelo Eryngui,B,B,B,B,B,M,A,M,M,M,M,M
+VERDURAS,Cogumelo Hiratake,M,B,B,M,B,B,M,M,M,M,B,A
+VERDURAS,Cogumelo Paris,M,B,B,B,B,M,M,B,B,B,A,A
+VERDURAS,Cogumelo Porto Belo,B,B,B,B,M,B,B,M,A,M,A,A
+VERDURAS,Cogumelo Shimeji,M,B,M,B,B,B,B,M,A,A,M,M
+VERDURAS,Cogumelo Shitake,M,M,M,B,M,B,B,M,M,M,A,A
+VERDURAS,Couve Manteiga,B,M,B,B,M,M,A,A,A,M,M,B
+VERDURAS,Couve de Bruxelas,M,B,B,B,B,M,M,A,A,A,A,M
+VERDURAS,Couve-Flor,B,B,B,B,M,B,M,A,A,M,M,B
+VERDURAS,Endívia,A,M,M,M,B,M,M,M,B,B,B,A
+VERDURAS,Endro,B,B,M,A,B,M,M,M,A,A,M,A
+VERDURAS,Erva Doce,M,B,B,B,M,B,B,M,M,M,M,A
+VERDURAS,Escarola,A,A,A,M,A,M,M,A,A,A,M,B
+VERDURAS,Escarola Hidropônica,B,B,B,B,B,B,B,A,M,A,A,A
+VERDURAS,Espinafre,A,A,M,M,A,M,A,A,A,A,A,B
+VERDURAS,Espinafre Hidropônico,A,M,M,M,A,B,A,A,A,A,M,M
+VERDURAS,Estragão,B,M,M,M,M,B,B,B,M,A,A,A
+VERDURAS,Gengibre com Folhas,A,A,A,M,M,B,B,B,B,B,B,A
+VERDURAS,Gobô,B,B,B,B,B,B,B,M,M,M,M,A
+VERDURAS,Hana Nira,A,A,A,B,B,B,B,B,B,A,M,M
+VERDURAS,Hortelã,A,M,A,A,A,B,B,B,B,B,B,B
+VERDURAS,Louro,M,M,B,M,M,B,B,B,M,A,A,B
+VERDURAS,Manjericão,B,B,B,B,B,B,A,A,A,A,M,M
+VERDURAS,Manjerona,M,B,M,M,M,B,M,A,A,A,M,A
+VERDURAS,Milho Verde,B,B,B,B,M,A,M,B,B,B,B,B
+VERDURAS,Mostarda,B,M,A,A,M,B,M,M,M,A,A,M
+VERDURAS,Mostarda Hidropônica,B,B,M,B,B,B,M,A,M,A,A,A
+VERDURAS,Moyashi,M,A,M,B,M,B,B,M,A,A,M,M
+VERDURAS,Nabo,A,B,M,B,M,B,B,M,A,A,A,M
+VERDURAS,Orégano,A,B,M,M,M,B,M,M,M,M,A,A
+VERDURAS,Palmito Pupunha,A,B,B,B,B,B,M,B,B,B,M,M
+VERDURAS,Rabanete,B,B,M,M,B,B,A,A,M,M,A,M
+VERDURAS,Radicchio,A,M,A,M,B,B,B,B,M,M,M,A
+VERDURAS,Repolho Verde Liso,M,M,A,M,M,B,M,M,M,M,B,B
+VERDURAS,Repolho Roxo,A,M,A,A,A,B,M,M,M,A,A,A
+VERDURAS,Rúcula,A,A,A,B,B,B,M,B,B,B,B,B
+VERDURAS,Rúcula Hidropônica,M,M,M,B,B,B,B,B,M,A,A,M
+VERDURAS,Salsa,M,B,M,B,B,B,M,M,B,M,M,A
+VERDURAS,Salsão Branco/Verde,M,M,A,M,M,M,M,B,B,B,B,A
+VERDURAS,Sálvia,M,B,B,B,M,B,M,M,M,A,A,A
+VERDURAS,Tomilho,B,B,B,B,B,B,B,M,B,A,A,A
+---,,,,,,,,,,,,,
+DIVERSOS,Alho Importado,M,M,M,M,M,A,A,M,B,B,B,M
+DIVERSOS,Alho Importado Argentina,A,A,A,M,A,B,B,B,B,B,B,M
+DIVERSOS,Alho Importado China,B,B,B,B,M,M,A,M,B,M,M,B
+DIVERSOS,Alho Importado Estados Unidos,B,B,B,B,B,B,B,B,B,B,B,A
+DIVERSOS,Alho Nacional,M,B,B,B,B,B,M,A,A,A,A,M
+DIVERSOS,Amendoim com Casca,B,B,B,M,M,A,M,M,M,B,B,B
+DIVERSOS,Amendoim sem Casca,B,B,M,B,A,B,A,A,A,M,A,B
+DIVERSOS,Batata Asterix,B,B,M,A,A,M,M,M,M,B,M,A
+DIVERSOS,Batata Lavada,B,B,B,B,B,B,M,M,B,B,B,A
+DIVERSOS,Cebola Importada,B,B,M,A,A,B,B,B,B,B,B,B
+DIVERSOS,Cebola Importada Argentina,B,B,B,A,A,M,B,B,B,B,B,B
+DIVERSOS,Cebola Importada Espanha,B,B,B,B,B,B,B,A,A,M,A,M
+DIVERSOS,Cebola Importada Holanda,B,B,B,B,M,M,B,A,A,A,A,B
+DIVERSOS,Cebola Nacional,A,M,M,B,B,M,A,A,A,A,A,A
+DIVERSOS,Cebola Pérola,M,B,B,B,B,B,M,M,M,M,M,A
+DIVERSOS,Cebola Roxa,A,A,A,M,B,B,B,M,B,B,M,A
+DIVERSOS,Coco Seco,M,B,M,M,B,B,A,M,A,A,A,B
+DIVERSOS,Milho de Pipoca Importado,B,M,M,B,M,A,B,M,M,M,B,A
+DIVERSOS,Ovo Branco,B,B,A,M,M,B,B,A,B,M,A,B
+DIVERSOS,Ovo de Codorna,A,B,M,B,M,A,A,M,M,M,B,B
+DIVERSOS,Ovo Vermelho,M,B,B,B,M,M,A,A,M,M,M,M
+DIVERSOS,Pinhão,B,B,B,M,A,A,B,B,B,B,B,B
+---,,,,,,,,,,,,,
+FLORES,Alstroméria,A,M,A,B,B,M,M,A,A,A,M,A
+FLORES,Angélica,A,A,M,M,B,B,B,B,B,B,B,M
+FLORES,Agapanto,B,B,B,M,B,B,M,B,B,B,A,A
+FLORES,Antúrio - PCT,A,A,A,A,M,A,B,B,B,B,M,A
+FLORES,Antúrio - Vaso,B,B,B,B,B,M,A,A,M,M,M,A
+FLORES,Avenca,A,M,M,B,M,M,M,B,B,B,M,A
+FLORES,Azaleia,M,B,B,B,A,B,B,A,A,A,A,A
+FLORES,Begônia,M,B,B,B,A,M,B,B,B,B,M,M
+FLORES,Bico de Papagaio,B,B,B,B,B,B,B,B,B,B,M,A
+FLORES,Boca de Leão,M,B,B,B,B,B,B,A,A,A,M,A
+FLORES,Branquinha,A,M,B,B,M,A,A,M,A,A,A,A
+FLORES,Bromélia,B,M,B,B,B,M,A,A,A,A,A,A
+FLORES,Bromélia,B,M,B,B,B,M,A,A,A,A,A,A
+FLORES,Calêndula,B,B,B,B,A,A,B,B,B,B,B,B
+FLORES,Callas,B,B,B,B,B,B,M,A,A,A,M,B
+FLORES,Ciclamen,M,B,B,B,A,A,A,A,A,M,M,B
+FLORES,Copo de Leite,B,B,B,B,B,B,A,A,A,A,M,M
+FLORES,Cravo Comum,A,B,A,M,B,B,B,A,M,M,B,B
+FLORES,Cravo Túnico,B,B,B,B,A,M,M,M,A,A,A,M
+FLORES,Crisântemo Comum,B,B,M,B,B,B,B,M,A,A,A,A
+FLORES,Crisântemo Polares Bola Belga,B,B,B,A,B,B,B,B,B,B,B,B
+FLORES,Crisântemo,M,M,A,A,A,M,A,B,B,M,B,B
+FLORES,Crista de Galo,B,B,B,M,A,M,M,A,M,A,A,A
+FLORES,Dália,M,B,A,A,M,B,B,B,B,B,M,M
+FLORES,Dracena,B,B,M,B,A,M,A,A,M,M,B,B
+FLORES,Estatice,M,B,B,B,B,B,B,B,M,A,A,M
+FLORES,Estrelicia,M,A,A,M,A,A,A,A,M,M,B,B
+FLORES,Eucalipto Simeria,M,B,M,B,B,B,B,B,B,M,A,A
+FLORES,Ficus,B,M,A,M,M,B,M,M,B,M,B,B
+FLORES,Flor de Trigo,M,M,A,M,B,B,M,M,M,A,B,A
+FLORES,Gérbera,A,M,M,B,B,B,B,M,A,A,A,A
+FLORES,Girassol,M,B,M,B,M,B,M,A,A,A,M,A
+FLORES,Gladiolo,A,B,M,A,A,B,B,A,B,B,B,B
+FLORES,Goivo,B,B,B,B,B,M,M,A,A,M,B,B
+FLORES,Grama São Carlos,B,M,M,B,B,M,M,A,M,A,A,M
+FLORES,Gypsofila,M,B,B,B,B,M,B,M,M,M,A,A
+FLORES,Helicônia,B,B,M,M,A,M,M,M,B,B,B,M
+FLORES,Hortênsia,A,B,M,B,M,M,M,M,A,A,A,A
+FLORES,Impatins,A,M,M,B,B,M,M,B,B,M,A,M
+FLORES,Ìris,B,B,B,B,B,B,A,M,A,B,M,M
+FLORES,Jasmim,A,A,A,M,M,A,A,M,B,B,M,B
+FLORES,Kalanchoe,M,B,A,B,B,B,B,B,B,M,B,M
+FLORES,Lírio,M,A,A,B,B,B,B,B,A,M,M,A
+FLORES,Lisianthus,M,M,M,B,B,M,B,B,B,M,A,A
+FLORES,Margarida,M,B,B,B,B,M,M,A,A,A,A,M
+FLORES,Mini Rosa,A,A,A,M,A,M,A,M,M,B,B,B
+FLORES,Mini Suculenta,M,B,B,B,B,B,B,B,M,A,A,A
+FLORES,Moreia,A,A,M,B,B,M,A,A,A,A,A,A
+FLORES,Musgo Pequeno,A,A,B,B,B,B,B,B,B,B,M,A
+FLORES,Orquídea,B,B,M,B,M,A,A,A,A,A,M,M
+FLORES,Palmeira PCT,B,B,B,M,M,M,B,B,B,A,M,A
+FLORES,Palmeira,A,M,M,M,M,A,A,A,M,M,M,B
+FLORES,Petúnia,A,B,B,B,B,B,M,M,M,M,A,A
+FLORES,Pingo de Ouro,M,M,M,B,B,A,M,B,B,B,B,B
+FLORES,Prímula,B,B,B,B,M,M,M,A,A,A,A,A
+FLORES,Rosa,A,M,A,B,B,B,M,B,B,M,M,M
+FLORES,Rosa Spray,M,M,A,M,B,B,B,B,B,M,B,M
+FLORES,Samambaia,A,M,B,B,B,M,M,B,M,M,A,A
+FLORES,Sempre Viva,B,B,B,B,B,B,B,B,M,A,A,M
+FLORES,Suculenta,B,B,B,B,B,A,M,M,M,M,B,B
+FLORES,Tango,A,M,M,B,B,B,B,M,M,A,A,A
+FLORES,Tuia,M,M,M,B,M,A,A,B,B,B,A,A
+FLORES,Tuia PCT,B,B,B,B,B,B,B,B,M,M,M,A
+FLORES,Tulipa,B,B,B,B,A,A,M,B,B,B,B,B
+FLORES,Tulipa VS,B,B,B,B,B,A,B,M,B,B,B,B
+FLORES,Violeta,A,M,A,B,B,B,B,M,B,B,B,A
+FLORES,Zínia,A,M,M,A,M,B,B,B,B,B,B,M
+---,,,,,,,,,,,,,
+PESCADOS,Abrótea,B,M,A,B,B,B,A,M,B,B,B,B
+PESCADOS,Agulhão,B,B,B,B,B,B,B,B,B,A,A,M
+PESCADOS,Anchova,B,B,B,M,B,M,A,A,M,M,M,B
+PESCADOS,Atum,M,A,A,B,M,B,M,A,A,A,A,M
+PESCADOS,Bacalhau Seco Importado,B,B,M,A,B,B,B,B,B,B,B,B
+PESCADOS,Badejo,B,B,B,B,M,B,M,B,B,B,B,A
+PESCADOS,Bagre Água Doce,B,B,M,A,M,B,M,M,B,A,B,M
+PESCADOS,Bagre Água Salgada,M,B,B,B,B,B,B,B,M,M,A,A
+PESCADOS,Berbigão Limpo,B,M,M,B,B,B,B,B,B,M,A,A
+PESCADOS,Betara,B,B,B,B,B,M,M,M,M,A,A,A
+PESCADOS,Bijupira,B,B,B,A,B,B,B,B,B,B,B,B
+PESCADOS,Bonito,A,B,A,B,B,B,M,B,B,M,M,B
+PESCADOS,Cação Azul,B,A,A,A,M,M,M,B,M,B,A,B
+PESCADOS,Camarão Cativeiro,M,B,A,M,A,B,B,A,B,M,M,M
+PESCADOS,Camarão Pitu,B,B,M,M,B,B,B,A,B,B,B,B
+PESCADOS,Camarão Rosa,B,B,B,B,B,A,A,A,A,A,M,M
+PESCADOS,Camarão Sete Barbas,B,B,B,B,B,A,A,A,A,M,M,B
+PESCADOS,Caranguejo,M,B,M,M,M,M,A,M,M,B,B,M
+PESCADOS,Carapau,M,A,A,A,M,M,M,A,B,B,M,B
+PESCADOS,Carapeba,M,M,M,B,B,B,B,B,B,M,A,A
+PESCADOS,Cascudo,B,B,A,M,M,A,A,A,A,A,B,B
+PESCADOS,Cavala,B,A,A,B,M,B,B,M,B,B,B,B
+PESCADOS,Cavalinha,M,A,A,A,B,B,B,B,B,A,B,B
+PESCADOS,Chiova,B,A,B,B,M,B,B,M,B,A,A,A
+PESCADOS,Côngrio Rosa,B,B,B,A,B,B,M,A,A,A,M,B
+PESCADOS,Corvina Água Doce,B,B,A,A,A,M,M,M,M,M,B,B
+PESCADOS,Corvina Água Salgada,M,M,A,A,B,B,B,B,B,M,M,B
+PESCADOS,Croassu,B,B,A,A,M,M,M,M,B,B,B,M
+PESCADOS,Curimba,B,B,A,A,B,B,B,B,B,B,B,B
+PESCADOS,Dourado Água Salgada,M,B,B,B,M,B,B,A,B,M,M,A
+PESCADOS,Peixe - Espada,A,A,A,M,M,B,M,B,B,A,A,M
+PESCADOS,File de Merluza,B,A,A,A,M,M,B,B,B,B,A,M
+PESCADOS,File de Tilapia,B,B,M,M,B,M,B,M,A,A,A,A
+PESCADOS,Peixe - Galo,B,M,A,A,A,A,M,M,B,B,M,M
+PESCADOS,Garoupa,B,B,M,A,A,M,M,B,B,M,B,B
+PESCADOS,Gordinho,A,B,B,B,B,M,M,B,B,M,A,M
+PESCADOS,Guaivira,B,B,M,A,B,M,A,B,B,B,A,A
+PESCADOS,Jundiá,B,B,B,B,B,B,M,A,B,M,B,B
+PESCADOS,Lagosta,B,B,B,B,M,A,A,A,A,M,M,B
+PESCADOS,Lambari,B,B,B,M,A,M,M,M,A,A,B,B
+PESCADOS,Linguado,B,M,M,M,B,B,B,B,A,A,A,B
+PESCADOS,Lula,A,A,A,M,M,M,B,B,B,B,B,B
+PESCADOS,Mandi,B,B,A,A,A,A,A,A,M,A,B,B
+PESCADOS,Manjuba,B,A,A,B,B,B,B,B,M,A,A,A
+PESCADOS,Meca,B,B,B,M,A,A,M,M,A,A,M,M
+PESCADOS,Mexilhão Limpo,B,B,B,M,M,B,B,B,M,B,B,A
+PESCADOS,Namorado,B,B,B,B,A,B,B,M,B,B,M,A
+PESCADOS,Olhete,B,B,B,B,B,B,B,M,M,A,A,B
+PESCADOS,Ostra,M,M,B,B,M,M,M,M,A,A,A,A
+PESCADOS,Oveva,A,A,A,M,M,M,B,B,B,B,A,A
+PESCADOS,Pacu,B,B,B,A,B,M,B,B,B,B,B,B
+PESCADOS,Palombeta,M,B,B,B,B,A,B,B,M,M,A,B
+PESCADOS,Pampo,M,M,M,B,M,A,M,A,M,B,M,B
+PESCADOS,Pampo,M,M,M,B,M,A,M,A,M,B,M,B
+PESCADOS,Pangasius,B,M,M,M,B,B,A,M,A,A,A,B
+PESCADOS,Pargo,B,B,M,B,A,A,A,A,M,A,B,B
+PESCADOS,Paru,M,M,B,B,B,B,B,B,B,B,A,A
+PESCADOS,Peixe-Cabra,B,B,B,B,B,A,A,A,M,M,B,B
+PESCADOS,Peroá Branco (Porquinho),M,B,M,A,A,A,M,M,M,M,B,B
+PESCADOS,Pescada Amarela,M,B,B,B,B,A,M,A,A,A,A,A
+PESCADOS,Pescada Bicuda,B,B,M,B,B,A,M,A,A,B,M,B
+PESCADOS,Pescada Branca,B,B,B,B,M,A,A,A,A,M,M,B
+PESCADOS,Pescada Cumbucu,M,M,B,B,B,B,B,M,M,A,A,A
+PESCADOS,Pescada Goete,M,M,B,M,M,M,A,A,A,A,A,B
+PESCADOS,Pescada Maria Mole,B,M,A,A,B,M,B,B,B,B,B,B
+PESCADOS,Pescada Tortinha,B,B,M,B,B,M,M,A,A,M,B,B
+PESCADOS,Piau,B,B,A,M,M,M,A,M,M,A,B,B
+PESCADOS,Pintado,B,B,M,A,B,B,B,B,B,B,M,B
+PESCADOS,Pirarucu,M,B,A,A,M,B,M,A,B,B,M,M
+PESCADOS,Polvo,B,B,M,M,M,A,A,M,A,B,B,B
+PESCADOS,Prego,B,A,B,M,B,B,B,B,B,B,B,M
+PESCADOS,Robalo,M,B,B,B,B,B,B,B,B,B,A,M
+PESCADOS,Roncador,B,B,B,B,B,B,B,B,B,M,A,B
+PESCADOS,Salmão Importado Chile,B,B,B,B,M,M,B,A,A,A,A,M
+PESCADOS,Sardinha Congelada,A,M,B,B,B,B,B,B,B,A,A,A
+PESCADOS,Sardinha Lages,M,M,B,B,B,M,A,A,A,A,A,B
+PESCADOS,Sardinha Fresca,B,B,A,A,A,A,A,A,M,B,B,B
+PESCADOS,Siri,B,B,M,M,M,A,A,M,B,M,B,B
+PESCADOS,Sororoca,B,B,B,B,M,A,A,M,B,B,B,B
+PESCADOS,Tainha,B,B,A,A,M,A,A,M,B,B,B,B
+PESCADOS,Tambaqui,B,B,M,A,B,B,B,A,A,A,A,A
+PESCADOS,Tilapia,M,B,A,A,B,B,B,M,M,M,M,B
+PESCADOS,Traira,B,B,M,M,M,M,M,A,A,M,B,B
+PESCADOS,Trilha,M,A,M,B,B,M,A,A,A,M,B,B
+PESCADOS,Truta,M,B,B,B,B,B,B,B,B,B,A,M
+PESCADOS,Tucunaré,B,B,B,B,B,M,A,M,B,B,B,B
+PESCADOS,Xaréu,M,B,M,B,B,M,B,B,B,B,A,B

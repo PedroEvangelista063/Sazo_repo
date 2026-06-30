@@ -26,6 +26,7 @@ jobs:
       - name: Rodar pipeline
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PYTHONPATH: .
         run: python -m pipeline.run
 
       - name: Notificar falha

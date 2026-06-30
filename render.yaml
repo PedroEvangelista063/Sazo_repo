@@ -27,3 +27,5 @@ services:
         value: "120"
       - key: INTERNAL_API_KEY
         sync: false
+      - key: RUN_SCRAPER
+        value: "false"

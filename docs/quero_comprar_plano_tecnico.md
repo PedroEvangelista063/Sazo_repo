@@ -249,6 +249,8 @@ O schema segue o padrão medalhão (raw → staging → mart) com acesso via vie
 GET /api/v1/sazonalidade?uf=SP&municipio=São Paulo&produto=tomate&status_cor=VERDE&ano=2026&mes=6
     → Lista produtos com filtros combinados (UF, município, produto, status_cor, ano, mês)
       Paginação: pagina=1&por_pagina=100 (max 500)
+      Quando ano + mês são fornecidos, dispara computação dinâmica por mês
+      (via 4 CTEs: precos_mes → baseline → fallback → semaforo)
 
 GET /api/v1/sazonalidade/{uf}/{municipio}
     → Atalho por localidade (encaminha para o endpoint acima)
@@ -293,6 +295,10 @@ class MunicipioListResponse(BaseModel):
 ### 2.2 Otimização B2C — Cache e Connection Pooling
 
 **Cache:** Implementado com cache in-memory thread-safe e TTL configurável (padrão 24h). Dispensa Redis no MVP — para o volume esperado de requisições B2C, o cache local é suficiente e elimina latência de rede.
+
+**Estratégia dual-cache:**
+- **Cache geral**: TTL 24h para requisições exatas (todos os filtros combinados).
+- **Cache imutável histórico** (`_HIST_CACHE_TTL = 86_400`): chave apenas de dimensões (`saz_hist_{ano}_{mes}_{uf}_{municipio}_{categoria}`). A computação mensal completa é cacheada uma vez. Requisições com diferentes filtros de produto/status_cor/pagina são servidas de memória via `_slice_periodo()`, sem novas consultas ao banco.
 
 ```python
 # backend/app/core/cache.py
@@ -372,10 +378,12 @@ App
 1. App abre → `useUserStore` checa localStorage
 2. Sem localização salva → `LocationSelector` (fullscreen)
 3. Seleciona UF → `useMunicipios(uf)` busca lista via API → `<datalist>` no input
-4. Digita/autocomplete cidade → debounce 600ms → `prefetchQuery` aquece cache
-5. Clica "Ver Sazonalidade" → salva na store → `useSazonalidade(uf, municipio)` dispara
-6. Loading → 8 `ProductCardSkeleton` pulsantes (grid)
-7. Dados carregados → grid ordenado: VERDE (topo) → AMARELO → VERMELHO
+4. Digita/autocomplete cidade → salva na store
+5. Tela principal: seção colapsável "Monte sua Lista" com toggle via ChevronDown
+6. Seleciona produtos → seção "Produtos Selecionados"/"Todos os Produtos" (também colapsável)
+7. Clica em um mês → `useHortifruti(ano, mes)` dispara duas queries: `hortifruti-meta` (snapshot) + `hortifruti-filter` (dados do mês)
+8. Loading → 8 `ProductCardSkeleton` pulsantes (grid)
+9. Dados carregados → grid ordenado: VERDE (topo) → AMARELO → VERMELHO
 
 ### 3.3 O ProductCard e a Lógica de Cores (Implementado)
 
@@ -411,7 +419,8 @@ const STATUS_MAP = {
 
 Características implementadas no ProductCard:
 - **Nunca mostra preços em R$** — apenas o label textual (Melhor Época! / Preço Normal / Péssima Época)
-- **Emoji fallback**: se a imagem WebP falhar (`onError`), renderiza emoji gigante em círculo cinza (`getProdutoEmoji()`)
+- **Emoji unicode apenas**: usa `PRODUTO_EMOJI` map (🍚, 🍌, etc.). Sem imagens (sem jpg, png, webp, svg, avif)
+- **Seções colapsáveis**: "Monte sua Lista" e grid de produtos alternam com `ChevronDown` e rotação CSS
 - **Skeleton view**: componente `ProductCardSkeleton` com `animate-pulse-soft` mantém o layout estável
 
 ### 3.4 Gerenciamento de Estado e Cache
@@ -432,15 +441,21 @@ export const useUserStore = create<UserState>()(
 ```
 
 ```tsx
-// TanStack Query — sazonalidade (staleTime 12h)
-export function useSazonalidade(uf, municipio) {
-  return useQuery({
-    queryKey: ['sazonalidade', uf, municipio],
+// TanStack Query — sazonalidade (dual-query, staleTime 12h)
+export function useHortifruti(ano, mes) {
+  const meta = useQuery({
+    queryKey: ['hortifruti-meta', uf, municipio],
     queryFn: () => api.get(`/sazonalidade/${uf}/${municipio}`).then(r => r.data),
     enabled: !!uf && !!municipio,
-    staleTime: 1000 * 60 * 60 * 12,  // 12h — dados mudam 1x/mês
-    retry: 2,
+    staleTime: 1000 * 60 * 60 * 12,
   })
+  const filtro = useQuery({
+    queryKey: ['hortifruti-filter', uf, municipio, ano, mes],
+    queryFn: () => api.get(`/sazonalidade/${uf}/${municipio}`, { params: { ano, mes } }).then(r => r.data),
+    enabled: !!uf && !!municipio && ano !== undefined && mes !== undefined,
+    staleTime: 1000 * 60 * 60 * 12,
+  })
+  return { products: filtro.data ?? [], allProducts: meta.data ?? [] }
 }
 
 // TanStack Query — municipios (staleTime 24h)
@@ -498,8 +513,8 @@ colors: {
 | **2** | 2 | Modelagem PostgreSQL. Carga dos dados processados. Script de ingestion end-to-end. | Dados faltando para muitos municípios | Implementar fallback UF imediatamente |
 | **3** | 3 | FastAPI: endpoints `/locations` e `/products`. Testes com Postman/pytest. | Query lenta sem índice | Adicionar índices antes dos testes de carga |
 | **4** | 4 | React: LocationSelector + ProductGrid + ProductCard com semáforo. Mobile-first. | Complexidade de estado (UF + Cidade + Mês) | Zustand desde o início; não improvisar com useState global |
-| **5** | 5 | Redis cache. PWA manifest + service worker. WebP nas imagens. Deploy (Hetzner/Fly.io). | Deploy com variáveis de ambiente erradas | Usar docker-compose com `.env.example` documentado |
-| **6** | 6 | Busca full-text. Polish UX (skeletons, empty states, error states). Teste no celular real. Lighthouse ≥ 90. | Lighthouse falhar por imagens grandes | Testar WebP desde Sprint 4; não deixar para o final |
+| **5** | 5 | Cache in-memory TTL. PWA manifest + service worker. Emoji-only nos cards. Deploy (Hetzner/Fly.io). | Deploy com variáveis de ambiente erradas | Usar docker-compose com `.env.example` documentado |
+| **6** | 6 | Busca full-text. Polish UX (skeletons, empty states, error states). Teste no celular real. Lighthouse ≥ 90. | Lighthouse falhar por assets grandes | Testar em 3G real desde Sprint 4; não deixar para o final |
 
 **Maior gargalo do projeto:** A qualidade dos dados da CONAB. Municípios pequenos têm histórico incompleto. A solução de fallback hierárquico (município → UF) deve ser implementada no Sprint 2, não como "nice to have" futuro.
 
@@ -515,5 +530,5 @@ colors: {
 | Cache | In-memory (TTL thread-safe) | Redis, Memcached | Elimina latência de rede e dependência externa no MVP; migração trivial para Redis se necessário |
 | Backend | FastAPI + asyncpg | Django, Flask | Performance async + Pydantic nativo |
 | Frontend | Vite + React 18 + PWA | Next.js, CRA, Material-UI | PWA estático (S3/CF Pages); SSR não agrega para app de tela única |
-| Imagens | S3/Cloudinary + WebP | PNG/JPEG no banco | Banco de dados não é CDN |
+| Imagens | Emoji unicode (PRODUTO_EMOJI map) | WebP/S3/Cloudinary | CDN desnecessário — emoji nativo é zero-latency, zero-custo, zero-manutenção |
 | Hosting | Hetzner CX21 (€5/mês) | AWS EC2 t3.medium | 70% mais barato para o mesmo hardware |

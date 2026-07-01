@@ -8,18 +8,20 @@ import { CategoriesModal } from '../components/CategoriesModal'
 const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 
 export function SupermercadoView() {
-  const [selectedYear, setSelectedYear] = useState<number | null>(null)
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
+  const [listOpen, setListOpen] = useState(true)
+  const [productsOpen, setProductsOpen] = useState(true)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
 
-  const { products: produtos, isLoading, isError } = useHortifruti()
+  const { products: produtos, allProducts, isLoading, isError } = useHortifruti(selectedYear, selectedMonth)
 
   const { availableYears, monthsByYear } = useMemo(() => {
     const years = new Set<number>()
     const months: Record<number, Set<number>> = {}
 
-    for (const p of produtos) {
+    for (const p of allProducts) {
       if (!p.ano) continue
       years.add(p.ano)
       if (!months[p.ano]) months[p.ano] = new Set()
@@ -30,24 +32,17 @@ export function SupermercadoView() {
       availableYears: Array.from(years).sort((a, b) => b - a),
       monthsByYear: months,
     }
-  }, [produtos])
-
-  const currentYear = useMemo(() => {
-    if (selectedYear !== null) return selectedYear
-    return availableYears[0] ?? null
-  }, [selectedYear, availableYears])
+  }, [allProducts])
 
   const monthsInYear = useMemo(() => {
-    if (!currentYear) return new Set<number>()
-    return monthsByYear[currentYear] ?? new Set()
-  }, [currentYear, monthsByYear])
+    if (!selectedYear) return new Set<number>()
+    return monthsByYear[selectedYear] ?? new Set()
+  }, [selectedYear, monthsByYear])
 
   const availableProducts = useMemo(() => {
-    const filtered = currentYear
-      ? produtos.filter((p) => p.ano === currentYear)
-      : produtos
+    const filtered = allProducts.filter((p) => p.ano === selectedYear)
     return Array.from(new Set(filtered.map((p) => p.nome_produto))).sort()
-  }, [produtos, currentYear])
+  }, [allProducts, selectedYear])
 
   const handleYearChange = (year: number) => {
     setSelectedYear(year)
@@ -68,13 +63,11 @@ export function SupermercadoView() {
 
   const displayProducts = useMemo(() => {
     let filtered = produtos
-    if (currentYear) filtered = filtered.filter((p) => p.ano === currentYear)
-    if (selectedMonth) filtered = filtered.filter((p) => p.mes === selectedMonth)
     if (selectedProducts.length > 0) {
       filtered = filtered.filter((p) => selectedProducts.includes(p.nome_produto))
     }
     return filtered
-  }, [produtos, currentYear, selectedMonth, selectedProducts])
+  }, [produtos, selectedProducts])
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-green-50 to-white">
@@ -120,7 +113,7 @@ export function SupermercadoView() {
           </div>
         )}
 
-        {!isLoading && !isError && produtos.length === 0 && (
+        {!isLoading && !isError && allProducts.length === 0 && (
           <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center shadow-sm">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <Salad className="h-8 w-8 text-green-600" />
@@ -132,7 +125,7 @@ export function SupermercadoView() {
           </div>
         )}
 
-        {!isLoading && produtos.length > 0 && (
+        {!isLoading && allProducts.length > 0 && (
           <>
             <div className="mb-6 rounded-2xl border border-green-100 bg-white p-5 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
@@ -142,7 +135,7 @@ export function SupermercadoView() {
                 </h2>
                 <div className="relative">
                   <select
-                    value={currentYear ?? ''}
+                    value={selectedYear}
                     onChange={(e) => handleYearChange(Number(e.target.value))}
                     className="appearance-none rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 pr-8 text-sm font-semibold text-gray-700 outline-none transition-colors hover:border-green-300 focus:border-green-400 focus:ring-2 focus:ring-green-100"
                   >
@@ -204,69 +197,92 @@ export function SupermercadoView() {
               </div>
             </div>
 
-            <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <div className="mb-3 flex items-center justify-between">
+            <div className="mb-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
+              <button
+                onClick={() => setListOpen(!listOpen)}
+                className="flex w-full items-center justify-between px-5 py-4 transition-colors hover:bg-gray-50"
+              >
                 <h2 className="flex items-center text-sm font-bold uppercase tracking-wider text-gray-700">
                   <Search className="mr-2 h-4 w-4 text-green-600" />
                   Monte sua Lista
                 </h2>
-                {selectedProducts.length > 0 && (
-                  <button
-                    onClick={() => setSelectedProducts([])}
-                    className="text-xs font-semibold text-red-400 transition-colors hover:text-red-600"
-                  >
-                    Limpar ({selectedProducts.length})
-                  </button>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {availableProducts.map((prod) => {
-                  const isSelected = selectedProducts.includes(prod)
-                  return (
-                    <button
-                      key={prod}
-                      onClick={() => toggleProduct(prod)}
-                      className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
-                        isSelected
-                          ? 'border-green-500 bg-green-50 text-green-700 shadow-sm'
-                          : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-green-300 hover:text-green-600'
-                      }`}
+                <div className="flex items-center gap-3">
+                  {selectedProducts.length > 0 && (
+                    <span
+                      onClick={(e) => { e.stopPropagation(); setSelectedProducts([]) }}
+                      className="text-xs font-semibold text-red-400 transition-colors hover:text-red-600"
                     >
-                      {prod}
-                      {isSelected ? (
-                        <X size={12} className="text-green-600" />
-                      ) : (
-                        <Plus size={12} className="text-gray-400" />
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
+                      Limpar ({selectedProducts.length})
+                    </span>
+                  )}
+                  <ChevronDown
+                    className={`h-4 w-4 text-gray-400 transition-transform ${listOpen ? '' : '-rotate-90'}`}
+                  />
+                </div>
+              </button>
+              {listOpen && (
+                <div className="border-t border-gray-100 px-5 pb-5 pt-4">
+                  <div className="flex flex-wrap gap-2">
+                    {availableProducts.map((prod) => {
+                      const isSelected = selectedProducts.includes(prod)
+                      return (
+                        <button
+                          key={prod}
+                          onClick={() => toggleProduct(prod)}
+                          className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
+                            isSelected
+                              ? 'border-green-500 bg-green-50 text-green-700 shadow-sm'
+                              : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-green-300 hover:text-green-600'
+                          }`}
+                        >
+                          {prod}
+                          {isSelected ? (
+                            <X size={12} className="text-green-600" />
+                          ) : (
+                            <Plus size={12} className="text-gray-400" />
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="mb-4">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 rounded-2xl border border-gray-100 bg-white shadow-sm">
+              <button
+                onClick={() => setProductsOpen(!productsOpen)}
+                className="flex w-full items-center justify-between px-5 py-4 transition-colors hover:bg-gray-50"
+              >
                 <h2 className="text-base font-bold text-gray-900">
                   {selectedProducts.length > 0
                     ? 'Produtos Selecionados'
                     : 'Todos os Produtos'}
                 </h2>
-                <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                  {displayProducts.length} {displayProducts.length === 1 ? 'item' : 'itens'}
-                </span>
-              </div>
-
-              {displayProducts.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                  {displayProducts.map((p) => (
-                    <ProductCard key={p.id_produto} product={p} />
-                  ))}
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                    {displayProducts.length} {displayProducts.length === 1 ? 'item' : 'itens'}
+                  </span>
+                  <ChevronDown
+                    className={`h-4 w-4 text-gray-400 transition-transform ${productsOpen ? '' : '-rotate-90'}`}
+                  />
                 </div>
-              ) : (
-                <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
-                  <p className="text-sm font-medium text-gray-500">
-                    Nenhum produto encontrado para este período.
-                  </p>
+              </button>
+              {productsOpen && (
+                <div className="border-t border-gray-100 px-5 pb-5 pt-4">
+                  {displayProducts.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                      {displayProducts.map((p) => (
+                        <ProductCard key={p.id_produto} product={p} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
+                      <p className="text-sm font-medium text-gray-500">
+                        Nenhum produto encontrado para este período.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

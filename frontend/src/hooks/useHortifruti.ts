@@ -19,13 +19,25 @@ function sortByStatus(products: ProdutoVarejo[]): ProdutoVarejo[] {
   )
 }
 
-export function useHortifruti() {
-  const query = useQuery({
-    queryKey: ['hortifruti'],
+/**
+ * Fetches sazonalidade data.
+ * @param ano  optional year filter
+ * @param mes  optional month filter — when set together with ano,
+ *             triggers dynamic per-month computation on the backend.
+ *
+ * Returns:
+ *  - `products`     – the actively displayed list (honors ano+mes when both set)
+ *  - `allProducts`  – the full unfiltered snapshot (for calendar / filter chips)
+ */
+export function useHortifruti(ano?: number | null, mes?: number | null) {
+  const hasFilter = ano != null && mes != null
+
+  const metaQuery = useQuery({
+    queryKey: ['hortifruti-meta'],
     queryFn: async ({ signal }) => {
       const { data } = await api.get<SazonalidadeResponse>(
-        '/sazonalidade/SP/São Paulo',
-        { signal },
+        '/sazonalidade',
+        { params: { uf: 'SP', por_pagina: 500 }, signal },
       )
       return data
     },
@@ -36,10 +48,40 @@ export function useHortifruti() {
     refetchOnReconnect: true,
   })
 
-  const products = useMemo(
-    () => sortByStatus(query.data?.data ?? []),
-    [query.data?.data],
+  const filterQuery = useQuery({
+    queryKey: ['hortifruti-filter', ano, mes],
+    queryFn: async ({ signal }) => {
+      const params: Record<string, unknown> = { uf: 'SP', por_pagina: 500, ano, mes }
+      const { data } = await api.get<SazonalidadeResponse>(
+        '/sazonalidade',
+        { params, signal },
+      )
+      return data
+    },
+    enabled: hasFilter,
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
+    retry: 2,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+  })
+
+  const displayData = useMemo(() => {
+    if (hasFilter && filterQuery.data?.data) return filterQuery.data.data
+    return metaQuery.data?.data ?? []
+  }, [hasFilter, filterQuery.data?.data, metaQuery.data?.data])
+
+  const products = useMemo(() => sortByStatus(displayData), [displayData])
+  const allProducts = useMemo(
+    () => sortByStatus(metaQuery.data?.data ?? []),
+    [metaQuery.data?.data],
   )
 
-  return { ...query, products }
+  return {
+    products,
+    allProducts,
+    isLoading: metaQuery.isLoading || (hasFilter && filterQuery.isLoading && !metaQuery.data),
+    isError: metaQuery.isError || filterQuery.isError,
+    data: metaQuery.data ?? filterQuery.data,
+  }
 }

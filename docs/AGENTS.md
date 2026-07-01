@@ -90,16 +90,18 @@ Proibido exibir preços: O Frontend B2C nunca mostra R$. Apenas status visual (V
 
 Estado e Cache: Zustand 5 estritamente para estado persistente do usuário (UF/Cidade, persist via IndexedDB com idb-keyval). TanStack Query v5 estritamente para cache de API (Offline-first, stale-while-revalidate).
 
-UI: Mobile-first, uso de Skeletons (sem spinners bloqueantes), suporte a fallback com Emojis gigantes caso imagens WebP falhem.
+UI: Mobile-first, uso de Skeletons (sem spinners bloqueantes). Produtos usam emoji unicode exclusivamente — sem imagens (jpg, png, webp, svg, avif).
 
 Componentes:
-- LocationSelector: input de cidade com `<datalist>` populado via `useMunicipios(uf)` hook. Prefetch dos dados de sazonalidade via `usePrefetchSazonalidade()` com debounce 600ms no `onChange`.
-- ProductCard: NUNCA exibe preços. Mapeia `status_cor` → classes Tailwind (bg/border/text). Imagem WebP com `onError` → emoji fallback via `getProdutoEmoji()`.
-- Dashboard: ordenação `STATUS_ORDER[status_cor]` (VERDE=0 no topo, VERMELHO=2 no fim). Skeleton cards enquanto `isLoading`.
+- LocationSelector: input de cidade com `<datalist>` populado via `useMunicipios(uf)` hook.
+- ProductCard: NUNCA exibe preços. Usa emoji unicode via `PRODUTO_EMOJI` map. Mapeia `status_cor` → classes Tailwind (bg/border/text).
+- Dashboard: seções colapsáveis para "Monte sua Lista" e grid de produtos (ChevronDown com rotação). Ordenação `STATUS_ORDER[status_cor]` (VERDE=0 no topo, VERMELHO=2 no fim). Skeleton cards enquanto `isLoading`.
 
-API queries: TanStack Query com `staleTime: 12h` para sazonalidade, `24h` para lista de municípios. Prefetch dispara quando input de cidade recebe foco ou muda com debounce.
+API queries: `useHortifruti(ano?, mes?)` executa duas queries TanStack Query: `hortifruti-meta` (snapshot sem filtro, para metadados) e `hortifruti-filter` (ativada apenas com ano+mes, para cards). `staleTime: 12h` para sazonalidade, `24h` para lista de municípios.
+
+Cache do backend: os dados mensais históricos usam cache imutável de 24h com chave apenas de dimensões (ano, mês, UF, município, categoria). Requisições com diferentes filtros de produto/semáforo/páginação são servidas de memória.
 
 Ações:
-- O usuário seleciona UF e cidade → salvo em `useUserStore` com persist → `useSazonalidade` dispara automaticamente (enabled: !!uf && !!municipio).
+- O usuário seleciona UF e cidade → salvo em `useUserStore` com persist → `useHortifruti` dispara automaticamente (enabled: !!uf && !!municipio).
 - Botão "Alterar" no header do Dashboard → `clearLocation()` → volta ao LocationSelector.
 - `handleDismiss` no LocationSelector (modo edição) → limpa store e fecha.

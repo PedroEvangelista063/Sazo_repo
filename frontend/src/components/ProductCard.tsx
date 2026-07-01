@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { CheckCircle2, MinusCircle, XCircle, TrendingDown, TrendingUp, Equal } from 'lucide-react'
 import type { ProdutoVarejo, StatusOferta } from '../types/domain'
 
@@ -91,20 +90,6 @@ const STATUS_MAP: Record<string, StatusConfig> = {
   },
 }
 
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-}
-
-function getCdnUrl(name: string): string {
-  const slug = slugify(name)
-  return `https://cdn.querocomprar.com/produtos/alimento_varejo/${slug}.webp`
-}
-
 function getEmoji(name: string): string {
   const key = name
     .toUpperCase()
@@ -119,7 +104,6 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [imgFailed, setImgFailed] = useState(false)
   const oferta = product.status_oferta
   const config = oferta
     ? OFERTA_MAP[oferta] ?? OFERTA_MAP.INSUFICIENTE
@@ -131,23 +115,13 @@ export function ProductCard({ product }: ProductCardProps) {
       className={`rounded-xl border-2 p-4 shadow-sm transition-shadow hover:shadow-md ${config.bg} ${config.border}`}
     >
       <div className="mb-3 flex justify-center">
-        {imgFailed ? (
-          <div
-            className={`flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-3xl ${config.imgClass}`}
-            role="img"
-            aria-label={product.nome_produto}
-          >
-            {emoji}
-          </div>
-        ) : (
-          <img
-            src={getCdnUrl(product.nome_produto)}
-            alt={product.nome_produto}
-            className={`h-20 w-20 rounded-full object-cover ${config.imgClass}`}
-            loading="lazy"
-            onError={() => setImgFailed(true)}
-          />
-        )}
+        <div
+          className={`flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-3xl ${config.imgClass}`}
+          role="img"
+          aria-label={product.nome_produto}
+        >
+          {emoji}
+        </div>
       </div>
 
       <h3 className={`mb-1 text-center text-sm font-semibold ${config.text}`}>

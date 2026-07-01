@@ -1,1 +1,3 @@
-{}
+{
+  "utilities/teste_apication/pipeline/test_seasonality.py::TestFallback::test_fallback_aplica_dado_uf_para_insuficiente": true
+}

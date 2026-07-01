@@ -25,20 +25,20 @@ O **QUERO COMPRAR** foi projetado para a dona de casa e o comprador de feira que
 Ao abrir o app (web ou PWA instalado), o usuário seleciona seu **Estado (UF)** e **Município**. A partir daí, toda a análise é personalizada para a realidade local — porque a sazonalidade muda de região para região.
 
 ### 2. 🛒 Monte sua lista
-Na tela principal, o usuário escolhe os produtos que deseja consultar. Pode selecionar **vários itens ao mesmo tempo** com o botão **+ Adicionar**. O filtro é inteligente e focado nas categorias de varejo: hortifrutigranjeiros, pescados, flores e muito mais.
+Na tela principal há uma seção colapsável "Monte sua Lista" onde o usuário escolhe os produtos que deseja consultar. Pode selecionar **vários itens ao mesmo tempo** com o botão **+ Adicionar**. O filtro é inteligente e focado nas categorias de varejo: hortifrutigranjeiros, pescados, flores e muito mais.
 
 ### 3. 📅 Escolha o mês
-Com a lista pronta, o usuário define **qual mês** quer analisar — seja para planejar as compras da próxima semana ou para decidir quando estocar a despensa. O seletor de mês é rápido e responsivo.
+Com a lista pronta, o usuário define **qual mês** quer analisar — seja para planejar as compras da próxima semana ou para decidir quando estocar a despensa. O seletor de mês é rápido e responsivo. Cada clique em um mês dispara uma requisição ao backend que computa a sazonalidade dinamicamente para aquele período específico.
 
 ### 4. 🚦 Resultado na hora
-A tela reage instantaneamente: cada produto ganha um **semáforo de sazonalidade** que compara o preço do mês escolhido com a média histórica:
+A tela reage instantaneamente: o grid de produtos (seção colapsável "Todos os Produtos" / "Produtos Selecionados") exibe **cartões com emoji** representando cada item, cada um com um **semáforo de sazonalidade** que compara o preço do mês escolhido com a média histórica. Ao clicar em um mês específico, uma computação dinâmica por mês é disparada no backend, processando a sazonalidade agregada para aquele período:
 
 - 🟢 **Barato** — Muita Oferta / Safra — melhor época para comprar
 - 🟡 **Equilibrado** — Preço normal
 - 🔴 **Caro** — Baixa Oferta / Entressafra — evite ou compre pouco
 
 ### Offline? Sem problemas.
-Por ser um **PWA (Progressive Web App)**, depois do primeiro acesso o aplicativo funciona mesmo sem internet. Os dados ficam em cache local (TanStack Query + Service Worker) e o usuário pode consultar a sazonalidade a qualquer momento, em qualquer lugar — na fila do banco, no ônibus ou na feira.
+Por ser um **PWA (Progressive Web App)**, depois do primeiro acesso o aplicativo funciona mesmo sem internet. Os dados ficam em cache local (TanStack Query + Service Worker) e o usuário pode consultar a sazonalidade a qualquer momento, em qualquer lugar — na fila do banco, no ônibus ou na feira. O cache histórico mensal é imutável (24h TTL com chave apenas de dimensões), permitindo que múltiplos filtros de produto/semáforo/paginação sejam servidos de memória sem novas consultas ao banco.
 
 ## Estrutura do Projeto
 
@@ -120,7 +120,7 @@ cd frontend && npm run dev                           # Frontend :5173
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/api/v1/sazonalidade?uf=SP&municipio=...` | Lista produtos com filtros |
+| `GET` | `/api/v1/sazonalidade?uf=SP&municipio=...` | Lista produtos com filtros; `ano`+`mes` dispara computação dinâmica por mês |
 | `GET` | `/api/v1/sazonalidade/{uf}/{municipio}` | Atalho por localidade |
 | `GET` | `/api/v1/municipios?uf=SP` | Lista municípios disponíveis |
 | `GET` | `/api/v1/_internal/cache-clear` | Limpa cache (uso interno) |

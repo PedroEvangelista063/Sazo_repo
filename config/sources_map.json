@@ -1,0 +1,123 @@
+{
+  "_meta": {
+    "versao": "1.0",
+    "descricao": "Mapeamento produto → fontes de cotacao regional (CEASAs + CONAB)",
+    "atualizado_em": "2026-07-01",
+    "ordem_prioridade": "CONAB-ProHort (fonte oficial nacional) > CEASA estadual (capilaridade regional)"
+  },
+  "produtos": {
+    "TOMATE": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-PR", "uf": "PR", "municipio": "Curitiba"},
+      {"fonte": "CEASA-GO", "uf": "GO", "municipio": "Goiania"},
+      {"fonte": "CEASA-CE", "uf": "CE", "municipio": "Maracanau"},
+      {"fonte": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre"},
+      {"fonte": "CEASA-SC", "uf": "SC", "municipio": "Sao Jose"},
+      {"fonte": "CEASA-BA", "uf": "BA", "municipio": "Salvador"},
+      {"fonte": "CEASA-MG", "uf": "MG", "municipio": "Contagem"},
+      {"fonte": "CEASA-DF", "uf": "DF", "municipio": "Brasilia"}
+    ],
+    "BATATA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-PR", "uf": "PR", "municipio": "Curitiba"},
+      {"fonte": "CEASA-GO", "uf": "GO", "municipio": "Goiania"},
+      {"fonte": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre"},
+      {"fonte": "CEASA-MG", "uf": "MG", "municipio": "Contagem"}
+    ],
+    "CEBOLA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-PR", "uf": "PR", "municipio": "Curitiba"},
+      {"fonte": "CEASA-GO", "uf": "GO", "municipio": "Goiania"},
+      {"fonte": "CEASA-BA", "uf": "BA", "municipio": "Salvador"}
+    ],
+    "CENOURA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-PR", "uf": "PR", "municipio": "Curitiba"},
+      {"fonte": "CEASA-MG", "uf": "MG", "municipio": "Contagem"}
+    ],
+    "ALFACE": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-PR", "uf": "PR", "municipio": "Curitiba"}
+    ],
+    "BANANA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-SC", "uf": "SC", "municipio": "Sao Jose"},
+      {"fonte": "CEASA-BA", "uf": "BA", "municipio": "Salvador"}
+    ],
+    "LARANJA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-CE", "uf": "CE", "municipio": "Maracanau"}
+    ],
+    "MACA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre"},
+      {"fonte": "CEASA-SC", "uf": "SC", "municipio": "Sao Jose"}
+    ],
+    "MAMAO": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-BA", "uf": "BA", "municipio": "Salvador"}
+    ],
+    "UVA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre"}
+    ],
+    "BETERRABA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "ABOBRINHA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "PEPINO": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "PIMENTAO": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "MILHO": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-GO", "uf": "GO", "municipio": "Goiania"}
+    ],
+    "MANDIOCA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-PR", "uf": "PR", "municipio": "Curitiba"}
+    ],
+    "MELANCIA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-GO", "uf": "GO", "municipio": "Goiania"}
+    ],
+    "MORANGO": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"},
+      {"fonte": "CEASA-MG", "uf": "MG", "municipio": "Contagem"}
+    ],
+    "GOIABA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "MANGA": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "BATATA DOCE": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "REPOLHO": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "COUVE": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ],
+    "VAGEM": [
+      {"fonte": "CONAB-ProHort", "uf": "BR", "municipio": "Nacional"}
+    ]
+  },
+  "fontes_prioridade": {
+    "CONAB-ProHort": 1,
+    "CEAGESP": 2,
+    "CEASA-PR": 3,
+    "CEASA-GO": 4,
+    "CEASA-RS": 5,
+    "CEASA-SC": 6,
+    "CEASA-CE": 7,
+    "CEASA-BA": 8,
+    "CEASA-MG": 9,
+    "CEASA-DF": 10
+  }
+}

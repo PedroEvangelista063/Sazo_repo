@@ -14,6 +14,8 @@ O conceito de **idempotência** é a espinha dorsal do Agente de Autocura. Cada 
 
 5. **Cache com TTL + invalidação explícita.** O cache in-memory da FastAPI expira em 24h por padrão. Se o Ghost DBA reparar uma view, ele chama `/_internal/cache-clear` para forçar refresh. Se o cache for limpo duas vezes, é apenas um cache miss — zero impacto.
 
+6. **Cache imutável histórico também é limpo.** O endpoint `/_internal/cache-clear` limpa tanto o cache geral (TTL curto) quanto o cache imutável histórico (`_HIST_CACHE_TTL = 86_400`). O cache imutável se re-popula naturalmente na primeira requisição após o clear, sem necessidade de ação manual.
+
 ## Plano de Testes Local (Executar no DBeaver)
 
 ### Teste 1: Quebrar a Materialized View

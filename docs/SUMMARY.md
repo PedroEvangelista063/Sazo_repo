@@ -127,7 +127,8 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 **Regras**:
 - URLs no plural (`/api/v1/sazonalidade`, `/api/v1/municipios`)
 - Conexão via **connection string URI** `postgresql://user:pass@host:port/dbname`
-- Cache in-memory thread-safe com TTL (24h)
+- Cache in-memory thread-safe com TTL (24h) para requisições exatas + cache imutável de 24h para dados históricos mensais (chave apenas de dimensões: ano, mês, UF, município, categoria)
+- Per-month sazonalidade: quando `ano`+`mes` são fornecidos, o backend computa dinamicamente via 4 CTEs (precos_mes → baseline → fallback → semaforo), cacheando o resultado agregado. Diferentes filtros de produto/status_cor/páginação são servidos de memória via `_slice_periodo()`
 - Nunca expõe preço em R$ como campo principal — `preco_referencia` e `preco_atual` existem apenas para o schema interno
 - Rate limiting por IP (60 req/min)
 - Zero ORM — raw SQL com asyncpg
@@ -140,7 +141,7 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 | `backend/app/core/ratelimit.py` | Rate limiting por IP (60 req/min, sliding window) |
 | `backend/app/db/session.py` | Pool asyncpg (10-50 conexões) via connection string URI |
 | `backend/app/schemas/responses.py` | Pydantic V2: SazonalidadeResponse, MunicipioListResponse, ErrorResponse |
-| `backend/app/api/v1/endpoints/produtos.py` | `GET /api/v1/sazonalidade` com filtros UF, município, mês, produto, status_cor; paginação |
+| `backend/app/api/v1/endpoints/produtos.py` | `GET /api/v1/sazonalidade` com filtros UF, município, mês, produto, status_cor; paginação; `ano`+`mes` dispara computação dinâmica por mês |
 | `backend/app/api/v1/endpoints/municipios.py` | `GET /api/v1/municipios?uf=SP` |
 | `backend/app/api/v1/endpoints/internal.py` | `GET/POST /api/v1/_internal/cache-clear` (protegido por API Key) |
 | `backend/get_data_summary.py` | Script ad-hoc: health check do banco (counts, distribuição, freshness) |
@@ -183,11 +184,24 @@ O usuário percorre 4 etapas implementadas dentro da `SupermercadoView`:
 | `frontend/src/components/LocationModal.tsx` | Modal de onboarding: UF dropdown + city datalist + prefetch debounce 600ms |
 | `frontend/src/components/ProductCard.tsx` | Card com semáforo visual + emoji fallback + skeleton |
 | `frontend/src/components/SkeletonCard.tsx` | Skeleton loading pulsante (`animate-pulse-soft`) |
-| `frontend/src/pages/SupermercadoView.tsx` | View principal única: onboarding → multi-select → mês → dashboard |
-| `frontend/src/hooks/useHortifruti.ts` | Hook TanStack Query para dados de sazonalidade (staleTime 12h) |
+| `frontend/src/pages/SupermercadoView.tsx` | View principal única: onboarding → multi-select (colapsável) → mês → dashboard (colapsável); ChevronDown com rotação para toggle |
+| `frontend/src/hooks/useHortifruti.ts` | Hook TanStack Query dual-query: `hortifruti-meta` (snapshot sem filtro) + `hortifruti-filter` (ativada com ano+mes). StaleTime 12h. |
 | `frontend/src/hooks/useMunicipios.ts` | Hook TanStack Query para lista de municípios (staleTime 24h) |
 | `frontend/src/types/domain.ts` | Interfaces TypeScript: ProdutoVarejo, StatusCor, SazonalidadeResponse |
 | `frontend/src/types/index.ts` | Barrel export dos tipos |
+
+---
+
+## 📦 Cache Imutável Histórico (Phase 12 — Performance B2C)
+
+O backend implementa uma estratégia de cache em duas camadas:
+
+- **Cache geral**: TTL 24h para requisições exatas (combinando todos os filtros).
+- **Cache imutável histórico** (`_HIST_CACHE_TTL = 86_400`): chave apenas de dimensões (`saz_hist_{ano}_{mes}_{uf}_{municipio}_{categoria}`). A computação mensal completa via `_compute_periodo_full()` (4 CTEs: precos_mes → baseline → fallback → semaforo) é cachead uma vez. Requisições subsequentes com diferentes filtros de `produto`/`status_cor`/`pagina` são servidas de memória via `_slice_periodo()`.
+
+Isso garante que o banco seja consultado no máximo uma vez por combinação (ano, mês, UF, município, categoria), independentemente de quantos usuários filtrem por produtos diferentes.
+
+**Cache clear**: `/_internal/cache-clear` limpa ambas as camadas (o cache imutável se re-popula naturalmente na próxima requisição).
 
 ---
 

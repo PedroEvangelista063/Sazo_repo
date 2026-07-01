@@ -5,12 +5,12 @@ import re
 from pathlib import Path
 
 import polars as pl
-from rapidfuzz import fuzz, process, utils as fuzz_utils
+from rapidfuzz import fuzz, process
 
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CSV_PATH = PROJECT_ROOT / "docs" / "Planilha sem título - sazonalidade_produtos.csv"
+CSV_PATH = PROJECT_ROOT / "dados_sazonliza_dados_bruto" / "Planilha sem título - sazonalidade_produtos.csv"
 
 ABREVIACOES: dict[str, str] = {
     "batata-doce": "batata doce",
@@ -26,20 +26,52 @@ ABREVIACOES: dict[str, str] = {
 }
 
 STOP_WORDS = {
-    "da", "de", "do", "das", "dos", "em", "para", "com",
-    "tipo", "variedade", "grupo", "extra", "especial",
+    "da",
+    "de",
+    "do",
+    "das",
+    "dos",
+    "em",
+    "para",
+    "com",
+    "tipo",
+    "variedade",
+    "grupo",
+    "extra",
+    "especial",
 }
 
-NORMALIZAR_ACENTOS = str.maketrans({
-    "á": "a", "à": "a", "ã": "a", "â": "a",
-    "é": "e", "ê": "e", "í": "i", "ó": "o",
-    "ô": "o", "õ": "o", "ú": "u", "ü": "u",
-    "ç": "c",
-    "Á": "A", "À": "A", "Ã": "A", "Â": "A",
-    "É": "E", "Ê": "E", "Í": "I", "Ó": "O",
-    "Ô": "O", "Õ": "O", "Ú": "U", "Ü": "U",
-    "Ç": "C",
-})
+NORMALIZAR_ACENTOS = str.maketrans(
+    {
+        "á": "a",
+        "à": "a",
+        "ã": "a",
+        "â": "a",
+        "é": "e",
+        "ê": "e",
+        "í": "i",
+        "ó": "o",
+        "ô": "o",
+        "õ": "o",
+        "ú": "u",
+        "ü": "u",
+        "ç": "c",
+        "Á": "A",
+        "À": "A",
+        "Ã": "A",
+        "Â": "A",
+        "É": "E",
+        "Ê": "E",
+        "Í": "I",
+        "Ó": "O",
+        "Ô": "O",
+        "Õ": "O",
+        "Ú": "U",
+        "Ü": "U",
+        "Ç": "C",
+    }
+)
+
 
 def normalizar(nome: str | None) -> str:
     if not nome:
@@ -68,7 +100,14 @@ class EntityMatcher:
             null_values=["", "-", "--"],
         )
         colunas = df.columns
-        col_nome = next((c for c in colunas if "produto" in c.lower() or "nome" in c.lower() or "item" in c.lower()), colunas[0])
+        col_nome = next(
+            (
+                c
+                for c in colunas
+                if "produto" in c.lower() or "nome" in c.lower() or "item" in c.lower()
+            ),
+            colunas[0],
+        )
         self._df = df.unique(subset=[col_nome])
         self._master_names = [n for n in self._df[col_nome].to_list() if n]
         self._master_names_norm = [normalizar(n) for n in self._master_names]

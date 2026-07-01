@@ -16,7 +16,9 @@ from psycopg2.extras import execute_values
 
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/quero_comprar")
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/quero_comprar"
+)
 
 DDL = """
 CREATE TABLE IF NOT EXISTS municipios (
@@ -100,19 +102,38 @@ def load_seasonality(df: pl.DataFrame, batch_size: int = 5_000) -> int:
     Returns:
         Total de linhas inseridas/atualizadas.
     """
-    records = df.select([
-        "municipio_id", "municipio_nome", "uf", "produto", "ano", "mes",
-        "preco_medio", "media_movel_12m", "indice_sazonalidade",
-        "status_semaforo", "dica", "fonte",
-    ]).to_dicts()
+    records = df.select(
+        [
+            "municipio_id",
+            "municipio_nome",
+            "uf",
+            "produto",
+            "ano",
+            "mes",
+            "preco_medio",
+            "media_movel_12m",
+            "indice_sazonalidade",
+            "status_semaforo",
+            "dica",
+            "fonte",
+        ]
+    ).to_dicts()
 
     # Converte para tuplas para psycopg2
     rows = [
         (
-            r["municipio_id"], r["municipio_nome"], r["uf"], r["produto"],
-            r["ano"], r["mes"],
-            r["preco_medio"], r["media_movel_12m"], r["indice_sazonalidade"],
-            r["status_semaforo"], r["dica"], r["fonte"],
+            r["municipio_id"],
+            r["municipio_nome"],
+            r["uf"],
+            r["produto"],
+            r["ano"],
+            r["mes"],
+            r["preco_medio"],
+            r["media_movel_12m"],
+            r["indice_sazonalidade"],
+            r["status_semaforo"],
+            r["dica"],
+            r["fonte"],
             "NOW()",
         )
         for r in records

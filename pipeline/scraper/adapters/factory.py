@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from pipeline.scraper.adapters.base import BaseAdapter, CotacaoRegional
+from pipeline.scraper.adapters.base import BaseAdapter
 from pipeline.scraper.adapters.hortifrut.ceasa_standard import (
     CEASA_REGISTRY,
     CeasaStandardAdapter,
@@ -48,7 +48,8 @@ class ScraperFactory:
                         self._sources_map = {k.upper(): v for k, v in produtos.items()}
                 logger.info(
                     "ScraperFactory: %d produtos mapeados em %s",
-                    len(self._sources_map), SOURCES_MAP_PATH,
+                    len(self._sources_map),
+                    SOURCES_MAP_PATH,
                 )
             except Exception as e:
                 logger.warning("Erro ao carregar sources_map: %s", e)
@@ -165,22 +166,15 @@ class ScraperFactory:
             self._adapters_cache[cache_key] = adapter
         return adapter
 
-    def fonte_para_produto(
-        self, produto: str, regiao: str | None = None
-    ) -> list[dict]:
+    def fonte_para_produto(self, produto: str, regiao: str | None = None) -> list[dict]:
         produto_key = produto.upper().strip()
         fontes = self._sources_map.get(produto_key, [])
         if regiao:
             regiao_upper = regiao.upper()
-            fontes = [
-                f for f in fontes
-                if f.get("uf", "").upper() == regiao_upper
-            ]
+            fontes = [f for f in fontes if f.get("uf", "").upper() == regiao_upper]
         return fontes
 
-    def adapters_para_produto(
-        self, produto: str, regiao: str | None = None
-    ) -> list[BaseAdapter]:
+    def adapters_para_produto(self, produto: str, regiao: str | None = None) -> list[BaseAdapter]:
         fontes = self.fonte_para_produto(produto, regiao)
         adapters: list[BaseAdapter] = []
         for config_fonte in fontes:
@@ -202,7 +196,12 @@ class ScraperFactory:
         adapter = adapter_cls(**kwargs)
         adapter.fonte = nome_fonte
         self._adapters_cache[cache_key] = adapter
-        logger.info("Adapter registrado: %s (%s-%s)", nome_fonte, kwargs.get("uf", ""), kwargs.get("municipio", ""))
+        logger.info(
+            "Adapter registrado: %s (%s-%s)",
+            nome_fonte,
+            kwargs.get("uf", ""),
+            kwargs.get("municipio", ""),
+        )
 
     def limpar_cache(self) -> None:
         self._adapters_cache.clear()

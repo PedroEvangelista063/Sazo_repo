@@ -85,17 +85,16 @@ def calculate_seasonality_municipio(df: pl.DataFrame) -> pl.DataFrame:
 
     # Passo 3: Índice de Sazonalidade
     monthly = monthly.with_columns(
-        (pl.col("preco_medio") / pl.col("media_movel_12m"))
-        .alias("indice_sazonalidade")
+        (pl.col("preco_medio") / pl.col("media_movel_12m")).alias("indice_sazonalidade")
     )
 
     # Passo 4 e 5: status semáforo + dica + fonte
-    monthly = monthly.with_columns([
-        _classify_status(pl.col("indice_sazonalidade")).alias("status_semaforo"),
-        pl.lit("municipio").alias("fonte"),
-    ]).with_columns(
-        _build_tip(pl.col("status_semaforo"), pl.col("produto")).alias("dica")
-    )
+    monthly = monthly.with_columns(
+        [
+            _classify_status(pl.col("indice_sazonalidade")).alias("status_semaforo"),
+            pl.lit("municipio").alias("fonte"),
+        ]
+    ).with_columns(_build_tip(pl.col("status_semaforo"), pl.col("produto")).alias("dica"))
 
     n_insuf = monthly.filter(pl.col("status_semaforo") == "INSUFICIENTE").height
     logger.info(
@@ -105,11 +104,22 @@ def calculate_seasonality_municipio(df: pl.DataFrame) -> pl.DataFrame:
         100 * n_insuf / monthly.height if monthly.height else 0,
     )
 
-    return monthly.select([
-        "produto", "municipio_id", "municipio_nome", "uf",
-        "ano", "mes", "preco_medio", "media_movel_12m",
-        "indice_sazonalidade", "status_semaforo", "dica", "fonte",
-    ])
+    return monthly.select(
+        [
+            "produto",
+            "municipio_id",
+            "municipio_nome",
+            "uf",
+            "ano",
+            "mes",
+            "preco_medio",
+            "media_movel_12m",
+            "indice_sazonalidade",
+            "status_semaforo",
+            "dica",
+            "fonte",
+        ]
+    )
 
 
 def calculate_seasonality_uf(df: pl.DataFrame) -> pl.DataFrame:
@@ -132,26 +142,36 @@ def calculate_seasonality_uf(df: pl.DataFrame) -> pl.DataFrame:
     )
 
     monthly = monthly.with_columns(
-        (pl.col("preco_medio") / pl.col("media_movel_12m"))
-        .alias("indice_sazonalidade")
+        (pl.col("preco_medio") / pl.col("media_movel_12m")).alias("indice_sazonalidade")
     )
 
-    monthly = monthly.with_columns([
-        _classify_status(pl.col("indice_sazonalidade")).alias("status_semaforo"),
-        pl.lit(None).cast(pl.Utf8).alias("municipio_id"),
-        pl.lit(None).cast(pl.Utf8).alias("municipio_nome"),
-        pl.lit("uf").alias("fonte"),
-    ]).with_columns(
-        _build_tip(pl.col("status_semaforo"), pl.col("produto")).alias("dica")
-    )
+    monthly = monthly.with_columns(
+        [
+            _classify_status(pl.col("indice_sazonalidade")).alias("status_semaforo"),
+            pl.lit(None).cast(pl.Utf8).alias("municipio_id"),
+            pl.lit(None).cast(pl.Utf8).alias("municipio_nome"),
+            pl.lit("uf").alias("fonte"),
+        ]
+    ).with_columns(_build_tip(pl.col("status_semaforo"), pl.col("produto")).alias("dica"))
 
     logger.info("Sazonalidade UF: %d registros", monthly.height)
 
-    return monthly.select([
-        "produto", "municipio_id", "municipio_nome", "uf",
-        "ano", "mes", "preco_medio", "media_movel_12m",
-        "indice_sazonalidade", "status_semaforo", "dica", "fonte",
-    ])
+    return monthly.select(
+        [
+            "produto",
+            "municipio_id",
+            "municipio_nome",
+            "uf",
+            "ano",
+            "mes",
+            "preco_medio",
+            "media_movel_12m",
+            "indice_sazonalidade",
+            "status_semaforo",
+            "dica",
+            "fonte",
+        ]
+    )
 
 
 def apply_municipio_fallback(
@@ -168,25 +188,39 @@ def apply_municipio_fallback(
     insufficient = mun_df.filter(pl.col("status_semaforo") == "INSUFICIENTE")
 
     # Para cada linha insuficiente, buscar o dado de UF correspondente
-    uf_lookup = uf_df.select([
-        "produto", "uf", "ano", "mes",
-        pl.col("preco_medio").alias("preco_medio_uf"),
-        pl.col("media_movel_12m").alias("media_movel_12m_uf"),
-        pl.col("indice_sazonalidade").alias("indice_sazonalidade_uf"),
-        pl.col("status_semaforo").alias("status_semaforo_uf"),
-        pl.col("dica").alias("dica_uf"),
-    ])
+    uf_lookup = uf_df.select(
+        [
+            "produto",
+            "uf",
+            "ano",
+            "mes",
+            pl.col("preco_medio").alias("preco_medio_uf"),
+            pl.col("media_movel_12m").alias("media_movel_12m_uf"),
+            pl.col("indice_sazonalidade").alias("indice_sazonalidade_uf"),
+            pl.col("status_semaforo").alias("status_semaforo_uf"),
+            pl.col("dica").alias("dica_uf"),
+        ]
+    )
 
     fallback = insufficient.join(uf_lookup, on=["produto", "uf", "ano", "mes"], how="left")
-    fallback = fallback.with_columns([
-        pl.col("preco_medio_uf").alias("preco_medio"),
-        pl.col("media_movel_12m_uf").alias("media_movel_12m"),
-        pl.col("indice_sazonalidade_uf").alias("indice_sazonalidade"),
-        pl.col("status_semaforo_uf").fill_null("INSUFICIENTE").alias("status_semaforo"),
-        pl.col("dica_uf").fill_null("Dados insuficientes para esta cidade.").alias("dica"),
-        pl.lit("uf").alias("fonte"),
-    ]).drop(["preco_medio_uf", "media_movel_12m_uf", "indice_sazonalidade_uf",
-             "status_semaforo_uf", "dica_uf"])
+    fallback = fallback.with_columns(
+        [
+            pl.col("preco_medio_uf").alias("preco_medio"),
+            pl.col("media_movel_12m_uf").alias("media_movel_12m"),
+            pl.col("indice_sazonalidade_uf").alias("indice_sazonalidade"),
+            pl.col("status_semaforo_uf").fill_null("INSUFICIENTE").alias("status_semaforo"),
+            pl.col("dica_uf").fill_null("Dados insuficientes para esta cidade.").alias("dica"),
+            pl.lit("uf").alias("fonte"),
+        ]
+    ).drop(
+        [
+            "preco_medio_uf",
+            "media_movel_12m_uf",
+            "indice_sazonalidade_uf",
+            "status_semaforo_uf",
+            "dica_uf",
+        ]
+    )
 
     result = pl.concat([sufficient, fallback], how="diagonal")
     logger.info(

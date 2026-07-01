@@ -4,7 +4,6 @@ import asyncio
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Any
 
 from pipeline.scraper.adapters.base import BaseAdapter, CotacaoRegional
 
@@ -92,36 +91,47 @@ class DispatcherOrquestrador:
                     elapsed = time.perf_counter() - t_start
                     logger.info(
                         "%s %s-%s: %d cotacoes em %.1fs",
-                        nome, adapter.uf, adapter.municipio,
-                        len(items), elapsed,
+                        nome,
+                        adapter.uf,
+                        adapter.municipio,
+                        len(items),
+                        elapsed,
                     )
                     relatorio.fontes_ok += 1
-                    relatorio.resultados.append(ResultadoFonte(
-                        nome=nome,
-                        uf=adapter.uf,
-                        municipio=adapter.municipio,
-                        status="sucesso",
-                        cotacoes=len(items),
-                        tempo_s=round(elapsed, 1),
-                    ))
+                    relatorio.resultados.append(
+                        ResultadoFonte(
+                            nome=nome,
+                            uf=adapter.uf,
+                            municipio=adapter.municipio,
+                            status="sucesso",
+                            cotacoes=len(items),
+                            tempo_s=round(elapsed, 1),
+                        )
+                    )
                     return nome, items, elapsed
                 except Exception as e:
                     elapsed = time.perf_counter() - t_start
                     logger.error(
                         "%s %s-%s falhou em %.1fs: %s",
-                        nome, adapter.uf, adapter.municipio, elapsed, e,
+                        nome,
+                        adapter.uf,
+                        adapter.municipio,
+                        elapsed,
+                        e,
                     )
                     relatorio.fontes_falha += 1
                     relatorio.erros.append(f"{nome} {adapter.uf}-{adapter.municipio}: {e}")
-                    relatorio.resultados.append(ResultadoFonte(
-                        nome=nome,
-                        uf=adapter.uf,
-                        municipio=adapter.municipio,
-                        status="erro",
-                        cotacoes=0,
-                        tempo_s=round(elapsed, 1),
-                        erro=str(e)[:200],
-                    ))
+                    relatorio.resultados.append(
+                        ResultadoFonte(
+                            nome=nome,
+                            uf=adapter.uf,
+                            municipio=adapter.municipio,
+                            status="erro",
+                            cotacoes=0,
+                            tempo_s=round(elapsed, 1),
+                            erro=str(e)[:200],
+                        )
+                    )
                     return nome, [], elapsed
 
         sem_limitado = asyncio.Semaphore(self._max_concorrencia)
@@ -141,9 +151,7 @@ class DispatcherOrquestrador:
 
         for item in todas:
             fonte = item.fonte or "desconhecida"
-            relatorio.proporcao_fontes[fonte] = (
-                relatorio.proporcao_fontes.get(fonte, 0) + 1
-            )
+            relatorio.proporcao_fontes[fonte] = relatorio.proporcao_fontes.get(fonte, 0) + 1
 
         return todas, relatorio
 
@@ -162,6 +170,8 @@ class DispatcherOrquestrador:
 
         logger.info(
             "Dispatcher: %d adapters para %s (regiao=%s)",
-            len(adapters), produto, regiao,
+            len(adapters),
+            produto,
+            regiao,
         )
         return await self.executar(adapters)

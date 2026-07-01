@@ -16,10 +16,19 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = PROJECT_ROOT / "database" / "processed_data" / "01_raw"
 
 UNIDADES_PADRAO: dict[str, float] = {
-    "cx": 1.0, "cx 20kg": 20.0, "cx 22kg": 22.0, "cx 25kg": 25.0,
-    "saco 25 kg": 25.0, "saco 25kg": 25.0, "saco 50 kg": 50.0,
-    "kg": 1.0, "dz": 1.0, "dúzia": 1.0, "duzia": 1.0,
+    "cx": 1.0,
+    "cx 20kg": 20.0,
+    "cx 22kg": 22.0,
+    "cx 25kg": 25.0,
+    "saco 25 kg": 25.0,
+    "saco 25kg": 25.0,
+    "saco 50 kg": 50.0,
+    "kg": 1.0,
+    "dz": 1.0,
+    "dúzia": 1.0,
+    "duzia": 1.0,
 }
+
 
 @dataclass
 class CotacaoItem:
@@ -38,15 +47,17 @@ class CotacaoItem:
     def preco_por_kg(self) -> float:
         return self.preco_medio / self.fator_kg if self.fator_kg > 0 else self.preco_medio
 
+
 def _extrair_fator_kg(desc: str) -> float:
     desc_lower = desc.lower()
     for chave, fator in UNIDADES_PADRAO.items():
         if chave in desc_lower:
             return fator
-    match = re.search(r'(\d+)\s*(kg|k|quilos?)', desc_lower)
+    match = re.search(r"(\d+)\s*(kg|k|quilos?)", desc_lower)
     if match:
         return float(match.group(1))
     return 1.0
+
 
 def _limpar_preco(valor: str) -> float | None:
     if not valor or valor.strip() in ("-", "--", "", "- - -"):
@@ -58,13 +69,14 @@ def _limpar_preco(valor: str) -> float | None:
     except ValueError:
         return None
 
+
 class BaseScraper(ABC):
     def __init__(self, timeout: int = 30):
         self.timeout = timeout
 
     @abstractmethod
-    async def coletar(self) -> list[CotacaoItem]:
-        ...
+    async def coletar(self) -> list[CotacaoItem]: ...
+
 
 BROWSER_HEADERS = {
     "User-Agent": (
@@ -76,32 +88,66 @@ BROWSER_HEADERS = {
     "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 
+
 class HFBrasilScraper(BaseScraper):
     BASE_URL = "https://www.hfbrasil.org.br/br/estatistica"
 
     PRODUTOS_HF = [
-        "batata", "tomate", "cebola", "alface", "cenoura",
-        "beterraba", "abobrinha", "pepino", "pimentao",
-        "banana", "laranja", "maca", "mamao", "uva",
-        "melancia", "morango", "abacate", "abacaxi", "manga",
-        "goiaba", "maracuja", "limao",
+        "batata",
+        "tomate",
+        "cebola",
+        "alface",
+        "cenoura",
+        "beterraba",
+        "abobrinha",
+        "pepino",
+        "pimentao",
+        "banana",
+        "laranja",
+        "maca",
+        "mamao",
+        "uva",
+        "melancia",
+        "morango",
+        "abacate",
+        "abacaxi",
+        "manga",
+        "goiaba",
+        "maracuja",
+        "limao",
     ]
 
     CATEGORIA_MAP: dict[str, str] = {
-        "batata": "LEGUMES", "tomate": "LEGUMES", "cebola": "DIVERSOS",
-        "alface": "VERDURAS", "cenoura": "LEGUMES", "beterraba": "LEGUMES",
-        "abobrinha": "LEGUMES", "pepino": "LEGUMES", "pimentao": "LEGUMES",
-        "banana": "FRUTAS", "laranja": "FRUTAS", "maca": "FRUTAS",
-        "mamao": "FRUTAS", "uva": "FRUTAS", "melancia": "FRUTAS",
-        "morango": "FRUTAS", "abacate": "FRUTAS", "abacaxi": "FRUTAS",
-        "manga": "FRUTAS", "goiaba": "FRUTAS", "maracuja": "FRUTAS",
+        "batata": "LEGUMES",
+        "tomate": "LEGUMES",
+        "cebola": "DIVERSOS",
+        "alface": "VERDURAS",
+        "cenoura": "LEGUMES",
+        "beterraba": "LEGUMES",
+        "abobrinha": "LEGUMES",
+        "pepino": "LEGUMES",
+        "pimentao": "LEGUMES",
+        "banana": "FRUTAS",
+        "laranja": "FRUTAS",
+        "maca": "FRUTAS",
+        "mamao": "FRUTAS",
+        "uva": "FRUTAS",
+        "melancia": "FRUTAS",
+        "morango": "FRUTAS",
+        "abacate": "FRUTAS",
+        "abacaxi": "FRUTAS",
+        "manga": "FRUTAS",
+        "goiaba": "FRUTAS",
+        "maracuja": "FRUTAS",
         "limao": "FRUTAS",
     }
 
     async def coletar(self) -> list[CotacaoItem]:
         resultados: list[CotacaoItem] = []
         async with httpx.AsyncClient(
-            timeout=self.timeout, follow_redirects=True, headers=BROWSER_HEADERS,
+            timeout=self.timeout,
+            follow_redirects=True,
+            headers=BROWSER_HEADERS,
         ) as client:
             for produto in self.PRODUTOS_HF:
                 try:
@@ -132,7 +178,7 @@ class HFBrasilScraper(BaseScraper):
 
         data_idx = None
         for i, h in enumerate(cabecalhos):
-            if re.search(r'\d{2}/jun|\d{2}/mai|\d{2}/abr', h):
+            if re.search(r"\d{2}/jun|\d{2}/mai|\d{2}/abr", h):
                 data_idx = i
                 break
         if data_idx is None:
@@ -163,53 +209,72 @@ class HFBrasilScraper(BaseScraper):
             uf = self._extrair_uf(regiao)
             cat = self.CATEGORIA_MAP.get(produto, "LEGUMES")
 
-            items.append(CotacaoItem(
-                produto_original=descricao,
-                preco_medio=preco,
-                unidade=unidade_txt,
-                fator_kg=fator,
-                data_coleta=date.today().isoformat(),
-                fonte="HF Brasil/CEPEA",
-                uf=uf,
-                categoria=cat,
-            ))
+            items.append(
+                CotacaoItem(
+                    produto_original=descricao,
+                    preco_medio=preco,
+                    unidade=unidade_txt,
+                    fator_kg=fator,
+                    data_coleta=date.today().isoformat(),
+                    fonte="HF Brasil/CEPEA",
+                    uf=uf,
+                    categoria=cat,
+                )
+            )
         return items
 
     @staticmethod
     def _extrair_uf(regiao: str) -> str:
         uf_map = {
-            "são paulo": "SP", "rio de janeiro": "RJ",
-            "belo horizonte": "MG", "minas gerais": "MG",
-            "brasília": "DF", "curitiba": "PR", "paraná": "PR",
-            "santa catarina": "SC", "rio grande do sul": "RS",
-            "bahia": "BA", "pernambuco": "PE", "ceará": "CE",
-            "goiás": "GO", "mato grosso": "MT", "mato grosso do sul": "MS",
+            "são paulo": "SP",
+            "rio de janeiro": "RJ",
+            "belo horizonte": "MG",
+            "minas gerais": "MG",
+            "brasília": "DF",
+            "curitiba": "PR",
+            "paraná": "PR",
+            "santa catarina": "SC",
+            "rio grande do sul": "RS",
+            "bahia": "BA",
+            "pernambuco": "PE",
+            "ceará": "CE",
+            "goiás": "GO",
+            "mato grosso": "MT",
+            "mato grosso do sul": "MS",
             "espírito santo": "ES",
         }
         rl = regiao.lower()
         for nome, sigla in uf_map.items():
             if nome in rl:
                 return sigla
-        match = re.search(r'\(([A-Z]{2})\)', regiao)
+        match = re.search(r"\(([A-Z]{2})\)", regiao)
         if match:
             return match.group(1)
         return "SP"
+
 
 class CEAGESPScraper(BaseScraper):
     """CEAGESP cotacoes — tabela renderizada via JS no WordPress.
     O scraper tenta httpx simples; para dados reais é necessário
     usar Playwright ou identificar o endpoint AJAX interno.
     """
+
     BASE_URL = "https://ceagesp.gov.br/cotacoes/"
     CATEGORIAS = ["diversos", "flores", "frutas", "legumes", "pescados", "verduras"]
     CATEGORIA_MAP: dict[str, str] = {
-        "diversos": "DIVERSOS", "flores": "FLORES", "frutas": "FRUTAS",
-        "legumes": "LEGUMES", "pescados": "PESCADOS", "verduras": "VERDURAS",
+        "diversos": "DIVERSOS",
+        "flores": "FLORES",
+        "frutas": "FRUTAS",
+        "legumes": "LEGUMES",
+        "pescados": "PESCADOS",
+        "verduras": "VERDURAS",
     }
 
     async def coletar(self) -> list[CotacaoItem]:
         resultados: list[CotacaoItem] = []
-        async with httpx.AsyncClient(timeout=self.timeout, headers=BROWSER_HEADERS, follow_redirects=True) as client:
+        async with httpx.AsyncClient(
+            timeout=self.timeout, headers=BROWSER_HEADERS, follow_redirects=True
+        ) as client:
             for cat in self.CATEGORIAS:
                 try:
                     items = await self._raspar_categoria(client, cat)

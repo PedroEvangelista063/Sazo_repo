@@ -7,7 +7,11 @@ from pathlib import Path
 
 import psycopg2
 
-CSV_PATH = Path(__file__).resolve().parent.parent / "docs" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
+CSV_PATH = (
+    Path(__file__).resolve().parent.parent
+    / "docs"
+    / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
+)
 DATABASE_URL: str = os.environ.get(
     "DATABASE_URL",
     "postgresql://postgres:postgres@localhost:5432/quero_comprar",

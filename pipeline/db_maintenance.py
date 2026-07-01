@@ -9,6 +9,7 @@ Usage:
     python -m pipeline.db_maintenance --retention 60     # keep 60 days
     python -m pipeline.db_maintenance --db-url postgresql://user:pass@host/db
 """
+
 from __future__ import annotations
 
 import argparse
@@ -23,7 +24,9 @@ if sys.platform == "win32":
 
 
 async def main() -> None:
-    parser = argparse.ArgumentParser(description="DB maintenance — garbage collector for scraper data")
+    parser = argparse.ArgumentParser(
+        description="DB maintenance — garbage collector for scraper data"
+    )
     parser.add_argument(
         "--db-url",
         default="postgresql://postgres:postgres@localhost:5432/quero_comprar",
@@ -71,7 +74,7 @@ async def main() -> None:
         print(f"  Raw atual        : {counts['raw_atual']}")
         print(f"  Staging atual    : {counts['staging_atual']}")
         print(f"  Rejeitados       : {counts['rejeitados']}")
-        print(f"[INFO] Status: OK")
+        print("[INFO] Status: OK")
 
     except asyncpg.PostgresError as e:
         print(f"[ERROR] Falha na limpeza diária: {e}", file=sys.stderr)

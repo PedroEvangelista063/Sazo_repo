@@ -1,0 +1,1047 @@
+#CONTEXTO = 
+Varrer o arquivo csv que está na pasta docs->Planilha sem titulo - sazonalidade_produtos.csv, validar todos o itens do arquivo, verificar a processed_data, comprar os itens que tem com o arquivo "csv", verificar oque tem e oque não tme em comum nos arquivos. Objetivo e criar a lista principal de itens baseados neste documento em CSV.
+
+#RESPOSTA OPENCODE = 
+
+$ python _crossref.py
+...
+
+na
+  [FRUTAS    ] Ameixa Imp. Espanhola
+  [FRUTAS    ] Ameixa Nacional
+  [FRUTAS    ] Ameixa Seca Importada
+  [FRUTAS    ] Amora
+  [FRUTAS    ] Amêndoa Importada
+  [FRUTAS    ] Atemoia
+  [FRUTAS    ] Avelã
+  [FRUTAS    ] Cacau
+  [FRUTAS    ] Caju
+  [FRUTAS    ] Caqui Chocolate - Kyoto
+  [FRUTAS    ] Caqui Fuyu
+  [FRUTAS    ] Caqui Giombo
+  [FRUTAS    ] Caqui Rama Forte
+  [FRUTAS    ] Carambola
+  [FRUTAS    ] Castanha Nacional
+  [FRUTAS    ] Castanha imp. Portuguesa
+  [FRUTAS    ] Cereja Importada
+  [FRUTAS    ] Coco Verde
+  [FRUTAS    ] Cupuaçu
+  [FRUTAS    ] Damasco Importado
+  [FRUTAS    ] Embu
+  [FRUTAS    ] Figo
+  [FRUTAS    ] Framboesa
+  [FRUTAS    ] Goiaba
+  [FRUTAS    ] Granadilla Imp Colômbia
+  [FRUTAS    ] Grapefruit
+  [FRUTAS    ] Graviola
+  [FRUTAS    ] Jabuticaba
+  [FRUTAS    ] Jaca
+  [FRUTAS    ] Jambo
+  [FRUTAS    ] Jatobá
+  [FRUTAS    ] Jenipapo
+  [FRUTAS    ] Kiwi Gold NZL Importado
+  [FRUTAS    ] Kiwi Green NZL Importado
+  [FRUTAS    ] Kiwi Imp Chile
+  [FRUTAS    ] Kiwi Imp Itália
+  [FRUTAS    ] Kiwi Importado
+  [FRUTAS    ] Kiwi Nacional
+  [FRUTAS    ] Laranja Baia
+  [FRUTAS    ] Laranja Baia Importada
+  [FRUTAS    ] Laranja Valência
+  [FRUTAS    ] Lichia
+  [FRUTAS    ] Lima Pérsia
+  [FRUTAS    ] Limão Galego
+  [FRUTAS    ] Limão Rosa
+  [FRUTAS    ] Limão Siciliano
+  [FRUTAS    ] Limão Siciliano Importado
+  [FRUTAS    ] Limão Taiti
+  [FRUTAS    ] Longan
+  [FRUTAS    ] Mamão Formosa
+  [FRUTAS    ] Mamão Havaí
+  [FRUTAS    ] Manga Bourbon
+  [FRUTAS    ] Manga Coquinho
+  [FRUTAS    ] Manga Espada
+  [FRUTAS    ] Manga Haden
+  [FRUTAS    ] Manga Keity
+  [FRUTAS    ] Manga Lolita
+  [FRUTAS    ] Manga Palmer
+  [FRUTAS    ] Manga Rosa
+  [FRUTAS    ] Manga Shelly
+  [FRUTAS    ] Manga Tommy
+  [FRUTAS    ] Mangostim
+  [FRUTAS    ] Maracujá Azedo
+  [FRUTAS    ] Maracujá Doce
+  [FRUTAS    ] Maça Fuji Importada
+  [FRUTAS    ] Maça Gala Importada
+  [FRUTAS    ] Maça Golden Importada
+  [FRUTAS    ] Maça Granny Smith Importada
+  [FRUTAS    ] Maça Pink Lady Importada
+  [FRUTAS    ] Maça Red Del Importada
+  [FRUTAS    ] Maçã Eva
+  [FRUTAS    ] Maçã Fuji
+  [FRUTAS    ] Maçã Gala
+  [FRUTAS    ] Maçã Golden Del
+  [FRUTAS    ] Melancia
+  [FRUTAS    ] Melancia Baby
+  [FRUTAS    ] Melão Amarelo
+  [FRUTAS    ] Melão Gália
+  [FRUTAS    ] Melão Net Melon
+  [FRUTAS    ] Melão Orange
+  [FRUTAS    ] Melão Pele de Sapo
+  [FRUTAS    ] Mexerica Mandarina Importada
+  [FRUTAS    ] Mexerica Rio
+  [FRUTAS    ] Mirtilo
+  [FRUTAS    ] Morango Comum
+  [FRUTAS    ] Nectarina Imp Argentina
+  [FRUTAS    ] Nectarina Imp Chile
+  [FRUTAS    ] Nectarina Imp Espanha
+  [FRUTAS    ] Nectarina Imp Estados Unidos
+  [FRUTAS    ] Nectarina Importada
+  [FRUTAS    ] Nectarina Nacional
+  [FRUTAS    ] Nozes Importada
+  [FRUTAS    ] Nozes Pecan
+  [FRUTAS    ] Nêspera
+  [FRUTAS    ] Pera Danjou Importada
+  [FRUTAS    ] Pera Ercolini Importada
+  [FRUTAS    ] Pera Forelli Importada
+  [FRUTAS    ] Pera Hosui Importada
+  [FRUTAS    ] Pera Nacional
+  [FRUTAS    ] Pera Packhams Triumph Importada
+  [FRUTAS    ] Pera Red Bartlett Importada
+  [FRUTAS    ] Pera Rocha Importada
+  [FRUTAS    ] Pera William Importada
+  [FRUTAS    ] Physalis
+  [FRUTAS    ] Pinha
+  [FRUTAS    ] Pitaia
+  [FRUTAS    ] Pitanga
+  [FRUTAS    ] Pêssego Aurora
+  [FRUTAS    ] Pêssego Chimarrita
+  [FRUTAS    ] Pêssego Dourado
+  [FRUTAS    ] Pêssego Eragil
+  [FRUTAS    ] Pêssego Fascinio
+  [FRUTAS    ] Pêssego Imp Estados Unidos
+  [FRUTAS    ] Pêssego Importado
+  [FRUTAS    ] Pêssego Importado Argentina
+  [FRUTAS    ] Pêssego Importado Chile
+  [FRUTAS    ] Pêssego Importado Espanha
+  [FRUTAS    ] Pêssego Kampai
+  [FRUTAS    ] Pêssego Nacional
+  [FRUTAS    ] Pêssego Rubimel
+  [FRUTAS    ] Pêssego Tropic Beauty
+  [FRUTAS    ] Pêssego Xiripa
+  [FRUTAS    ] Quincam
+  [FRUTAS    ] Rambutã
+  [FRUTAS    ] Romã
+  [FRUTAS    ] Sapoti
+  [FRUTAS    ] Seriguela
+  [FRUTAS    ] Tamarillo
+  [FRUTAS    ] Tangerina Cravo
+  [FRUTAS    ] Tangerina Decopom
+  [FRUTAS    ] Tangerina Importada
+  [FRUTAS    ] Tangerina Murcote
+  [FRUTAS    ] Tangerina Ole
+  [FRUTAS    ] Tangerina Poncã
+  [FRUTAS    ] Tâmara Seca Importada
+  [FRUTAS    ] Uva Arra 15
+  [FRUTAS    ] Uva Benitaka
+  [FRUTAS    ] Uva Brasil
+  [FRUTAS    ] Uva Centenial
+  [FRUTAS    ] Uva Crimson Importada
+  [FRUTAS    ] Uva Crinsom
+  [FRUTAS    ] Uva Isis
+  [FRUTAS    ] Uva Italia
+  [FRUTAS    ] Uva Melodia
+  [FRUTAS    ] Uva Moscatel Importada
+  [FRUTAS    ] Uva Niagara
+  [FRUTAS    ] Uva Passa Importada
+  [FRUTAS    ] Uva Red Globe
+  [FRUTAS    ] Uva Red Globe Importada
+  [FRUTAS    ] Uva Rubi
+  [FRUTAS    ] Uva Thompson
+  [FRUTAS    ] Uva Thompson Importada
+  [FRUTAS    ] Uva Vitoria
+  [LEGUMES   ] Abobrinha Brasileira
+  [LEGUMES   ] Abobrinha Italiana
+  [LEGUMES   ] Abóbora D´Agua
+  [LEGUMES   ] Abóbora Japonesa
+  [LEGUMES   ] Abóbora Moranga
+  [LEGUMES   ] Abóbora Paulista
+  [LEGUMES   ] Abóbora Seca
+  [LEGUMES   ] Alcachofra
+  [LEGUMES   ] Batata Yakon
+  [LEGUMES   ] Berinjela Comum
+  [LEGUMES   ] Berinjela Japonesa
+  [LEGUMES   ] Beterraba
+  [LEGUMES   ] Cará
+  [LEGUMES   ] Cenoura
+  [LEGUMES   ] Chuchu
+  [LEGUMES   ] Ervilha Torta
+  [LEGUMES   ] Feijão de Corda
+  [LEGUMES   ] Gengibre
+  [LEGUMES   ] Inhame
+  [LEGUMES   ] Jiló
+  [LEGUMES   ] Lakio
+  [LEGUMES   ] Lenkon
+  [LEGUMES   ] Mandioca
+  [LEGUMES   ] Mandioquinha
+  [LEGUMES   ] Maxixe
+  [LEGUMES   ] Miyoga
+  [LEGUMES   ] Nigagori
+  [LEGUMES   ] Pepino Caipira
+  [LEGUMES   ] Pepino Comum
+  [LEGUMES   ] Pepino Japonês
+  [LEGUMES   ] Pimenta Cambuci
+  [LEGUMES   ] Pimenta Dedo de Moça
+  [LEGUMES   ] Pimenta Malagueta/Malaguetão
+  [LEGUMES   ] Pimenta Verde
+  [LEGUMES   ] Pimenta Verde Americana
+  [LEGUMES   ] Pimentão Amarelo
+  [LEGUMES   ] Pimentão Verde
+  [LEGUMES   ] Pimentão Vermelho
+  [LEGUMES   ] Quiabo
+  [LEGUMES   ] Taquenoco
+  [LEGUMES   ] Tomate Caqui
+  [LEGUMES   ] Tomate Carmem
+  [LEGUMES   ] Tomate Cereja
+  [LEGUMES   ] Tomate Debora
+  [LEGUMES   ] Tomate Holandês
+  [LEGUMES   ] Tomate Rasteiro
+  [LEGUMES   ] Tomate Sweet Grape
+  [LEGUMES   ] Ume
+  [LEGUMES   ] Vagem Macarrão
+  [LEGUMES   ] Vagem Manteiga
+  [LEGUMES   ] Vagem Metro
+  [PESCADOS  ] Abrótea
+  [PESCADOS  ] Agulhão
+  [PESCADOS  ] Anchova
+  [PESCADOS  ] Atum
+  [PESCADOS  ] Bacalhau Seco Importado
+  [PESCADOS  ] Badejo
+  [PESCADOS  ] Bagre Água Doce
+  [PESCADOS  ] Bagre Água Salgada
+  [PESCADOS  ] Berbigão Limpo
+  [PESCADOS  ] Betara
+  [PESCADOS  ] Bijupira
+  [PESCADOS  ] Bonito
+  [PESCADOS  ] Camarão Cativeiro
+  [PESCADOS  ] Camarão Pitu
+  [PESCADOS  ] Camarão Rosa
+  [PESCADOS  ] Camarão Sete Barbas
+  [PESCADOS  ] Caranguejo
+  [PESCADOS  ] Carapau
+  [PESCADOS  ] Carapeba
+  [PESCADOS  ] Cascudo
+  [PESCADOS  ] Cavala
+  [PESCADOS  ] Cavalinha
+  [PESCADOS  ] Cação Azul
+  [PESCADOS  ] Chiova
+  [PESCADOS  ] Corvina Água Doce
+  [PESCADOS  ] Corvina Água Salgada
+  [PESCADOS  ] Croassu
+  [PESCADOS  ] Curimba
+  [PESCADOS  ] Côngrio Rosa
+  [PESCADOS  ] Dourado Água Salgada
+  [PESCADOS  ] File de Merluza
+  [PESCADOS  ] File de Tilapia
+  [PESCADOS  ] Garoupa
+  [PESCADOS  ] Gordinho
+  [PESCADOS  ] Guaivira
+  [PESCADOS  ] Jundiá
+  [PESCADOS  ] Lagosta
+  [PESCADOS  ] Lambari
+  [PESCADOS  ] Linguado
+  [PESCADOS  ] Lula
+  [PESCADOS  ] Mandi
+  [PESCADOS  ] Manjuba
+  [PESCADOS  ] Meca
+  [PESCADOS  ] Mexilhão Limpo
+  [PESCADOS  ] Namorado
+  [PESCADOS  ] Olhete
+  [PESCADOS  ] Ostra
+  [PESCADOS  ] Oveva
+  [PESCADOS  ] Pacu
+  [PESCADOS  ] Palombeta
+  [PESCADOS  ] Pampo
+  [PESCADOS  ] Pangasius
+  [PESCADOS  ] Pargo
+  [PESCADOS  ] Paru
+  [PESCADOS  ] Peixe - Espada
+  [PESCADOS  ] Peixe - Galo
+  [PESCADOS  ] Peixe-Cabra
+  [PESCADOS  ] Peroá Branco (Porquinho)
+  [PESCADOS  ] Pescada Amarela
+  [PESCADOS  ] Pescada Bicuda
+  [PESCADOS  ] Pescada Branca
+  [PESCADOS  ] Pescada Cumbucu
+  [PESCADOS  ] Pescada Goete
+  [PESCADOS  ] Pescada Maria Mole
+  [PESCADOS  ] Pescada Tortinha
+  [PESCADOS  ] Piau
+  [PESCADOS  ] Pintado
+  [PESCADOS  ] Pirarucu
+  [PESCADOS  ] Polvo
+  [PESCADOS  ] Prego
+  [PESCADOS  ] Robalo
+  [PESCADOS  ] Roncador
+  [PESCADOS  ] Salmão Importado Chile
+  [PESCADOS  ] Sardinha Congelada
+  [PESCADOS  ] Sardinha Fresca
+  [PESCADOS  ] Sardinha Lages
+  [PESCADOS  ] Siri
+  [PESCADOS  ] Sororoca
+  [PESCADOS  ] Tainha
+  [PESCADOS  ] Tambaqui
+  [PESCADOS  ] Tilapia
+  [PESCADOS  ] Traira
+  [PESCADOS  ] Trilha
+  [PESCADOS  ] Truta
+  [PESCADOS  ] Tucunaré
+  [PESCADOS  ] Xaréu
+  [VERDURAS  ] Acelga
+  [VERDURAS  ] Acelga Chinesa
+  [VERDURAS  ] Agrião
+  [VERDURAS  ] Agrião Hidropônico
+  [VERDURAS  ] Alecrim
+  [VERDURAS  ] Alface Americana
+  [VERDURAS  ] Alface Crespa
+  [VERDURAS  ] Alface Crespa Hidropônica
+  [VERDURAS  ] Alface Lisa
+  [VERDURAS  ] Alface Lisa Hidropônica
+  [VERDURAS  ] Alface Mimosa
+  [VERDURAS  ] Alface Mimosa Hidropônica
+  [VERDURAS  ] Alface Romana
+  [VERDURAS  ] Alface Romana Hidropônica
+  [VERDURAS  ] Alfavaca
+  [VERDURAS  ] Alho Porro
+  [VERDURAS  ] Almeirão
+  [VERDURAS  ] Almeirão Hidropônico
+  [VERDURAS  ] Almeirão Pão de Açucar
+  [VERDURAS  ] Aspargo
+  [VERDURAS  ] Beterraba com Folhas
+  [VERDURAS  ] Broto de Alfafa
+  [VERDURAS  ] Brócolos Ninja
+  [VERDURAS  ] Brócolos Ramoso
+  [VERDURAS  ] Capim Cidreira
+  [VERDURAS  ] Catalonha
+  [VERDURAS  ] Cebolete
+  [VERDURAS  ] Cebolinha
+  [VERDURAS  ] Cenoura com Folhas
+  [VERDURAS  ] Chicória
+  [VERDURAS  ] Coentro
+  [VERDURAS  ] Cogumelo Eryngui
+  [VERDURAS  ] Cogumelo Hiratake
+  [VERDURAS  ] Cogumelo Paris
+  [VERDURAS  ] Cogumelo Porto Belo
+  [VERDURAS  ] Cogumelo Shimeji
+  [VERDURAS  ] Cogumelo Shitake
+  [VERDURAS  ] Couve Manteiga
+  [VERDURAS  ] Couve de Bruxelas
+  [VERDURAS  ] Couve-Flor
+  [VERDURAS  ] Endro
+  [VERDURAS  ] Endívia
+  [VERDURAS  ] Erva Doce
+  [VERDURAS  ] Escarola
+  [VERDURAS  ] Escarola Hidropônica
+  [VERDURAS  ] Espinafre
+  [VERDURAS  ] Espinafre Hidropônico
+  [VERDURAS  ] Estragão
+  [VERDURAS  ] Gengibre com Folhas
+  [VERDURAS  ] Gobô
+  [VERDURAS  ] Hana Nira
+  [VERDURAS  ] Hortelã
+  [VERDURAS  ] Louro
+  [VERDURAS  ] Manjericão
+  [VERDURAS  ] Manjerona
+  [VERDURAS  ] Milho Verde
+  [VERDURAS  ] Mostarda
+  [VERDURAS  ] Mostarda Hidropônica
+  [VERDURAS  ] Moyashi
+  [VERDURAS  ] Nabo
+  [VERDURAS  ] Orégano
+  [VERDURAS  ] Palmito Pupunha
+  [VERDURAS  ] Rabanete
+  [VERDURAS  ] Radicchio
+  [VERDURAS  ] Repolho Roxo
+  [VERDURAS  ] Repolho Verde Liso
+  [VERDURAS  ] Rúcula
+  [VERDURAS  ] Rúcula Hidropônica
+  [VERDURAS  ] Salsa
+  [VERDURAS  ] Salsão Branco/Verde
+  [VERDURAS  ] Sálvia
+  [VERDURAS  ] Tomilho
+
+===========================================================================
+APENAS NO PROCESSED_DATA (CONAB sem sazonalidade manual)
+===========================================================================
+Total: 69
+  ARROZ - LONGO FINO EM CASCA
+  ARROZ - LONGO FINO ORGÃNICO(
+  ARROZ - LONGO FINO TIPO 1 58
+  ARROZ - LONGO FINO TIPO 1 BE
+  ARROZ - LONGO FINO TIPO 1 PA
+  ARROZ - LONGO FINO TIPO 2 BE
+  ARROZ - PARBOILIZADO LONGO F
+  ARROZ - VERMELHO EM CASCA
+  BANANA - PACOVAN
+  BATATA - INGLESA
+  BATATA - NÃO INFORMADO
+  BATATA-DOCE - NÃO INFORMADO
+  CARNE BOVINA - ACÃM
+  CARNE BOVINA - CHARQUE PA CRAY-O-VA
+  CARNE BOVINA - CHARQUE PA MANTA
+  CARNE BOVINA - COXÃO DURO S/OSSO
+  CARNE BOVINA - COXÃO MOLE S/OSSO
+  CARNE BOVINA - DIANTEIRO COM OSSO
+  CARNE BOVINA - JERKED BEEF
+  CARNE BOVINA - PATINHO S/OSSO
+  CARNE BOVINA - PONTA DE AGULHA
+  CARNE BOVINA - TRASEIRO COM OSSO
+  CARNE BOVINA - TRASEIRO SEM OSSO
+  CARNE CAPRINA - CARCAÃA
+  CARNE CAPRINA - DIANTEIRA
+  CARNE CAPRINA - TRASEIRA
+  CARNE DE FRANGO - CONGELADO
+  CARNE DE FRANGO - RESFRIADO
+  CARNE DE FRANGO - SEM MIÃDOS CONGELADA
+  CARNE OVINA - CARCAÃA
+  CARNE SUINA - CARCAÃA CONGELADA
+  CARNE SUINA - PERNIL COM OSSO CONG
+  CARNE SUINA - PERNIL COM OSSO RESF
+  CEBOLA - AMARELA
+  CEBOLA - CEBOLA
+  CEBOLA - CLASSE 3, EXTRA AMAR
+  CEBOLA - NÃO INFORMADO
+  ERVA MATE - IN NATURA
+  FEIJAO - CAUPI
+  FEIJAO - CAUPI TIPO 1
+  FEIJAO - COMUM CORES
+  FEIJAO - COMUM CORES TIPO 1
+  FEIJAO - COMUM PRETO
+  FEIJAO - COMUM PRETO TIPO 1
+  FLOCOS DE MILHO - ENRIQUECIDO
+  FLOCOS DE MILHO - FLOCÃO
+  FLOCOS DE MILHO - PRE-COZIDO
+  FRANGO - VIVO
+  LARANJA - INDÃSTRIA
+  LARANJA - INDÃSTRIA PERA
+  MACA - FUJI
+  MACA - GALA
+  MAMAO - FORMOSA
+  MAMAO - NÃO INFORMADO
+  MAMAO - PAPAIA
+  PAO - FRANCÃS
+  PIMENTAO - VERDE
+  TOMATE - LONGA VIDA
+  TOMATE - NÃO INFORMADO
+  UVA - DE MESA ITÃLIA
+  UVA - DE MESA NIÃGARA
+  UVA - INDÃSTRIA BORDÃ
+  UVA - INDÃSTRIA CABERNET S
+  UVA - INDÃSTRIA CHARDONNAY
+  UVA - INDÃSTRIA GAMAY SAIN
+  UVA - INDÃSTRIA ISABEL
+  UVA - INDÃSTRIA MOSCATO
+  UVA - INDÃSTRIA NIÃGARA
+  UVA - INDÃSTRIA NIÃGARA BR
+
+
+===========================================================================
+MASTER LIST — LISTA PRINCIPAL DE ITENS
+===========================================================================
+
+Produtos do CSV com sazonalidade manual (477 itens):
+----------------------------------------------------
+  DIVERSOS   | Alho Importado
+  DIVERSOS   | Alho Importado Argentina
+  DIVERSOS   | Alho Importado China
+  DIVERSOS   | Alho Importado Estados Unidos
+  DIVERSOS   | Alho Nacional
+  DIVERSOS   | Amendoim com Casca
+  DIVERSOS   | Amendoim sem Casca
+  DIVERSOS   | Batata Asterix
+  DIVERSOS   | Batata Lavada
+  DIVERSOS   | Cebola Importada [MATCHED]
+  DIVERSOS   | Cebola Importada Argentina [MATCHED]
+  DIVERSOS   | Cebola Importada Espanha [MATCHED]
+  DIVERSOS   | Cebola Importada Holanda [MATCHED]
+  DIVERSOS   | Cebola Nacional [MATCHED]
+  DIVERSOS   | Cebola Pérola [MATCHED]
+  DIVERSOS   | Cebola Roxa [MATCHED]
+  DIVERSOS   | Coco Seco
+  DIVERSOS   | Milho de Pipoca Importado
+  DIVERSOS   | Ovo Branco
+  DIVERSOS   | Ovo Vermelho
+  DIVERSOS   | Ovo de Codorna
+  DIVERSOS   | Pinhão
+  FLORES     | Agapanto
+  FLORES     | Alstroméria
+  FLORES     | Angélica
+  FLORES     | Antúrio - PCT
+  FLORES     | Antúrio - Vaso
+  FLORES     | Avenca
+  FLORES     | Azaleia
+  FLORES     | Begônia
+  FLORES     | Bico de Papagaio
+  FLORES     | Boca de Leão
+  FLORES     | Branquinha
+  FLORES     | Bromélia
+  FLORES     | Callas
+  FLORES     | Calêndula
+  FLORES     | Ciclamen
+  FLORES     | Copo de Leite
+  FLORES     | Cravo Comum
+  FLORES     | Cravo Túnico
+  FLORES     | Crista de Galo
+  FLORES     | Crisântemo
+  FLORES     | Crisântemo Comum
+  FLORES     | Crisântemo Polares Bola Belga
+  FLORES     | Dracena
+  FLORES     | Dália
+  FLORES     | Estatice
+  FLORES     | Estrelicia
+  FLORES     | Eucalipto Simeria
+  FLORES     | Ficus
+  FLORES     | Flor de Trigo
+  FLORES     | Girassol
+  FLORES     | Gladiolo
+  FLORES     | Goivo
+  FLORES     | Grama São Carlos
+  FLORES     | Gypsofila
+  FLORES     | Gérbera
+  FLORES     | Helicônia
+  FLORES     | Hortênsia
+  FLORES     | Impatins
+  FLORES     | Jasmim
+  FLORES     | Kalanchoe
+  FLORES     | Lisianthus
+  FLORES     | Lírio
+  FLORES     | Margarida
+  FLORES     | Mini Rosa
+  FLORES     | Mini Suculenta
+  FLORES     | Moreia
+  FLORES     | Musgo Pequeno
+  FLORES     | Orquídea
+  FLORES     | Palmeira
+  FLORES     | Palmeira PCT
+  FLORES     | Petúnia
+  FLORES     | Pingo de Ouro
+  FLORES     | Prímula
+  FLORES     | Rosa
+  FLORES     | Rosa Spray
+  FLORES     | Samambaia
+  FLORES     | Sempre Viva
+  FLORES     | Suculenta
+  FLORES     | Tango
+  FLORES     | Tuia
+  FLORES     | Tuia PCT
+  FLORES     | Tulipa
+  FLORES     | Tulipa VS
+  FLORES     | Violeta
+  FLORES     | Zínia
+  FLORES     | Ìris
+  FRUTAS     | Abacate Avocado
+  FRUTAS     | Abacate Breda
+  FRUTAS     | Abacate Fortuna
+  FRUTAS     | Abacate Geada
+  FRUTAS     | Abacate Margarida
+  FRUTAS     | Abacate Quintal
+  FRUTAS     | Abacaxi Havai
+  FRUTAS     | Abacaxi Pérola
+  FRUTAS     | Abiu
+  FRUTAS     | Acerola
+  FRUTAS     | Ameixa Imp. Americana
+  FRUTAS     | Ameixa Imp. Argentina
+  FRUTAS     | Ameixa Imp. Chilena
+  FRUTAS     | Ameixa Imp. Espanhola
+  FRUTAS     | Ameixa Nacional
+  FRUTAS     | Ameixa Seca Importada
+  FRUTAS     | Amora
+  FRUTAS     | Amêndoa Importada
+  FRUTAS     | Atemoia
+  FRUTAS     | Avelã
+  FRUTAS     | Banana Maçã [MATCHED]
+  FRUTAS     | Banana Nanica [MATCHED]
+  FRUTAS     | Banana Ouro [MATCHED]
+  FRUTAS     | Banana Prata MG [MATCHED]
+  FRUTAS     | Banana Prata SP [MATCHED]
+  FRUTAS     | Banana Terra [MATCHED]
+  FRUTAS     | Cacau
+  FRUTAS     | Caju
+  FRUTAS     | Caqui Chocolate - Kyoto
+  FRUTAS     | Caqui Fuyu
+  FRUTAS     | Caqui Giombo
+  FRUTAS     | Caqui Rama Forte
+  FRUTAS     | Carambola
+  FRUTAS     | Castanha Nacional
+  FRUTAS     | Castanha imp. Portuguesa
+  FRUTAS     | Cereja Importada
+  FRUTAS     | Coco Verde
+  FRUTAS     | Cupuaçu
+  FRUTAS     | Damasco Importado
+  FRUTAS     | Embu
+  FRUTAS     | Figo
+  FRUTAS     | Framboesa
+  FRUTAS     | Goiaba
+  FRUTAS     | Granadilla Imp Colômbia
+  FRUTAS     | Grapefruit
+  FRUTAS     | Graviola
+  FRUTAS     | Jabuticaba
+  FRUTAS     | Jaca
+  FRUTAS     | Jambo
+  FRUTAS     | Jatobá
+  FRUTAS     | Jenipapo
+  FRUTAS     | Kiwi Gold NZL Importado
+  FRUTAS     | Kiwi Green NZL Importado
+  FRUTAS     | Kiwi Imp Chile
+  FRUTAS     | Kiwi Imp Itália
+  FRUTAS     | Kiwi Importado
+  FRUTAS     | Kiwi Nacional
+  FRUTAS     | Laranja Baia
+  FRUTAS     | Laranja Baia Importada
+  FRUTAS     | Laranja Lima [MATCHED]
+  FRUTAS     | Laranja Pera [MATCHED]
+  FRUTAS     | Laranja Valência
+  FRUTAS     | Lichia
+  FRUTAS     | Lima Pérsia
+  FRUTAS     | Limão Galego
+  FRUTAS     | Limão Rosa
+  FRUTAS     | Limão Siciliano
+  FRUTAS     | Limão Siciliano Importado
+  FRUTAS     | Limão Taiti
+  FRUTAS     | Longan
+  FRUTAS     | Mamão Formosa
+  FRUTAS     | Mamão Havaí
+  FRUTAS     | Manga Bourbon
+  FRUTAS     | Manga Coquinho
+  FRUTAS     | Manga Espada
+  FRUTAS     | Manga Haden
+  FRUTAS     | Manga Keity
+  FRUTAS     | Manga Lolita
+  FRUTAS     | Manga Palmer
+  FRUTAS     | Manga Rosa
+  FRUTAS     | Manga Shelly
+  FRUTAS     | Manga Tommy
+  FRUTAS     | Mangostim
+  FRUTAS     | Maracujá Azedo
+  FRUTAS     | Maracujá Doce
+  FRUTAS     | Maça Fuji Importada
+  FRUTAS     | Maça Gala Importada
+  FRUTAS     | Maça Golden Importada
+  FRUTAS     | Maça Granny Smith Importada
+  FRUTAS     | Maça Pink Lady Importada
+  FRUTAS     | Maça Red Del Importada
+  FRUTAS     | Maçã Eva
+  FRUTAS     | Maçã Fuji
+  FRUTAS     | Maçã Gala
+  FRUTAS     | Maçã Golden Del
+  FRUTAS     | Melancia
+  FRUTAS     | Melancia Baby
+  FRUTAS     | Melão Amarelo
+  FRUTAS     | Melão Gália
+  FRUTAS     | Melão Net Melon
+  FRUTAS     | Melão Orange
+  FRUTAS     | Melão Pele de Sapo
+  FRUTAS     | Mexerica Mandarina Importada
+  FRUTAS     | Mexerica Rio
+  FRUTAS     | Mirtilo
+  FRUTAS     | Morango Comum
+  FRUTAS     | Nectarina Imp Argentina
+  FRUTAS     | Nectarina Imp Chile
+  FRUTAS     | Nectarina Imp Espanha
+  FRUTAS     | Nectarina Imp Estados Unidos
+  FRUTAS     | Nectarina Importada
+  FRUTAS     | Nectarina Nacional
+  FRUTAS     | Nozes Importada
+  FRUTAS     | Nozes Pecan
+  FRUTAS     | Nêspera
+  FRUTAS     | Pera Danjou Importada
+  FRUTAS     | Pera Ercolini Importada
+  FRUTAS     | Pera Forelli Importada
+  FRUTAS     | Pera Hosui Importada
+  FRUTAS     | Pera Nacional
+  FRUTAS     | Pera Packhams Triumph Importada
+  FRUTAS     | Pera Red Bartlett Importada
+  FRUTAS     | Pera Rocha Importada
+  FRUTAS     | Pera William Importada
+  FRUTAS     | Physalis
+  FRUTAS     | Pinha
+  FRUTAS     | Pitaia
+  FRUTAS     | Pitanga
+  FRUTAS     | Pêssego Aurora
+  FRUTAS     | Pêssego Chimarrita
+  FRUTAS     | Pêssego Dourado
+  FRUTAS     | Pêssego Eragil
+  FRUTAS     | Pêssego Fascinio
+  FRUTAS     | Pêssego Imp Estados Unidos
+  FRUTAS     | Pêssego Importado
+  FRUTAS     | Pêssego Importado Argentina
+  FRUTAS     | Pêssego Importado Chile
+  FRUTAS     | Pêssego Importado Espanha
+  FRUTAS     | Pêssego Kampai
+  FRUTAS     | Pêssego Nacional
+  FRUTAS     | Pêssego Rubimel
+  FRUTAS     | Pêssego Tropic Beauty
+  FRUTAS     | Pêssego Xiripa
+  FRUTAS     | Quincam
+  FRUTAS     | Rambutã
+  FRUTAS     | Romã
+  FRUTAS     | Sapoti
+  FRUTAS     | Seriguela
+  FRUTAS     | Tamarillo
+  FRUTAS     | Tangerina Cravo
+  FRUTAS     | Tangerina Decopom
+  FRUTAS     | Tangerina Importada
+  FRUTAS     | Tangerina Murcote
+  FRUTAS     | Tangerina Ole
+  FRUTAS     | Tangerina Poncã
+  FRUTAS     | Tâmara Seca Importada
+  FRUTAS     | Uva Arra 15
+  FRUTAS     | Uva Benitaka
+  FRUTAS     | Uva Brasil
+  FRUTAS     | Uva Centenial
+  FRUTAS     | Uva Crimson Importada
+  FRUTAS     | Uva Crinsom
+  FRUTAS     | Uva Isabel [MATCHED]
+  FRUTAS     | Uva Isis
+  FRUTAS     | Uva Italia
+  FRUTAS     | Uva Melodia
+  FRUTAS     | Uva Moscatel Importada
+  FRUTAS     | Uva Niagara
+  FRUTAS     | Uva Passa Importada
+  FRUTAS     | Uva Red Globe
+  FRUTAS     | Uva Red Globe Importada
+  FRUTAS     | Uva Rubi
+  FRUTAS     | Uva Thompson
+  FRUTAS     | Uva Thompson Importada
+  FRUTAS     | Uva Vitoria
+  LEGUMES    | Abobrinha Brasileira
+  LEGUMES    | Abobrinha Italiana
+  LEGUMES    | Abóbora D´Agua
+  LEGUMES    | Abóbora Japonesa
+  LEGUMES    | Abóbora Moranga
+  LEGUMES    | Abóbora Paulista
+  LEGUMES    | Abóbora Seca
+  LEGUMES    | Alcachofra
+  LEGUMES    | Batata Doce Amarela [MATCHED]
+  LEGUMES    | Batata Doce Branca [MATCHED]
+  LEGUMES    | Batata Doce Rosada [MATCHED]
+  LEGUMES    | Batata Doce Roxa [MATCHED]
+  LEGUMES    | Batata Yakon
+  LEGUMES    | Berinjela Comum
+  LEGUMES    | Berinjela Japonesa
+  LEGUMES    | Beterraba
+  LEGUMES    | Cará
+  LEGUMES    | Cenoura
+  LEGUMES    | Chuchu
+  LEGUMES    | Ervilha Torta
+  LEGUMES    | Feijão de Corda
+  LEGUMES    | Gengibre
+  LEGUMES    | Inhame
+  LEGUMES    | Jiló
+  LEGUMES    | Lakio
+  LEGUMES    | Lenkon
+  LEGUMES    | Mandioca
+  LEGUMES    | Mandioquinha
+  LEGUMES    | Maxixe
+  LEGUMES    | Miyoga
+  LEGUMES    | Nigagori
+  LEGUMES    | Pepino Caipira
+  LEGUMES    | Pepino Comum
+  LEGUMES    | Pepino Japonês
+  LEGUMES    | Pimenta Cambuci
+  LEGUMES    | Pimenta Dedo de Moça
+  LEGUMES    | Pimenta Malagueta/Malaguetão
+  LEGUMES    | Pimenta Verde
+  LEGUMES    | Pimenta Verde Americana
+  LEGUMES    | Pimentão Amarelo
+  LEGUMES    | Pimentão Verde
+  LEGUMES    | Pimentão Vermelho
+  LEGUMES    | Quiabo
+  LEGUMES    | Taquenoco
+  LEGUMES    | Tomate Caqui
+  LEGUMES    | Tomate Carmem
+  LEGUMES    | Tomate Cereja
+  LEGUMES    | Tomate Debora
+  LEGUMES    | Tomate Holandês
+  LEGUMES    | Tomate Italiano - Pizzadoro [MATCHED]
+  LEGUMES    | Tomate Rasteiro
+  LEGUMES    | Tomate Sweet Grape
+  LEGUMES    | Ume
+  LEGUMES    | Vagem Macarrão
+  LEGUMES    | Vagem Manteiga
+  LEGUMES    | Vagem Metro
+  PESCADOS   | Abrótea
+  PESCADOS   | Agulhão
+  PESCADOS   | Anchova
+  PESCADOS   | Atum
+  PESCADOS   | Bacalhau Seco Importado
+  PESCADOS   | Badejo
+  PESCADOS   | Bagre Água Doce
+  PESCADOS   | Bagre Água Salgada
+  PESCADOS   | Berbigão Limpo
+  PESCADOS   | Betara
+  PESCADOS   | Bijupira
+  PESCADOS   | Bonito
+  PESCADOS   | Camarão Cativeiro
+  PESCADOS   | Camarão Pitu
+  PESCADOS   | Camarão Rosa
+  PESCADOS   | Camarão Sete Barbas
+  PESCADOS   | Caranguejo
+  PESCADOS   | Carapau
+  PESCADOS   | Carapeba
+  PESCADOS   | Cascudo
+  PESCADOS   | Cavala
+  PESCADOS   | Cavalinha
+  PESCADOS   | Cação Azul
+  PESCADOS   | Chiova
+  PESCADOS   | Corvina Água Doce
+  PESCADOS   | Corvina Água Salgada
+  PESCADOS   | Croassu
+  PESCADOS   | Curimba
+  PESCADOS   | Côngrio Rosa
+  PESCADOS   | Dourado Água Salgada
+  PESCADOS   | File de Merluza
+  PESCADOS   | File de Tilapia
+  PESCADOS   | Garoupa
+  PESCADOS   | Gordinho
+  PESCADOS   | Guaivira
+  PESCADOS   | Jundiá
+  PESCADOS   | Lagosta
+  PESCADOS   | Lambari
+  PESCADOS   | Linguado
+  PESCADOS   | Lula
+  PESCADOS   | Mandi
+  PESCADOS   | Manjuba
+  PESCADOS   | Meca
+  PESCADOS   | Mexilhão Limpo
+  PESCADOS   | Namorado
+  PESCADOS   | Olhete
+  PESCADOS   | Ostra
+  PESCADOS   | Oveva
+  PESCADOS   | Pacu
+  PESCADOS   | Palombeta
+  PESCADOS   | Pampo
+  PESCADOS   | Pangasius
+  PESCADOS   | Pargo
+  PESCADOS   | Paru
+  PESCADOS   | Peixe - Espada
+  PESCADOS   | Peixe - Galo
+  PESCADOS   | Peixe-Cabra
+  PESCADOS   | Peroá Branco (Porquinho)
+  PESCADOS   | Pescada Amarela
+  PESCADOS   | Pescada Bicuda
+  PESCADOS   | Pescada Branca
+  PESCADOS   | Pescada Cumbucu
+  PESCADOS   | Pescada Goete
+  PESCADOS   | Pescada Maria Mole
+  PESCADOS   | Pescada Tortinha
+  PESCADOS   | Piau
+  PESCADOS   | Pintado
+  PESCADOS   | Pirarucu
+  PESCADOS   | Polvo
+  PESCADOS   | Prego
+  PESCADOS   | Robalo
+  PESCADOS   | Roncador
+  PESCADOS   | Salmão Importado Chile
+  PESCADOS   | Sardinha Congelada
+  PESCADOS   | Sardinha Fresca
+  PESCADOS   | Sardinha Lages
+  PESCADOS   | Siri
+  PESCADOS   | Sororoca
+  PESCADOS   | Tainha
+  PESCADOS   | Tambaqui
+  PESCADOS   | Tilapia
+  PESCADOS   | Traira
+  PESCADOS   | Trilha
+  PESCADOS   | Truta
+  PESCADOS   | Tucunaré
+  PESCADOS   | Xaréu
+  VERDURAS   | Acelga
+  VERDURAS   | Acelga Chinesa
+  VERDURAS   | Agrião
+  VERDURAS   | Agrião Hidropônico
+  VERDURAS   | Alecrim
+  VERDURAS   | Alface Americana
+  VERDURAS   | Alface Crespa
+  VERDURAS   | Alface Crespa Hidropônica
+  VERDURAS   | Alface Lisa
+  VERDURAS   | Alface Lisa Hidropônica
+  VERDURAS   | Alface Mimosa
+  VERDURAS   | Alface Mimosa Hidropônica
+  VERDURAS   | Alface Romana
+  VERDURAS   | Alface Romana Hidropônica
+  VERDURAS   | Alfavaca
+  VERDURAS   | Alho Porro
+  VERDURAS   | Almeirão
+  VERDURAS   | Almeirão Hidropônico
+  VERDURAS   | Almeirão Pão de Açucar
+  VERDURAS   | Aspargo
+  VERDURAS   | Beterraba com Folhas
+  VERDURAS   | Broto de Alfafa
+  VERDURAS   | Brócolos Ninja
+  VERDURAS   | Brócolos Ramoso
+  VERDURAS   | Capim Cidreira
+  VERDURAS   | Catalonha
+  VERDURAS   | Cebolete
+  VERDURAS   | Cebolinha
+  VERDURAS   | Cenoura com Folhas
+  VERDURAS   | Chicória
+  VERDURAS   | Coentro
+  VERDURAS   | Cogumelo Eryngui
+  VERDURAS   | Cogumelo Hiratake
+  VERDURAS   | Cogumelo Paris
+  VERDURAS   | Cogumelo Porto Belo
+  VERDURAS   | Cogumelo Shimeji
+  VERDURAS   | Cogumelo Shitake
+  VERDURAS   | Couve Manteiga
+  VERDURAS   | Couve de Bruxelas
+  VERDURAS   | Couve-Flor
+  VERDURAS   | Endro
+  VERDURAS   | Endívia
+  VERDURAS   | Erva Doce
+  VERDURAS   | Escarola
+  VERDURAS   | Escarola Hidropônica
+  VERDURAS   | Espinafre
+  VERDURAS   | Espinafre Hidropônico
+  VERDURAS   | Estragão
+  VERDURAS   | Gengibre com Folhas
+  VERDURAS   | Gobô
+  VERDURAS   | Hana Nira
+  VERDURAS   | Hortelã
+  VERDURAS   | Louro
+  VERDURAS   | Manjericão
+  VERDURAS   | Manjerona
+  VERDURAS   | Milho Verde
+  VERDURAS   | Mostarda
+  VERDURAS   | Mostarda Hidropônica
+  VERDURAS   | Moyashi
+  VERDURAS   | Nabo
+  VERDURAS   | Orégano
+  VERDURAS   | Palmito Pupunha
+  VERDURAS   | Rabanete
+  VERDURAS   | Radicchio
+  VERDURAS   | Repolho Roxo
+  VERDURAS   | Repolho Verde Liso
+  VERDURAS   | Rúcula
+  VERDURAS   | Rúcula Hidropônica
+  VERDURAS   | Salsa
+  VERDURAS   | Salsão Branco/Verde
+  VERDURAS   | Sálvia
+  VERDURAS   | Tomilho
+
+Produtos B2C da CONAB (80 produtos base):
+----------------------------------------
+  ARROZ - LONGO FINO EM CASCA
+  ARROZ - LONGO FINO ORGÃNICO(
+  ARROZ - LONGO FINO TIPO 1 58
+  ARROZ - LONGO FINO TIPO 1 BE
+  ARROZ - LONGO FINO TIPO 1 PA
+  ARROZ - LONGO FINO TIPO 2 BE
+  ARROZ - PARBOILIZADO LONGO F
+  ARROZ - VERMELHO EM CASCA
+  BANANA - DA TERRA [MATCHED]
+  BANANA - EXTRA PACOVAN [MATCHED]
+  BANANA - NANICA [MATCHED]
+  BANANA - PACOVAN
+  BANANA - PRATA [MATCHED]
+  BATATA - INGLESA
+  BATATA - INGLESA BRANCA [MATCHED]
+  BATATA - NÃO INFORMADO
+  BATATA-DOCE - AMARELA [MATCHED]
+  BATATA-DOCE - NÃO INFORMADO
+  CARNE BOVINA - ACÃM
+  CARNE BOVINA - CHARQUE PA CRAY-O-VA
+  CARNE BOVINA - CHARQUE PA MANTA
+  CARNE BOVINA - COXÃO DURO S/OSSO
+  CARNE BOVINA - COXÃO MOLE S/OSSO
+  CARNE BOVINA - DIANTEIRO COM OSSO
+  CARNE BOVINA - JERKED BEEF
+  CARNE BOVINA - PATINHO S/OSSO
+  CARNE BOVINA - PONTA DE AGULHA
+  CARNE BOVINA - TRASEIRO COM OSSO
+  CARNE BOVINA - TRASEIRO SEM OSSO
+  CARNE CAPRINA - CARCAÃA
+  CARNE CAPRINA - DIANTEIRA
+  CARNE CAPRINA - TRASEIRA
+  CARNE DE FRANGO - CONGELADO
+  CARNE DE FRANGO - RESFRIADO
+  CARNE DE FRANGO - SEM MIÃDOS CONGELADA
+  CARNE OVINA - CARCAÃA
+  CARNE SUINA - CARCAÃA CONGELADA
+  CARNE SUINA - PERNIL COM OSSO CONG
+  CARNE SUINA - PERNIL COM OSSO RESF
+  CEBOLA - AMARELA
+  CEBOLA - CEBOLA
+  CEBOLA - CLASSE 2, EXTRA AMAR [MATCHED]
+  CEBOLA - CLASSE 3, EXTRA AMAR
+  CEBOLA - NÃO INFORMADO
+  ERVA MATE - IN NATURA
+  FEIJAO - CAUPI
+  FEIJAO - CAUPI TIPO 1
+  FEIJAO - COMUM CORES
+  FEIJAO - COMUM CORES TIPO 1
+  FEIJAO - COMUM PRETO
+  FEIJAO - COMUM PRETO TIPO 1
+  FLOCOS DE MILHO - ENRIQUECIDO
+  FLOCOS DE MILHO - FLOCÃO
+  FLOCOS DE MILHO - PRE-COZIDO
+  FRANGO - VIVO
+  LARANJA - DE MESA LIMA [MATCHED]
+  LARANJA - DE MESA PERA [MATCHED]
+  LARANJA - INDÃSTRIA
+  LARANJA - INDÃSTRIA PERA
+  MACA - FUJI
+  MACA - GALA
+  MAMAO - FORMOSA
+  MAMAO - NÃO INFORMADO
+  MAMAO - PAPAIA
+  PAO - FRANCÃS
+  PIMENTAO - VERDE
+  TOMATE - ITALIANO [MATCHED]
+  TOMATE - LONGA VIDA
+  TOMATE - NÃO INFORMADO
+  UVA - DE MESA ISABEL [MATCHED]
+  UVA - DE MESA ITÃLIA
+  UVA - DE MESA NIÃGARA
+  UVA - INDÃSTRIA BORDÃ
+  UVA - INDÃSTRIA CABERNET S
+  UVA - INDÃSTRIA CHARDONNAY
+  UVA - INDÃSTRIA GAMAY SAIN
+  UVA - INDÃSTRIA ISABEL
+  UVA - INDÃSTRIA MOSCATO
+  UVA - INDÃSTRIA NIÃGARA
+  UVA - INDÃSTRIA NIÃGARA BR
+
+Total master list: 536 itens unicos
+  CSV source: 477
+  CONAB source: 80
+  Em comum: 21
+  Combinado unico: 546
+Click to collapse
++ Thought: 420ms
+Aqui está a análise completa do cruzamento:
+Resumo Geral:
+- CSV (sazonalidade manual): 477 produtos válidos (6 categorias: FRUTAS, LEGUMES, VERDURAS, DIVERSOS, FLORES, PESCADOS)
+- Processed_data (CONAB B2C): 80 produtos base com preços
+- Matches encontrados: 21 (sobreposição parcial)
+Problema central: São 2 bases com propósitos diferentes:
+- CSV → Sazonalidade agrícola mensal (safra/entressafra com A/B/M por mês)
+- CONAB → Preços referência (carnes, grãos, commodities com preço por UF)
+A sobreposição é mínima (~21 itens) porque a CONAB não cobre hortifrútis finos, flores, pescados, ou variedades específicas (abacate, manga, kiwi, etc.).
+Master List combinada: 546 itens únicos
+- 477 do CSV (cobrem hortifrúti completo com sazonalidade mensal)
+- 69 da CONAB (carnes, grãos, arroz, feijão, etc. — sem sazonalidade no CSV)
+- 21 em comum
+O CSV é a fonte principal para sazonalidade de hortifrútis. A CONAB complementa com commodities onde o CSV não cobre.
+$ Remove-Item -LiteralPath "_crossref.py" -Force
+(no output)
++ Thought: 436ms
+⚙engram_mem_save [title=Cross-ref CSV sazonalidade vs processed_data CONAB, type=discovery, project=quero_comprar_vg, content=**What**: Cross-referenced CSV sazonalidade (477 products) against processed_data CONAB (80 B2C products). Found 21 matches, 456 CSV-only, 69 CONAB-only.
+
+**Why**: User requested validation of CSV items against processed_data to build master list.
+
+**Where**: `docs/Planilha sem título - sazonalidade_produtos.csv`, `database/processed_data/`
+
+**Learned**: CSV covers hortifrúti seasonality (safra/entressafra A/B/M per month) across 6 categories: FRUTAS, LEGUMES, VERDURAS, DIVERSOS, FLORES, PESCADOS. CONAB covers price reference for commodities (carnes, grãos, arroz, feijão). Minimal overlap because CONAB data doesn't include specialty fruits, flowers, fish. CONAB product naming uses format "PRODUTO - VARIEDADE" (e.g., "BANANA - NANICA") while CSV uses "Nome Variedade" (e.g., "Banana Nanica"). Master list: 546 unique items.]
++ Thought: 505ms
+Feito. O arquivo temporário _crossref.py foi removido. Os resultados completos estão acima.

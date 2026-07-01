@@ -4,7 +4,6 @@ import asyncio
 import functools
 import logging
 import random
-import time
 from typing import Any, Callable, TypeVar
 
 logger = logging.getLogger(__name__)
@@ -34,27 +33,35 @@ def retry_request(
                 try:
                     result = await func(*args, **kwargs)
                     if attempt > 1:
-                        logger.info(
-                            "%s recuperou apos %d tentativas", func.__name__, attempt
-                        )
+                        logger.info("%s recuperou apos %d tentativas", func.__name__, attempt)
                     return result
                 except exceptions as e:
                     last_exc = e
                     if attempt < retries:
-                        jitter_val = random.uniform(0.7, 1.3) * current_delay if jitter else current_delay
+                        jitter_val = (
+                            random.uniform(0.7, 1.3) * current_delay if jitter else current_delay
+                        )
                         logger.warning(
                             "%s tentativa %d/%d falhou: %s. Retentando em %.1fs...",
-                            func.__name__, attempt, retries, e, jitter_val,
+                            func.__name__,
+                            attempt,
+                            retries,
+                            e,
+                            jitter_val,
                         )
                         await asyncio.sleep(jitter_val)
                         current_delay = min(current_delay * backoff, max_delay)
                     else:
                         logger.error(
                             "%s esgotou %d tentativas. Ultimo erro: %s",
-                            func.__name__, retries, e,
+                            func.__name__,
+                            retries,
+                            e,
                         )
             if last_exc:
                 raise last_exc
             return None
+
         return wrapper  # type: ignore
+
     return decorator

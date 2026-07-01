@@ -9,7 +9,6 @@ import sys
 import time
 import uuid
 from datetime import date, datetime
-from pathlib import Path
 from typing import Any, NoReturn
 
 import polars as pl
@@ -21,7 +20,7 @@ from pipeline.scraper.ceasa_spider import (
 )
 from pipeline.scraper.data_normalizer import DataNormalizer
 from pipeline.scraper.adapters import AgrolinkCEASAAdapter
-from pipeline.scraper.price_collector import PriceCollector, QualidadeMetricas
+from pipeline.scraper.price_collector import PriceCollector
 
 logging.basicConfig(
     level=logging.INFO,
@@ -42,7 +41,9 @@ COPY_BATCH_SIZE: int = 50_000
 AUDIT_LOG_DIR = RAW_DIR / "audit"
 
 
-def _iterar_meses(ano_inicio: int, mes_inicio: int, ano_fim: int, mes_fim: int) -> list[tuple[int, int]]:
+def _iterar_meses(
+    ano_inicio: int, mes_inicio: int, ano_fim: int, mes_fim: int
+) -> list[tuple[int, int]]:
     meses: list[tuple[int, int]] = []
     a, m = ano_inicio, mes_inicio
     while (a < ano_fim) or (a == ano_fim and m <= mes_fim):
@@ -75,8 +76,10 @@ def _salvar_audit_mes(ano: int, mes: int, cobertura_pct: float, status: str, lin
 
 # ── Qualidade do banco ──────────────────────────────────────────────
 
+
 async def _meses_com_qualidade_insuficiente(
-    conn, meses: list[tuple[int, int]],
+    conn,
+    meses: list[tuple[int, int]],
     limite_pct: float,
 ) -> list[tuple[int, int]]:
     total = await conn.fetchval(
@@ -98,7 +101,8 @@ async def _meses_com_qualidade_insuficiente(
             WHERE p.status_fonte = 'MAPEADA'
               AND f.ano = $1 AND f.mes = $2
             """,
-            ano, mes,
+            ano,
+            mes,
         )
         cobertura = (existentes / total) * 100 if existentes else 0.0
         coberturas[(ano, mes)] = cobertura
@@ -115,8 +119,10 @@ async def _meses_com_qualidade_insuficiente(
 
 # ── Carga no PostgreSQL (atômica por mês) ───────────────────────────
 
+
 def _get_pg_conn():
     import psycopg2
+
     conn = psycopg2.connect(DATABASE_URL, options="-c timezone=UTC")
     conn.set_session(autocommit=False)
     return conn
@@ -155,7 +161,10 @@ def _ensure_dimensions(conn, produtos_uf: set[str], uf_list: set[str]) -> dict:
 
 
 def _load_mes_into_fact(
-    conn, df_mes: pl.DataFrame, mapping: dict, mapping_lock: Any,
+    conn,
+    df_mes: pl.DataFrame,
+    mapping: dict,
+    mapping_lock: Any,
 ) -> int:
     """Carrega UM mes em transacao atomica. Se falhar, rollback nao afeta outros meses."""
     from psycopg2.extras import execute_values
@@ -189,7 +198,7 @@ def _load_mes_into_fact(
 
     with conn.cursor() as cur:
         for i in range(0, len(rows), COPY_BATCH_SIZE):
-            batch = rows[i:i + COPY_BATCH_SIZE]
+            batch = rows[i : i + COPY_BATCH_SIZE]
             execute_values(
                 cur,
                 """
@@ -220,6 +229,7 @@ def _executar_ciclo_medalhao(conn) -> None:
 
 
 # ── Scraper ─────────────────────────────────────────────────────────
+
 
 def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) -> pl.DataFrame:
     if not items:
@@ -258,7 +268,9 @@ def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) 
     return aggregated.select(STAGING_COLUNAS)
 
 
-async def _coletar_mes(meses: list[tuple[int, int]], collector: PriceCollector, normalizer: DataNormalizer) -> list[pl.DataFrame]:
+async def _coletar_mes(
+    meses: list[tuple[int, int]], collector: PriceCollector, normalizer: DataNormalizer
+) -> list[pl.DataFrame]:
     blocos: list[pl.DataFrame] = []
     for ano, mes in meses:
         logger.info("--- Coletando %04d/%02d ---", ano, mes)
@@ -266,7 +278,9 @@ async def _coletar_mes(meses: list[tuple[int, int]], collector: PriceCollector, 
         items, metricas = await collector.collect_all()
         df = formatar_staging(items, normalizer)
         metricas.total_apos_fuzzy = df.height
-        metricas.taxa_conversao_pct = (df.height / metricas.total_bruto * 100) if metricas.total_bruto > 0 else 0.0
+        metricas.taxa_conversao_pct = (
+            (df.height / metricas.total_bruto * 100) if metricas.total_bruto > 0 else 0.0
+        )
         print(metricas.relatorio())
         if df.height > 0:
             blocos.append(df)
@@ -291,16 +305,36 @@ def _separar_por_mes(df: pl.DataFrame) -> dict[tuple[int, int], pl.DataFrame]:
 
 # ── Main ────────────────────────────────────────────────────────────
 
+
 async def main() -> NoReturn:
     parser = argparse.ArgumentParser(description="Scraper + Carga Medalhao — Qualidade Progressiva")
-    parser.add_argument("--descobrir", action="store_true", help="Executa descoberta de novas fontes antes da coleta")
-    parser.add_argument("--concorrencia", type=int, default=4, help="Maximo de requisicoes simultaneas")
-    parser.add_argument("--desde", type=str, default=None, help="Mes inicial (YYYY-MM). Omitir = mes corrente")
-    parser.add_argument("--ate", type=str, default=None, help="Mes final (YYYY-MM). Omitir = mes corrente")
-    parser.add_argument("--qualidade-minima", type=float, default=QUALIDADE_MINIMA_PCT, help="%% minima de cobertura para ignorar mes (0-100)")
-    parser.add_argument("--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range")
+    parser.add_argument(
+        "--descobrir",
+        action="store_true",
+        help="Executa descoberta de novas fontes antes da coleta",
+    )
+    parser.add_argument(
+        "--concorrencia", type=int, default=4, help="Maximo de requisicoes simultaneas"
+    )
+    parser.add_argument(
+        "--desde", type=str, default=None, help="Mes inicial (YYYY-MM). Omitir = mes corrente"
+    )
+    parser.add_argument(
+        "--ate", type=str, default=None, help="Mes final (YYYY-MM). Omitir = mes corrente"
+    )
+    parser.add_argument(
+        "--qualidade-minima",
+        type=float,
+        default=QUALIDADE_MINIMA_PCT,
+        help="%% minima de cobertura para ignorar mes (0-100)",
+    )
+    parser.add_argument(
+        "--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range"
+    )
     parser.add_argument("--db-url", type=str, default=DATABASE_URL, help="PostgreSQL URL")
-    parser.add_argument("--skip-load", action="store_true", help="So salva parquet, nao carrega no banco")
+    parser.add_argument(
+        "--skip-load", action="store_true", help="So salva parquet, nao carrega no banco"
+    )
     args = parser.parse_args()
 
     logger.info("=== SCRAPER REGIONAL + CARGA MEDALHAO ===")
@@ -311,7 +345,12 @@ async def main() -> NoReturn:
         ano_inicio, mes_inicio = (int(x) for x in args.desde.split("-"))
         ano_fim, mes_fim = (int(x) for x in (args.ate or args.desde).split("-"))
         meses_planejados = _iterar_meses(ano_inicio, mes_inicio, ano_fim, mes_fim)
-        logger.info("Range: %d meses (%s a %s)", len(meses_planejados), args.desde, f"{ano_fim:04d}-{mes_fim:02d}")
+        logger.info(
+            "Range: %d meses (%s a %s)",
+            len(meses_planejados),
+            args.desde,
+            f"{ano_fim:04d}-{mes_fim:02d}",
+        )
     else:
         meses_planejados = [(hoje.year, hoje.month)]
 
@@ -322,12 +361,15 @@ async def main() -> NoReturn:
     else:
         try:
             import asyncpg
+
             if sys.platform == "win32":
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
             conn = await asyncpg.connect(args.db_url)
             try:
                 meses_para_raspar, coberturas_conhecidas = await _meses_com_qualidade_insuficiente(
-                    conn, meses_planejados, args.qualidade_minima,
+                    conn,
+                    meses_planejados,
+                    args.qualidade_minima,
                 )
             finally:
                 await conn.close()
@@ -336,7 +378,9 @@ async def main() -> NoReturn:
             meses_para_raspar = meses_planejados
 
     if not meses_para_raspar:
-        logger.info("Nenhum mes precisa de raspagem (todos acima de %.1f%%).", args.qualidade_minima)
+        logger.info(
+            "Nenhum mes precisa de raspagem (todos acima de %.1f%%).", args.qualidade_minima
+        )
         sys.exit(0)
 
     logger.info("Meses para raspar: %d de %d", len(meses_para_raspar), len(meses_planejados))
@@ -346,6 +390,7 @@ async def main() -> NoReturn:
 
     if args.descobrir:
         from pipeline.scraper.buscador_fontes import descobrir_fontes, fontes_para_localidades
+
         rel = await descobrir_fontes()
         novas = fontes_para_localidades(rel.fontes)
         logger.info("Descoberta: %d novas fontes", len(novas))
@@ -415,8 +460,12 @@ async def main() -> NoReturn:
                 conn.rollback()
                 logger.exception("Ciclo medalhao falhou")
 
-        logger.info("=== RESUMO: %d meses OK, %d falha, %d linhas ===",
-                     meses_ok, meses_falha, total_inseridas)
+        logger.info(
+            "=== RESUMO: %d meses OK, %d falha, %d linhas ===",
+            meses_ok,
+            meses_falha,
+            total_inseridas,
+        )
 
     except Exception:
         conn.rollback()

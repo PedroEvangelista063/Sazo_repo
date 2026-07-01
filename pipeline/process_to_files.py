@@ -23,7 +23,6 @@ from __future__ import annotations
 import io
 import json
 import logging
-import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -45,16 +44,29 @@ OUTPUT_DIR = PROJECT_ROOT / "database" / "processed_data"
 UF_COLUMNS = ["produto", "uf", "ano", "mes", "preco_medio"]
 
 CONAB_COLUMNS_9 = [
-    "produto", "classificao_produto", "id_produto",
-    "uf", "regiao", "ano", "mes",
-    "dsc_nivel_comercializacao", "valor_produto_kg",
+    "produto",
+    "classificao_produto",
+    "id_produto",
+    "uf",
+    "regiao",
+    "ano",
+    "mes",
+    "dsc_nivel_comercializacao",
+    "valor_produto_kg",
 ]
 
 CONAB_COLUMNS_11 = [
-    "produto", "classificao_produto", "id_produto",
-    "nom_municipio", "cod_ibge",
-    "uf", "regiao", "ano", "mes",
-    "dsc_nivel_comercializacao", "valor_produto_kg",
+    "produto",
+    "classificao_produto",
+    "id_produto",
+    "nom_municipio",
+    "cod_ibge",
+    "uf",
+    "regiao",
+    "ano",
+    "mes",
+    "dsc_nivel_comercializacao",
+    "valor_produto_kg",
 ]
 
 
@@ -68,12 +80,15 @@ def _ler_csv(text: str) -> pl.DataFrame:
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     if _tem_header(text):
         df = pl.read_csv(
-            io.StringIO(text), separator=";",
-            infer_schema_length=10_000, ignore_errors=True,
+            io.StringIO(text),
+            separator=";",
+            infer_schema_length=10_000,
+            ignore_errors=True,
             truncate_ragged_lines=True,
         )
-        df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                         for c in df.columns})
+        df = df.rename(
+            {c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns}
+        )
     else:
         first_line = text.strip().split("\n", 1)[0].strip()
         num_cols = len(first_line.split(";"))
@@ -82,9 +97,12 @@ def _ler_csv(text: str) -> pl.DataFrame:
         else:
             col_names = CONAB_COLUMNS_9
         df = pl.read_csv(
-            io.StringIO(text), separator=";",
-            has_header=False, new_columns=col_names,
-            infer_schema_length=10_000, ignore_errors=True,
+            io.StringIO(text),
+            separator=";",
+            has_header=False,
+            new_columns=col_names,
+            infer_schema_length=10_000,
+            ignore_errors=True,
             truncate_ragged_lines=True,
         )
     return df
@@ -99,9 +117,7 @@ REGRAS_CATEGORIAS: dict[str, str] = {
         r"(?i)^(00-\d{2}-\d{2}|ZINCO|FLUMYZIN|NATIVO|SENCOR|"
         r"SEMENTE|NEMAT|FLUIL|NHT|OLEO VEGETA|PARA BROCA)\b"
     ),
-    "SERVICO_LOGISTICA": (
-        r"(?i)^(TRANSPORTE|PASSAGEM|PATIO|TRATAMENTO)\b"
-    ),
+    "SERVICO_LOGISTICA": (r"(?i)^(TRANSPORTE|PASSAGEM|PATIO|TRATAMENTO)\b"),
     "ALIMENTO_VAREJO": (
         r"(?i)^(CARNE|PAO|FLOCOS DE MILHO|ERVA MATE|TOMATE|"
         r"FRANGO|ARROZ|FEIJAO|BATATA|CENOURA|CEBOLA|ALFACE|"
@@ -115,11 +131,7 @@ THRESHOLD_RED = 1.15
 
 
 def _sanitize_price(series: pl.Series) -> pl.Series:
-    return (
-        series.str.strip_chars()
-        .str.replace(",", ".")
-        .cast(pl.Float64, strict=False)
-    )
+    return series.str.strip_chars().str.replace(",", ".").cast(pl.Float64, strict=False)
 
 
 def _clean_file(filepath: Path) -> pl.DataFrame:
@@ -163,9 +175,7 @@ def _clean_file(filepath: Path) -> pl.DataFrame:
     )
 
     if "produto" in df.columns:
-        df = df.filter(
-            ~pl.col("produto").str.to_lowercase().str.contains("produto")
-        )
+        df = df.filter(~pl.col("produto").str.to_lowercase().str.contains("produto"))
 
     return df
 
@@ -180,18 +190,30 @@ def _categorizar(df: pl.DataFrame) -> pl.DataFrame:
 
 
 def _calcular_sazonalidade(df: pl.DataFrame) -> pl.DataFrame:
-    """Calcula baseline 2025 + fallback 12m (réplica da SP do banco).
+    """Calcula baseline 2025 + fallback 12m + MoM (réplica da SP do banco).
 
-    Retorna DataFrame com: produto, uf, preco_referencia, preco_atual,
-    data_referencia_atual, usou_fallback_12m, status_cor, fonte.
+    Cadeia de fallback:
+      1. rolling_12m → Baseline 2025 interpolada
+      2. fallback_12m → Média 12 meses
+      3. mom → Variação mês-a-mês (Δ% ±10%)
+      4. insuficiente → Sem dados
     """
     if df.height == 0:
-        return pl.DataFrame(schema={
-            "produto": pl.Utf8, "uf": pl.Utf8,
-            "preco_referencia": pl.Float64, "preco_atual": pl.Float64,
-            "data_referencia_atual": pl.Utf8, "usou_fallback_12m": pl.Boolean,
-            "status_cor": pl.Utf8, "fonte": pl.Utf8,
-        })
+        return pl.DataFrame(
+            schema={
+                "produto": pl.Utf8,
+                "uf": pl.Utf8,
+                "preco_referencia": pl.Float64,
+                "preco_atual": pl.Float64,
+                "data_referencia_atual": pl.Utf8,
+                "usou_fallback_12m": pl.Boolean,
+                "status_cor": pl.Utf8,
+                "fonte": pl.Utf8,
+                "metodo_calculo": pl.Utf8,
+                "variacao_mom_pct": pl.Float64,
+                "preco_mes_anterior": pl.Float64,
+            }
+        )
 
     # Baseline 2025
     base_2025 = (
@@ -204,22 +226,25 @@ def _calcular_sazonalidade(df: pl.DataFrame) -> pl.DataFrame:
     ultimos = (
         df.sort(["produto", "uf", "ano", "mes"])
         .group_by(["produto", "uf"])
-        .agg([
-            pl.col("preco_medio").last().alias("preco_atual"),
-            pl.col("ano").last().alias("ultimo_ano"),
-            pl.col("mes").last().alias("ultimo_mes"),
-        ])
+        .agg(
+            [
+                pl.col("preco_medio").last().alias("preco_atual"),
+                pl.col("ano").last().alias("ultimo_ano"),
+                pl.col("mes").last().alias("ultimo_mes"),
+            ]
+        )
         .with_columns(
-            (pl.col("ultimo_ano").cast(pl.Utf8) + "-"
-             + pl.col("ultimo_mes").cast(pl.Utf8).str.pad_start(2, "0"))
-            .alias("data_referencia_atual")
+            (
+                pl.col("ultimo_ano").cast(pl.Utf8)
+                + "-"
+                + pl.col("ultimo_mes").cast(pl.Utf8).str.pad_start(2, "0")
+            ).alias("data_referencia_atual")
         )
     )
 
     # Fallback 12m
-    periodos = (
-        df.group_by(["produto", "uf"])
-        .agg((pl.col("ano") * 12 + pl.col("mes")).max().alias("ultimo_periodo"))
+    periodos = df.group_by(["produto", "uf"]).agg(
+        (pl.col("ano") * 12 + pl.col("mes")).max().alias("ultimo_periodo")
     )
     fallback = df.join(periodos, on=["produto", "uf"], how="inner")
     fallback = fallback.filter(
@@ -227,43 +252,111 @@ def _calcular_sazonalidade(df: pl.DataFrame) -> pl.DataFrame:
     )
     fallback = (
         fallback.group_by(["produto", "uf"])
-        .agg(pl.col("preco_medio").mean().alias("preco_fallback_12m"))
+        .agg([
+            pl.col("preco_medio").mean().alias("preco_fallback_12m"),
+            pl.len().alias("qtd_meses"),
+        ])
         .filter(pl.col("preco_fallback_12m").is_not_null())
+        .filter(pl.col("qtd_meses") >= 3)
+    )
+
+    # MoM: preço do mês anterior via window function
+    mom = (
+        df.sort(["produto", "uf", "ano", "mes"])
+        .with_columns(
+            pl.col("preco_medio")
+            .shift(1)
+            .over(["produto", "uf"])
+            .alias("preco_mes_anterior")
+        )
+        .filter(pl.col("preco_mes_anterior").is_not_null())
+        .group_by(["produto", "uf"])
+        .agg([
+            pl.col("preco_medio").last().alias("preco_atual_mom"),
+            pl.col("preco_mes_anterior").last().alias("preco_mes_anterior"),
+        ])
+        .with_columns(
+            pl.when(
+                pl.col("preco_mes_anterior").is_not_null()
+                & (pl.col("preco_mes_anterior") > 0)
+            )
+            .then(
+                ((pl.col("preco_atual_mom") / pl.col("preco_mes_anterior") - 1) * 100).round(2)
+            )
+            .alias("variacao_mom_pct")
+        )
+        .select(["produto", "uf", "preco_mes_anterior", "variacao_mom_pct"])
     )
 
     # Master join
     resultado = ultimos.join(base_2025, on=["produto", "uf"], how="left")
     resultado = resultado.join(fallback, on=["produto", "uf"], how="left")
+    resultado = resultado.join(mom, on=["produto", "uf"], how="left")
 
     resultado = resultado.with_columns(
         pl.coalesce(
             pl.col("preco_referencia_2025"),
             pl.col("preco_fallback_12m"),
+            pl.col("preco_mes_anterior"),
         ).alias("preco_referencia"),
         (
             pl.col("preco_referencia_2025").is_null()
             & pl.col("preco_fallback_12m").is_not_null()
         ).alias("usou_fallback_12m"),
+        pl.when(pl.col("preco_referencia_2025").is_not_null())
+        .then(pl.lit("rolling_12m"))
+        .when(pl.col("preco_fallback_12m").is_not_null())
+        .then(pl.lit("fallback_12m"))
+        .when(pl.col("preco_mes_anterior").is_not_null())
+        .then(pl.lit("mom"))
+        .otherwise(pl.lit("insuficiente"))
+        .alias("metodo_calculo"),
     )
 
-    # Semáforo
-    razao = pl.col("preco_atual") / pl.col("preco_referencia")
+    # Semáforo com thresholds condicionais
     resultado = resultado.with_columns(
         pl.when(pl.col("preco_referencia").is_null() | (pl.col("preco_referencia") == 0))
         .then(pl.lit("INSUFICIENTE"))
         .when(pl.col("preco_atual").is_null())
         .then(pl.lit("INSUFICIENTE"))
-        .when(razao < THRESHOLD_GREEN)
+        .when(
+            (pl.col("metodo_calculo") == "mom")
+            & (pl.col("preco_atual") < pl.col("preco_mes_anterior") * 0.90)
+        )
         .then(pl.lit("VERDE"))
-        .when(razao > THRESHOLD_RED)
+        .when(
+            (pl.col("metodo_calculo") == "mom")
+            & (pl.col("preco_atual") > pl.col("preco_mes_anterior") * 1.10)
+        )
+        .then(pl.lit("VERMELHO"))
+        .when(pl.col("metodo_calculo") == "mom")
+        .then(pl.lit("AMARELO"))
+        .when(
+            pl.col("preco_atual") < pl.col("preco_referencia") * THRESHOLD_GREEN
+        )
+        .then(pl.lit("VERDE"))
+        .when(
+            pl.col("preco_atual") > pl.col("preco_referencia") * THRESHOLD_RED
+        )
         .then(pl.lit("VERMELHO"))
         .otherwise(pl.lit("AMARELO"))
         .alias("status_cor"),
         pl.lit("municipio").alias("fonte"),
     )
 
-    cols = ["produto", "uf", "preco_referencia", "preco_atual",
-            "data_referencia_atual", "usou_fallback_12m", "status_cor", "fonte"]
+    cols = [
+        "produto",
+        "uf",
+        "preco_referencia",
+        "preco_atual",
+        "data_referencia_atual",
+        "usou_fallback_12m",
+        "status_cor",
+        "fonte",
+        "metodo_calculo",
+        "variacao_mom_pct",
+        "preco_mes_anterior",
+    ]
     return resultado.select(cols)
 
 
@@ -303,7 +396,7 @@ def _gerar_sql_insert(df: pl.DataFrame, tabela: str, schema: str, output_dir: Pa
     lines = [
         f"-- {schema}.{tabela} — {df.height} linhas",
         f"-- Gerado em {datetime.now().isoformat()}",
-        f"BEGIN;",
+        "BEGIN;",
         f"INSERT INTO {schema}.{tabela} ({col_list}) VALUES",
     ]
 
@@ -380,8 +473,16 @@ def processar() -> dict[str, Any]:
         cleaned_count = df_clean.height
         total_linhas_limpas += cleaned_count
 
-        kept_cols = ["produto", "classificao_produto", "id_produto",
-                      "uf", "regiao", "ano", "mes", "preco_medio"]
+        kept_cols = [
+            "produto",
+            "classificao_produto",
+            "id_produto",
+            "uf",
+            "regiao",
+            "ano",
+            "mes",
+            "preco_medio",
+        ]
 
         df_out = df_clean.select([c for c in kept_cols if c in df_clean.columns])
         _salvar_json(df_out, "02_cleaned", nome, OUTPUT_DIR)
@@ -406,14 +507,16 @@ def processar() -> dict[str, Any]:
             _salvar_json(df_b2c_out, "04_b2c_only", nome, OUTPUT_DIR)
             all_b2c.extend(df_b2c_out.to_dicts())
 
-        arquivos_processados.append({
-            "arquivo": nome,
-            "raw": raw_count,
-            "cleaned": cleaned_count,
-            "b2c": b2c_count,
-            "b2b": b2b_count,
-            "rejeitados": raw_count - cleaned_count,
-        })
+        arquivos_processados.append(
+            {
+                "arquivo": nome,
+                "raw": raw_count,
+                "cleaned": cleaned_count,
+                "b2c": b2c_count,
+                "b2b": b2b_count,
+                "rejeitados": raw_count - cleaned_count,
+            }
+        )
 
         # Contagem de categorias
         for cat_df in [df_cat]:
@@ -421,17 +524,21 @@ def processar() -> dict[str, Any]:
                 if cat:
                     categorias_gerais[cat] = categorias_gerais.get(cat, 0) + 1
 
-        logger.info("  RAW=%d → CLEANED=%d | B2C=%d B2B=%d | rejeitados=%d",
-                     raw_count, cleaned_count, b2c_count, b2b_count,
-                     raw_count - cleaned_count)
+        logger.info(
+            "  RAW=%d → CLEANED=%d | B2C=%d B2B=%d | rejeitados=%d",
+            raw_count,
+            cleaned_count,
+            b2c_count,
+            b2b_count,
+            raw_count - cleaned_count,
+        )
 
     # 05: Aggregated (B2C mensal por produto+UF)
     logger.info("\n--- Agregado B2C ---")
     if all_b2c:
         df_all_b2c = pl.DataFrame(all_b2c)
         df_agg = (
-            df_all_b2c
-            .group_by(["produto", "uf", "ano", "mes"])
+            df_all_b2c.group_by(["produto", "uf", "ano", "mes"])
             .agg(pl.col("preco_medio").mean().alias("preco_medio"))
             .sort(["produto", "uf", "ano", "mes"])
         )
@@ -492,14 +599,12 @@ def processar() -> dict[str, Any]:
             },
             "usou_fallback": int(df_saz["usou_fallback_12m"].sum()),
             "produtos_verdes": df_saz.filter(pl.col("status_cor") == "VERDE")["produto"].to_list(),
-            "produtos_vermelhos": df_saz.filter(pl.col("status_cor") == "VERMELHO")["produto"].to_list(),
+            "produtos_vermelhos": df_saz.filter(pl.col("status_cor") == "VERMELHO")[
+                "produto"
+            ].to_list(),
         }
-        summary["produtos_disponiveis"] = sorted(
-            df_all_b2c["produto"].unique().to_list()
-        )
-        summary["ufs_disponiveis"] = sorted(
-            df_all_b2c["uf"].unique().to_list()
-        )
+        summary["produtos_disponiveis"] = sorted(df_all_b2c["produto"].unique().to_list())
+        summary["ufs_disponiveis"] = sorted(df_all_b2c["uf"].unique().to_list())
 
     summary_path = OUTPUT_DIR / "summary.json"
     with open(summary_path, "w", encoding="utf-8") as f:
@@ -514,8 +619,7 @@ def processar() -> dict[str, Any]:
 
     logger.info("\n" + "=" * 60)
     logger.info("ETL CONCLUÍDO — %.1fs", duracao)
-    logger.info("  %d arquivos | %d linhas B2C | %d B2B",
-                 len(files), total_b2c, total_b2b)
+    logger.info("  %d arquivos | %d linhas B2C | %d B2B", len(files), total_b2c, total_b2b)
     logger.info("  Saída: %s", OUTPUT_DIR)
     logger.info("=" * 60)
 
@@ -533,7 +637,7 @@ def _gerar_relatorio(summary: dict, arquivos: list[dict]) -> str:
         "",
         "## Totais Gerais",
         "",
-        f"| Indicador | Valor |",
+        "| Indicador | Valor |",
         "|---|---|",
         f"| Arquivos processados | {summary['totais']['arquivos']} |",
         f"| Linhas lidas (RAW) | {summary['totais']['linhas_lidas_raw']:,} |",
@@ -558,7 +662,7 @@ def _gerar_relatorio(summary: dict, arquivos: list[dict]) -> str:
             "",
             "## Sazonalidade Calculada",
             "",
-            f"| Indicador | Valor |",
+            "| Indicador | Valor |",
             "|---|---|",
             f"| Produtos com sazonalidade | {saz['total_produtos']} |",
         ]

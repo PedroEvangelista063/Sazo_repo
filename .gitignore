@@ -32,5 +32,3 @@ pg_start.log
 # OS
 .DS_Store
 Thumbs.db
-
-node_modules

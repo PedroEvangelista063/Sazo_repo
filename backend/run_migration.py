@@ -1,4 +1,5 @@
 """Execute migration 05_recalibracao_baseline_2025.sql on the target database."""
+
 import asyncio
 import asyncpg
 from app.core.config import get_settings

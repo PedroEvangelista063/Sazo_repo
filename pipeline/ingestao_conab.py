@@ -62,7 +62,13 @@ COPY_BATCH_SIZE: int = 50_000
 # Colunas esperadas após transformação
 UF_COLUMNS: list[str] = ["produto", "uf", "ano", "mes", "preco_medio"]
 MUN_COLUMNS: list[str] = [
-    "produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio",
+    "produto",
+    "municipio_id",
+    "municipio_nome",
+    "uf",
+    "ano",
+    "mes",
+    "preco_medio",
 ]
 
 # ProhortMensal.txt mapeado para MUN_COLUMNS (CEASA como local de observação)
@@ -70,18 +76,33 @@ MUN_COLUMNS: list[str] = [
 #              uf_ceasa, id_ano_comercializacao, id_mes_comercializacao,
 #              valor_comercializado / qtd_comercializada_kg
 PROHORT_COLUMNS: list[str] = [
-    "produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio",
+    "produto",
+    "municipio_id",
+    "municipio_nome",
+    "uf",
+    "ano",
+    "mes",
+    "preco_medio",
 ]
 
 # Diretório dos arquivos locais LISTA*.txt
 LOCAL_DATA_DIR: str = os.path.join(
-    os.path.dirname(__file__), "..", "dados_sazonliza_dados_bruto",
+    os.path.dirname(__file__),
+    "..",
+    "dados_sazonliza_dados_bruto",
 )
 
 # Colunas esperadas nos arquivos locais
 LOCAL_FILE_COLUMNS: list[str] = [
-    "produto", "classificao_produto", "id_produto", "uf",
-    "regiao", "ano", "mes", "dsc_nivel_comercializacao", "valor_produto_kg",
+    "produto",
+    "classificao_produto",
+    "id_produto",
+    "uf",
+    "regiao",
+    "ano",
+    "mes",
+    "dsc_nivel_comercializacao",
+    "valor_produto_kg",
 ]
 
 
@@ -100,6 +121,7 @@ class CargaResult:
 # EXTRACT — Download com streaming e retry exponencial
 # ────────────────────────────────────────────────────────────────────
 
+
 class DownloadError(Exception):
     """Falha no download após todas as tentativas."""
 
@@ -107,10 +129,12 @@ class DownloadError(Exception):
 def _build_session() -> requests.Session:
     """Cria session com pool de conexões e headers padrão."""
     session = requests.Session()
-    session.headers.update({
-        "User-Agent": "QueroComprar/2.0 (dados publicos CONAB; contato: dev@querocomprar.app)",
-        "Accept": "text/plain, text/csv, */*",
-    })
+    session.headers.update(
+        {
+            "User-Agent": "QueroComprar/2.0 (dados publicos CONAB; contato: dev@querocomprar.app)",
+            "Accept": "text/plain, text/csv, */*",
+        }
+    )
     adapter = requests.adapters.HTTPAdapter(
         pool_connections=4,
         pool_maxsize=8,
@@ -123,9 +147,7 @@ def _build_session() -> requests.Session:
 @retry(
     stop=stop_after_attempt(MAX_RETRIES),
     wait=wait_exponential(multiplier=2, min=2, max=60),
-    retry=retry_if_exception_type(
-        (requests.ConnectionError, requests.Timeout, requests.HTTPError)
-    ),
+    retry=retry_if_exception_type((requests.ConnectionError, requests.Timeout, requests.HTTPError)),
     before_sleep=before_sleep_log(logger, logging.WARNING),
     reraise=True,
 )
@@ -178,13 +200,10 @@ def extract(url: str) -> bytes:
 # TRANSFORM — Limpeza e normalização com Polars
 # ────────────────────────────────────────────────────────────────────
 
+
 def _sanitize_price(series: pl.Series) -> pl.Series:
     """Converte string '2,27' para Float64. Retorna null se inválido."""
-    return (
-        series.str.strip_chars()
-        .str.replace(",", ".")
-        .cast(pl.Float64, strict=False)
-    )
+    return series.str.strip_chars().str.replace(",", ".").cast(pl.Float64, strict=False)
 
 
 def _sanitize_text(series: pl.Series) -> pl.Series:
@@ -212,8 +231,7 @@ def transform_uf(raw_bytes: bytes) -> pl.DataFrame:
     )
 
     before = df.height
-    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                     for c in df.columns})
+    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns})
 
     # Detectar coluna de preço
     price_col = next((c for c in df.columns if "preco" in c or "valor" in c), None)
@@ -240,16 +258,15 @@ def transform_uf(raw_bytes: bytes) -> pl.DataFrame:
         pl.col("preco_medio").is_not_null()
         & (pl.col("preco_medio") > 0)
         & pl.col("produto").is_not_null()
-        & pl.col("uf").str.len_chars() == 2
+        & pl.col("uf").str.len_chars()
+        == 2
         & pl.col("ano").is_not_null()
         & pl.col("mes").is_not_null()
         & pl.col("mes").is_between(1, 12)
     )
 
     # Remover falsos cabeçalhos (linhas onde produto repete o header)
-    df = df.filter(
-        ~pl.col("produto").str.to_lowercase().str.contains("produto|produto")
-    )
+    df = df.filter(~pl.col("produto").str.to_lowercase().str.contains("produto|produto"))
 
     after = before - df.height
     if df.height == 0:
@@ -271,8 +288,7 @@ def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
     )
 
     before = df.height
-    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                     for c in df.columns})
+    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns})
 
     price_col = next((c for c in df.columns if "preco" in c or "valor" in c), None)
     if price_col is None:
@@ -286,8 +302,7 @@ def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
         df = df.rename({id_col: "municipio_id"})
 
     nome_col = next(
-        (c for c in df.columns
-         if "municipio" in c and "id" not in c and "cod" not in c),
+        (c for c in df.columns if "municipio" in c and "id" not in c and "cod" not in c),
         None,
     )
     if nome_col and nome_col != "municipio_nome":
@@ -306,9 +321,7 @@ def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
     )
 
     if "municipio_nome" in df.columns:
-        df = df.with_columns(
-            pl.col("municipio_nome").str.strip_chars().str.to_titlecase()
-        )
+        df = df.with_columns(pl.col("municipio_nome").str.strip_chars().str.to_titlecase())
 
     df = df.filter(
         pl.col("preco_medio").is_not_null()
@@ -319,9 +332,7 @@ def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
         & pl.col("mes").is_between(1, 12)
     )
 
-    df = df.filter(
-        ~pl.col("produto").str.to_lowercase().str.contains("produto")
-    )
+    df = df.filter(~pl.col("produto").str.to_lowercase().str.contains("produto"))
 
     # Preencher municipio_id ausente com placeholder
     if "municipio_id" not in df.columns:
@@ -361,8 +372,7 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
     )
 
     before = df.height
-    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                     for c in df.columns})
+    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns})
 
     # Mapear colunas do Prohort para o schema padrão
     col_map = {
@@ -385,8 +395,14 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
 
     # Calcular preco_medio = valor / quantidade
     df = df.with_columns(
-        pl.col("qtd_comercializada_kg").str.replace(",", ".").cast(pl.Float64, strict=False).alias("_qtd"),
-        pl.col("valor_comercializado").str.replace(",", ".").cast(pl.Float64, strict=False).alias("_valor"),
+        pl.col("qtd_comercializada_kg")
+        .str.replace(",", ".")
+        .cast(pl.Float64, strict=False)
+        .alias("_qtd"),
+        pl.col("valor_comercializado")
+        .str.replace(",", ".")
+        .cast(pl.Float64, strict=False)
+        .alias("_valor"),
         pl.col("ano").cast(pl.Int32, strict=False),
         pl.col("mes").cast(pl.Int32, strict=False),
     )
@@ -415,7 +431,8 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
         pl.col("preco_medio").is_not_null()
         & (pl.col("preco_medio") > 0)
         & pl.col("produto").is_not_null()
-        & pl.col("uf").str.len_chars() == 2
+        & pl.col("uf").str.len_chars()
+        == 2
         & pl.col("ano").is_not_null()
         & pl.col("mes").is_not_null()
         & pl.col("mes").is_between(1, 12)
@@ -424,17 +441,13 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
     )
 
     # Remover falsos cabeçalhos
-    df = df.filter(
-        ~pl.col("produto").str.to_lowercase().str.contains("produto")
-    )
+    df = df.filter(~pl.col("produto").str.to_lowercase().str.contains("produto"))
 
     # Preencher municipio_id ausente
     if "municipio_id" not in df.columns:
         df = df.with_columns(pl.lit(None).cast(pl.Utf8).alias("municipio_id"))
     else:
-        df = df.with_columns(
-            pl.col("municipio_id").str.strip_chars().cast(pl.Utf8)
-        )
+        df = df.with_columns(pl.col("municipio_id").str.strip_chars().cast(pl.Utf8))
 
     if "municipio_nome" not in df.columns:
         df = df.with_columns(pl.lit(None).cast(pl.Utf8).alias("municipio_nome"))
@@ -463,9 +476,7 @@ REGRAS_CATEGORIAS: dict[str, str] = {
         r"(?i)^(00-\d{2}-\d{2}|ZINCO|FLUMYZIN|NATIVO|SENCOR|"
         r"SEMENTE|NEMAT|FLUIL|NHT|OLEO VEGETA|PARA BROCA)\b"
     ),
-    "SERVICO_LOGISTICA": (
-        r"(?i)^(TRANSPORTE|PASSAGEM|PATIO|TRATAMENTO)\b"
-    ),
+    "SERVICO_LOGISTICA": (r"(?i)^(TRANSPORTE|PASSAGEM|PATIO|TRATAMENTO)\b"),
     "ALIMENTO_VAREJO": (
         r"(?i)^(CARNE|PAO|FLOCOS DE MILHO|ERVA MATE|TOMATE|"
         r"FRANGO|ARROZ|FEIJAO|BATATA|CENOURA|CEBOLA|ALFACE|"
@@ -525,8 +536,7 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
     )
 
     before = df.height
-    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                     for c in df.columns})
+    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns})
 
     # Strip padding de TODAS as colunas string
     for col in df.columns:
@@ -546,9 +556,7 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
 
     # Motor de categorização semântica
     df = categorizar_produtos(df)
-    categorias = dict(
-        df.select(["produto", "categoria_b2c"]).unique().iter_rows()
-    )
+    categorias = dict(df.select(["produto", "categoria_b2c"]).unique().iter_rows())
 
     # Renomear valor_produto_kg → preco_medio
     if "valor_produto_kg" in df.columns:
@@ -574,9 +582,7 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
     )
 
     # Remover falsos cabeçalhos
-    df = df.filter(
-        ~pl.col("produto").str.to_lowercase().str.contains("produto")
-    )
+    df = df.filter(~pl.col("produto").str.to_lowercase().str.contains("produto"))
 
     after = before - df.height
     if df.height == 0:
@@ -584,7 +590,10 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
 
     logger.info(
         "LocalFile: %s — %d -> %d linhas (%d removidas) | categorias=%s",
-        Path(filepath).name, before, df.height, after,
+        Path(filepath).name,
+        before,
+        df.height,
+        after,
         set(categorias.values()),
     )
     df_out = df.select([*UF_COLUMNS, "categoria_b2c"])
@@ -595,9 +604,11 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
 # LOAD — COPY nativo do PostgreSQL com upsert idempotente
 # ────────────────────────────────────────────────────────────────────
 
+
 def _get_pg_conn():
     """Cria conexão PostgreSQL com statement timeout e timezone."""
     import psycopg2
+
     conn = psycopg2.connect(DATABASE_URL, options="-c timezone=UTC")
     conn.set_session(autocommit=False)
     return conn
@@ -635,7 +646,9 @@ def _ensure_dimensions(
         for row in df_mun.select(["uf", "municipio_id", "municipio_nome"]).unique().iter_rows():
             localidades.add((row[0], row[1] if row[1] else None, row[2] if row[2] else None))
         if df_prohort is not None:
-            for row in df_prohort.select(["uf", "municipio_id", "municipio_nome"]).unique().iter_rows():
+            for row in (
+                df_prohort.select(["uf", "municipio_id", "municipio_nome"]).unique().iter_rows()
+            ):
                 localidades.add((row[0], row[1] if row[1] else None, row[2] if row[2] else None))
 
         execute_values(
@@ -646,15 +659,14 @@ def _ensure_dimensions(
             """,
             [(uf, mid, mnome) for uf, mid, mnome in localidades],
         )
-        cur.execute(
-            "SELECT id_localidade, uf, municipio_id FROM staging.dim_localidade"
-        )
+        cur.execute("SELECT id_localidade, uf, municipio_id FROM staging.dim_localidade")
         localidade_map = {(row[1], row[2]): row[0] for row in cur.fetchall()}
 
     conn.commit()
     logger.info(
         "Dimensões sincronizadas: %d produtos, %d localidades",
-        len(produto_map), len(localidade_map),
+        len(produto_map),
+        len(localidade_map),
     )
     return {"produtos": produto_map, "localidades": localidade_map}
 
@@ -717,7 +729,7 @@ def _copy_to_fact(
     total = 0
     with conn.cursor() as cur:
         for i in range(0, len(rows), COPY_BATCH_SIZE):
-            batch = rows[i:i + COPY_BATCH_SIZE]
+            batch = rows[i : i + COPY_BATCH_SIZE]
             execute_values(cur, COPY_SQL, batch, page_size=COPY_BATCH_SIZE)
             total += len(batch)
 
@@ -731,6 +743,7 @@ def _executar_pos_carga(conn) -> None:
     Deve ser chamado APÓS a carga de todos os arquivos na mesma transação.
     """
     import time as _time
+
     t0 = _time.perf_counter()
     logger.info("Completando ciclo medalhão — SP + MV refresh...")
 
@@ -814,6 +827,7 @@ def load(
         Dicionário com resultados por arquivo.
     """
     import uuid
+
     batch_id = str(uuid.uuid4())
     inicio = time.perf_counter()
 
@@ -827,8 +841,14 @@ def load(
         uf_inseridas = _copy_to_fact(conn, df_uf, mapping, batch_id, is_uf=True)
         uf_duracao = time.perf_counter() - t0
         _registrar_carga(
-            conn, batch_id, "PrecosMensalUF",
-            df_uf.height, uf_inseridas, 0, uf_duracao, "sucesso",
+            conn,
+            batch_id,
+            "PrecosMensalUF",
+            df_uf.height,
+            uf_inseridas,
+            0,
+            uf_duracao,
+            "sucesso",
         )
         resultado_uf = CargaResult(
             arquivo="PrecosMensalUF",
@@ -845,8 +865,14 @@ def load(
             pro_inseridas = _copy_to_fact(conn, df_prohort, mapping, batch_id, is_uf=False)
             pro_duracao = time.perf_counter() - t0
             _registrar_carga(
-                conn, batch_id, "ProhortMensal",
-                df_prohort.height, pro_inseridas, 0, pro_duracao, "sucesso",
+                conn,
+                batch_id,
+                "ProhortMensal",
+                df_prohort.height,
+                pro_inseridas,
+                0,
+                pro_duracao,
+                "sucesso",
             )
             resultado_pro = CargaResult(
                 arquivo="ProhortMensal",
@@ -861,7 +887,10 @@ def load(
         total_duracao = time.perf_counter() - inicio
         logger.info(
             "Carga concluída: batch=%s | UF=%d | Prohort=%d | total=%.1fs",
-            batch_id, uf_inseridas, pro_inseridas, total_duracao,
+            batch_id,
+            uf_inseridas,
+            pro_inseridas,
+            total_duracao,
         )
 
         return {"uf": resultado_uf, "prohort": resultado_pro}
@@ -870,7 +899,14 @@ def load(
         conn.rollback()
         logger.exception("Carga falhou — rollback executado para batch=%s", batch_id)
         _registrar_carga(
-            conn, batch_id, "geral", 0, 0, 0, 0, "falha",
+            conn,
+            batch_id,
+            "geral",
+            0,
+            0,
+            0,
+            0,
+            "falha",
         )
         raise
     finally:
@@ -880,6 +916,7 @@ def load(
 # ────────────────────────────────────────────────────────────────────
 # ORQUESTRAÇÃO
 # ────────────────────────────────────────────────────────────────────
+
 
 def run() -> None:
     """Executa o pipeline completo: extract → transform → load → medalhão.
@@ -901,18 +938,28 @@ def run() -> None:
     logger.info("[1/4] Download dos arquivos CONAB...")
     raw_uf = extract(CONAB_URLS["uf"])
     raw_pro = extract(CONAB_URLS["prohort"])
-    logger.info("Download concluído: UF=%.1fMB, Prohort=%.1fMB",
-                len(raw_uf) / 1_048_576, len(raw_pro) / 1_048_576)
+    logger.info(
+        "Download concluído: UF=%.1fMB, Prohort=%.1fMB",
+        len(raw_uf) / 1_048_576,
+        len(raw_pro) / 1_048_576,
+    )
 
     # Transform
     logger.info("[2/4] Limpeza e normalização...")
     df_uf = transform_uf(raw_uf)
     df_pro = transform_prohort(raw_pro)
     # df_mun mantido vazio para compatibilidade com a assinatura de load()
-    df_mun = pl.DataFrame(schema={"produto": pl.Utf8, "municipio_id": pl.Utf8,
-                                   "municipio_nome": pl.Utf8, "uf": pl.Utf8,
-                                   "ano": pl.Int32, "mes": pl.Int32,
-                                   "preco_medio": pl.Float64})
+    df_mun = pl.DataFrame(
+        schema={
+            "produto": pl.Utf8,
+            "municipio_id": pl.Utf8,
+            "municipio_nome": pl.Utf8,
+            "uf": pl.Utf8,
+            "ano": pl.Int32,
+            "mes": pl.Int32,
+            "preco_medio": pl.Float64,
+        }
+    )
 
     # Load
     logger.info("[3/4] Carga no PostgreSQL...")
@@ -994,11 +1041,17 @@ def run_local(filepath: str | None = None) -> None:
             continue
 
         # DataFrame vazio para mun (compatibilidade com assinatura de load)
-        df_mun = pl.DataFrame(schema={
-            "produto": pl.Utf8, "municipio_id": pl.Utf8,
-            "municipio_nome": pl.Utf8, "uf": pl.Utf8,
-            "ano": pl.Int32, "mes": pl.Int32, "preco_medio": pl.Float64,
-        })
+        df_mun = pl.DataFrame(
+            schema={
+                "produto": pl.Utf8,
+                "municipio_id": pl.Utf8,
+                "municipio_nome": pl.Utf8,
+                "uf": pl.Utf8,
+                "ano": pl.Int32,
+                "mes": pl.Int32,
+                "preco_medio": pl.Float64,
+            }
+        )
 
         # Load B2C no medalhão
         df_b2c_uf = df_b2c.select(UF_COLUMNS)
@@ -1010,7 +1063,10 @@ def run_local(filepath: str | None = None) -> None:
         duracao = time.perf_counter() - t0
         logger.info(
             "  → %s: %d B2C inseridas + %d B2B ignorados em %.1fs",
-            f.name, uf_result.linhas_inseridas, df_b2b.height, duracao,
+            f.name,
+            uf_result.linhas_inseridas,
+            df_b2b.height,
+            duracao,
         )
 
     # Atualizar categorias em dim_produto

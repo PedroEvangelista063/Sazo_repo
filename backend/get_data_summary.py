@@ -5,6 +5,7 @@ Usage:
     python backend/get_data_summary.py --db-url postgresql://user:pass@host/db
     python backend/get_data_summary.py --verbose
 """
+
 from __future__ import annotations
 
 import argparse
@@ -48,33 +49,48 @@ async def main() -> None:
         print(f"\n{'=' * 60}")
         print("  SCHEMA OVERVIEW")
         print(f"{'=' * 60}")
-        await _fetch(conn, "raw tables",
-                      "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'raw'")
-        await _fetch(conn, "staging tables",
-                      "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'staging'")
-        await _fetch(conn, "mart tables",
-                      "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'mart'")
-        await _fetch(conn, "ops tables",
-                      "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops'")
+        await _fetch(
+            conn,
+            "raw tables",
+            "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'raw'",
+        )
+        await _fetch(
+            conn,
+            "staging tables",
+            "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'staging'",
+        )
+        await _fetch(
+            conn,
+            "mart tables",
+            "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'mart'",
+        )
+        await _fetch(
+            conn,
+            "ops tables",
+            "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops'",
+        )
 
         # ── Row counts ───────────────────────────────────────────────
         print(f"\n{'=' * 60}")
         print("  ROW COUNTS")
         print(f"{'=' * 60}")
-        await _fetch(conn, "raw.precos_mensais_uf",
-                      "SELECT count(*) FROM raw.precos_mensais_uf")
-        await _fetch(conn, "raw.precos_mensais_municipio",
-                      "SELECT count(*) FROM raw.precos_mensais_municipio")
-        await _fetch(conn, "staging.fact_precos_mensais",
-                      "SELECT count(*) FROM staging.fact_precos_mensais")
-        await _fetch(conn, "staging.precos_rejeitados",
-                      "SELECT count(*) FROM staging.precos_rejeitados")
-        await _fetch(conn, "staging.dim_produto",
-                      "SELECT count(*) FROM staging.dim_produto")
-        await _fetch(conn, "staging.dim_localidade",
-                      "SELECT count(*) FROM staging.dim_localidade")
-        await _fetch(conn, "mart.sazonalidade_produto",
-                      "SELECT count(*) FROM mart.sazonalidade_produto")
+        await _fetch(conn, "raw.precos_mensais_uf", "SELECT count(*) FROM raw.precos_mensais_uf")
+        await _fetch(
+            conn,
+            "raw.precos_mensais_municipio",
+            "SELECT count(*) FROM raw.precos_mensais_municipio",
+        )
+        await _fetch(
+            conn, "staging.fact_precos_mensais", "SELECT count(*) FROM staging.fact_precos_mensais"
+        )
+        await _fetch(
+            conn, "staging.precos_rejeitados", "SELECT count(*) FROM staging.precos_rejeitados"
+        )
+        await _fetch(conn, "staging.dim_produto", "SELECT count(*) FROM staging.dim_produto")
+        await _fetch(conn, "staging.dim_localidade", "SELECT count(*) FROM staging.dim_localidade")
+        await _fetch(
+            conn, "mart.sazonalidade_produto", "SELECT count(*) FROM mart.sazonalidade_produto"
+        )
 
         # ── Seasonality distribution ─────────────────────────────────
         print(f"\n{'=' * 60}")
@@ -104,18 +120,29 @@ async def main() -> None:
         print(f"\n{'=' * 60}")
         print("  COVERAGE")
         print(f"{'=' * 60}")
-        await _fetch(conn, "UF with data",
-                      "SELECT count(DISTINCT l.uf) FROM staging.fact_precos_mensais f JOIN staging.dim_localidade l ON f.id_localidade = l.id_localidade")
-        await _fetch(conn, "Municipios with data",
-                      "SELECT count(DISTINCT l.municipio_nome) FROM staging.fact_precos_mensais f JOIN staging.dim_localidade l ON f.id_localidade = l.id_localidade WHERE l.municipio_nome IS NOT NULL")
+        await _fetch(
+            conn,
+            "UF with data",
+            "SELECT count(DISTINCT l.uf) FROM staging.fact_precos_mensais f JOIN staging.dim_localidade l ON f.id_localidade = l.id_localidade",
+        )
+        await _fetch(
+            conn,
+            "Municipios with data",
+            "SELECT count(DISTINCT l.municipio_nome) FROM staging.fact_precos_mensais f JOIN staging.dim_localidade l ON f.id_localidade = l.id_localidade WHERE l.municipio_nome IS NOT NULL",
+        )
         total_mapeado = await conn.fetchval(
-            "SELECT count(*) FROM staging.dim_produto WHERE status_fonte = 'MAPEADA'")
+            "SELECT count(*) FROM staging.dim_produto WHERE status_fonte = 'MAPEADA'"
+        )
         total_cat = await conn.fetchval(
-            "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c = 'ALIMENTO_VAREJO'")
+            "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c = 'ALIMENTO_VAREJO'"
+        )
         print(f"  Total MAPEADO (status_fonte): {total_mapeado}")
         print(f"  Total ALIMENTO_VAREJO (categoria_b2c): {total_cat}")
-        await _fetch(conn, "Products (B2B/other)",
-                      "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c != 'ALIMENTO_VAREJO' OR categoria_b2c IS NULL")
+        await _fetch(
+            conn,
+            "Products (B2B/other)",
+            "SELECT count(*) FROM staging.dim_produto WHERE categoria_b2c != 'ALIMENTO_VAREJO' OR categoria_b2c IS NULL",
+        )
 
         # ── Monthly Coverage Matrix (MAPEADOS apenas) ──────────────────
         print(f"\n{'=' * 60}")
@@ -133,7 +160,7 @@ async def main() -> None:
             ORDER BY f.ano, f.mes
         """)
         for r in cov_rows:
-            pct = r['cnt'] / total_mapeado * 100
+            pct = r["cnt"] / total_mapeado * 100
             print(f"  {r['ano']}-{r['mes']:02d}: {r['cnt']:>3d}/{total_mapeado} ({pct:5.1f}%)")
 
         # ── Orphan Products (MAPEADOS): have 2025 data but ZERO in 2026 ──
@@ -170,7 +197,8 @@ async def main() -> None:
 
         # ── SEM_FONTE summary ─────────────────────────────────────────
         n_sem_fonte = await conn.fetchval(
-            "SELECT count(*) FROM staging.dim_produto WHERE status_fonte = 'SEM_FONTE_MAPEDADA'")
+            "SELECT count(*) FROM staging.dim_produto WHERE status_fonte = 'SEM_FONTE_MAPEDADA'"
+        )
         n_sf_2025 = await conn.fetchval("""
             SELECT count(DISTINCT f.id_produto)
             FROM staging.fact_precos_mensais f
@@ -191,22 +219,35 @@ async def main() -> None:
         print(f"\n{'=' * 60}")
         print("  DATA FRESHNESS")
         print(f"{'=' * 60}")
-        await _fetch(conn, "Latest data (staging)",
-                      "SELECT max(ano::text || '-' || lpad(mes::text, 2, '0')) FROM staging.fact_precos_mensais")
-        await _fetch(conn, "Earliest data (staging)",
-                      "SELECT min(ano::text || '-' || lpad(mes::text, 2, '0')) FROM staging.fact_precos_mensais")
-        await _fetch(conn, "Latest sazonalidade calc",
-                      "SELECT max(data_referencia_atual) FROM mart.sazonalidade_produto")
+        await _fetch(
+            conn,
+            "Latest data (staging)",
+            "SELECT max(ano::text || '-' || lpad(mes::text, 2, '0')) FROM staging.fact_precos_mensais",
+        )
+        await _fetch(
+            conn,
+            "Earliest data (staging)",
+            "SELECT min(ano::text || '-' || lpad(mes::text, 2, '0')) FROM staging.fact_precos_mensais",
+        )
+        await _fetch(
+            conn,
+            "Latest sazonalidade calc",
+            "SELECT max(data_referencia_atual) FROM mart.sazonalidade_produto",
+        )
 
         # ── Anomalies / rejected ─────────────────────────────────────
         print(f"\n{'=' * 60}")
         print("  ANOMALIES / REJECTED")
         print(f"{'=' * 60}")
-        await _fetch(conn, "Rows in precos_rejeitados",
-                      "SELECT count(*) FROM staging.precos_rejeitados")
+        await _fetch(
+            conn, "Rows in precos_rejeitados", "SELECT count(*) FROM staging.precos_rejeitados"
+        )
         if args.verbose:
-            await _fetch(conn, "  >500% anomaly (rollback suspect)",
-                          "SELECT count(*) FROM staging.precos_rejeitados WHERE motivo LIKE '%500%' OR motivo LIKE '%anomalia%'")
+            await _fetch(
+                conn,
+                "  >500% anomaly (rollback suspect)",
+                "SELECT count(*) FROM staging.precos_rejeitados WHERE motivo LIKE '%500%' OR motivo LIKE '%anomalia%'",
+            )
 
         # ── Top 10 locations by data volume ──────────────────────────
         print(f"\n{'=' * 60}")
@@ -227,13 +268,15 @@ async def main() -> None:
         print(f"\n{'=' * 60}")
         print("  PRODUCTS WITH INSUFFICIENT DATA")
         print(f"{'=' * 60}")
-        await _fetch(conn, "INSUFICIENTE in mart",
-                      "SELECT count(*) FROM mart.sazonalidade_produto WHERE status_cor = 'INSUFICIENTE'")
+        await _fetch(
+            conn,
+            "INSUFICIENTE in mart",
+            "SELECT count(*) FROM mart.sazonalidade_produto WHERE status_cor = 'INSUFICIENTE'",
+        )
 
         # ── Audit log (if exists) ────────────────────────────────────
         try:
-            await _fetch(conn, "Audit log entries",
-                          "SELECT count(*) FROM ops.audit_logs")
+            await _fetch(conn, "Audit log entries", "SELECT count(*) FROM ops.audit_logs")
         except Exception:
             print("  Audit log entries: (ops.audit_logs not found)")
 

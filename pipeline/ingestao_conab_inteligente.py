@@ -54,7 +54,9 @@ DATABASE_URL: str = os.environ.get(
 )
 
 LOCAL_DATA_DIR: str = os.path.join(
-    os.path.dirname(__file__), "..", "dados_sazonliza_dados_bruto",
+    os.path.dirname(__file__),
+    "..",
+    "dados_sazonliza_dados_bruto",
 )
 
 COPY_BATCH_SIZE: int = 50_000
@@ -62,6 +64,7 @@ COPY_BATCH_SIZE: int = 50_000
 # ──────────────────────────────────────────────────────────────────────
 # Resultado
 # ──────────────────────────────────────────────────────────────────────
+
 
 @dataclass
 class ResultadoCarga:
@@ -89,6 +92,7 @@ class ResultadoCarga:
 #   ALIMENTO_VAREJO é a única categoria que atravessa o filtro da
 #   Materialized View. Todo o resto é trator ou insumo — não pertence
 #   ao app de supermercado.
+
 
 class MotorCategorizacao:
     """Motor baseado em Expressões Regulares para classificar produtos CONAB.
@@ -159,9 +163,11 @@ class MotorCategorizacao:
         """
         expr = pl.lit("MATERIA_PRIMA_B2B")
         for categoria, pattern in cls.REGRAS.items():
-            expr = pl.when(pl.col(coluna).str.contains(pattern)).then(
-                pl.lit(categoria)
-            ).otherwise(expr)
+            expr = (
+                pl.when(pl.col(coluna).str.contains(pattern))
+                .then(pl.lit(categoria))
+                .otherwise(expr)
+            )
 
         return df.with_columns(expr.alias("categoria_b2c"))
 
@@ -170,17 +176,14 @@ class MotorCategorizacao:
 # FUNÇÕES DE TRANSFORMAÇÃO
 # ══════════════════════════════════════════════════════════════════════
 
+
 def _sanitizar_preco(series: pl.Series) -> pl.Series:
     """Converte string ``'2,27'`` para ``Float64`` (null se inválido).
 
     A CONAB usa vírgula como separador decimal (padrão brasileiro).
     PostgreSQL e o resto do mundo usam ponto. Esta função faz a ponte.
     """
-    return (
-        series.str.strip_chars()
-        .str.replace(",", ".")
-        .cast(pl.Float64, strict=False)
-    )
+    return series.str.strip_chars().str.replace(",", ".").cast(pl.Float64, strict=False)
 
 
 def _sanitizar_texto(series: pl.Series) -> pl.Series:
@@ -189,8 +192,15 @@ def _sanitizar_texto(series: pl.Series) -> pl.Series:
 
 
 COLUNAS_COM_HEADER: list[str] = [
-    "produto", "classificao_produto", "id_produto", "uf",
-    "regiao", "ano", "mes", "dsc_nivel_comercializacao", "valor_produto_kg",
+    "produto",
+    "classificao_produto",
+    "id_produto",
+    "uf",
+    "regiao",
+    "ano",
+    "mes",
+    "dsc_nivel_comercializacao",
+    "valor_produto_kg",
 ]
 
 
@@ -230,16 +240,23 @@ def ler_arquivo_local(caminho: str | Path) -> pl.DataFrame:
         colunas = COLUNAS_COM_HEADER[:]
         if len(linhas[0].split(";")) > len(colunas):
             colunas = [
-                "produto", "classificao_produto", "id_produto",
-                "municipio", "codigo_ibge", "uf",
-                "regiao", "ano", "mes", "dsc_nivel_comercializacao",
+                "produto",
+                "classificao_produto",
+                "id_produto",
+                "municipio",
+                "codigo_ibge",
+                "uf",
+                "regiao",
+                "ano",
+                "mes",
+                "dsc_nivel_comercializacao",
                 "valor_produto_kg",
             ]
         df = pl.read_csv(
-        io.StringIO(raw),
+            io.StringIO(raw),
             separator=";",
             has_header=False,
-            new_columns=colunas[:len(linhas[0].split(";"))],
+            new_columns=colunas[: len(linhas[0].split(";"))],
             infer_schema_length=0,
             ignore_errors=True,
             truncate_ragged_lines=True,
@@ -253,8 +270,7 @@ def ler_arquivo_local(caminho: str | Path) -> pl.DataFrame:
             truncate_ragged_lines=True,
         )
     # Normaliza nomes de colunas: espaços → underscore, lowercase
-    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                     for c in df.columns})
+    df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns})
     # Strip todas as colunas string
     for c in df.columns:
         if df[c].dtype == pl.Utf8:
@@ -265,6 +281,7 @@ def ler_arquivo_local(caminho: str | Path) -> pl.DataFrame:
 # ══════════════════════════════════════════════════════════════════════
 # CARREGADOR POSTGRESQL
 # ══════════════════════════════════════════════════════════════════════
+
 
 class CarregadorMedalhao:
     """Carrega dados B2C no esquema Medalhão do PostgreSQL.
@@ -291,27 +308,24 @@ class CarregadorMedalhao:
             produtos = set(df["produto"].to_list())
             execute_values(
                 cur,
-                "INSERT INTO staging.dim_produto (nome_produto) VALUES %s "
-                "ON CONFLICT DO NOTHING",
+                "INSERT INTO staging.dim_produto (nome_produto) VALUES %s ON CONFLICT DO NOTHING",
                 [(p,) for p in produtos],
             )
-            cur.execute(
-                "SELECT id_produto, nome_produto FROM staging.dim_produto"
-            )
+            cur.execute("SELECT id_produto, nome_produto FROM staging.dim_produto")
             prod_map = {nome: pid for pid, nome in cur.fetchall()}
 
             localidades = set()
             for row in df.select(["uf"]).unique().iter_rows():
                 localidades.add((row[0], "", ""))
             if "municipio_id" in df.columns:
-                for row in df.select(
-                    ["uf", "municipio_id", "municipio_nome"]
-                ).unique().iter_rows():
-                    localidades.add((
-                        row[0],
-                        row[1] if row[1] else None,
-                        row[2] if row[2] else None,
-                    ))
+                for row in df.select(["uf", "municipio_id", "municipio_nome"]).unique().iter_rows():
+                    localidades.add(
+                        (
+                            row[0],
+                            row[1] if row[1] else None,
+                            row[2] if row[2] else None,
+                        )
+                    )
 
             execute_values(
                 cur,
@@ -319,18 +333,13 @@ class CarregadorMedalhao:
                 "VALUES %s ON CONFLICT (uf, municipio_id) DO NOTHING",
                 [(uf, mid, mn) for uf, mid, mn in localidades],
             )
-            cur.execute(
-                "SELECT id_localidade, uf, municipio_id "
-                "FROM staging.dim_localidade"
-            )
+            cur.execute("SELECT id_localidade, uf, municipio_id FROM staging.dim_localidade")
             loc_map = {(row[1], row[2]): row[0] for row in cur.fetchall()}
 
         conn.commit()
         return {"produtos": prod_map, "localidades": loc_map}
 
-    def _inserir_fato(
-        self, conn, df: pl.DataFrame, mapping: dict, batch_id: str
-    ) -> int:
+    def _inserir_fato(self, conn, df: pl.DataFrame, mapping: dict, batch_id: str) -> int:
         """Insere dados na ``fact_precos_mensais`` via ``execute_values``."""
         prod_map = mapping["produtos"]
         loc_map = mapping["localidades"]
@@ -346,9 +355,7 @@ class CarregadorMedalhao:
             ano = row[2] if not municipio_field else row[4]
             mes = row[3] if not municipio_field else row[5]
             preco = row[4] if not municipio_field else row[6]
-            mun_id = None if not municipio_field else (
-                row[1] if row[1] else None
-            )
+            mun_id = None if not municipio_field else (row[1] if row[1] else None)
 
             loc_key = (uf, None) if mun_id is None else (uf, mun_id)
             id_prod = prod_map.get(produto)
@@ -378,7 +385,7 @@ class CarregadorMedalhao:
         total = 0
         with conn.cursor() as cur:
             for i in range(0, len(rows), COPY_BATCH_SIZE):
-                batch = rows[i:i + COPY_BATCH_SIZE]
+                batch = rows[i : i + COPY_BATCH_SIZE]
                 execute_values(cur, sql, batch, page_size=COPY_BATCH_SIZE)
                 total += len(batch)
         conn.commit()
@@ -390,9 +397,7 @@ class CarregadorMedalhao:
             cur.execute("CALL staging.sp_executar_carga_completa()")
         conn.commit()
 
-    def _atualizar_categorias(
-        self, conn, categorias: dict[str, str]
-    ) -> None:
+    def _atualizar_categorias(self, conn, categorias: dict[str, str]) -> None:
         """Atualiza ``categoria_b2c`` na ``dim_produto`` para auditoria."""
         if not categorias:
             return
@@ -445,6 +450,7 @@ class CarregadorMedalhao:
 # ORQUESTRADOR
 # ══════════════════════════════════════════════════════════════════════
 
+
 class IngestaoInteligente:
     """Orquestrador principal da Garagem.
 
@@ -476,13 +482,12 @@ class IngestaoInteligente:
         arquivos = sorted(self._data_dir.glob("LISTA*.txt"))
         logger.info(
             "Descobertos %d arquivo(s) LISTA*.txt em %s",
-            len(arquivos), self._data_dir,
+            len(arquivos),
+            self._data_dir,
         )
         return arquivos
 
-    def _processar_arquivo(
-        self, caminho: Path
-    ) -> tuple[pl.DataFrame | None, dict[str, str]]:
+    def _processar_arquivo(self, caminho: Path) -> tuple[pl.DataFrame | None, dict[str, str]]:
         """Lê, categoriza e separa um arquivo LISTA*.txt.
 
         Returns:
@@ -507,21 +512,15 @@ class IngestaoInteligente:
         df = df.with_columns(pl.col("produto").alias("_produto_original"))
         if "classificao_produto" in df.columns:
             df = df.with_columns(
-                (pl.col("produto") + " - " + pl.col("classificao_produto"))
-                .alias("produto")
+                (pl.col("produto") + " - " + pl.col("classificao_produto")).alias("produto")
             )
 
         # Motor semântico
         df = MotorCategorizacao.aplicar(df)
-        categorias = dict(
-            df.select(["produto", "categoria_b2c"]).unique().iter_rows()
-        )
+        categorias = dict(df.select(["produto", "categoria_b2c"]).unique().iter_rows())
 
         # Converte preço (vírgula → ponto) e filtra inválidos
-        preco_col = (
-            "preco_medio" if "preco_medio" in df.columns
-            else "valor_produto_kg"
-        )
+        preco_col = "preco_medio" if "preco_medio" in df.columns else "valor_produto_kg"
         if preco_col != "preco_medio":
             df = df.rename({preco_col: "preco_medio"})
 
@@ -549,8 +548,13 @@ class IngestaoInteligente:
 
         if has_mun:
             cols = [
-                "produto", "municipio_id", "municipio_nome",
-                "uf", "ano", "mes", "preco_medio",
+                "produto",
+                "municipio_id",
+                "municipio_nome",
+                "uf",
+                "ano",
+                "mes",
+                "preco_medio",
             ]
         else:
             cols = ["produto", "uf", "ano", "mes", "preco_medio"]
@@ -558,11 +562,21 @@ class IngestaoInteligente:
         if df_b2c.height == 0:
             logger.info(
                 "  %s: 0 B2C, %d B2B (ignorado)",
-                caminho.name, df_b2b.height,
+                caminho.name,
+                df_b2b.height,
             )
             return None, categorias
 
-        cols_out = ["produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio", "categoria_b2c"]
+        cols_out = [
+            "produto",
+            "municipio_id",
+            "municipio_nome",
+            "uf",
+            "ano",
+            "mes",
+            "preco_medio",
+            "categoria_b2c",
+        ]
         for c in cols_out:
             if c not in df_b2c.columns:
                 df_b2c = df_b2c.with_columns(pl.lit(None, dtype=pl.Utf8).alias(c))
@@ -570,7 +584,9 @@ class IngestaoInteligente:
 
         logger.info(
             "  %s: %d B2C + %d B2B",
-            caminho.name, df_out.height, df_b2b.height,
+            caminho.name,
+            df_out.height,
+            df_b2b.height,
         )
         return df_out, categorias
 
@@ -597,9 +613,7 @@ class IngestaoInteligente:
         for f in arquivos:
             df_b2c, cats = self._processar_arquivo(f)
             todas_categorias.update(cats)
-            total_lidas += (
-                df_b2c.height if df_b2c is not None else 0
-            )
+            total_lidas += df_b2c.height if df_b2c is not None else 0
             if df_b2c is not None:
                 todos_b2c.append(df_b2c)
 
@@ -609,14 +623,12 @@ class IngestaoInteligente:
 
         # Concatena todos os B2C em um único DataFrame
         df_final = pl.concat(todos_b2c)
-        categorias_b2c = {
-            k: v for k, v in todas_categorias.items()
-            if v == "ALIMENTO_VAREJO"
-        }
+        categorias_b2c = {k: v for k, v in todas_categorias.items() if v == "ALIMENTO_VAREJO"}
 
         logger.info(
             "Total: %d B2C, %d B2B (excluídos do app)",
-            df_final.height, total_b2b,
+            df_final.height,
+            total_b2b,
         )
 
         # Carrega no medalhão
@@ -651,6 +663,7 @@ class IngestaoInteligente:
 # ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════
 
+
 def main() -> NoReturn:
     """Entry point.
 
@@ -674,4 +687,5 @@ def main() -> NoReturn:
 
 if __name__ == "__main__":
     import sys
+
     main()

@@ -31,6 +31,7 @@ def run() -> None:
     logger.warning("=" * 60)
 
     from pipeline.ingestao_conab import run as run_ingestao
+
     run_ingestao()
 
 

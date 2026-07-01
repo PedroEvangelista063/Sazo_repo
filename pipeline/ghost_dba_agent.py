@@ -119,11 +119,11 @@ async def carregar_config(pool: asyncpg.Pool) -> AgentConfig:
     """Carrega config da tabela ops.config_agente com fallback para env vars."""
     try:
         async with pool.acquire() as conn:
-            row = await conn.fetchrow(
-                "SELECT chave, valor FROM ops.config_agente"
-            )
+            row = await conn.fetchrow("SELECT chave, valor FROM ops.config_agente")
             if row:
-                raw: dict[str, Any] = json.loads(row["valor"]) if isinstance(row["valor"], str) else {}
+                raw: dict[str, Any] = (
+                    json.loads(row["valor"]) if isinstance(row["valor"], str) else {}
+                )
                 return AgentConfig.from_db_row(raw)
     except Exception:
         logger.warning("Falha ao ler ops.config_agente, usando env/defaults")
@@ -155,7 +155,9 @@ class OpenAICompatibleClient:
     api_url: str
     api_key: str
     model: str = "gpt-4o-mini"
-    _client: httpx.AsyncClient = field(default_factory=lambda: httpx.AsyncClient(timeout=httpx.Timeout(90.0)))
+    _client: httpx.AsyncClient = field(
+        default_factory=lambda: httpx.AsyncClient(timeout=httpx.Timeout(90.0))
+    )
 
     async def ask(
         self,
@@ -280,7 +282,9 @@ class LLMUrlRouter:
             logger.exception("Falha na chamada LLM para resgate de URL")
             return None
 
-        match = re.search(r'\{"new_url_u[fm]":\s*"[^"]+",?\s*"new_url_m[uo][a-z]+":\s*"[^"]+"\}', resposta)
+        match = re.search(
+            r'\{"new_url_u[fm]":\s*"[^"]+",?\s*"new_url_m[uo][a-z]+":\s*"[^"]+"\}', resposta
+        )
         if not match:
             logger.error("Resposta LLM não contém JSON válido: %s", resposta[:500])
             return None
@@ -380,16 +384,24 @@ def filtrar_sql_llm(resposta_llm: str, tipo_esperado: str | None = None) -> Filt
     """
     blocos = SQL_BLOCK_RE.findall(resposta_llm)
     if not blocos:
-        blocos = [linha for linha in resposta_llm.split("\n")
-                  if any(linha.strip().upper().startswith(p.upper())
-                         for p in TIPO_OBJETO_CREATE.values())]
+        blocos = [
+            linha
+            for linha in resposta_llm.split("\n")
+            if any(linha.strip().upper().startswith(p.upper()) for p in TIPO_OBJETO_CREATE.values())
+        ]
     if not blocos:
         for linha in resposta_llm.split("\n"):
             bloco = linha.strip()
             if re.search(r"CREATE\s+OR\s+REPLACE\s+(VIEW|FUNCTION|TRIGGER)", bloco, re.IGNORECASE):
                 blocos.append(bloco)
     if not blocos:
-        return FiltroResultado(aprovado=False, sql=None, tipo=None, nome_objeto=None, motivo="Nenhum bloco SQL encontrado na resposta")
+        return FiltroResultado(
+            aprovado=False,
+            sql=None,
+            tipo=None,
+            nome_objeto=None,
+            motivo="Nenhum bloco SQL encontrado na resposta",
+        )
 
     bloco = blocos[0].strip()
 
@@ -399,19 +411,35 @@ def filtrar_sql_llm(resposta_llm: str, tipo_esperado: str | None = None) -> Filt
             tipo_detectado = tipo
             break
     if tipo_detectado is None:
-        return FiltroResultado(aprovado=False, sql=None, tipo=None, nome_objeto=None, motivo="Bloco SQL não começa com CREATE OR REPLACE VIEW/FUNCTION/TRIGGER")
+        return FiltroResultado(
+            aprovado=False,
+            sql=None,
+            tipo=None,
+            nome_objeto=None,
+            motivo="Bloco SQL não começa com CREATE OR REPLACE VIEW/FUNCTION/TRIGGER",
+        )
 
     if tipo_esperado and tipo_detectado != tipo_esperado:
-        return FiltroResultado(aprovado=False, sql=None, tipo=tipo_detectado, nome_objeto=None, motivo=f"Tipo esperado {tipo_esperado}, recebido {tipo_detectado}")
+        return FiltroResultado(
+            aprovado=False,
+            sql=None,
+            tipo=tipo_detectado,
+            nome_objeto=None,
+            motivo=f"Tipo esperado {tipo_esperado}, recebido {tipo_detectado}",
+        )
 
     nome = _extrair_nome_objeto(bloco, tipo_detectado)
 
     for pat in BLACKLIST_KEYWORDS:
         if pat.search(bloco):
             motivo = f"Keyword bloqueada encontrada: {pat.pattern}"
-            return FiltroResultado(aprovado=False, sql=bloco, tipo=tipo_detectado, nome_objeto=nome, motivo=motivo)
+            return FiltroResultado(
+                aprovado=False, sql=bloco, tipo=tipo_detectado, nome_objeto=nome, motivo=motivo
+            )
 
-    return FiltroResultado(aprovado=True, sql=bloco, tipo=tipo_detectado, nome_objeto=nome, motivo=None)
+    return FiltroResultado(
+        aprovado=True, sql=bloco, tipo=tipo_detectado, nome_objeto=nome, motivo=None
+    )
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -442,7 +470,8 @@ async def _buscar_ddl_atual(conn: asyncpg.Connection, esquema: str, objeto: str,
                 "FROM pg_catalog.pg_class c "
                 "JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "
                 "WHERE n.nspname = $1 AND c.relname = $2 AND c.relkind = 'v'",
-                esquema, objeto,
+                esquema,
+                objeto,
             )
             if row:
                 cols = await conn.fetch(
@@ -450,7 +479,8 @@ async def _buscar_ddl_atual(conn: asyncpg.Connection, esquema: str, objeto: str,
                     "FROM information_schema.columns "
                     "WHERE table_schema = $1 AND table_name = $2 "
                     "ORDER BY ordinal_position",
-                    esquema, objeto,
+                    esquema,
+                    objeto,
                 )
                 col_defs = [f"  {c['column_name']} {c['data_type']}" for c in cols]
                 partes.append(f"-- Colunas atuais de {esquema}.{objeto}:")
@@ -463,7 +493,8 @@ async def _buscar_ddl_atual(conn: asyncpg.Connection, esquema: str, objeto: str,
                 "FROM pg_catalog.pg_proc p "
                 "JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "
                 "WHERE n.nspname = $1 AND p.proname = $2",
-                esquema, objeto,
+                esquema,
+                objeto,
             )
             if row:
                 partes.append(f"-- DDL atual de {esquema}.{objeto}:\n{row['func_def']}")
@@ -475,7 +506,8 @@ async def _buscar_ddl_atual(conn: asyncpg.Connection, esquema: str, objeto: str,
                 "JOIN pg_catalog.pg_class c ON c.oid = t.tgrelid "
                 "JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "
                 "WHERE n.nspname = $1 AND c.relname = $2",
-                esquema, objeto,
+                esquema,
+                objeto,
             )
             if row:
                 partes.append(f"-- Trigger atual em {esquema}.{objeto}:\n{row['trig_def']}")
@@ -513,7 +545,10 @@ async def _testar_sandbox(
                 await conn.fetch(f"SELECT {nome_objeto}() LIMIT 1")
                 logger.info("Sandbox SELECT FUNCTION OK: %s", nome_objeto)
             except asyncpg.PostgresError:
-                logger.info("Sandbox FUNCTION sem argumentos falhou (esperado), CREATE é válido: %s", nome_objeto)
+                logger.info(
+                    "Sandbox FUNCTION sem argumentos falhou (esperado), CREATE é válido: %s",
+                    nome_objeto,
+                )
 
         await conn.execute("COMMIT")
         return True, ""
@@ -549,8 +584,14 @@ async def _registrar_auditoria(
                  motivo_bloqueio, mensagem_erro, data_criacao)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
             """,
-            erro_id, esquema, objeto, status, sql_gerado, resposta_llm,
-            motivo_bloqueio, mensagem_erro,
+            erro_id,
+            esquema,
+            objeto,
+            status,
+            sql_gerado,
+            resposta_llm,
+            motivo_bloqueio,
+            mensagem_erro,
         )
     except Exception as exc:
         logger.error("Falha ao registrar auditoria para erro %d: %s", erro_id, exc)
@@ -588,7 +629,9 @@ async def _processar_erro(
     config: AgentConfig,
 ) -> None:
     """Processa um único erro DDL: contexto → LLM → filtro → sandbox → auditoria."""
-    logger.info("Processando erro %d: %s.%s (%s)", erro.id, erro.esquema, erro.objeto, erro.tipo_objeto)
+    logger.info(
+        "Processando erro %d: %s.%s (%s)", erro.id, erro.esquema, erro.objeto, erro.tipo_objeto
+    )
 
     ddl_atual = await _buscar_ddl_atual(conn, erro.esquema, erro.objeto, erro.tipo_objeto)
     logger.info("DDL atual obtida para %s.%s (%d chars)", erro.esquema, erro.objeto, len(ddl_atual))
@@ -604,7 +647,16 @@ async def _processar_erro(
     except Exception as exc:
         mensagem_erro_sandbox = f"Falha na chamada LLM: {exc}"
         logger.exception("LLM falhou para erro %d", erro.id)
-        await _registrar_auditoria(conn, erro.id, erro.esquema, erro.objeto, status, None, None, motivo_bloqueio=mensagem_erro_sandbox)
+        await _registrar_auditoria(
+            conn,
+            erro.id,
+            erro.esquema,
+            erro.objeto,
+            status,
+            None,
+            None,
+            motivo_bloqueio=mensagem_erro_sandbox,
+        )
         await _notificar_erro_reparo(webhook, erro, f"Falha LLM: {exc}", config)
         return
 
@@ -615,7 +667,16 @@ async def _processar_erro(
         sql_gerado = filtro.sql
         motivo_bloqueio = filtro.motivo
         logger.warning("SQL bloqueado para erro %d: %s", erro.id, motivo_bloqueio)
-        await _registrar_auditoria(conn, erro.id, erro.esquema, erro.objeto, status, sql_gerado, resposta_llm, motivo_bloqueio=motivo_bloqueio)
+        await _registrar_auditoria(
+            conn,
+            erro.id,
+            erro.esquema,
+            erro.objeto,
+            status,
+            sql_gerado,
+            resposta_llm,
+            motivo_bloqueio=motivo_bloqueio,
+        )
         await _notificar_erro_reparo(webhook, erro, f"SQL bloqueado: {motivo_bloqueio}", config)
         return
 
@@ -623,7 +684,10 @@ async def _processar_erro(
     assert filtro.nome_objeto is not None
 
     sucesso, mensagem_erro_sandbox = await _testar_sandbox(
-        conn, sql_gerado, erro.tipo_objeto, filtro.nome_objeto,
+        conn,
+        sql_gerado,
+        erro.tipo_objeto,
+        filtro.nome_objeto,
     )
 
     if sucesso:
@@ -633,12 +697,17 @@ async def _processar_erro(
         try:
             await conn.execute(
                 "SELECT ops.fn_resolver_erro($1, $2, $3, $4)",
-                erro.id, status, sql_gerado, resposta_llm,
+                erro.id,
+                status,
+                sql_gerado,
+                resposta_llm,
             )
         except Exception as exc:
             logger.error("Falha ao chamar fn_resolver_erro para %d: %s", erro.id, exc)
 
-        await _registrar_auditoria(conn, erro.id, erro.esquema, erro.objeto, status, sql_gerado, resposta_llm)
+        await _registrar_auditoria(
+            conn, erro.id, erro.esquema, erro.objeto, status, sql_gerado, resposta_llm
+        )
         await _notificar_sucesso(webhook, erro)
 
     else:
@@ -648,14 +717,28 @@ async def _processar_erro(
 
         if novas_tentativas >= erro.max_tentativas:
             status = "falha_permanente"
-            logger.error("Erro %d esgotou tentativas (%d/%d)", erro.id, novas_tentativas, erro.max_tentativas)
+            logger.error(
+                "Erro %d esgotou tentativas (%d/%d)", erro.id, novas_tentativas, erro.max_tentativas
+            )
 
-        await _registrar_auditoria(conn, erro.id, erro.esquema, erro.objeto, status, sql_gerado, resposta_llm, mensagem_erro=mensagem_erro_sandbox)
+        await _registrar_auditoria(
+            conn,
+            erro.id,
+            erro.esquema,
+            erro.objeto,
+            status,
+            sql_gerado,
+            resposta_llm,
+            mensagem_erro=mensagem_erro_sandbox,
+        )
 
         try:
             await conn.execute(
                 "SELECT ops.fn_resolver_erro($1, $2, $3, $4)",
-                erro.id, status, sql_gerado, resposta_llm,
+                erro.id,
+                status,
+                sql_gerado,
+                resposta_llm,
             )
         except Exception as exc:
             logger.error("Falha ao chamar fn_resolver_erro para %d: %s", erro.id, exc)
@@ -730,13 +813,17 @@ async def _notificar_sucesso(webhook: WebhookDispatcher, erro: ErroDDL) -> None:
     await webhook.enviar(msg, cor="green")
 
 
-async def _notificar_falha_permanente(webhook: WebhookDispatcher, erro: ErroDDL, config: AgentConfig) -> None:
+async def _notificar_falha_permanente(
+    webhook: WebhookDispatcher, erro: ErroDDL, config: AgentConfig
+) -> None:
     msg = f"🔴 [Self-Healing] Falha ao reparar {erro.esquema}.{erro.objeto} após {erro.max_tentativas} tentativas. Intervenção humana necessária."
     logger.error(msg)
     await webhook.enviar(msg, cor="red")
 
 
-async def _notificar_erro_reparo(webhook: WebhookDispatcher, erro: ErroDDL, motivo: str, config: AgentConfig) -> None:
+async def _notificar_erro_reparo(
+    webhook: WebhookDispatcher, erro: ErroDDL, motivo: str, config: AgentConfig
+) -> None:
     msg = f"🟡 [Self-Healing] Erro ao processar {erro.esquema}.{erro.objeto}: {motivo}"
     logger.warning(msg)
     await webhook.enviar(msg, cor="red")
@@ -763,7 +850,9 @@ class AsyncIOSelfHealer:
         self.shutdown_event = asyncio.Event()
         self._pool: asyncpg.Pool | None = None
         self._llm: OpenAICompatibleClient | None = None
-        self._webhook: WebhookDispatcher = WebhookDispatcher(config.webhook_url, config.webhook_tipo)
+        self._webhook: WebhookDispatcher = WebhookDispatcher(
+            config.webhook_url, config.webhook_tipo
+        )
         self._url_router: LLMUrlRouter | None = None
 
     async def _init_pool(self) -> asyncpg.Pool:
@@ -820,17 +909,21 @@ class AsyncIOSelfHealer:
                 return 0
 
             for row in rows:
-                erros.append(ErroDDL(
-                    id=row["id"],
-                    data_erro=row["data_erro"],
-                    esquema=row["esquema"],
-                    objeto=row["objeto"],
-                    tipo_objeto=row["tipo_objeto"],
-                    mensagem_erro=row["mensagem_erro"],
-                    contexto_extra=json.loads(row["contexto_extra"]) if isinstance(row["contexto_extra"], str) else row["contexto_extra"],
-                    tentativas_ia=row["tentativas_ia"],
-                    max_tentativas=row["max_tentativas"],
-                ))
+                erros.append(
+                    ErroDDL(
+                        id=row["id"],
+                        data_erro=row["data_erro"],
+                        esquema=row["esquema"],
+                        objeto=row["objeto"],
+                        tipo_objeto=row["tipo_objeto"],
+                        mensagem_erro=row["mensagem_erro"],
+                        contexto_extra=json.loads(row["contexto_extra"])
+                        if isinstance(row["contexto_extra"], str)
+                        else row["contexto_extra"],
+                        tentativas_ia=row["tentativas_ia"],
+                        max_tentativas=row["max_tentativas"],
+                    )
+                )
 
         if not erros:
             logger.debug("Nenhum erro pendente encontrado")
@@ -920,7 +1013,10 @@ def _configurar_logging() -> None:
 async def _inicializar(args: argparse.Namespace) -> AsyncIOSelfHealer:
     """Inicializa config, pool e healer."""
     pool = await asyncpg.create_pool(
-        args.db_url or os.environ.get("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/quero_comprar"),
+        args.db_url
+        or os.environ.get(
+            "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/quero_comprar"
+        ),
         min_size=1,
         max_size=2,
         command_timeout=15,
@@ -933,7 +1029,9 @@ async def _inicializar(args: argparse.Namespace) -> AsyncIOSelfHealer:
     if args.db_url:
         config.db_url = args.db_url
     if not config.db_url:
-        config.db_url = os.environ.get("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/quero_comprar")
+        config.db_url = os.environ.get(
+            "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/quero_comprar"
+        )
 
     logger.info(
         "Config: poll=%ds max_tent=%d llm=%s model=%s",

@@ -46,12 +46,12 @@ class QualidadeMetricas:
             f"  Fontes com sucesso:         {self.fontes_ok}",
             f"  Fontes com falha:           {self.fontes_falha}",
             f"  Taxa de sucesso:            {self.taxa_sucesso_pct():.1f}%",
-            f"",
+            "",
             f"  Cotacoes brutas:            {self.total_bruto}",
             f"  Apos fuzzy + staging:       {self.total_apos_fuzzy}",
             f"  Taxa de conversao:          {self.taxa_conversao_pct:.1f}%",
-            f"  Tempo de execucao:          {self.tempo_execucao_s:.1f}s ({self.tempo_execucao_s/60:.1f}min)",
-            f"",
+            f"  Tempo de execucao:          {self.tempo_execucao_s:.1f}s ({self.tempo_execucao_s / 60:.1f}min)",
+            "",
         ]
         if self.proporcao_categorias:
             linhas.append("  Proporcao por fonte (bruto):")
@@ -64,7 +64,9 @@ class QualidadeMetricas:
             linhas.append("  Desempenho por adapter:")
             for a in sorted(self.adapters_executados, key=lambda x: x["tempo_s"]):
                 icone = "OK" if a["status"] == "ok" else "XX"
-                linhas.append(f"    [{icone}] {a['nome']:30s} {a['uf']}-{a['municipio']:15s} {a['cotacoes']:4d} cotacoes  {a['tempo_s']:.1f}s")
+                linhas.append(
+                    f"    [{icone}] {a['nome']:30s} {a['uf']}-{a['municipio']:15s} {a['cotacoes']:4d} cotacoes  {a['tempo_s']:.1f}s"
+                )
             linhas.append("")
 
         if self.erros:
@@ -118,7 +120,9 @@ class PriceCollector:
             adp.ano = ano
             adp.mes = mes
 
-    async def collect_all(self, max_concorrencia: int = 3) -> tuple[list[CotacaoHistorica], QualidadeMetricas]:
+    async def collect_all(
+        self, max_concorrencia: int = 3
+    ) -> tuple[list[CotacaoHistorica], QualidadeMetricas]:
         self._semaforo = asyncio.Semaphore(max_concorrencia)
         metricas = QualidadeMetricas()
         metricas.total_adapters = len(self._adapters)
@@ -126,30 +130,56 @@ class PriceCollector:
 
         todas: list[CotacaoHistorica] = []
 
-        async def wrapper(nome: str, adapter: ScraperAdapter) -> tuple[str, list[CotacaoHistorica], float]:
+        async def wrapper(
+            nome: str, adapter: ScraperAdapter
+        ) -> tuple[str, list[CotacaoHistorica], float]:
             t_start = time.perf_counter()
             async with self._semaforo:
                 try:
                     items = await adapter.fetch()
                     t = time.perf_counter() - t_start
-                    logger.info("Adapter %s %s-%s: %d cotacoes em %.1fs", nome, adapter.uf, adapter.municipio, len(items), t)
+                    logger.info(
+                        "Adapter %s %s-%s: %d cotacoes em %.1fs",
+                        nome,
+                        adapter.uf,
+                        adapter.municipio,
+                        len(items),
+                        t,
+                    )
                     if len(items) == 0:
-                        logger.warning("FONTE VAZIA: %s %s-%s retornou 0 cotacoes", nome, adapter.uf, adapter.municipio)
+                        logger.warning(
+                            "FONTE VAZIA: %s %s-%s retornou 0 cotacoes",
+                            nome,
+                            adapter.uf,
+                            adapter.municipio,
+                        )
                     metricas.fontes_ok += 1
-                    metricas.adapters_executados.append({
-                        "nome": nome, "uf": adapter.uf, "municipio": adapter.municipio,
-                        "status": "ok", "cotacoes": len(items), "tempo_s": round(t, 1),
-                    })
+                    metricas.adapters_executados.append(
+                        {
+                            "nome": nome,
+                            "uf": adapter.uf,
+                            "municipio": adapter.municipio,
+                            "status": "ok",
+                            "cotacoes": len(items),
+                            "tempo_s": round(t, 1),
+                        }
+                    )
                     return nome, items, t
                 except Exception as e:
                     t = time.perf_counter() - t_start
                     logger.error("Adapter %s falhou em %.1fs: %s", nome, t, e)
                     metricas.fontes_falha += 1
                     metricas.erros.append(f"{nome}: {e}")
-                    metricas.adapters_executados.append({
-                        "nome": nome, "uf": adapter.uf, "municipio": adapter.municipio,
-                        "status": "erro", "cotacoes": 0, "tempo_s": round(t, 1),
-                    })
+                    metricas.adapters_executados.append(
+                        {
+                            "nome": nome,
+                            "uf": adapter.uf,
+                            "municipio": adapter.municipio,
+                            "status": "erro",
+                            "cotacoes": 0,
+                            "tempo_s": round(t, 1),
+                        }
+                    )
                     return nome, [], t
 
         tasks = [wrapper(nome, adp) for nome, adp in self._adapters.items()]

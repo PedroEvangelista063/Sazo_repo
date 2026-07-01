@@ -98,18 +98,22 @@ def imputar_gaps(df: pl.DataFrame) -> pl.DataFrame:
 
     Retorna df com coluna adicional 'preco_interpolado' e 'real_ou_interp'.
     """
-    return df.with_columns([
-        pl.col("preco_medio")
-        .interpolate(method="linear")
-        .fill_null(strategy="forward", limit=2)
-        .over(["id_produto", "id_localidade"])
-        .alias("preco_interpolado"),
-    ]).with_columns([
-        pl.when(pl.col("preco_medio").is_not_null())
-        .then(pl.lit("REAL"))
-        .otherwise(pl.lit("IMPUTADO"))
-        .alias("tipo_origem"),
-    ])
+    return df.with_columns(
+        [
+            pl.col("preco_medio")
+            .interpolate(method="linear")
+            .fill_null(strategy="forward", limit=2)
+            .over(["id_produto", "id_localidade"])
+            .alias("preco_interpolado"),
+        ]
+    ).with_columns(
+        [
+            pl.when(pl.col("preco_medio").is_not_null())
+            .then(pl.lit("REAL"))
+            .otherwise(pl.lit("IMPUTADO"))
+            .alias("tipo_origem"),
+        ]
+    )
 
 
 def calcular_confianca(df: pl.DataFrame) -> pl.DataFrame:
@@ -119,26 +123,33 @@ def calcular_confianca(df: pl.DataFrame) -> pl.DataFrame:
       - peso_confianca:  qtd_meses_reais / 12
       - media_interpolada: AVG(preco_interpolado) com 12 meses
     """
-    grupos = df.group_by(["id_produto", "id_localidade"]).agg([
-        pl.col("preco_medio").is_not_null().sum().alias("qtd_meses_reais"),
-        pl.col("preco_medio").len().alias("qtd_meses_grid"),
-        pl.col("preco_interpolado").mean().alias("media_interpolada"),
-        pl.col("tipo_origem").filter(pl.col("tipo_origem") == "IMPUTADO").len().alias("qtd_imputados"),
-    ])
+    grupos = df.group_by(["id_produto", "id_localidade"]).agg(
+        [
+            pl.col("preco_medio").is_not_null().sum().alias("qtd_meses_reais"),
+            pl.col("preco_medio").len().alias("qtd_meses_grid"),
+            pl.col("preco_interpolado").mean().alias("media_interpolada"),
+            pl.col("tipo_origem")
+            .filter(pl.col("tipo_origem") == "IMPUTADO")
+            .len()
+            .alias("qtd_imputados"),
+        ]
+    )
 
-    return grupos.with_columns([
-        (pl.col("qtd_meses_reais") / 12)
-        .round(2)
-        .alias("peso_confianca"),
-        pl.col("media_interpolada").round(4),
-    ]).select([
-        "id_produto",
-        "id_localidade",
-        "media_interpolada",
-        "peso_confianca",
-        "qtd_meses_reais",
-        "qtd_meses_grid",
-    ])
+    return grupos.with_columns(
+        [
+            (pl.col("qtd_meses_reais") / 12).round(2).alias("peso_confianca"),
+            pl.col("media_interpolada").round(4),
+        ]
+    ).select(
+        [
+            "id_produto",
+            "id_localidade",
+            "media_interpolada",
+            "peso_confianca",
+            "qtd_meses_reais",
+            "qtd_meses_grid",
+        ]
+    )
 
 
 def upsert_baseline(df: pl.DataFrame) -> int:
@@ -209,16 +220,20 @@ def log_summary(df: pl.DataFrame):
     print("\n  Top 5 (menor confiança):")
     piores = df.sort("peso_confianca").head(5)
     for r in piores.iter_rows(named=True):
-        print(f"    produto={r['id_produto']} local={r['id_localidade']} "
-              f"C={r['peso_confianca']:.2f} "
-              f"reais={r['qtd_meses_reais']}/{r['qtd_meses_grid']}")
+        print(
+            f"    produto={r['id_produto']} local={r['id_localidade']} "
+            f"C={r['peso_confianca']:.2f} "
+            f"reais={r['qtd_meses_reais']}/{r['qtd_meses_grid']}"
+        )
 
     print("\n  Top 5 (maior confiança):")
     melhores = df.sort("peso_confianca", descending=True).head(5)
     for r in melhores.iter_rows(named=True):
-        print(f"    produto={r['id_produto']} local={r['id_localidade']} "
-              f"C={r['peso_confianca']:.2f} "
-              f"reais={r['qtd_meses_reais']}/{r['qtd_meses_grid']}")
+        print(
+            f"    produto={r['id_produto']} local={r['id_localidade']} "
+            f"C={r['peso_confianca']:.2f} "
+            f"reais={r['qtd_meses_reais']}/{r['qtd_meses_grid']}"
+        )
 
 
 def main():

@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import asyncio
 import logging
 import re
-from datetime import datetime
 
 import httpx
 from bs4 import BeautifulSoup
@@ -123,7 +121,9 @@ class CeasaStandardAdapter(BaseAdapter):
             fonte=nome_fonte,
             uf=cfg["uf"],
             municipio=cfg["municipio"],
-            url=cfg.get("url", cfg.get("urls_fallback", [None])[0] if cfg.get("urls_fallback") else None),
+            url=cfg.get(
+                "url", cfg.get("urls_fallback", [None])[0] if cfg.get("urls_fallback") else None
+            ),
             tipo=cfg["tipo"],
             urls_fallback=cfg.get("urls_fallback", []),
         )
@@ -161,7 +161,11 @@ class CeasaStandardAdapter(BaseAdapter):
                             if name:
                                 data[name] = inp.get("value", "")
                         if action:
-                            post_url = action if action.startswith("http") else url.rstrip("/") + "/" + action.lstrip("/")
+                            post_url = (
+                                action
+                                if action.startswith("http")
+                                else url.rstrip("/") + "/" + action.lstrip("/")
+                            )
                         else:
                             post_url = url
                         r2 = await client.post(post_url, data=data)
@@ -169,7 +173,9 @@ class CeasaStandardAdapter(BaseAdapter):
                         soup = BeautifulSoup(r2.text, "html.parser")
                     resultados = self._parse_table(soup)
                     if resultados:
-                        logger.info("%s: %d cotacoes de %s (form_search)", self.fonte, len(resultados), url)
+                        logger.info(
+                            "%s: %d cotacoes de %s (form_search)", self.fonte, len(resultados), url
+                        )
                         return resultados
                 except (httpx.HTTPStatusError, httpx.ConnectError, httpx.TimeoutException) as e:
                     ultimo_erro = e
@@ -202,7 +208,12 @@ class CeasaStandardAdapter(BaseAdapter):
                     logger.debug("%s: 0 cotacoes de %s, tentando fallback...", self.fonte, url)
                 except httpx.HTTPStatusError as e:
                     ultimo_erro = e
-                    logger.debug("%s: HTTP %s em %s, tentando fallback...", self.fonte, e.response.status_code, url)
+                    logger.debug(
+                        "%s: HTTP %s em %s, tentando fallback...",
+                        self.fonte,
+                        e.response.status_code,
+                        url,
+                    )
                 except (httpx.ConnectError, httpx.TimeoutException) as e:
                     ultimo_erro = e
                     logger.debug("%s: conexao falhou em %s: %s", self.fonte, url, e)
@@ -216,7 +227,9 @@ class CeasaStandardAdapter(BaseAdapter):
 
         tabelas = soup.find_all("table")
         if not tabelas:
-            tabelas_alternativas = soup.find_all("div", class_=re.compile(r"(table|grid|cotacao|preco)", re.I))
+            tabelas_alternativas = soup.find_all(
+                "div", class_=re.compile(r"(table|grid|cotacao|preco)", re.I)
+            )
             if not tabelas_alternativas:
                 logger.warning("%s: nenhuma tabela encontrada", self.fonte)
                 return resultados
@@ -228,12 +241,23 @@ class CeasaStandardAdapter(BaseAdapter):
             header_cells = rows[0].find_all(["th", "td"])
             headers = [h.get_text(strip=True).lower() for h in header_cells]
 
-            col_produto = self._find_col(headers, ["produto", "produto", "descricao", "item", "especificacao"])
-            col_preco_min = self._find_col(headers, ["preco min", "preco minimo", "minimo", "menor", "min"])
-            col_preco_max = self._find_col(headers, ["preco max", "preco maximo", "maximo", "maior", "max"])
-            col_preco_med = self._find_col(headers, ["preco medio", "preco médio", "medio", "preco", "preço", "preco comum", "comum"])
+            col_produto = self._find_col(
+                headers, ["produto", "produto", "descricao", "item", "especificacao"]
+            )
+            col_preco_min = self._find_col(
+                headers, ["preco min", "preco minimo", "minimo", "menor", "min"]
+            )
+            col_preco_max = self._find_col(
+                headers, ["preco max", "preco maximo", "maximo", "maior", "max"]
+            )
+            col_preco_med = self._find_col(
+                headers,
+                ["preco medio", "preco médio", "medio", "preco", "preço", "preco comum", "comum"],
+            )
             col_unidade = self._find_col(headers, ["unidade", "und", "embalagem", "emablagem"])
-            col_data = self._find_col(headers, ["data", "data cotacao", "dt cotacao", "periodo", "referencia"])
+            col_data = self._find_col(
+                headers, ["data", "data cotacao", "dt cotacao", "periodo", "referencia"]
+            )
             col_uf = self._find_col(headers, ["uf", "estado"])
 
             if col_produto is None:
@@ -244,21 +268,47 @@ class CeasaStandardAdapter(BaseAdapter):
                 if len(cells) < col_produto + 1:
                     continue
 
-                produto_raw = cells[col_produto].get_text(strip=True) if col_produto < len(cells) else ""
+                produto_raw = (
+                    cells[col_produto].get_text(strip=True) if col_produto < len(cells) else ""
+                )
                 if not produto_raw or produto_raw.lower() in ("produto", "item", ""):
                     continue
 
-                preco_min = self.limpar_valor(cells[col_preco_min].get_text(strip=True)) if col_preco_min is not None and col_preco_min < len(cells) else None
-                preco_max = self.limpar_valor(cells[col_preco_max].get_text(strip=True)) if col_preco_max is not None and col_preco_max < len(cells) else None
-                preco_med = self.limpar_valor(cells[col_preco_med].get_text(strip=True)) if col_preco_med is not None and col_preco_med < len(cells) else None
+                preco_min = (
+                    self.limpar_valor(cells[col_preco_min].get_text(strip=True))
+                    if col_preco_min is not None and col_preco_min < len(cells)
+                    else None
+                )
+                preco_max = (
+                    self.limpar_valor(cells[col_preco_max].get_text(strip=True))
+                    if col_preco_max is not None and col_preco_max < len(cells)
+                    else None
+                )
+                preco_med = (
+                    self.limpar_valor(cells[col_preco_med].get_text(strip=True))
+                    if col_preco_med is not None and col_preco_med < len(cells)
+                    else None
+                )
 
-                unidade_raw = cells[col_unidade].get_text(strip=True) if col_unidade is not None and col_unidade < len(cells) else ""
+                unidade_raw = (
+                    cells[col_unidade].get_text(strip=True)
+                    if col_unidade is not None and col_unidade < len(cells)
+                    else ""
+                )
                 fator = self.normalizar_unidade(unidade_raw)
 
-                data_raw = cells[col_data].get_text(strip=True) if col_data is not None and col_data < len(cells) else ""
+                data_raw = (
+                    cells[col_data].get_text(strip=True)
+                    if col_data is not None and col_data < len(cells)
+                    else ""
+                )
                 periodo = self.extrair_periodo(data_raw)
 
-                uf_row = cells[col_uf].get_text(strip=True) if col_uf is not None and col_uf < len(cells) else self.uf
+                uf_row = (
+                    cells[col_uf].get_text(strip=True)
+                    if col_uf is not None and col_uf < len(cells)
+                    else self.uf
+                )
 
                 preco_bruto = preco_med or preco_min or 0.0
                 if preco_bruto <= 0:
@@ -271,23 +321,25 @@ class CeasaStandardAdapter(BaseAdapter):
                     continue
                 seen.add(dedup_key)
 
-                resultados.append(CotacaoRegional(
-                    produto_original=produto_raw,
-                    produto_normalizado=produto_norm,
-                    uf=uf_row,
-                    municipio=self.municipio,
-                    ano=periodo[0] if periodo else 0,
-                    mes=periodo[1] if periodo else 0,
-                    data_cotacao=data_raw,
-                    fonte=self.fonte,
-                    unidade_medida=unidade_raw,
-                    preco_min=preco_min,
-                    preco_max=preco_max,
-                    preco_medio=preco_med,
-                    preco_bruto=preco_bruto,
-                    fator_kg=fator,
-                    status_coleta="sucesso",
-                ))
+                resultados.append(
+                    CotacaoRegional(
+                        produto_original=produto_raw,
+                        produto_normalizado=produto_norm,
+                        uf=uf_row,
+                        municipio=self.municipio,
+                        ano=periodo[0] if periodo else 0,
+                        mes=periodo[1] if periodo else 0,
+                        data_cotacao=data_raw,
+                        fonte=self.fonte,
+                        unidade_medida=unidade_raw,
+                        preco_min=preco_min,
+                        preco_max=preco_max,
+                        preco_medio=preco_med,
+                        preco_bruto=preco_bruto,
+                        fator_kg=fator,
+                        status_coleta="sucesso",
+                    )
+                )
 
         logger.info("%s: %d cotacoes", self.fonte, len(resultados))
         return resultados

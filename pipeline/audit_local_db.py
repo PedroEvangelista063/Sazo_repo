@@ -33,7 +33,9 @@ logging.basicConfig(
 logger = logging.getLogger("audit_local_db")
 
 LOCAL_DATA_DIR: str = os.path.join(
-    os.path.dirname(__file__), "..", "dados_sazonliza_dados_bruto",
+    os.path.dirname(__file__),
+    "..",
+    "dados_sazonliza_dados_bruto",
 )
 
 DATABASE_URL: str = os.environ.get(
@@ -47,6 +49,7 @@ API_BASE: str = os.environ.get("API_BASE_URL", "http://localhost:8000/api/v1")
 # ────────────────────────────────────────────────────────────────────
 # Contagem local
 # ────────────────────────────────────────────────────────────────────
+
 
 def contar_linhas_locais(data_dir: str) -> dict[str, int]:
     """Conta linhas de ALIMENTO_VAREJO nos LISTA*.txt.
@@ -71,8 +74,9 @@ def contar_linhas_locais(data_dir: str) -> dict[str, int]:
             truncate_ragged_lines=True,
         )
 
-        df = df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_")
-                        for c in df.columns})
+        df = df.rename(
+            {c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns}
+        )
 
         if "valor_produto_kg" in df.columns:
             df = df.rename({"valor_produto_kg": "preco_medio"})
@@ -88,8 +92,18 @@ def contar_linhas_locais(data_dir: str) -> dict[str, int]:
 
         # Filtrar inválidos (mesmo filtro do pipeline)
         df = df.filter(
-            pl.col("preco_medio").str.strip_chars().str.replace(",", ".").cast(pl.Float64, strict=False).is_not_null()
-            & (pl.col("preco_medio").str.strip_chars().str.replace(",", ".").cast(pl.Float64, strict=False) > 0)
+            pl.col("preco_medio")
+            .str.strip_chars()
+            .str.replace(",", ".")
+            .cast(pl.Float64, strict=False)
+            .is_not_null()
+            & (
+                pl.col("preco_medio")
+                .str.strip_chars()
+                .str.replace(",", ".")
+                .cast(pl.Float64, strict=False)
+                > 0
+            )
             & pl.col("produto").is_not_null()
             & (pl.col("uf").str.len_chars() == 2)
             & pl.col("ano").cast(pl.Int32, strict=False).is_not_null()
@@ -100,13 +114,15 @@ def contar_linhas_locais(data_dir: str) -> dict[str, int]:
         # Motor de categorização semântica (réplica simplificada)
         from pipeline.ingestao_conab import REGRAS_CATEGORIAS
 
-        df = df.with_columns(
-            pl.col("produto").alias("_produto_original")
-        )
+        df = df.with_columns(pl.col("produto").alias("_produto_original"))
 
         expr = pl.lit("MATERIA_PRIMA_B2B")
         for categoria, pattern_re in REGRAS_CATEGORIAS.items():
-            expr = pl.when(pl.col("_produto_original").str.contains(pattern_re)).then(pl.lit(categoria)).otherwise(expr)
+            expr = (
+                pl.when(pl.col("_produto_original").str.contains(pattern_re))
+                .then(pl.lit(categoria))
+                .otherwise(expr)
+            )
 
         df = df.with_columns(expr.alias("categoria_b2c"))
 
@@ -124,9 +140,11 @@ def contar_linhas_locais(data_dir: str) -> dict[str, int]:
 # Contagem no banco (via SQL direto)
 # ────────────────────────────────────────────────────────────────────
 
+
 def contar_fact_table() -> int:
     """Retorna total de linhas em staging.fact_precos_mensais."""
     import psycopg2
+
     conn = psycopg2.connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
@@ -142,10 +160,13 @@ def contar_produtos_distintos_mart() -> int:
     Consulta a MV (já filtrada por ALIMENTO_VAREJO e != INSUFICIENTE).
     """
     import psycopg2
+
     conn = psycopg2.connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(DISTINCT id_sazonalidade) FROM mart.vw_api_produtos_sazonalidade")
+            cur.execute(
+                "SELECT COUNT(DISTINCT id_sazonalidade) FROM mart.vw_api_produtos_sazonalidade"
+            )
             return cur.fetchone()[0]
     finally:
         conn.close()
@@ -155,6 +176,7 @@ def contar_produtos_distintos_mart() -> int:
 # Teste do endpoint
 # ────────────────────────────────────────────────────────────────────
 
+
 def testar_endpoint_api() -> dict:
     """Testa GET /api/v1/sazonalidade e retorna metadados da resposta.
 
@@ -162,6 +184,7 @@ def testar_endpoint_api() -> dict:
         Dict com total_retornado, status_code, tempo_resposta_ms.
     """
     import time
+
     url = f"{API_BASE}/sazonalidade?por_pagina=1"
     inicio = time.perf_counter()
     resp = requests.get(url, timeout=30)
@@ -169,17 +192,26 @@ def testar_endpoint_api() -> dict:
 
     if resp.status_code != 200:
         logger.error("  Endpoint retornou HTTP %d", resp.status_code)
-        return {"status_code": resp.status_code, "total_retornado": 0, "tempo_ms": round(duracao, 1)}
+        return {
+            "status_code": resp.status_code,
+            "total_retornado": 0,
+            "tempo_ms": round(duracao, 1),
+        }
 
     data = resp.json()
     total_api = data.get("total", 0)
     logger.info("  Endpoint OK: %d produtos retornados em %.1fms", total_api, duracao)
-    return {"status_code": resp.status_code, "total_retornado": total_api, "tempo_ms": round(duracao, 1)}
+    return {
+        "status_code": resp.status_code,
+        "total_retornado": total_api,
+        "tempo_ms": round(duracao, 1),
+    }
 
 
 # ────────────────────────────────────────────────────────────────────
 # Orquestração
 # ────────────────────────────────────────────────────────────────────
+
 
 def audit() -> int:
     """Executa auditoria completa.
@@ -200,7 +232,9 @@ def audit() -> int:
     if not locais:
         logger.warning("  Nenhum dado local encontrado. Pulando validação local.")
     else:
-        logger.info("  TOTAL ALIMENTO_VAREJO nos TXT: %d (em %d arquivo(s))", total_local, len(locais))
+        logger.info(
+            "  TOTAL ALIMENTO_VAREJO nos TXT: %d (em %d arquivo(s))", total_local, len(locais)
+        )
 
     # 2. Contagem na fact table
     logger.info("\n[2/4] Consultando staging.fact_precos_mensais...")
@@ -219,7 +253,9 @@ def audit() -> int:
         total_mart = contar_produtos_distintos_mart()
         logger.info("  Produtos distintos na MV (ALIMENTO_VAREJO): %d", total_mart)
         if total_mart == 0:
-            erros.append("FATAL: mart.vw_api_produtos_sazonalidade está VAZIA — frontend não renderizará nada")
+            erros.append(
+                "FATAL: mart.vw_api_produtos_sazonalidade está VAZIA — frontend não renderizará nada"
+            )
     except Exception as e:
         erros.append(f"Falha ao consultar MV: {e}")
         total_mart = 0

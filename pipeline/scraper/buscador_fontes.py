@@ -3,10 +3,8 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
 import httpx
 
@@ -132,12 +130,14 @@ def construir_urls_candidatas(config: dict) -> list[dict]:
                 continue
             for padrao in padroes_url:
                 url = padrao.format(fonte=nome, uf=uf_lower)
-                candidatas.append({
-                    "nome": f"{nome.upper()}-{uf}",
-                    "url": url,
-                    "tipo": nome,
-                    "uf": uf,
-                })
+                candidatas.append(
+                    {
+                        "nome": f"{nome.upper()}-{uf}",
+                        "url": url,
+                        "tipo": nome,
+                        "uf": uf,
+                    }
+                )
     return candidatas
 
 
@@ -156,7 +156,15 @@ async def sondar_fonte(client: httpx.AsyncClient, fonte: dict) -> FonteDescobert
             texto = r.text.lower()
             resultado.conteudo_tem_tabela = any(
                 marcador in texto
-                for marcador in ["<table", "<tr>", "<td", "cotacao", "preco", "produto", "hortifruti"]
+                for marcador in [
+                    "<table",
+                    "<tr>",
+                    "<td",
+                    "cotacao",
+                    "preco",
+                    "produto",
+                    "hortifruti",
+                ]
             )
         else:
             resultado.status = "falha_http"
@@ -177,6 +185,7 @@ async def sondar_todas(candidatas: list[dict], max_concorrencia: int = 5) -> lis
     resultados: list[FonteDescoberta] = []
 
     async with httpx.AsyncClient(headers=BROWSER_HEADERS) as client:
+
         async def _sondar(f: dict) -> FonteDescoberta:
             async with sem:
                 return await sondar_fonte(client, f)
@@ -210,11 +219,15 @@ async def descobrir_fontes() -> RelatorioDescoberta:
 
     rel = gerar_relatorio(resultados)
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_PATH.write_text(json.dumps(rel.para_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+    REPORT_PATH.write_text(
+        json.dumps(rel.para_dict(), ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     logger.info(
         "Descoberta concluida: %d candidatas, %d acessiveis, %d com tabela",
-        rel.total_encontradas, rel.total_acessiveis, rel.total_com_tabela,
+        rel.total_encontradas,
+        rel.total_acessiveis,
+        rel.total_com_tabela,
     )
     return rel
 
@@ -223,11 +236,13 @@ def fontes_para_localidades(resultados: list[FonteDescoberta]) -> list[dict]:
     localidades: list[dict] = []
     for r in resultados:
         if r.status == "acessivel" and r.conteudo_tem_tabela:
-            localidades.append({
-                "uf": r.uf,
-                "municipio": r.municipio or r.uf,
-                "fonte": r.nome,
-            })
+            localidades.append(
+                {
+                    "uf": r.uf,
+                    "municipio": r.municipio or r.uf,
+                    "fonte": r.nome,
+                }
+            )
     return localidades
 
 

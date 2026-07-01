@@ -16,30 +16,60 @@ from pipeline.scraper.ceasa_spider import CotacaoHistorica
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CSV_PATH = PROJECT_ROOT / "docs" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
+CSV_PATH = PROJECT_ROOT / "dados_sazonliza_dados_bruto" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
 ALIASES_PATH = Path(__file__).resolve().parent / "aliases.json"
 UNMATCHED_LOG = PROJECT_ROOT / "logs" / "unmatched_items.log"
 
-NORM_TABLE = str.maketrans({
-    "\u00e1": "a", "\u00e0": "a", "\u00e3": "a", "\u00e2": "a",
-    "\u00e9": "e", "\u00ea": "e", "\u00ed": "i", "\u00f3": "o",
-    "\u00f4": "o", "\u00f5": "o", "\u00fa": "u", "\u00fc": "u",
-    "\u00e7": "c",
-})
+NORM_TABLE = str.maketrans(
+    {
+        "\u00e1": "a",
+        "\u00e0": "a",
+        "\u00e3": "a",
+        "\u00e2": "a",
+        "\u00e9": "e",
+        "\u00ea": "e",
+        "\u00ed": "i",
+        "\u00f3": "o",
+        "\u00f4": "o",
+        "\u00f5": "o",
+        "\u00fa": "u",
+        "\u00fc": "u",
+        "\u00e7": "c",
+    }
+)
 
 STOP_WORDS = {
-    "da", "de", "do", "das", "dos", "em", "para", "com", "tipo",
-    "variedade", "grupo", "extra", "especial", "primeira", "segunda",
+    "da",
+    "de",
+    "do",
+    "das",
+    "dos",
+    "em",
+    "para",
+    "com",
+    "tipo",
+    "variedade",
+    "grupo",
+    "extra",
+    "especial",
+    "primeira",
+    "segunda",
 }
 
 ABREVIACOES = {
-    "batata-doce": "batata doce", "b. doce": "batata doce",
-    "c. roxa": "cebola roxa", "p. de queijo": "pao de queijo",
-    "s. jorge": "sao jorge", "r. preto": "rio preto",
+    "batata-doce": "batata doce",
+    "b. doce": "batata doce",
+    "c. roxa": "cebola roxa",
+    "p. de queijo": "pao de queijo",
+    "s. jorge": "sao jorge",
+    "r. preto": "rio preto",
 }
 
 SUFIXOS_QUALIFICADOR = [
-    "atacado", "produtor", "beneficiador", "tomate",
+    "atacado",
+    "produtor",
+    "beneficiador",
+    "tomate",
 ]
 
 RE_UNIDADE = re.compile(r"\d+\s?(kg|g|dz|un|l|ml|cx|sc|cx\d+dz|sc\d+kg|cx\d+kg)", re.IGNORECASE)
@@ -146,7 +176,9 @@ class DataNormalizer:
         self._carregado = True
         logger.info(
             "DataNormalizer: %d itens carregados, %d tokens indexados, %d aliases",
-            len(self._master), len(self._token_index), len(self.aliases),
+            len(self._master),
+            len(self._token_index),
+            len(self.aliases),
         )
 
     def _ensure_loaded(self) -> None:
@@ -179,8 +211,11 @@ class DataNormalizer:
         if not n:
             self._log_unmatched(nome_bruto)
             return ResultadoNormalizacao(
-                nome_original=nome_bruto, nome_padrao=None, categoria=None,
-                score=0.0, metodo="vazio",
+                nome_original=nome_bruto,
+                nome_padrao=None,
+                categoria=None,
+                score=0.0,
+                metodo="vazio",
             )
 
         # E0: alias match
@@ -198,22 +233,31 @@ class DataNormalizer:
                         break
             if m is not None:
                 return ResultadoNormalizacao(
-                    nome_original=nome_bruto, nome_padrao=m["nome"],
-                    categoria=m["categoria"], score=100.0, metodo="alias",
+                    nome_original=nome_bruto,
+                    nome_padrao=m["nome"],
+                    categoria=m["categoria"],
+                    score=100.0,
+                    metodo="alias",
                 )
 
         # E1: exact match
         if n in self._master:
             m = self._master[n]
             return ResultadoNormalizacao(
-                nome_original=nome_bruto, nome_padrao=m["nome"],
-                categoria=m["categoria"], score=100.0, metodo="exact",
+                nome_original=nome_bruto,
+                nome_padrao=m["nome"],
+                categoria=m["categoria"],
+                score=100.0,
+                metodo="exact",
             )
         if n_limpo in self._master:
             m = self._master[n_limpo]
             return ResultadoNormalizacao(
-                nome_original=nome_bruto, nome_padrao=m["nome"],
-                categoria=m["categoria"], score=100.0, metodo="exact_clean",
+                nome_original=nome_bruto,
+                nome_padrao=m["nome"],
+                categoria=m["categoria"],
+                score=100.0,
+                metodo="exact_clean",
             )
 
         # E2: token key — first meaningful token >= 4 chars
@@ -225,16 +269,24 @@ class DataNormalizer:
                 if len(candidates) == 1:
                     m = self._master[candidates[0]]
                     return ResultadoNormalizacao(
-                        nome_original=nome_bruto, nome_padrao=m["nome"],
-                        categoria=m["categoria"], score=90.0, metodo="token_key",
+                        nome_original=nome_bruto,
+                        nome_padrao=m["nome"],
+                        categoria=m["categoria"],
+                        score=90.0,
+                        metodo="token_key",
                     )
                 if len(candidates) > 1:
-                    best_tok = process.extractOne(n_limpo, candidates, scorer=fuzz.WRatio, score_cutoff=70.0)
+                    best_tok = process.extractOne(
+                        n_limpo, candidates, scorer=fuzz.WRatio, score_cutoff=70.0
+                    )
                     if best_tok:
                         m = self._master[best_tok[0]]
                         return ResultadoNormalizacao(
-                            nome_original=nome_bruto, nome_padrao=m["nome"],
-                            categoria=m["categoria"], score=best_tok[1], metodo="token_key_fuzzy",
+                            nome_original=nome_bruto,
+                            nome_padrao=m["nome"],
+                            categoria=m["categoria"],
+                            score=best_tok[1],
+                            metodo="token_key_fuzzy",
                         )
 
         # E3: WRatio 85 on original normalized
@@ -243,27 +295,40 @@ class DataNormalizer:
             if best:
                 m = self._master[best[0]]
                 return ResultadoNormalizacao(
-                    nome_original=nome_bruto, nome_padrao=m["nome"],
-                    categoria=m["categoria"], score=best[1], metodo="fuzzy_85",
+                    nome_original=nome_bruto,
+                    nome_padrao=m["nome"],
+                    categoria=m["categoria"],
+                    score=best[1],
+                    metodo="fuzzy_85",
                 )
 
         # E4: WRatio 75 on cleaned
         if n_limpo and n_limpo != n:
-            best_clean = process.extractOne(n_limpo, self._nomes_norm, scorer=fuzz.WRatio, score_cutoff=self.fuzzy_cutoff)
+            best_clean = process.extractOne(
+                n_limpo, self._nomes_norm, scorer=fuzz.WRatio, score_cutoff=self.fuzzy_cutoff
+            )
             if best_clean:
                 m = self._master[best_clean[0]]
                 return ResultadoNormalizacao(
-                    nome_original=nome_bruto, nome_padrao=m["nome"],
-                    categoria=m["categoria"], score=best_clean[1], metodo="fuzzy_clean",
+                    nome_original=nome_bruto,
+                    nome_padrao=m["nome"],
+                    categoria=m["categoria"],
+                    score=best_clean[1],
+                    metodo="fuzzy_clean",
                 )
 
         # E5: token_set_ratio 70
-        best_ts = process.extractOne(n_limpo or n, self._nomes_norm, scorer=fuzz.token_set_ratio, score_cutoff=70.0)
+        best_ts = process.extractOne(
+            n_limpo or n, self._nomes_norm, scorer=fuzz.token_set_ratio, score_cutoff=70.0
+        )
         if best_ts:
             m = self._master[best_ts[0]]
             return ResultadoNormalizacao(
-                nome_original=nome_bruto, nome_padrao=m["nome"],
-                categoria=m["categoria"], score=best_ts[1], metodo="token_set",
+                nome_original=nome_bruto,
+                nome_padrao=m["nome"],
+                categoria=m["categoria"],
+                score=best_ts[1],
+                metodo="token_set",
             )
 
         # E6: WRatio 70 fallback
@@ -271,41 +336,54 @@ class DataNormalizer:
         if best_low:
             m = self._master[best_low[0]]
             return ResultadoNormalizacao(
-                nome_original=nome_bruto, nome_padrao=m["nome"],
-                categoria=m["categoria"], score=best_low[1], metodo="fuzzy_low",
+                nome_original=nome_bruto,
+                nome_padrao=m["nome"],
+                categoria=m["categoria"],
+                score=best_low[1],
+                metodo="fuzzy_low",
             )
 
         # E7: partial_ratio 75 — better for short names with suffix differences (e.g. "ovos" → "ovo")
-        best_partial = process.extractOne(n, self._nomes_norm, scorer=fuzz.partial_ratio, score_cutoff=75.0)
+        best_partial = process.extractOne(
+            n, self._nomes_norm, scorer=fuzz.partial_ratio, score_cutoff=75.0
+        )
         if best_partial:
             m = self._master[best_partial[0]]
             return ResultadoNormalizacao(
-                nome_original=nome_bruto, nome_padrao=m["nome"],
-                categoria=m["categoria"], score=best_partial[1], metodo="partial_75",
+                nome_original=nome_bruto,
+                nome_padrao=m["nome"],
+                categoria=m["categoria"],
+                score=best_partial[1],
+                metodo="partial_75",
             )
 
         self._log_unmatched(nome_bruto)
         return ResultadoNormalizacao(
-            nome_original=nome_bruto, nome_padrao=None, categoria=None,
-            score=0.0, metodo="none",
+            nome_original=nome_bruto,
+            nome_padrao=None,
+            categoria=None,
+            score=0.0,
+            metodo="none",
         )
 
     def normalizar_lote(self, items: list[CotacaoHistorica], cutoff: float = 70.0) -> pl.DataFrame:
         registros = []
         for item in items:
             r = self.normalizar(item.produto_original)
-            registros.append({
-                "produto_original": item.produto_original,
-                "produto": r.nome_padrao or "",
-                "categoria": r.categoria or "",
-                "match_score": r.score,
-                "metodo": r.metodo,
-                "uf": item.uf,
-                "municipio": item.municipio,
-                "ano": item.ano,
-                "mes": item.mes,
-                "valor_produto_kg": round(item.valor_produto_kg, 4),
-            })
+            registros.append(
+                {
+                    "produto_original": item.produto_original,
+                    "produto": r.nome_padrao or "",
+                    "categoria": r.categoria or "",
+                    "match_score": r.score,
+                    "metodo": r.metodo,
+                    "uf": item.uf,
+                    "municipio": item.municipio,
+                    "ano": item.ano,
+                    "mes": item.mes,
+                    "valor_produto_kg": round(item.valor_produto_kg, 4),
+                }
+            )
         self._flush_unmatched()
         df = pl.DataFrame(registros)
         return df.filter(pl.col("match_score") >= cutoff)

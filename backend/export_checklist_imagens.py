@@ -8,6 +8,7 @@ Usage:
     python backend/export_checklist_imagens.py --db-url postgresql://user:pass@host/db
     python backend/export_checklist_imagens.py --output checklist.csv
 """
+
 from __future__ import annotations
 
 import argparse
@@ -29,7 +30,8 @@ async def main() -> None:
         help="PostgreSQL connection URI",
     )
     parser.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         default="checklist_imagens.csv",
         help="Caminho do arquivo CSV de saída",
     )

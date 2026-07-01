@@ -30,7 +30,10 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if len(self._windows[key]) >= self._requests_per_minute:
             return JSONResponse(
                 status_code=HTTP_429_TOO_MANY_REQUESTS,
-                content={"error": "rate_limit_exceeded", "message": "Muitas requisições. Aguarde e tente novamente."},
+                content={
+                    "error": "rate_limit_exceeded",
+                    "message": "Muitas requisições. Aguarde e tente novamente.",
+                },
             )
 
         self._windows[key].append(now)

@@ -4,7 +4,6 @@ from backend.app.db.session import fetch
 from backend.app.core.cache import cache
 from backend.app.core.config import get_settings
 import hashlib
-import json
 
 router = APIRouter(prefix="/categorias", tags=["Categorias"])
 
@@ -31,16 +30,16 @@ async def listar_categorias():
     """)
 
     CATEGORIA_ICONES = {
-        'FRUTAS': '\U0001f34e',
-        'LEGUMES': '\U0001f954',
-        'VERDURAS': '\U0001f96c',
-        'FLORES': '\U0001f33c',
-        'PESCADOS': '\U0001f41f',
-        'PROTEINAS': '\U0001f969',
-        'CEREAIS_GRAOS': '\U0001f33e',
-        'BEBIDAS': '\U0001f964',
-        'ALIMENTO_VAREJO': '\U0001f372',
-        'OUTROS': '\U0001f4e6',
+        "FRUTAS": "\U0001f34e",
+        "LEGUMES": "\U0001f954",
+        "VERDURAS": "\U0001f96c",
+        "FLORES": "\U0001f33c",
+        "PESCADOS": "\U0001f41f",
+        "PROTEINAS": "\U0001f969",
+        "CEREAIS_GRAOS": "\U0001f33e",
+        "BEBIDAS": "\U0001f964",
+        "ALIMENTO_VAREJO": "\U0001f372",
+        "OUTROS": "\U0001f4e6",
     }
 
     items = [
@@ -50,7 +49,8 @@ async def listar_categorias():
             total_produtos=r["total_produtos"],
             icone=CATEGORIA_ICONES.get(r["nome_categoria"]),
         )
-        for r in rows if r["total_produtos"] > 0
+        for r in rows
+        if r["total_produtos"] > 0
     ]
 
     result = CategoriaListResponse(data=items, total=len(items))

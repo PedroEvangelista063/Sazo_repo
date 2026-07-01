@@ -10,22 +10,50 @@ from rapidfuzz import fuzz, process
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CSV_PATH = PROJECT_ROOT / "docs" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
+CSV_PATH = PROJECT_ROOT / "dados_sazonliza_dados_bruto" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
 
 ABREVIACOES = {
-    "batata-doce": "batata doce", "b. doce": "batata doce",
-    "c. roxa": "cebola roxa", "p. de queijo": "pao de queijo",
-    "s. jorge": "sao jorge", "r. preto": "rio preto",
+    "batata-doce": "batata doce",
+    "b. doce": "batata doce",
+    "c. roxa": "cebola roxa",
+    "p. de queijo": "pao de queijo",
+    "s. jorge": "sao jorge",
+    "r. preto": "rio preto",
 }
 
-STOP_WORDS = {"da", "de", "do", "das", "dos", "em", "para", "com", "tipo", "variedade", "grupo", "extra", "especial"}
+STOP_WORDS = {
+    "da",
+    "de",
+    "do",
+    "das",
+    "dos",
+    "em",
+    "para",
+    "com",
+    "tipo",
+    "variedade",
+    "grupo",
+    "extra",
+    "especial",
+}
 
-NORM_TABLE = str.maketrans({
-    "\u00e1": "a", "\u00e0": "a", "\u00e3": "a", "\u00e2": "a",
-    "\u00e9": "e", "\u00ea": "e", "\u00ed": "i", "\u00f3": "o",
-    "\u00f4": "o", "\u00f5": "o", "\u00fa": "u", "\u00fc": "u",
-    "\u00e7": "c",
-})
+NORM_TABLE = str.maketrans(
+    {
+        "\u00e1": "a",
+        "\u00e0": "a",
+        "\u00e3": "a",
+        "\u00e2": "a",
+        "\u00e9": "e",
+        "\u00ea": "e",
+        "\u00ed": "i",
+        "\u00f3": "o",
+        "\u00f4": "o",
+        "\u00f5": "o",
+        "\u00fa": "u",
+        "\u00fc": "u",
+        "\u00e7": "c",
+    }
+)
 
 
 def normalizar(nome: str | None) -> str:
@@ -65,7 +93,9 @@ class ConciliadorSemantico:
         termo = normalizar(nome_bruto)
         if not termo:
             return None, 0.0
-        resultado = process.extractOne(termo, self._nomes_norm, scorer=fuzz.WRatio, score_cutoff=self.score_cutoff)
+        resultado = process.extractOne(
+            termo, self._nomes_norm, scorer=fuzz.WRatio, score_cutoff=self.score_cutoff
+        )
         if resultado:
             idx = self._nomes_norm.index(resultado[0])
             return self._nomes_csv[idx], resultado[1]

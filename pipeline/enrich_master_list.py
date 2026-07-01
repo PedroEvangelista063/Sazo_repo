@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from pathlib import Path
 
 import polars as pl
 
@@ -50,7 +49,8 @@ def enrich_master(
 ) -> pl.DataFrame:
     df_master = matcher.df
     col_nome = next(
-        c for c in df_master.columns
+        c
+        for c in df_master.columns
         if "produto" in c.lower() or "nome" in c.lower() or "item" in c.lower()
     )
 
@@ -61,17 +61,21 @@ def enrich_master(
         if not nome_cot:
             continue
         match, score = matcher.melhor_match(nome_cot)
-        match_log.append({
-            "cotacao_produto": nome_cot,
-            "match_master": match or "",
-            "match_score": score,
-        })
+        match_log.append(
+            {
+                "cotacao_produto": nome_cot,
+                "match_master": match or "",
+                "match_score": score,
+            }
+        )
 
     df_log = pl.DataFrame(match_log)
 
     matched = df_log.filter(pl.col("match_score") >= matcher.score_cutoff)
     if matched.height == 0:
-        logger.warning("Nenhuma cotação teve match com o CSV mestre (score >= %.0f)", matcher.score_cutoff)
+        logger.warning(
+            "Nenhuma cotação teve match com o CSV mestre (score >= %.0f)", matcher.score_cutoff
+        )
         return pl.DataFrame(), df_log
 
     cotacoes_com_match = df_cotacoes.join(

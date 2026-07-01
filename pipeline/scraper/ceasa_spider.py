@@ -21,11 +21,17 @@ LOG_DIR = PROJECT_ROOT / "logs" / "scraping_failures"
 RAW_DIR = PROJECT_ROOT / "database" / "processed_data" / "01_raw"
 
 UNIDADES_PADRAO: dict[str, float] = {
-    "cx 20kg": 20.0, "cx 22kg": 22.0, "cx 25kg": 25.0,
+    "cx 20kg": 20.0,
+    "cx 22kg": 22.0,
+    "cx 25kg": 25.0,
     "cx": 1.0,
-    "saco 25 kg": 25.0, "saco 25kg": 25.0,
-    "saco 50 kg": 50.0, "saco 50kg": 50.0,
-    "kg": 1.0, "dz": 1.0, "duzia": 1.0,
+    "saco 25 kg": 25.0,
+    "saco 25kg": 25.0,
+    "saco 50 kg": 50.0,
+    "saco 50kg": 50.0,
+    "kg": 1.0,
+    "dz": 1.0,
+    "duzia": 1.0,
 }
 
 USER_AGENTS = [
@@ -37,12 +43,12 @@ USER_AGENTS = [
 ]
 
 LOCALIDADES_ALVO: list[dict] = [
-    {"uf": "SP", "municipio": "Sao Paulo",      "fonte": "HF Brasil/CEPEA"},
-    {"uf": "SP", "municipio": "Sao Paulo",      "fonte": "CEAGESP"},
-    {"uf": "MG", "municipio": "Contagem",       "fonte": "HF Brasil/CEPEA"},
+    {"uf": "SP", "municipio": "Sao Paulo", "fonte": "HF Brasil/CEPEA"},
+    {"uf": "SP", "municipio": "Sao Paulo", "fonte": "CEAGESP"},
+    {"uf": "MG", "municipio": "Contagem", "fonte": "HF Brasil/CEPEA"},
     {"uf": "RJ", "municipio": "Rio de Janeiro", "fonte": "HF Brasil/CEPEA"},
-    {"uf": "DF", "municipio": "Brasilia",       "fonte": "HF Brasil/CEPEA"},
-    {"uf": "PR", "municipio": "Curitiba",       "fonte": "HF Brasil/CEPEA"},
+    {"uf": "DF", "municipio": "Brasilia", "fonte": "HF Brasil/CEPEA"},
+    {"uf": "PR", "municipio": "Curitiba", "fonte": "HF Brasil/CEPEA"},
 ]
 
 
@@ -94,7 +100,13 @@ def salvar_html_falha(nome_fonte: str, url: str, html: str, xpath_tentado: str) 
     slug = re.sub(r"[^a-z0-9]+", "_", nome_fonte.lower())[:30]
     path = LOG_DIR / f"{ts}_{slug}.html"
     path.write_text(html, encoding="utf-8")
-    meta = {"fonte": nome_fonte, "url": url, "timestamp": ts, "xpath_tentado": xpath_tentado, "html_path": str(path)}
+    meta = {
+        "fonte": nome_fonte,
+        "url": url,
+        "timestamp": ts,
+        "xpath_tentado": xpath_tentado,
+        "html_path": str(path),
+    }
     meta_path = LOG_DIR / f"{ts}_{slug}.json"
     meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     logger.warning("HTML de falha salvo: %s (xpath: %s)", path, xpath_tentado)
@@ -110,8 +122,7 @@ class BaseSpiderCEASA(ABC):
         self.semaforo = semaforo or asyncio.Semaphore(2)
 
     @abstractmethod
-    async def coletar_snapshot(self) -> list[CotacaoHistorica]:
-        ...
+    async def coletar_snapshot(self) -> list[CotacaoHistorica]: ...
 
     def parse_tabela(self, html: str, fonte: str) -> list[CotacaoHistorica]:
         soup = BeautifulSoup(html, "lxml")
@@ -155,25 +166,48 @@ class HFBrasilSpider(BaseSpiderCEASA):
     ]
 
     PRODUTOS_HF = [
-        "batata", "tomate", "cebola", "alface", "cenoura",
-        "beterraba", "abobrinha", "pepino", "pimentao",
-        "banana", "laranja", "maca", "mamao", "uva",
-        "melancia", "morango", "abacate", "abacaxi", "manga",
-        "goiaba", "maracuja", "limao",
+        "batata",
+        "tomate",
+        "cebola",
+        "alface",
+        "cenoura",
+        "beterraba",
+        "abobrinha",
+        "pepino",
+        "pimentao",
+        "banana",
+        "laranja",
+        "maca",
+        "mamao",
+        "uva",
+        "melancia",
+        "morango",
+        "abacate",
+        "abacaxi",
+        "manga",
+        "goiaba",
+        "maracuja",
+        "limao",
     ]
 
     MAPA_REGIAO_UF = {
-        "sao paulo": "SP", "capital": "SP",
-        "belo horizonte": "MG", "contagem": "MG", "minas gerais": "MG",
+        "sao paulo": "SP",
+        "capital": "SP",
+        "belo horizonte": "MG",
+        "contagem": "MG",
+        "minas gerais": "MG",
         "rio de janeiro": "RJ",
         "brasilia": "DF",
-        "curitiba": "PR", "parana": "PR",
-        "goiania": "GO", "goias": "GO",
+        "curitiba": "PR",
+        "parana": "PR",
+        "goiania": "GO",
+        "goias": "GO",
     }
 
-    async def coletar_snapshot(self, ano: int | None = None, mes: int | None = None) -> list[CotacaoHistorica]:
+    async def coletar_snapshot(
+        self, ano: int | None = None, mes: int | None = None
+    ) -> list[CotacaoHistorica]:
         from pipeline.scraper.ceasa_engine import HFBrasilRegionalScraper as EngineScraper
-        from pipeline.scraper.ceasa_engine import CotacaoHistorica as EngineCotacao
 
         engine = EngineScraper(self.uf, self.municipio, self.semaforo)
         if ano is None or mes is None:
@@ -226,7 +260,9 @@ class CEAGESPSpider(BaseSpiderCEASA):
 
     async def coletar_snapshot(self) -> list[CotacaoHistorica]:
         resultados: list[CotacaoHistorica] = []
-        async with httpx.AsyncClient(headers=HEADERS_CEAGESP, follow_redirects=True, timeout=30) as client:
+        async with httpx.AsyncClient(
+            headers=HEADERS_CEAGESP, follow_redirects=True, timeout=30
+        ) as client:
             r = await client.get(self.URL)
             self._datas_disponiveis = _extrair_datas_ceagesp(r.text)
 
@@ -247,7 +283,9 @@ class CEAGESPSpider(BaseSpiderCEASA):
         # datas vem ordenadas cronologicamente; pegar a mais recente
         return datas[-1]
 
-    async def _raspar_categoria(self, client: httpx.AsyncClient, categoria: str) -> list[CotacaoHistorica]:
+    async def _raspar_categoria(
+        self, client: httpx.AsyncClient, categoria: str
+    ) -> list[CotacaoHistorica]:
         if categoria == "ORGÂNICOS":
             return []
 
@@ -297,17 +335,19 @@ class CEAGESPSpider(BaseSpiderCEASA):
             unidade = cells[2] if len(cells) > 2 else "kg"
             fator = extrair_fator_kg(unidade)
 
-            items.append(CotacaoHistorica(
-                produto_original=nome,
-                uf=self.uf,
-                municipio=self.municipio,
-                ano=ano,
-                mes=mes,
-                preco_bruto=preco,
-                fator_kg=fator,
-                unidade=unidade,
-                fonte="CEAGESP",
-            ))
+            items.append(
+                CotacaoHistorica(
+                    produto_original=nome,
+                    uf=self.uf,
+                    municipio=self.municipio,
+                    ano=ano,
+                    mes=mes,
+                    preco_bruto=preco,
+                    fator_kg=fator,
+                    unidade=unidade,
+                    fonte="CEAGESP",
+                )
+            )
 
         logger.info("CEAGESP %s (%s): %d cotacoes", categoria, data_val, len(items))
         return items
@@ -335,10 +375,18 @@ async def executar_spider_regional(
         spider = cls(loc["uf"], loc["municipio"], semaforo)
         try:
             items = await spider.coletar_snapshot()
-            logger.info("Spider %s %s-%s: %d cotacoes", loc["fonte"], loc["uf"], loc["municipio"], len(items))
+            logger.info(
+                "Spider %s %s-%s: %d cotacoes",
+                loc["fonte"],
+                loc["uf"],
+                loc["municipio"],
+                len(items),
+            )
             todas.extend(items)
         except Exception as exc:
-            logger.error("Spider %s %s-%s falhou: %s", loc["fonte"], loc["uf"], loc["municipio"], exc)
+            logger.error(
+                "Spider %s %s-%s falhou: %s", loc["fonte"], loc["uf"], loc["municipio"], exc
+            )
 
     logger.info("Spider regional concluido: %d cotacoes", len(todas))
     return todas

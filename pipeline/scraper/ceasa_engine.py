@@ -5,9 +5,8 @@ import logging
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
-from typing import Callable
 
 import httpx
 from bs4 import BeautifulSoup
@@ -18,9 +17,17 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 RAW_DIR = PROJECT_ROOT / "database" / "processed_data" / "01_raw"
 
 UNIDADES_PADRAO: dict[str, float] = {
-    "cx": 1.0, "cx 20kg": 20.0, "cx 22kg": 22.0, "cx 25kg": 25.0,
-    "saco 25 kg": 25.0, "saco 25kg": 25.0, "saco 50 kg": 50.0, "saco 50kg": 50.0,
-    "kg": 1.0, "dz": 1.0, "duzia": 1.0,
+    "cx": 1.0,
+    "cx 20kg": 20.0,
+    "cx 22kg": 22.0,
+    "cx 25kg": 25.0,
+    "saco 25 kg": 25.0,
+    "saco 25kg": 25.0,
+    "saco 50 kg": 50.0,
+    "saco 50kg": 50.0,
+    "kg": 1.0,
+    "dz": 1.0,
+    "duzia": 1.0,
 }
 
 BROWSER_HEADERS = {
@@ -34,15 +41,15 @@ BROWSER_HEADERS = {
 }
 
 LOCALIDADES_ALVO: list[dict] = [
-    {"uf": "SP", "municipio": "Sao Paulo",      "fonte": "CEAGESP"},
-    {"uf": "SP", "municipio": "Sao Paulo",      "fonte": "HF Brasil/CEPEA"},
-    {"uf": "MG", "municipio": "Contagem",       "fonte": "HF Brasil/CEPEA"},
+    {"uf": "SP", "municipio": "Sao Paulo", "fonte": "CEAGESP"},
+    {"uf": "SP", "municipio": "Sao Paulo", "fonte": "HF Brasil/CEPEA"},
+    {"uf": "MG", "municipio": "Contagem", "fonte": "HF Brasil/CEPEA"},
     {"uf": "RJ", "municipio": "Rio de Janeiro", "fonte": "HF Brasil/CEPEA"},
-    {"uf": "DF", "municipio": "Brasilia",       "fonte": "HF Brasil/CEPEA"},
-    {"uf": "PR", "municipio": "Curitiba",       "fonte": "HF Brasil/CEPEA"},
-    {"uf": "GO", "municipio": "Goiania",        "fonte": "CEASA-GO"},
-    {"uf": "MG", "municipio": "Contagem",       "fonte": "CEASA-MG"},
-    {"uf": "CE", "municipio": "Maracanau",      "fonte": "CEASA-CE"},
+    {"uf": "DF", "municipio": "Brasilia", "fonte": "HF Brasil/CEPEA"},
+    {"uf": "PR", "municipio": "Curitiba", "fonte": "HF Brasil/CEPEA"},
+    {"uf": "GO", "municipio": "Goiania", "fonte": "CEASA-GO"},
+    {"uf": "MG", "municipio": "Contagem", "fonte": "CEASA-MG"},
+    {"uf": "CE", "municipio": "Maracanau", "fonte": "CEASA-CE"},
 ]
 
 
@@ -105,20 +112,37 @@ class ScraperCEASA(ABC):
         self.semaforo = semaforo or asyncio.Semaphore(2)
 
     @abstractmethod
-    async def coletar_mes(self, ano: int, mes: int) -> list[CotacaoHistorica]:
-        ...
+    async def coletar_mes(self, ano: int, mes: int) -> list[CotacaoHistorica]: ...
 
-    async def coletar_periodo(self, data_inicio: date, data_fim: date | None = None) -> list[CotacaoHistorica]:
+    async def coletar_periodo(
+        self, data_inicio: date, data_fim: date | None = None
+    ) -> list[CotacaoHistorica]:
         hoje = date.today()
         todas: list[CotacaoHistorica] = []
         for ano, mes in iterar_meses(data_inicio, data_fim):
             async with self.semaforo:
                 try:
                     items = await self.coletar_mes(ano, mes)
-                    logger.info("%s %s-%s %04d/%02d: %d cotacoes", type(self).__name__, self.uf, self.municipio, ano, mes, len(items))
+                    logger.info(
+                        "%s %s-%s %04d/%02d: %d cotacoes",
+                        type(self).__name__,
+                        self.uf,
+                        self.municipio,
+                        ano,
+                        mes,
+                        len(items),
+                    )
                     todas.extend(items)
                 except Exception as exc:
-                    logger.warning("%s %s-%s %04d/%02d falhou: %s", type(self).__name__, self.uf, self.municipio, ano, mes, exc)
+                    logger.warning(
+                        "%s %s-%s %04d/%02d falhou: %s",
+                        type(self).__name__,
+                        self.uf,
+                        self.municipio,
+                        ano,
+                        mes,
+                        exc,
+                    )
         return todas
 
 
@@ -126,21 +150,52 @@ class HFBrasilRegionalScraper(ScraperCEASA):
     BASE_URL = "https://www.hfbrasil.org.br/br/estatistica"
 
     PRODUTOS_HF = [
-        "batata", "tomate", "cebola", "alface", "cenoura",
-        "beterraba", "abobrinha", "pepino", "pimentao",
-        "banana", "laranja", "maca", "mamao", "uva",
-        "melancia", "morango", "abacate", "abacaxi", "manga",
-        "goiaba", "maracuja", "limao",
+        "batata",
+        "tomate",
+        "cebola",
+        "alface",
+        "cenoura",
+        "beterraba",
+        "abobrinha",
+        "pepino",
+        "pimentao",
+        "banana",
+        "laranja",
+        "maca",
+        "mamao",
+        "uva",
+        "melancia",
+        "morango",
+        "abacate",
+        "abacaxi",
+        "manga",
+        "goiaba",
+        "maracuja",
+        "limao",
     ]
 
     MAPA_CATEGORIA: dict[str, str] = {
-        "batata": "LEGUMES", "tomate": "LEGUMES", "cebola": "DIVERSOS",
-        "alface": "VERDURAS", "cenoura": "LEGUMES", "beterraba": "LEGUMES",
-        "abobrinha": "LEGUMES", "pepino": "LEGUMES", "pimentao": "LEGUMES",
-        "banana": "FRUTAS", "laranja": "FRUTAS", "maca": "FRUTAS",
-        "mamao": "FRUTAS", "uva": "FRUTAS", "melancia": "FRUTAS",
-        "morango": "FRUTAS", "abacate": "FRUTAS", "abacaxi": "FRUTAS",
-        "manga": "FRUTAS", "goiaba": "FRUTAS", "maracuja": "FRUTAS",
+        "batata": "LEGUMES",
+        "tomate": "LEGUMES",
+        "cebola": "DIVERSOS",
+        "alface": "VERDURAS",
+        "cenoura": "LEGUMES",
+        "beterraba": "LEGUMES",
+        "abobrinha": "LEGUMES",
+        "pepino": "LEGUMES",
+        "pimentao": "LEGUMES",
+        "banana": "FRUTAS",
+        "laranja": "FRUTAS",
+        "maca": "FRUTAS",
+        "mamao": "FRUTAS",
+        "uva": "FRUTAS",
+        "melancia": "FRUTAS",
+        "morango": "FRUTAS",
+        "abacate": "FRUTAS",
+        "abacaxi": "FRUTAS",
+        "manga": "FRUTAS",
+        "goiaba": "FRUTAS",
+        "maracuja": "FRUTAS",
         "limao": "FRUTAS",
     }
 
@@ -153,44 +208,76 @@ class HFBrasilRegionalScraper(ScraperCEASA):
     }
 
     MAPA_REGIAO_UF: dict[str, str] = {
-        "sao paulo": "SP", "capital": "SP",
-        "belo horizonte": "MG", "contagem": "MG", "minas gerais": "MG",
-        "rio de janeiro": "RJ", "rj": "RJ",
-        "brasilia": "DF", "df": "DF",
-        "curitiba": "PR", "parana": "PR",
-        "santa catarina": "SC", "rio grande do sul": "RS",
-        "goiania": "GO", "goias": "GO",
+        "sao paulo": "SP",
+        "capital": "SP",
+        "belo horizonte": "MG",
+        "contagem": "MG",
+        "minas gerais": "MG",
+        "rio de janeiro": "RJ",
+        "rj": "RJ",
+        "brasilia": "DF",
+        "df": "DF",
+        "curitiba": "PR",
+        "parana": "PR",
+        "santa catarina": "SC",
+        "rio grande do sul": "RS",
+        "goiania": "GO",
+        "goias": "GO",
     }
 
-    async def coletar_periodo(self, data_inicio: date, data_fim: date | None = None) -> list[CotacaoHistorica]:
+    async def coletar_periodo(
+        self, data_inicio: date, data_fim: date | None = None
+    ) -> list[CotacaoHistorica]:
         todas: list[CotacaoHistorica] = []
         for ano, mes in iterar_meses(data_inicio, data_fim):
             async with self.semaforo:
                 try:
                     items = await self.coletar_mes(ano, mes)
-                    logger.info("%s %s-%s %04d/%02d: %d cotacoes", type(self).__name__, self.uf, self.municipio, ano, mes, len(items))
+                    logger.info(
+                        "%s %s-%s %04d/%02d: %d cotacoes",
+                        type(self).__name__,
+                        self.uf,
+                        self.municipio,
+                        ano,
+                        mes,
+                        len(items),
+                    )
                     todas.extend(items)
                 except Exception as exc:
-                    logger.warning("%s %s-%s %04d/%02d falhou: %s", type(self).__name__, self.uf, self.municipio, ano, mes, exc)
+                    logger.warning(
+                        "%s %s-%s %04d/%02d falhou: %s",
+                        type(self).__name__,
+                        self.uf,
+                        self.municipio,
+                        ano,
+                        mes,
+                        exc,
+                    )
         return todas
 
     async def coletar_mes(self, ano: int, mes: int) -> list[CotacaoHistorica]:
         resultados: list[CotacaoHistorica] = []
-        async with httpx.AsyncClient(timeout=30, follow_redirects=True, headers=BROWSER_HEADERS) as client:
+        async with httpx.AsyncClient(
+            timeout=30, follow_redirects=True, headers=BROWSER_HEADERS
+        ) as client:
             sem = asyncio.Semaphore(3)
+
             async def _raspar(produto: str):
                 async with sem:
                     try:
                         return await self._raspar_produto(client, produto, ano, mes)
                     except Exception:
                         return []
+
             tasks = [_raspar(p) for p in self.PRODUTOS_HF]
             blocos = await asyncio.gather(*tasks)
             for bloco in blocos:
                 resultados.extend(bloco)
         return [r for r in resultados if r.uf == self.uf and r.valor_produto_kg > 0]
 
-    async def _raspar_produto(self, client: httpx.AsyncClient, produto: str, ano: int, mes: int) -> list[CotacaoHistorica]:
+    async def _raspar_produto(
+        self, client: httpx.AsyncClient, produto: str, ano: int, mes: int
+    ) -> list[CotacaoHistorica]:
         url = f"{self.BASE_URL}/{produto}.aspx"
         r = await client.get(url)
         r.raise_for_status()
@@ -204,8 +291,21 @@ class HFBrasilRegionalScraper(ScraperCEASA):
 
         cabecalhos = [th.get_text(strip=True) for th in linhas[0].find_all("th")]
         data_idx = None
-        meses_pt = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
-        alvo = f"{mes:02d}/{meses_pt[mes-1]}"
+        meses_pt = [
+            "jan",
+            "fev",
+            "mar",
+            "abr",
+            "mai",
+            "jun",
+            "jul",
+            "ago",
+            "set",
+            "out",
+            "nov",
+            "dez",
+        ]
+        alvo = f"{mes:02d}/{meses_pt[mes - 1]}"
         for i, h in enumerate(cabecalhos):
             if alvo in h.lower():
                 data_idx = i
@@ -239,17 +339,19 @@ class HFBrasilRegionalScraper(ScraperCEASA):
                 continue
 
             fator = extrair_fator_kg(unid)
-            items.append(CotacaoHistorica(
-                produto_original=desc,
-                preco_bruto=preco,
-                fator_kg=fator,
-                unidade=unid,
-                uf=self.uf,
-                municipio=self.municipio,
-                ano=ano,
-                mes=mes,
-                fonte=f"HF Brasil/CEPEA",
-            ))
+            items.append(
+                CotacaoHistorica(
+                    produto_original=desc,
+                    preco_bruto=preco,
+                    fator_kg=fator,
+                    unidade=unid,
+                    uf=self.uf,
+                    municipio=self.municipio,
+                    ano=ano,
+                    mes=mes,
+                    fonte="HF Brasil/CEPEA",
+                )
+            )
         return items
 
     def _extrair_uf(self, regiao: str) -> str:
@@ -283,7 +385,9 @@ class CEASAMGScraper(ScraperCEASA):
         return []  # host inacessivel via rede externa
 
 
-def _resolver_scraper(uf: str, municipio: str, fonte: str, semaforo: asyncio.Semaphore) -> ScraperCEASA | None:
+def _resolver_scraper(
+    uf: str, municipio: str, fonte: str, semaforo: asyncio.Semaphore
+) -> ScraperCEASA | None:
     mapa: dict[str, type[ScraperCEASA]] = {
         "HF Brasil/CEPEA": HFBrasilRegionalScraper,
         "CEAGESP": CEAGESPScraper,

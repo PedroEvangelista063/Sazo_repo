@@ -22,11 +22,21 @@ async def _query_sazonalidade(
 ) -> SazonalidadeListResponse:
     settings = get_settings()
     cache_key = hashlib.md5(
-        json.dumps({"uf": uf, "municipio": municipio, "produto": produto,
-                     "status_cor": status_cor, "categoria": categoria,
-                     "ano": ano, "mes": mes,
-                     "pagina": pagina, "por_pagina": por_pagina},
-                    sort_keys=True, default=str).encode()
+        json.dumps(
+            {
+                "uf": uf,
+                "municipio": municipio,
+                "produto": produto,
+                "status_cor": status_cor,
+                "categoria": categoria,
+                "ano": ano,
+                "mes": mes,
+                "pagina": pagina,
+                "por_pagina": por_pagina,
+            },
+            sort_keys=True,
+            default=str,
+        ).encode()
     ).hexdigest()
 
     cached = cache.get(cache_key)
@@ -37,19 +47,45 @@ async def _query_sazonalidade(
 
     if ano is not None and mes is not None:
         return await _query_sazonalidade_por_mes(
-            ano, mes, uf, municipio, produto, status_cor, categoria,
-            pagina, por_pagina, offset_val, cache_key, settings,
+            ano,
+            mes,
+            uf,
+            municipio,
+            produto,
+            status_cor,
+            categoria,
+            pagina,
+            por_pagina,
+            offset_val,
+            cache_key,
+            settings,
         )
 
     return await _query_sazonalidade_snapshot(
-        uf, municipio, produto, status_cor, categoria,
-        pagina, por_pagina, offset_val, cache_key, settings,
+        uf,
+        municipio,
+        produto,
+        status_cor,
+        categoria,
+        pagina,
+        por_pagina,
+        offset_val,
+        cache_key,
+        settings,
     )
 
 
 async def _query_sazonalidade_snapshot(
-    uf, municipio, produto, status_cor, categoria,
-    pagina, por_pagina, offset_val, cache_key, settings,
+    uf,
+    municipio,
+    produto,
+    status_cor,
+    categoria,
+    pagina,
+    por_pagina,
+    offset_val,
+    cache_key,
+    settings,
 ) -> SazonalidadeListResponse:
     where_clauses = ["1=1"]
     params = []
@@ -102,7 +138,7 @@ async def _query_sazonalidade_snapshot(
     """
     params.extend([offset_val, por_pagina])
 
-    total_row = await fetchrow(count_query, *params[:idx-1])
+    total_row = await fetchrow(count_query, *params[: idx - 1])
     total = total_row["total"] if total_row else 0
 
     if total == 0:
@@ -118,9 +154,18 @@ _HIST_CACHE_TTL = 86_400  # 24h — dados históricos imutáveis
 
 
 async def _query_sazonalidade_por_mes(
-    ano: int, mes: int,
-    uf, municipio, produto, status_cor, categoria,
-    pagina, por_pagina, offset_val, _cache_key, settings,
+    ano: int,
+    mes: int,
+    uf,
+    municipio,
+    produto,
+    status_cor,
+    categoria,
+    pagina,
+    por_pagina,
+    offset_val,
+    _cache_key,
+    settings,
 ) -> SazonalidadeListResponse:
     # Chave: apenas dimensões imutáveis — sem produto, status_cor, paginação
     hist_parts = [str(ano), str(mes), uf or "", municipio or "", categoria or ""]
@@ -134,23 +179,25 @@ async def _query_sazonalidade_por_mes(
 
     full = []
     for i, r in enumerate(rows):
-        full.append(SazonalidadeResponse(
-            id_produto=i + 1,
-            nome_produto=r["produto"],
-            icone_url=None,
-            uf=r["uf"],
-            municipio=r.get("municipio"),
-            municipio_id=r.get("municipio_id"),
-            ano=r["ano"],
-            mes=r["mes"],
-            data_referencia_atual=r["data_referencia_atual"],
-            preco_referencia=r.get("preco_referencia"),
-            preco_atual=r.get("preco_atual"),
-            usou_fallback_12m=r.get("usou_fallback_12m", False),
-            status_cor=r["status_cor"],
-            fonte=r["fonte"],
-            categoria=r.get("categoria"),
-        ).model_dump())
+        full.append(
+            SazonalidadeResponse(
+                id_produto=i + 1,
+                nome_produto=r["produto"],
+                icone_url=None,
+                uf=r["uf"],
+                municipio=r.get("municipio"),
+                municipio_id=r.get("municipio_id"),
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r["data_referencia_atual"],
+                preco_referencia=r.get("preco_referencia"),
+                preco_atual=r.get("preco_atual"),
+                usou_fallback_12m=r.get("usou_fallback_12m", False),
+                status_cor=r["status_cor"],
+                fonte=r["fonte"],
+                categoria=r.get("categoria"),
+            ).model_dump()
+        )
 
     cache.set(hist_key, full, _HIST_CACHE_TTL)
 
@@ -168,7 +215,7 @@ def _slice_periodo(full_dicts, produto, status_cor, pagina, por_pagina):
 
     total = len(filtered)
     start = (pagina - 1) * por_pagina
-    page = [SazonalidadeResponse(**d) for d in filtered[start:start + por_pagina]]
+    page = [SazonalidadeResponse(**d) for d in filtered[start : start + por_pagina]]
     return SazonalidadeListResponse(data=page, total=total, pagina=pagina, por_pagina=por_pagina)
 
 
@@ -266,23 +313,25 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
 def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
     items = []
     for r in rows:
-        items.append(SazonalidadeResponse(
-            id_produto=r.get("id_sazonalidade", 0),
-            nome_produto=r["produto"],
-            icone_url=None,
-            uf=r["uf"],
-            municipio=r.get("municipio"),
-            municipio_id=r.get("municipio_id"),
-            ano=r["ano"],
-            mes=r["mes"],
-            data_referencia_atual=r["data_referencia_atual"],
-            preco_referencia=r.get("preco_referencia"),
-            preco_atual=r.get("preco_atual"),
-            usou_fallback_12m=r.get("usou_fallback_12m", False),
-            status_cor=r["status_cor"],
-            fonte=r["fonte"],
-            categoria=r.get("categoria"),
-        ))
+        items.append(
+            SazonalidadeResponse(
+                id_produto=r.get("id_sazonalidade", 0),
+                nome_produto=r["produto"],
+                icone_url=None,
+                uf=r["uf"],
+                municipio=r.get("municipio"),
+                municipio_id=r.get("municipio_id"),
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r["data_referencia_atual"],
+                preco_referencia=r.get("preco_referencia"),
+                preco_atual=r.get("preco_atual"),
+                usou_fallback_12m=r.get("usou_fallback_12m", False),
+                status_cor=r["status_cor"],
+                fonte=r["fonte"],
+                categoria=r.get("categoria"),
+            )
+        )
 
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
@@ -294,7 +343,7 @@ async def listar_sazonalidade(
     uf: str | None = Query(None, min_length=2, max_length=2, description="UF (BR-2)"),
     municipio: str | None = Query(None, description="Nome do municipio"),
     produto: str | None = Query(None, description="Nome do produto"),
-    status_cor: str | None = Query(None, pattern=r'^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$'),
+    status_cor: str | None = Query(None, pattern=r"^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$"),
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
     ano: int | None = Query(None, ge=2020, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
@@ -302,9 +351,15 @@ async def listar_sazonalidade(
     por_pagina: int = Query(100, ge=1, le=500),
 ):
     return await _query_sazonalidade(
-        uf=uf, municipio=municipio, produto=produto, status_cor=status_cor,
+        uf=uf,
+        municipio=municipio,
+        produto=produto,
+        status_cor=status_cor,
         categoria=categoria,
-        ano=ano, mes=mes, pagina=pagina, por_pagina=por_pagina,
+        ano=ano,
+        mes=mes,
+        pagina=pagina,
+        por_pagina=por_pagina,
     )
 
 
@@ -319,6 +374,11 @@ async def listar_por_localidade(
     por_pagina: int = Query(100, ge=1, le=500),
 ):
     return await _query_sazonalidade(
-        uf=uf, municipio=municipio, categoria=categoria,
-        ano=ano, mes=mes, pagina=pagina, por_pagina=por_pagina,
+        uf=uf,
+        municipio=municipio,
+        categoria=categoria,
+        ano=ano,
+        mes=mes,
+        pagina=pagina,
+        por_pagina=por_pagina,
     )

@@ -19,25 +19,37 @@ logger = logging.getLogger(__name__)
 
 # Mapeamento esperado de colunas após normalização
 _EXPECTED_COLUMNS_UF = {
-    "produto", "uf", "ano", "mes", "preco_medio",
+    "produto",
+    "uf",
+    "ano",
+    "mes",
+    "preco_medio",
 }
 _EXPECTED_COLUMNS_MUN = {
-    "produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio",
+    "produto",
+    "municipio_id",
+    "municipio_nome",
+    "uf",
+    "ano",
+    "mes",
+    "preco_medio",
 }
 
 
 def _normalize_column_names(df: pl.DataFrame) -> pl.DataFrame:
     """Remove espaços, converte para snake_case lowercase."""
-    return df.rename(
-        {c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns}
-    )
+    return df.rename({c: c.strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns})
 
 
 def _parse_price_column(df: pl.DataFrame, col: str) -> pl.DataFrame:
     """Converte string 'X,XX' para Float64."""
     if df[col].dtype == pl.Utf8:
         df = df.with_columns(
-            pl.col(col).str.strip_chars().str.replace(",", ".").cast(pl.Float64, strict=False).alias(col)
+            pl.col(col)
+            .str.strip_chars()
+            .str.replace(",", ".")
+            .cast(pl.Float64, strict=False)
+            .alias(col)
         )
     return df
 
@@ -50,10 +62,12 @@ def _remove_outliers_zscore(df: pl.DataFrame, col: str, threshold: float = 3.0) 
     e gere uma falsa recomendação de "VERDE" no semáforo.
     """
     group_cols = ["produto", "municipio_id"] if "municipio_id" in df.columns else ["produto", "uf"]
-    df = df.with_columns([
-        pl.col(col).mean().over(group_cols).alias("_mean"),
-        pl.col(col).std().over(group_cols).alias("_std"),
-    ])
+    df = df.with_columns(
+        [
+            pl.col(col).mean().over(group_cols).alias("_mean"),
+            pl.col(col).std().over(group_cols).alias("_std"),
+        ]
+    )
     df = df.filter(
         ((pl.col(col) - pl.col("_mean")) / pl.col("_std").fill_null(1.0)).abs() < threshold
     ).drop(["_mean", "_std"])
@@ -88,12 +102,14 @@ def load_uf_file(path: Path) -> pl.DataFrame:
     df = _parse_price_column(df, "preco_medio")
 
     # Garantir tipos corretos
-    df = df.with_columns([
-        pl.col("ano").cast(pl.Int32, strict=False),
-        pl.col("mes").cast(pl.Int32, strict=False),
-        pl.col("uf").str.strip_chars().str.to_uppercase(),
-        pl.col("produto").str.strip_chars().str.to_uppercase(),
-    ])
+    df = df.with_columns(
+        [
+            pl.col("ano").cast(pl.Int32, strict=False),
+            pl.col("mes").cast(pl.Int32, strict=False),
+            pl.col("uf").str.strip_chars().str.to_uppercase(),
+            pl.col("produto").str.strip_chars().str.to_uppercase(),
+        ]
+    )
 
     # Remover linhas inválidas
     df = df.filter(
@@ -143,19 +159,25 @@ def load_municipio_file(path: Path) -> pl.DataFrame:
         df = df.rename({id_col: "municipio_id"})
 
     # Detectar coluna de nome do município
-    nome_col = next((c for c in df.columns if "municipio" in c and "id" not in c and "nome" in c), None)
+    nome_col = next(
+        (c for c in df.columns if "municipio" in c and "id" not in c and "nome" in c), None
+    )
     if nome_col and nome_col != "municipio_nome":
         df = df.rename({nome_col: "municipio_nome"})
 
     df = _parse_price_column(df, "preco_medio")
 
-    df = df.with_columns([
-        pl.col("ano").cast(pl.Int32, strict=False),
-        pl.col("mes").cast(pl.Int32, strict=False),
-        pl.col("uf").str.strip_chars().str.to_uppercase(),
-        pl.col("produto").str.strip_chars().str.to_uppercase(),
-        pl.col("municipio_nome").str.strip_chars().str.to_titlecase() if "municipio_nome" in df.columns else pl.lit(None).alias("municipio_nome"),
-    ])
+    df = df.with_columns(
+        [
+            pl.col("ano").cast(pl.Int32, strict=False),
+            pl.col("mes").cast(pl.Int32, strict=False),
+            pl.col("uf").str.strip_chars().str.to_uppercase(),
+            pl.col("produto").str.strip_chars().str.to_uppercase(),
+            pl.col("municipio_nome").str.strip_chars().str.to_titlecase()
+            if "municipio_nome" in df.columns
+            else pl.lit(None).alias("municipio_nome"),
+        ]
+    )
 
     df = df.filter(
         pl.col("preco_medio").is_not_null()
@@ -180,4 +202,6 @@ def load_municipio_file(path: Path) -> pl.DataFrame:
             df = df.with_columns(pl.lit(None).cast(pl.Utf8).alias(c))
 
     logger.info("Município cleaned shape: %s", df.shape)
-    return df.select(["produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio"])
+    return df.select(
+        ["produto", "municipio_id", "municipio_nome", "uf", "ano", "mes", "preco_medio"]
+    )

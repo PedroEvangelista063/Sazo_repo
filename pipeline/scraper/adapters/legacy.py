@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import asyncio
 import logging
 import re
-from datetime import date, datetime
+from datetime import datetime
 
 import httpx
 from bs4 import BeautifulSoup
@@ -25,13 +24,35 @@ HEADERS = {
 }
 
 RE_UNIDADE = re.compile(r"\s+\d+[A-Za-z].*$")
-RE_CEASA = re.compile(
-    r"CEASA[-\s]*(?P<sigla>[A-Z]{2})\s+(?P<cidade>.+?)\s*\((?P<uf>[A-Z]{2})\)"
-)
+RE_CEASA = re.compile(r"CEASA[-\s]*(?P<sigla>[A-Z]{2})\s+(?P<cidade>.+?)\s*\((?P<uf>[A-Z]{2})\)")
 UF_LIST = [
-    "ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg",
-    "ms", "mt", "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr",
-    "rs", "sc", "se", "sp", "to",
+    "ac",
+    "al",
+    "am",
+    "ap",
+    "ba",
+    "ce",
+    "df",
+    "es",
+    "go",
+    "ma",
+    "mg",
+    "ms",
+    "mt",
+    "pa",
+    "pb",
+    "pe",
+    "pi",
+    "pr",
+    "rj",
+    "rn",
+    "ro",
+    "rr",
+    "rs",
+    "sc",
+    "se",
+    "sp",
+    "to",
 ]
 
 
@@ -119,17 +140,19 @@ class AgrolinkCEASAAdapter(ScraperAdapter):
                             continue
                         seen.add(dedup_key)
 
-                        results.append(CotacaoHistorica(
-                            produto_original=produto_clean,
-                            uf=uf_ceasa,
-                            municipio=municipio,
-                            ano=dt.year,
-                            mes=dt.month,
-                            preco_bruto=preco,
-                            fator_kg=fator,
-                            fonte="Agrolink CEASA",
-                            data_coleta=dt.date().isoformat(),
-                        ))
+                        results.append(
+                            CotacaoHistorica(
+                                produto_original=produto_clean,
+                                uf=uf_ceasa,
+                                municipio=municipio,
+                                ano=dt.year,
+                                mes=dt.month,
+                                preco_bruto=preco,
+                                fator_kg=fator,
+                                fonte="Agrolink CEASA",
+                                data_coleta=dt.date().isoformat(),
+                            )
+                        )
                 except Exception as e:
                     logger.warning("Agrolink %s falhou: %s", uf, e)
                     continue

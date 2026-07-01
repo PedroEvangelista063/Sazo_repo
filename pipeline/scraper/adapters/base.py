@@ -5,8 +5,7 @@ import logging
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import date, datetime
-from typing import Any
+from datetime import date
 
 logger = logging.getLogger(__name__)
 
@@ -15,17 +14,34 @@ RE_UNIDADE_EMBALAGEM = re.compile(
 )
 
 UNIDADES_PADRAO: dict[str, float] = {
-    "kg": 1.0, "quilograma": 1.0, "quilo": 1.0,
-    "g": 0.001, "grama": 0.001,
-    "ton": 1000.0, "tonelada": 1000.0,
-    "cx 20kg": 20.0, "cx 22kg": 22.0, "cx 25kg": 25.0, "cx 30kg": 30.0,
-    "cx": 1.0, "caixa": 1.0,
-    "saco 25 kg": 25.0, "saco 25kg": 25.0, "saco 50 kg": 50.0, "saco 50kg": 50.0,
-    "saco": 1.0, "sacaria": 1.0,
+    "kg": 1.0,
+    "quilograma": 1.0,
+    "quilo": 1.0,
+    "g": 0.001,
+    "grama": 0.001,
+    "ton": 1000.0,
+    "tonelada": 1000.0,
+    "cx 20kg": 20.0,
+    "cx 22kg": 22.0,
+    "cx 25kg": 25.0,
+    "cx 30kg": 30.0,
+    "cx": 1.0,
+    "caixa": 1.0,
+    "saco 25 kg": 25.0,
+    "saco 25kg": 25.0,
+    "saco 50 kg": 50.0,
+    "saco 50kg": 50.0,
+    "saco": 1.0,
+    "sacaria": 1.0,
     "fardo": 1.0,
-    "dz": 1.0, "duzia": 1.0, "dúzia": 1.0,
-    "pc": 1.0, "pto": 1.0,
-    "un": 1.0, "und": 1.0, "unidade": 1.0,
+    "dz": 1.0,
+    "duzia": 1.0,
+    "dúzia": 1.0,
+    "pc": 1.0,
+    "pto": 1.0,
+    "un": 1.0,
+    "und": 1.0,
+    "unidade": 1.0,
 }
 
 
@@ -65,8 +81,7 @@ class BaseAdapter(ABC):
     mes: int | None = None
 
     @abstractmethod
-    async def fetch(self) -> list[CotacaoRegional]:
-        ...
+    async def fetch(self) -> list[CotacaoRegional]: ...
 
     def normalizar_unidade(self, descricao: str) -> float:
         if not descricao:

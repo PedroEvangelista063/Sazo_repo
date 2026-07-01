@@ -13,13 +13,17 @@ async def verify_api_key(x_api_key: Optional[str] = Header(None)) -> None:
         raise HTTPException(status_code=403, detail="Forbidden")
 
 
-@router.get("/cache-clear", response_model=CacheClearResponse, dependencies=[Depends(verify_api_key)])
+@router.get(
+    "/cache-clear", response_model=CacheClearResponse, dependencies=[Depends(verify_api_key)]
+)
 async def cache_clear():
     await clear_cache()
     return CacheClearResponse(success=True, message="Cache liberado com sucesso")
 
 
-@router.post("/cache-clear", response_model=CacheClearResponse, dependencies=[Depends(verify_api_key)])
+@router.post(
+    "/cache-clear", response_model=CacheClearResponse, dependencies=[Depends(verify_api_key)]
+)
 async def cache_clear_post():
     await clear_cache()
     return CacheClearResponse(success=True, message="Cache liberado com sucesso")

@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import asyncio
 import json
 import logging
 import re
-from datetime import datetime
 
 import httpx
 
@@ -26,17 +24,65 @@ PROHORT_URLS = {
 }
 
 PRODUTOS_PROHORT = [
-    "ABACATE", "ABACAXI", "ALFACE", "BANANA", "BATATA", "BATATA DOCE",
-    "BETERRABA", "CENOURA", "CEBOLA", "COUVE", "COUVE-FLOR", "ESPINAFRE",
-    "FEIJAO", "GOIABA", "LARANJA", "LIMAO", "MACA", "MAMAO", "MANDIOCA",
-    "MANGA", "MELANCIA", "MILHO", "MORANGO", "PEPINO", "PIMENTAO",
-    "REPOLHO", "TOMATE", "UVA", "VAGEM",
+    "ABACATE",
+    "ABACAXI",
+    "ALFACE",
+    "BANANA",
+    "BATATA",
+    "BATATA DOCE",
+    "BETERRABA",
+    "CENOURA",
+    "CEBOLA",
+    "COUVE",
+    "COUVE-FLOR",
+    "ESPINAFRE",
+    "FEIJAO",
+    "GOIABA",
+    "LARANJA",
+    "LIMAO",
+    "MACA",
+    "MAMAO",
+    "MANDIOCA",
+    "MANGA",
+    "MELANCIA",
+    "MILHO",
+    "MORANGO",
+    "PEPINO",
+    "PIMENTAO",
+    "REPOLHO",
+    "TOMATE",
+    "UVA",
+    "VAGEM",
 ]
 
 UF_LIST = [
-    "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
-    "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN",
-    "RO", "RR", "RS", "SC", "SE", "SP", "TO",
+    "AC",
+    "AL",
+    "AM",
+    "AP",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MG",
+    "MS",
+    "MT",
+    "PA",
+    "PB",
+    "PE",
+    "PI",
+    "PR",
+    "RJ",
+    "RN",
+    "RO",
+    "RR",
+    "RS",
+    "SC",
+    "SE",
+    "SP",
+    "TO",
 ]
 
 
@@ -118,9 +164,7 @@ class ProHortAdapter(BaseAdapter):
                 continue
         return ""
 
-    def _parse_json_response(
-        self, data: list[dict] | dict, seen: set
-    ) -> list[CotacaoRegional]:
+    def _parse_json_response(self, data: list[dict] | dict, seen: set) -> list[CotacaoRegional]:
         resultados: list[CotacaoRegional] = []
         registros = data if isinstance(data, list) else data.get("data", data.get("dados", []))
 
@@ -140,15 +184,8 @@ class ProHortAdapter(BaseAdapter):
 
         return resultados
 
-    def _json_item_para_cotacao(
-        self, item: dict, seen: set
-    ) -> CotacaoRegional | None:
-        produto_raw = (
-            item.get("produto")
-            or item.get("nome_produto")
-            or item.get("descricao")
-            or ""
-        )
+    def _json_item_para_cotacao(self, item: dict, seen: set) -> CotacaoRegional | None:
+        produto_raw = item.get("produto") or item.get("nome_produto") or item.get("descricao") or ""
         if not produto_raw:
             return None
 
@@ -180,24 +217,14 @@ class ProHortAdapter(BaseAdapter):
         )
         periodo = self.extrair_periodo(data_raw)
 
-        uf_item = (
-            item.get("uf")
-            or item.get("estado")
-            or item.get("sigla_uf")
-            or self.uf
-        )
+        uf_item = item.get("uf") or item.get("estado") or item.get("sigla_uf") or self.uf
         municipio_item = (
             item.get("municipio")
             or item.get("cidade")
             or item.get("municipio_nome")
             or self.municipio
         )
-        unidade = (
-            item.get("unidade")
-            or item.get("unidade_medida")
-            or item.get("und")
-            or ""
-        )
+        unidade = item.get("unidade") or item.get("unidade_medida") or item.get("und") or ""
         fator = self.normalizar_unidade(unidade)
 
         if self.uf != "BR" and uf_item.upper() != self.uf:
@@ -230,6 +257,7 @@ class ProHortAdapter(BaseAdapter):
 
     def _parse_html_response(self, html: str, seen: set) -> list[CotacaoRegional]:
         from bs4 import BeautifulSoup
+
         resultados: list[CotacaoRegional] = []
         if not html:
             return resultados
@@ -238,7 +266,9 @@ class ProHortAdapter(BaseAdapter):
         script_tags = soup.find_all("script")
         for script in script_tags:
             if script.string and "data" in script.string.lower():
-                m = re.search(r"(data|dados|datasets)\s*[=:]\s*(\[.*?\])\s*[;,\n]", script.string, re.DOTALL)
+                m = re.search(
+                    r"(data|dados|datasets)\s*[=:]\s*(\[.*?\])\s*[;,\n]", script.string, re.DOTALL
+                )
                 if m:
                     try:
                         raw = m.group(2)
@@ -247,7 +277,9 @@ class ProHortAdapter(BaseAdapter):
                         dados = json.loads(raw)
                         if isinstance(dados, list):
                             for item in dados:
-                                c = self._json_item_para_cotacao(item if isinstance(item, dict) else {}, seen)
+                                c = self._json_item_para_cotacao(
+                                    item if isinstance(item, dict) else {}, seen
+                                )
                                 if c:
                                     resultados.append(c)
                     except (json.JSONDecodeError, Exception):
@@ -274,16 +306,18 @@ class ProHortAdapter(BaseAdapter):
                         continue
                     seen.add(dedup_key)
 
-                    resultados.append(CotacaoRegional(
-                        produto_original=produto_raw,
-                        produto_normalizado=produto_norm,
-                        uf=self.uf,
-                        municipio=self.municipio,
-                        fonte=self.fonte,
-                        preco_medio=preco,
-                        preco_bruto=preco,
-                        status_coleta="sucesso",
-                    ))
+                    resultados.append(
+                        CotacaoRegional(
+                            produto_original=produto_raw,
+                            produto_normalizado=produto_norm,
+                            uf=self.uf,
+                            municipio=self.municipio,
+                            fonte=self.fonte,
+                            preco_medio=preco,
+                            preco_bruto=preco,
+                            status_coleta="sucesso",
+                        )
+                    )
 
         logger.info("ProHort HTML parse: %d cotacoes", len(resultados))
         return resultados

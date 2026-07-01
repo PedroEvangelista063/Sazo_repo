@@ -13,8 +13,6 @@ Regra da Sala de Estar:
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -54,10 +52,15 @@ class SazonalidadeResponse(BaseModel):
     uf: str = Field(..., min_length=2, max_length=2)
     municipio: str | None = Field(None, description="Nome do município")
     municipio_id: str | None = Field(None, description="Código IBGE do município")
-    ano: int = Field(..., ge=2000, le=2100, description="Ano do preço atual (derivado de data_referencia_atual)")
-    mes: int = Field(..., ge=1, le=12, description="Mês do preço atual (derivado de data_referencia_atual)")
+    ano: int = Field(
+        ..., ge=2000, le=2100, description="Ano do preço atual (derivado de data_referencia_atual)"
+    )
+    mes: int = Field(
+        ..., ge=1, le=12, description="Mês do preço atual (derivado de data_referencia_atual)"
+    )
     data_referencia_atual: str = Field(
-        ..., pattern=r"^\d{4}-\d{2}$",
+        ...,
+        pattern=r"^\d{4}-\d{2}$",
         description="Data do último preço registrado (YYYY-MM)",
     )
     preco_referencia: float | None = Field(
@@ -70,11 +73,14 @@ class SazonalidadeResponse(BaseModel):
         ..., description="True se a âncora veio do fallback 12m (produto sem 2025)"
     )
     status_cor: str = Field(
-        ..., pattern=r"^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$",
+        ...,
+        pattern=r"^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$",
         description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra)",
     )
     fonte: str | None = Field(None, pattern=r"^(municipio|uf)$")
-    categoria: str | None = Field(None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)")
+    categoria: str | None = Field(
+        None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)"
+    )
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
 
@@ -114,9 +120,7 @@ class ErrorResponse(BaseModel):
     """Estrutura padrão de erro HTTP para a API."""
 
     detail: str = Field(..., description="Mensagem de erro legıvel")
-    codigo: str | None = Field(
-        None, description="Código interno do erro (ex: 'UF_INVALIDA')"
-    )
+    codigo: str | None = Field(None, description="Código interno do erro (ex: 'UF_INVALIDA')")
 
     model_config = ConfigDict(frozen=True)
 

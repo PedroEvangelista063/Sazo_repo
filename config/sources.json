@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "generated": "2026-07-01",
+    "total_sources": 14,
+    "viable": 12,
+    "not_viable": 2,
+    "classification_criteria": "A=JSON_API, B=WAF_STEALTH, C=ASP_POSTBACK, D=AGENTIC_HTML"
+  },
+  "sources": [
+    {
+      "name": "CONAB Pentaho API",
+      "url": "https://pentahoportaldeinformacoes.conab.gov.br/pentaho/api/repos/:home:PROHORT:precoDia.wcdf/generatedContent?userid=pentaho&password=password",
+      "active": true,
+      "category": "a_json",
+      "adapter": "XhrInterceptorAdapter",
+      "uf": "BR",
+      "municipio": "Nacional",
+      "fonte": "CONAB-Pentaho",
+      "notes": "Pentaho API. Retorna HTML por padrao; tentar JSON com Accept header ou parametro output-type=json"
+    },
+    {
+      "name": "Agrolink CEASA SP",
+      "url": "https://www.agrolink.com.br/cotacoes/ceasa/ceasa---sp/",
+      "active": true,
+      "category": "b_stealth",
+      "adapter": "PlaywrightStealthAdapter",
+      "uf": "SP",
+      "municipio": "Sao Paulo",
+      "fonte": "Agrolink CEASA",
+      "notes": "Cloudflare. Requer Playwright com stealth plugins."
+    },
+    {
+      "name": "CEAGESP Cotacao",
+      "url": "https://ceagesp.gov.br/cotacoes/",
+      "active": true,
+      "category": "b_stealth",
+      "adapter": "PlaywrightStealthAdapter",
+      "uf": "SP",
+      "municipio": "Sao Paulo",
+      "fonte": "CEAGESP",
+      "notes": "JS-renderizado. Requer Playwright."
+    },
+    {
+      "name": "Calculadora Rural CEASA",
+      "url": "https://calculadorarural.com.br/ceasa",
+      "active": true,
+      "category": "b_stealth",
+      "adapter": "PlaywrightStealthAdapter",
+      "uf": "BR",
+      "municipio": "Nacional",
+      "fonte": "Calculadora Rural",
+      "notes": "Pode ter Cloudflare."
+    },
+    {
+      "name": "CEPEA Banco de Dados",
+      "url": "https://cepea.org.br/br/consultas-ao-banco-de-dados-do-site.aspx",
+      "active": true,
+      "category": "c_postback",
+      "adapter": "LegacyPostbackAdapter",
+      "uf": "SP",
+      "municipio": "Piracicaba",
+      "fonte": "CEPEA",
+      "notes": "ASP.NET WebForms. Requer __VIEWSTATE postback via Playwright."
+    },
+    {
+      "name": "CEASA PR Hoje",
+      "url": "https://celepar7.pr.gov.br/ceasa/hoje.asp",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "PR",
+      "municipio": "Curitiba",
+      "fonte": "CEASA-PR",
+      "notes": "Legado ASP. Responde com tabela HTML limpa."
+    },
+    {
+      "name": "CEASA ES",
+      "url": "http://200.198.51.71/detec/boletim_completo_es/boletim_completo_es.php",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "ES",
+      "municipio": "Vitoria",
+      "fonte": "CEASA-ES",
+      "notes": "IP fixo. Resposta pequena (1KB) — verificar conteudo real."
+    },
+    {
+      "name": "CEASA MG Minas1",
+      "url": "https://minas1.ceasa.mg.gov.br/ceasainternet/cst_precosmaiscomumEstados/cst_precosmaiscomumEstados.php",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "MG",
+      "municipio": "Contagem",
+      "fonte": "CEASA-MG",
+      "notes": "PHP legado. Tabela de precos por estado."
+    },
+    {
+      "name": "CEASA PE",
+      "url": "https://www.ceasape.org.br/cotacao/hortalicas?data=06/01/2025",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "PE",
+      "municipio": "Recife",
+      "fonte": "CEASA-PE",
+      "notes": "Tabela com data no query param. Parametro data deve ser atualizado dinamicamente."
+    },
+    {
+      "name": "CEASA RN",
+      "url": "https://transparencia.ceasa.rn.gov.br/cotacoes",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "RN",
+      "municipio": "Natal",
+      "fonte": "CEASA-RN",
+      "notes": "Pagina grande (1MB) com tabelas de cotacao."
+    },
+    {
+      "name": "CEASA MS Boletins",
+      "url": "https://www.ceasa.ms.gov.br/boletim-2026/",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "MS",
+      "municipio": "Campo Grande",
+      "fonte": "CEASA-MS",
+      "notes": "Galeria de boletins (PDF links). Precisa de parser extra para extrair links de PDF."
+    },
+    {
+      "name": "CEASA PR Cotacao 2025",
+      "url": "https://www.ceasa.pr.gov.br/Pagina/Cotacao-Diaria-de-Precos-2025",
+      "active": true,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "PR",
+      "municipio": "Curitiba",
+      "fonte": "CEASA-PR",
+      "notes": "Pagina institucional com tabela de cotacao diaria. Pode precisar de ano dinamico."
+    },
+    {
+      "name": "CEASA MS 2025",
+      "url": "https://www.ceasa.ms.gov.br/boletim-2025/",
+      "active": false,
+      "category": "d_agentic",
+      "adapter": "AgenticHtmlAdapter",
+      "uf": "MS",
+      "municipio": "Campo Grande",
+      "fonte": "CEASA-MS",
+      "notes": "Mesmo padrao do boletim-2026. Manter inativo se 2026 estiver ativo."
+    },
+    {
+      "name": "Goias Procon PDF",
+      "url": "https://goias.gov.br/procon/wp-content/uploads/sites/19/2017/03/hortifrutti-2017.pdf",
+      "active": false,
+      "category": "pdf",
+      "adapter": "none",
+      "uf": "GO",
+      "municipio": "Goiania",
+      "fonte": "PROCON-GO",
+      "notes": "PDF estatico de 2017. Dado historico nao automatizavel para coleta diaria."
+    }
+  ],
+  "adapter_map": {
+    "XhrInterceptorAdapter": ["a_json"],
+    "PlaywrightStealthAdapter": ["b_stealth"],
+    "LegacyPostbackAdapter": ["c_postback"],
+    "AgenticHtmlAdapter": ["d_agentic"]
+  }
+}

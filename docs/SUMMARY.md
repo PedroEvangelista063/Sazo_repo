@@ -6,6 +6,8 @@
 |---|---|
 | [README.md](./README.md) | Visão geral, setup, user journey, semáforo de sazonalidade |
 | [AGENTS.md](./AGENTS.md) | Regras da casa para OpenCode/GGA |
+| [AUDITORIA_BANCO_FRONTEND.md](./AUDITORIA_BANCO_FRONTEND.md) | Auditoria de dados: staging → mart → API → frontend |
+| [PROMPT_AUDITORIA_ENRIQUECIMENTO.md](./PROMPT_AUDITORIA_ENRIQUECIMENTO.md) | Auditoria e enriquecimento completo do projeto |
 
 ## Arquitetura
 

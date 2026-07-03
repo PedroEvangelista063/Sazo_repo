@@ -1,4 +1,4 @@
-export type StatusCor = 'VERDE' | 'AMARELO' | 'VERMELHO' | 'INSUFICIENTE'
+export type StatusCor = 'VERDE' | 'AMARELO' | 'VERMELHO'
 export type StatusOferta = 'OFERTA' | 'EQUILIBRADO' | 'ALTA' | 'INSUFICIENTE'
 
 export interface ProdutoVarejo {

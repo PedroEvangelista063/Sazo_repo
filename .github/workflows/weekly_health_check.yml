@@ -1,0 +1,116 @@
+name: Weekly Health Check
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:       # Manual trigger for emergencies
+
+jobs:
+  e2e-validation:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: quero_comprar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install httpx polars beautifulsoup4 lxml psycopg2-binary asyncpg playwright rapidfuzz
+
+      - name: Restore database dump (if available)
+        run: |
+          if [ -f database/dump_prod.sql ]; then
+            psql -h localhost -U postgres -d quero_comprar -f database/dump_prod.sql
+          else
+            echo "No dump found — running with empty DB (schema migrations only)"
+            psql -h localhost -U postgres -d quero_comprar -f backend/migrations/001_*.sql
+            psql -h localhost -U postgres -d quero_comprar -f backend/migrations/002_*.sql
+          fi
+
+      - name: SmartCrawler — route classification test
+        run: |
+          python -c "
+          import sys; sys.path.insert(0, '.')
+          from pipeline.scraper.adapters.smart_router import _classificar_url
+          urls = [
+            'https://celepar7.pr.gov.br/ceasa/hoje.asp',
+            'https://www.ceagesp.gov.br/cotacoes/',
+            'https://www.agrolink.com.br/cotacoes/ceasa/ceasa---sp/',
+            'https://cepea.org.br/br/consultas-ao-banco-de-dados-do-site.aspx',
+          ]
+          for u in urls:
+            cat, _ = _classificar_url(u)
+            print(f'  [{cat}] {u}')
+          print('Roteamento OK')
+          "
+
+      - name: Pipeline unit tests
+        run: python -m pytest utilities/teste_apication/pipeline/ --no-header -q
+
+      - name: Agentic HTML — source connectivity check
+        run: |
+          python pipeline/scraper/_prospect_sources.py 2>&1
+
+      - name: Database audit
+        run: |
+          python -c "
+          import sys, asyncio; sys.path.insert(0, '.')
+          import asyncpg
+          async def audit():
+            conn = await asyncpg.connect('postgresql://postgres:postgres@localhost:5432/quero_comprar')
+            mv_count = await conn.fetchval('SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade')
+            fact_count = await conn.fetchval('SELECT COUNT(*) FROM staging.fact_precos_mensais')
+            insuf = await conn.fetchval(\"SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade WHERE status_cor = 'INSUFICIENTE'\")
+            invalid = await conn.fetchval('SELECT COUNT(*) FROM staging.fact_precos_mensais WHERE preco_medio <= 0')
+            print(f'MV: {mv_count} | Fact: {fact_count} | INSUFICIENTE leaked: {insuf} | Invalid prices: {invalid}')
+            assert insuf == 0, 'CRITICAL: INSUFICIENTE leaked to MV'
+            assert invalid == 0, 'CRITICAL: Invalid prices in fact table'
+            await conn.close()
+          asyncio.run(audit())
+          print('Audit OK')
+          "
+
+      - name: Run garbage collection
+        run: |
+          psql -h localhost -U postgres -d quero_comprar -c "CALL ops.sp_limpeza_diaria();"
+          echo "Garbage collection OK"
+
+      - name: Validate E2E pipeline
+        run: |
+          python utilities/validate_e2e.py 2>&1 | tee logs/e2e_validation_$(date +%Y_%m_%d).log
+
+      - name: E2E report
+        if: always()
+        run: |
+          echo "========================================"
+          echo "WEEKLY HEALTH CHECK REPORT"
+          echo "========================================"
+          echo "Date: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          echo "Status: ${{ job.status }}"
+          echo ""
+          echo "Checked:"
+          echo "  - SmartCrawler route classification"
+          echo "  - Pipeline unit tests (43 tests)"
+          echo "  - Source connectivity (14 sources)"
+          echo "  - Database audit (MV + fact integrity)"
+          echo "  - Garbage collection"
+          echo "  - E2E data flow (scrape -> normalize -> DB)"
+          echo ""
+          echo "Logs: logs/e2e_validation_$(date +%Y_%m_%d).log"

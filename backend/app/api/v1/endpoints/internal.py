@@ -3,6 +3,7 @@ from typing import Optional
 from backend.app.schemas.responses import CacheClearResponse
 from backend.app.core.cache import clear_cache
 from backend.app.core.config import get_settings
+from backend.app.core.events import broadcaster
 
 router = APIRouter(prefix="/_internal", tags=["Internal"])
 
@@ -27,3 +28,9 @@ async def cache_clear():
 async def cache_clear_post():
     await clear_cache()
     return CacheClearResponse(success=True, message="Cache liberado com sucesso")
+
+
+@router.post("/etl-done", dependencies=[Depends(verify_api_key)])
+async def etl_done():
+    await broadcaster.publish("ETL_FINISHED")
+    return {"status": "ok", "event": "ETL_FINISHED"}

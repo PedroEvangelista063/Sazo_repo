@@ -16,7 +16,7 @@ from pipeline.scraper.ceasa_spider import CotacaoHistorica
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CSV_PATH = PROJECT_ROOT / "dados_sazonliza_dados_bruto" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
+CSV_PATH = PROJECT_ROOT / "database" / "processed_data" / "01_raw" / "Planilha sem t\u00edtulo - sazonalidade_produtos.csv"
 ALIASES_PATH = Path(__file__).resolve().parent / "aliases.json"
 UNMATCHED_LOG = PROJECT_ROOT / "logs" / "unmatched_items.log"
 

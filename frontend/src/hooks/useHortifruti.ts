@@ -10,7 +10,6 @@ const STATUS_ORDER: Record<string, number> = {
   VERDE: 0,
   AMARELO: 1,
   VERMELHO: 2,
-  INSUFICIENTE: 3,
 }
 
 function sortByStatus(products: ProdutoVarejo[]): ProdutoVarejo[] {

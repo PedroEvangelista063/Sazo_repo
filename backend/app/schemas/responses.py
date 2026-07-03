@@ -13,6 +13,7 @@ Regra da Sala de Estar:
 
 from __future__ import annotations
 
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -72,10 +73,9 @@ class SazonalidadeResponse(BaseModel):
     usou_fallback_12m: bool = Field(
         ..., description="True se a âncora veio do fallback 12m (produto sem 2025)"
     )
-    status_cor: str = Field(
+    status_cor: Literal['VERDE', 'AMARELO', 'VERMELHO'] = Field(
         ...,
-        pattern=r"^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$",
-        description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra)",
+        description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra) - Trindade Estrita",
     )
     fonte: str | None = Field(None, pattern=r"^(municipio|uf)$")
     categoria: str | None = Field(

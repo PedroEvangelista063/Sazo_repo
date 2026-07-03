@@ -46,13 +46,13 @@ export function CategoriesModal({
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
 
       <div
-        className="relative w-full max-w-lg rounded-2xl border border-white/20 p-6 shadow-2xl sm:mx-4 sm:max-h-[80vh] sm:overflow-y-auto"
+        className="relative w-full max-w-lg rounded-2xl p-6 shadow-2xl sm:mx-4 sm:max-h-[80vh] sm:overflow-y-auto"
         style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05))',
+          background: 'linear-gradient(135deg, var(--glass-bg-start), var(--glass-bg-end))',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.18)',
-          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+          border: '1px solid var(--glass-border)',
+          boxShadow: 'var(--glass-shadow)',
         }}
       >
         <div className="mb-5 flex items-center justify-between">
@@ -60,20 +60,20 @@ export function CategoriesModal({
             {drillCategory ? (
               <button
                 onClick={() => { setDrillCategory(null) }}
-                className="text-sm font-semibold text-green-700 hover:text-green-600"
+                className="text-sm font-semibold text-green-700 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
               >
                 Voltar
               </button>
             ) : (
-              <Layers className="h-5 w-5 text-green-600" />
+              <Layers className="h-5 w-5 text-green-600 dark:text-green-400" />
             )}
-            <h2 className="text-lg font-bold text-gray-900">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
               {drillCategory ? (drillCategory.replace(/_/g, ' ')) : 'Categorias'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/40 text-gray-600 hover:bg-white/60"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/40 text-gray-600 hover:bg-white/60 dark:bg-gray-700/40 dark:text-gray-400 dark:hover:bg-gray-700/60"
           >
             <X size={18} />
           </button>
@@ -91,20 +91,20 @@ export function CategoriesModal({
               <button
                 key={cat.nome}
                 onClick={() => setDrillCategory(cat.nome)}
-                className="flex w-full items-center gap-3 rounded-xl bg-white/40 px-4 py-3.5 text-left transition-all hover:bg-white/60"
+                className="flex w-full items-center gap-3 rounded-xl bg-white/40 px-4 py-3.5 text-left transition-all hover:bg-white/60 dark:bg-gray-700/40 dark:hover:bg-gray-700/60"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 text-xl shadow-sm">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 text-xl shadow-sm dark:bg-gray-700/60">
                   {cat.icone || '📆'}
                 </span>
                 <div className="flex-1">
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                     {cat.nome.replace(/_/g, ' ')}
                   </p>
-                  <p className="line-clamp-1 text-xs text-gray-500">
+                  <p className="line-clamp-1 text-xs text-gray-500 dark:text-gray-400">
                     {cat.descricao || `${cat.total_produtos} produtos`}
                   </p>
                 </div>
-                <span className="rounded-full bg-white/50 px-2.5 py-0.5 text-xs font-bold text-green-700">
+                <span className="rounded-full bg-white/50 px-2.5 py-0.5 text-xs font-bold text-green-700 dark:bg-gray-700/50 dark:text-green-400">
                   {cat.total_produtos}
                 </span>
                 <ChevronRight size={16} className="text-gray-400" />
@@ -116,13 +116,13 @@ export function CategoriesModal({
         {!isLoading && drillCategory && (
           <div>
             {catMap[drillCategory] && (
-              <p className="mb-3 text-xs text-gray-500">
+              <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
                 {catMap[drillCategory].descricao}
               </p>
             )}
 
             {drillProdutos.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+              <div className="flex flex-col items-center justify-center py-10 text-gray-400 dark:text-gray-500">
                 <Search size={32} className="mb-2 opacity-50" />
                 <p className="text-sm">Nenhum produto disponivel nesta categoria</p>
               </div>
@@ -137,20 +137,20 @@ export function CategoriesModal({
                     onClick={() => onToggleProduct(prod)}
                     className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left transition-all ${
                       isSelected
-                        ? 'bg-green-500/20'
-                        : 'bg-white/30 hover:bg-white/50'
+                        ? 'bg-green-500/20 dark:bg-green-500/20'
+                        : 'bg-white/30 hover:bg-white/50 dark:bg-gray-700/30 dark:hover:bg-gray-700/50'
                     }`}
                   >
                     <span
                       className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold ${
                         isSelected
                           ? 'bg-green-500 text-white'
-                          : 'bg-white/60 text-gray-600'
+                          : 'bg-white/60 text-gray-600 dark:bg-gray-700/60 dark:text-gray-400'
                       }`}
                     >
                       {isSelected ? <Check size={14} /> : <Plus size={14} />}
                     </span>
-                    <span className="flex-1 text-sm font-medium text-gray-800">
+                    <span className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">
                       {prod}
                     </span>
                   </button>
@@ -160,8 +160,8 @@ export function CategoriesModal({
           </div>
         )}
 
-        <div className="mt-4 rounded-xl bg-white/40 px-4 py-3 text-center">
-          <p className="text-xs text-gray-500">
+        <div className="mt-4 rounded-xl bg-white/40 px-4 py-3 text-center dark:bg-gray-700/40">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {selectedProducts.length > 0
               ? `${selectedProducts.length} produto${selectedProducts.length === 1 ? '' : 's'} na lista`
               : 'Toque nos produtos para adicionar a sua lista'}

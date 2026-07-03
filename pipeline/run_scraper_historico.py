@@ -19,8 +19,9 @@ from pipeline.scraper.ceasa_spider import (
     CotacaoHistorica,
 )
 from pipeline.scraper.data_normalizer import DataNormalizer
-from pipeline.scraper.adapters import AgrolinkCEASAAdapter
+from pipeline.scraper.adapters import AgrolinkCEASAAdapter, CotacaoRegional
 from pipeline.scraper.price_collector import PriceCollector
+from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,9 +32,22 @@ logger = logging.getLogger(__name__)
 
 OUTPUT = RAW_DIR / "scraper_hortifruti_historico.parquet"
 STAGING_COLUNAS = ["produto", "uf", "municipio", "ano", "mes", "valor_produto_kg"]
+STAGING_COLUNAS_FUZZY = ["produto", "uf", "municipio", "ano", "mes", "valor_produto_kg", "is_fuzzy", "match_score"]
+STAGING_SCHEMA = {
+    "produto": pl.String,
+    "uf": pl.String,
+    "municipio": pl.String,
+    "ano": pl.Int32,
+    "mes": pl.Int32,
+    "valor_produto_kg": pl.Float64,
+    "is_fuzzy": pl.Boolean,
+    "match_score": pl.Float64,
+}
 
 QUALIDADE_MINIMA_PCT = float(os.environ.get("QUALIDADE_MINIMA_PCT", "97.0"))
 DATABASE_URL: str = os.environ.get(
+    "DATABASE_URL_ETL",
+) or os.environ.get(
     "DATABASE_URL",
     "postgresql://postgres:postgres@localhost:5432/quero_comprar",
 )
@@ -173,14 +187,21 @@ def _load_mes_into_fact(
     loc_map = mapping["localidades"]
     batch_id = str(uuid.uuid4())
 
+    col_produto = "produto"
+    col_uf = "uf"
+    col_ano = "ano"
+    col_mes = "mes"
+    col_preco = "valor_produto_kg"
+    has_fuzzy = "is_fuzzy" in df_mes.columns
+
     rows: list[tuple] = []
     seen: set[tuple] = set()
-    for row in df_mes.iter_rows():
-        produto = row[0]
-        uf = row[1]
-        ano = row[3]
-        mes = row[4]
-        preco = row[5]
+    for row_dict in df_mes.iter_rows(named=True):
+        produto = row_dict.get(col_produto, "")
+        uf = row_dict.get(col_uf, "")
+        ano = row_dict.get(col_ano, 0)
+        mes = row_dict.get(col_mes, 0)
+        preco = row_dict.get(col_preco, 0.0)
 
         id_prod = prod_map.get(produto)
         id_loc = loc_map.get(uf)
@@ -228,12 +249,29 @@ def _executar_ciclo_medalhao(conn) -> None:
     logger.info("Ciclo medalhao concluido em %.1fs", time.perf_counter() - t0)
 
 
-# ── Scraper ─────────────────────────────────────────────────────────
+def _notificar_backend_etl_fim() -> None:
+    """Notifica o backend via POST interno que o ETL terminou."""
+    import httpx
 
+    api_url = os.environ.get("INTERNAL_API_URL", "http://127.0.0.1:8000")
+    api_key = os.environ.get("INTERNAL_API_KEY", "")
+    url = f"{api_url.rstrip('/')}/api/v1/_internal/etl-done"
+    headers = {}
+    if api_key:
+        headers["x-api-key"] = api_key
+    try:
+        resp = httpx.post(url, headers=headers, timeout=5.0)
+        logger.info("Notificacao backend ETL_FINISHED: %s %s", resp.status_code, resp.text)
+    except Exception:
+        logger.warning("Nao foi possivel notificar backend (ETL rodando standalone?)", exc_info=True)
+
+
+# ── Scraper ─────────────────────────────────────────────────────────
 
 def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) -> pl.DataFrame:
     if not items:
-        return pl.DataFrame(schema={c: pl.String for c in STAGING_COLUNAS})
+        logger.warning("formatar_staging: lista vazia, sem dados para processar")
+        return pl.DataFrame(schema=STAGING_SCHEMA)
 
     df = pl.DataFrame(
         {
@@ -247,31 +285,104 @@ def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) 
         }
     )
 
-    df_norm = normalizer.normalizar_lote(items)
-    df_norm = df_norm.filter(pl.col("match_score") >= 70.0)
+    df_norm = normalizer.normalizar_lote(items, cutoff=0.0)
 
-    if df_norm.height == 0:
-        logger.warning("Nenhum item passou no normalizer (score >= 70)")
-        return pl.DataFrame(schema={c: pl.String for c in STAGING_COLUNAS})
-
-    df_norm = df_norm.with_columns(
-        pl.col("ano").cast(pl.Int32),
-        pl.col("mes").cast(pl.Int32),
-        pl.col("valor_produto_kg").cast(pl.Float64),
+    total = df_norm.height
+    descartados_preco = df_norm.filter(pl.col("valor_produto_kg") <= 0).height
+    descartados_nome = df_norm.filter(
+        (pl.col("match_score") == 0.0) & (pl.col("produto") == "")
+    ).height
+    descartados_score = df_norm.filter(
+        (pl.col("match_score") > 0.0) & (pl.col("match_score") < 70.0)
+    ).height
+    df_high = df_norm.filter(pl.col("match_score") >= 70.0)
+    df_fuzzy = df_norm.filter(
+        (pl.col("match_score") >= 50.0) & (pl.col("match_score") < 70.0)
     )
 
-    aggregated = df_norm.group_by(["produto", "uf", "municipio", "ano", "mes"]).agg(
-        pl.col("valor_produto_kg").mean().round(4).alias("valor_produto_kg"),
+    logger.info(
+        "Normalizer: total=%d | high(>=70)=%d | fuzzy(50-70)=%d | "
+        "desc-nome=%d | desc-preco=%d | desc-score=%d",
+        total, df_high.height, df_fuzzy.height,
+        descartados_nome, descartados_preco, descartados_score,
     )
 
-    logger.info("Staging: %d linhas apos agregacao (normalizer)", aggregated.height)
-    return aggregated.select(STAGING_COLUNAS)
+    if df_high.height == 0 and df_fuzzy.height == 0:
+        logger.warning("Nenhum item passou no normalizer (score < 50)")
+        return pl.DataFrame(schema=STAGING_SCHEMA)
+
+    def _aggregate(df_in: pl.DataFrame, fuzzy: bool) -> pl.DataFrame:
+        if df_in.height == 0:
+            return pl.DataFrame(schema=STAGING_SCHEMA)
+        df_in = df_in.with_columns(
+            pl.col("ano").cast(pl.Int32),
+            pl.col("mes").cast(pl.Int32),
+            pl.col("valor_produto_kg").cast(pl.Float64),
+        )
+        out = df_in.group_by(["produto", "uf", "municipio", "ano", "mes"]).agg(
+            pl.col("valor_produto_kg").mean().round(4).alias("valor_produto_kg"),
+        )
+        out = out.with_columns(
+            pl.lit(fuzzy).alias("is_fuzzy"),
+            pl.lit(0.0).cast(pl.Float64).alias("match_score"),
+        )
+        if fuzzy:
+            score_agg = df_in.group_by(["produto", "uf", "municipio", "ano", "mes"]).agg(
+                pl.col("match_score").mean().round(1).alias("match_score"),
+            )
+            out = out.update(score_agg, on=["produto", "uf", "municipio", "ano", "mes"])
+        return out.select(STAGING_COLUNAS_FUZZY)
+
+    df_high_agg = _aggregate(df_high, fuzzy=False)
+    df_fuzzy_agg = _aggregate(df_fuzzy, fuzzy=True)
+
+    if df_high_agg.height == 0 and df_fuzzy_agg.height == 0:
+        return pl.DataFrame(schema=STAGING_SCHEMA)
+    resultado = (
+        df_high_agg
+        if df_fuzzy_agg.height == 0
+        else df_fuzzy_agg
+        if df_high_agg.height == 0
+        else pl.concat([df_high_agg, df_fuzzy_agg])
+    ).unique()
+    logger.info(
+        "Staging: %d high + %d fuzzy = %d total",
+        df_high_agg.height, df_fuzzy_agg.height, resultado.height,
+    )
+    return resultado
+
+
+# ── SmartCrawler Bridge ──────────────────────────────────────────────
+
+def _cotacao_regional_para_historica(
+    regionais: dict[str, list[CotacaoRegional]],
+) -> list[CotacaoHistorica]:
+    historicas: list[CotacaoHistorica] = []
+    for url, items in regionais.items():
+        for item in items:
+            historicas.append(
+                CotacaoHistorica(
+                    produto_original=item.produto_original,
+                    uf=item.uf or "",
+                    municipio=item.municipio or "",
+                    ano=item.ano or 0,
+                    mes=item.mes or 0,
+                    preco_bruto=item.preco_bruto,
+                    fator_kg=item.fator_kg,
+                    fonte=item.fonte or url,
+                )
+            )
+    return historicas
 
 
 async def _coletar_mes(
-    meses: list[tuple[int, int]], collector: PriceCollector, normalizer: DataNormalizer
+    meses: list[tuple[int, int]],
+    collector: PriceCollector,
+    normalizer: DataNormalizer,
+    smartcrawler_alvos: list[str] | None = None,
 ) -> list[pl.DataFrame]:
     blocos: list[pl.DataFrame] = []
+    crawler = SmartCrawler2026()
     for ano, mes in meses:
         logger.info("--- Coletando %04d/%02d ---", ano, mes)
         collector.definir_mes_alvo(ano, mes)
@@ -282,6 +393,30 @@ async def _coletar_mes(
             (df.height / metricas.total_bruto * 100) if metricas.total_bruto > 0 else 0.0
         )
         print(metricas.relatorio())
+
+        # Date fallback: se coletou 0 brutos, tenta mes anterior
+        if len(items) == 0:
+            mes_fallback = mes - 1 if mes > 1 else 12
+            ano_fallback = ano if mes > 1 else ano - 1
+            logger.info("FALLBACK DATA: %04d/%02d -> %04d/%02d", ano, mes, ano_fallback, mes_fallback)
+            collector.definir_mes_alvo(ano_fallback, mes_fallback)
+            items_fb, _ = await collector.collect_all()
+            if items_fb:
+                df_fb = formatar_staging(items_fb, normalizer)
+                if df_fb.height > 0:
+                    logger.info("Fallback data recuperou %d registros", df_fb.height)
+                    df = df_fb if df.height == 0 else pl.concat([df, df_fb]).unique()
+
+        # SmartCrawler: alvos que o PriceCollector legacy nao cobre
+        if smartcrawler_alvos:
+            logger.info("SmartCrawler: %d alvos adicionais...", len(smartcrawler_alvos))
+            sc_resultados = await crawler.executar_alvos(smartcrawler_alvos)
+            sc_items = _cotacao_regional_para_historica(sc_resultados)
+            if sc_items:
+                sc_df = formatar_staging(sc_items, normalizer)
+                df = pl.concat([df, sc_df]).unique() if df.height > 0 else sc_df
+                logger.info("SmartCrawler: +%d registros apos fuzzy", sc_df.height)
+
         if df.height > 0:
             blocos.append(df)
         logger.info("--- %04d/%02d: %d registros apos fuzzy ---", ano, mes, df.height)
@@ -403,8 +538,17 @@ async def main() -> NoReturn:
     normalizer = DataNormalizer(fuzzy_cutoff=75.0)
     normalizer.carregar_csv()
 
+    # SmartCrawler: alvos que exigem Playwright stealth / agentic html
+    smartcrawler_alvos = [
+        "cepea", "cepea_banco", "ceasa_pr", "ceasa_pr_hoje", "ceasa_pr_2025",
+        "ceasa_mg", "ceasa_mg_minas1", "conab", "conab_pentaho",
+        "ceasa_es", "ceasa_pe", "ceasa_rn", "ceasa_ms",
+        "calculadorarural",
+    ]
+    logger.info("SmartCrawler: %d alvos adicionais", len(smartcrawler_alvos))
+
     # ── 3. Raspar ────────────────────────────────────────────────
-    blocos = await _coletar_mes(meses_para_raspar, collector, normalizer)
+    blocos = await _coletar_mes(meses_para_raspar, collector, normalizer, smartcrawler_alvos)
 
     if not blocos:
         logger.warning("Nenhum dado coletado em nenhum mes.")
@@ -456,6 +600,7 @@ async def main() -> NoReturn:
         if meses_ok > 0 and not meses_falha > meses_ok:
             try:
                 _executar_ciclo_medalhao(conn)
+                _notificar_backend_etl_fim()
             except Exception:
                 conn.rollback()
                 logger.exception("Ciclo medalhao falhou")

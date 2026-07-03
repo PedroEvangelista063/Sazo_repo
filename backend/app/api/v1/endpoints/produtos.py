@@ -187,8 +187,8 @@ async def _query_sazonalidade_por_mes(
                 uf=r["uf"],
                 municipio=r.get("municipio"),
                 municipio_id=r.get("municipio_id"),
-                ano=r["ano"],
-                mes=r["mes"],
+                ano=ano,
+                mes=mes,
                 data_referencia_atual=r["data_referencia_atual"],
                 preco_referencia=r.get("preco_referencia"),
                 preco_atual=r.get("preco_atual"),
@@ -220,91 +220,43 @@ def _slice_periodo(full_dicts, produto, status_cor, pagina, por_pagina):
 
 
 async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
-    periodo = ano * 12 + mes
-    params = [ano, mes, periodo]
-    idx = 4
+    params = [ano, mes]
+    idx = 3
 
     dim = []
     if uf:
-        dim.append(f"l.uf = ${idx}")
+        dim.append(f"v.uf = ${idx}")
         params.append(uf.upper())
         idx += 1
     if municipio:
-        dim.append(f"l.municipio_nome ILIKE ${idx}")
+        dim.append(f"v.municipio ILIKE ${idx}")
         params.append(f"%{municipio}%")
         idx += 1
     if categoria:
-        dim.append(f"c.nome_categoria = ${idx}")
+        dim.append(f"v.categoria = ${idx}")
         params.append(categoria.upper())
         idx += 1
 
     dim_sql = " AND ".join(dim) if dim else "1=1"
 
     sql = f"""
-        WITH precos_mes AS (
-            SELECT DISTINCT ON (f.id_produto, f.id_localidade)
-                f.id_produto,
-                f.id_localidade,
-                f.preco_medio AS preco_atual
-            FROM staging.fact_precos_mensais f
-            WHERE f.ano = $1 AND f.mes = $2 AND f.preco_medio IS NOT NULL
-        ),
-        baseline AS (
-            SELECT id_produto, id_localidade, media_interpolada
-            FROM staging.baseline_2025_interpolado
-            WHERE peso_confianca >= 0.50 AND media_interpolada IS NOT NULL
-        ),
-        fallback AS (
-            SELECT
-                f2.id_produto,
-                f2.id_localidade,
-                AVG(f2.preco_medio) AS preco_fallback_12m
-            FROM staging.fact_precos_mensais f2
-            WHERE f2.preco_medio IS NOT NULL
-              AND (f2.ano * 12 + f2.mes) > ($3 - 12)
-              AND (f2.ano * 12 + f2.mes) < $3
-            GROUP BY f2.id_produto, f2.id_localidade
-            HAVING COUNT(*) >= 3
-        ),
-        semaforo AS (
-            SELECT
-                p.id_produto,
-                p.id_localidade,
-                p.preco_atual,
-                COALESCE(b.media_interpolada, f.preco_fallback_12m) AS preco_referencia,
-                (b.media_interpolada IS NULL AND f.preco_fallback_12m IS NOT NULL) AS usou_fallback_12m,
-                CASE
-                    WHEN COALESCE(b.media_interpolada, f.preco_fallback_12m) IS NULL THEN 'INSUFICIENTE'
-                    WHEN COALESCE(b.media_interpolada, f.preco_fallback_12m) = 0 THEN 'INSUFICIENTE'
-                    WHEN p.preco_atual IS NULL THEN 'INSUFICIENTE'
-                    WHEN p.preco_atual < COALESCE(b.media_interpolada, f.preco_fallback_12m) * 0.85 THEN 'VERDE'
-                    WHEN p.preco_atual > COALESCE(b.media_interpolada, f.preco_fallback_12m) * 1.15 THEN 'VERMELHO'
-                    ELSE 'AMARELO'
-                END AS status_cor
-            FROM precos_mes p
-            LEFT JOIN baseline b ON b.id_produto = p.id_produto AND b.id_localidade = p.id_localidade
-            LEFT JOIN fallback f ON f.id_produto = p.id_produto AND f.id_localidade = p.id_localidade
-        )
         SELECT
-            p.nome_produto AS produto,
-            COALESCE(c.nome_categoria, 'ALIMENTO_VAREJO') AS categoria,
-            l.uf,
-            l.municipio_nome AS municipio,
-            l.municipio_id,
-            $1::INTEGER AS ano,
-            $2::INTEGER AS mes,
-            $1::TEXT || '-' || LPAD($2::TEXT, 2, '0') AS data_referencia_atual,
-            s.preco_referencia,
-            s.preco_atual,
-            s.usou_fallback_12m,
-            s.status_cor,
-            CASE WHEN l.municipio_nome IS NOT NULL THEN 'municipio' ELSE 'uf' END AS fonte
-        FROM semaforo s
-        JOIN staging.dim_produto p ON p.id_produto = s.id_produto
-        JOIN staging.dim_localidade l ON l.id_localidade = s.id_localidade
-        LEFT JOIN staging.dim_categoria c ON c.id_categoria = p.id_categoria
+            v.produto,
+            v.categoria,
+            v.uf,
+            v.municipio,
+            v.municipio_id,
+            $1::INTEGER AS ano_pesquisa,
+            $2::INTEGER AS mes_pesquisa,
+            v.data_referencia_atual,
+            v.preco_referencia,
+            v.preco_atual,
+            v.usou_fallback_12m,
+            v.status_cor,
+            v.fonte
+        FROM mart.vw_api_produtos_sazonalidade v
         WHERE {dim_sql}
-        ORDER BY s.status_cor, p.nome_produto
+        ORDER BY v.status_cor, v.produto
     """
 
     return await fetch(sql, *params)
@@ -343,7 +295,7 @@ async def listar_sazonalidade(
     uf: str | None = Query(None, min_length=2, max_length=2, description="UF (BR-2)"),
     municipio: str | None = Query(None, description="Nome do municipio"),
     produto: str | None = Query(None, description="Nome do produto"),
-    status_cor: str | None = Query(None, pattern=r"^(VERDE|AMARELO|VERMELHO|INSUFICIENTE)$"),
+    status_cor: str | None = Query(None, pattern=r"^(VERDE|AMARELO|VERMELHO)$"),
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
     ano: int | None = Query(None, ge=2020, le=2030),
     mes: int | None = Query(None, ge=1, le=12),

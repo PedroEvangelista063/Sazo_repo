@@ -79,8 +79,9 @@ class TestSeasonalityMunicipio:
 class TestFallback:
     def test_fallback_aplica_dado_uf_para_insuficiente(self):
         """Municípios com INSUFICIENTE devem receber dado de UF como fallback."""
-        # 3 meses apenas (insuficiente)
+        # 3 meses apenas (insuficiente) no fim do ano para UF ter janela suficiente
         mun_df_raw = _make_municipio_df("TOMATE", "9999999", "TO", [10.0] * 3)
+        mun_df_raw = mun_df_raw.with_columns(pl.col("mes") + 6)
         from pipeline.seasonality import calculate_seasonality_municipio, calculate_seasonality_uf
 
         # Construir df_mun com status INSUFICIENTE
@@ -105,6 +106,7 @@ class TestFallback:
     def test_fonte_atualizada_apos_fallback(self):
         """Linhas com fallback devem ter fonte='uf'."""
         mun_df_raw = _make_municipio_df("CEBOLA", "8888888", "BA", [5.0] * 3)
+        mun_df_raw = mun_df_raw.with_columns(pl.col("mes") + 6)
         mun_season = calculate_seasonality_municipio(mun_df_raw)
 
         uf_raw = pl.DataFrame({

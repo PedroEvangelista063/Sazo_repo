@@ -12,6 +12,17 @@ from pipeline.scraper.adapters.legacy import (
     adapter_discovery,
 )
 
+# New generation adapters (2026)
+from pipeline.scraper.adapters.stealth import (
+    XhrInterceptorAdapter,
+    PlaywrightStealthAdapter,
+    LegacyPostbackAdapter,
+    BaseTargetAdapter,
+    executar_adapters_playwright,
+)
+from pipeline.scraper.adapters.agentic_html import AgenticHtmlAdapter, coletar_multiplos_agentic
+from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS
+
 __all__ = [
     "BaseAdapter",
     "CotacaoRegional",
@@ -24,4 +35,13 @@ __all__ = [
     "HFBrasilAdapter",
     "CEAGESPAdapter",
     "adapter_discovery",
+    "XhrInterceptorAdapter",
+    "PlaywrightStealthAdapter",
+    "LegacyPostbackAdapter",
+    "BaseTargetAdapter",
+    "executar_adapters_playwright",
+    "AgenticHtmlAdapter",
+    "coletar_multiplos_agentic",
+    "SmartCrawler2026",
+    "ALVOS_CONHECIDOS",
 ]

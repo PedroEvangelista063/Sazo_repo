@@ -1,5 +1,9 @@
+import { useTheme } from './hooks/useTheme'
+import { useDataStream } from './hooks/useDataStream'
 import { SupermercadoView } from './pages/SupermercadoView'
 
 export default function App() {
-  return <SupermercadoView />
+  const { isDark, toggleTheme } = useTheme()
+  useDataStream()
+  return <SupermercadoView isDark={isDark} onToggleTheme={toggleTheme} />
 }

@@ -1,0 +1,39 @@
+2026-07-01 17:56:24,951 [INFO] [AgenticHtml] Tentando https://celepar7.pr.gov.br/ceasa/hoje.asp
+2026-07-01 17:56:25,284 [INFO] HTTP Request: GET https://celepar7.pr.gov.br/ceasa/hoje.asp "HTTP/1.1 200 OK"
+2026-07-01 17:56:25,424 [INFO] Aliases carregados: 130 entradas
+2026-07-01 17:56:25,425 [INFO] DataNormalizer: 477 itens carregados, 489 tokens indexados, 130 aliases
+2026-07-01 17:56:25,551 [INFO] Normalizer: total=259 | high(>=70)=251 | fuzzy(50-70)=0 | desc-nome=8 | desc-preco=47 | desc-score=0
+2026-07-01 17:56:25,552 [INFO] Staging: 143 high + 0 fuzzy = 143 total
+============================================================
+VALIDACAO E2E - COLETA -> NORMALIZER -> DB
+============================================================
+
+[1/4] COLETA: CEASA PR Hoje (celepar7)...
+  Extraidos: 259 itens brutos
+    ABACATE BREDA  cx 20 kg                  R$ 60.0
+    ABACATE COMUM cx 20 kg                   R$ 0.0
+    ABACATE GEADA cx 20 kg                   R$ 55.0
+    ABACATE MANTEIGA cx 20 kg                R$ 60.0
+    ABACATE MARGARIDA cx 20 kg               R$ 0.0
+
+[2/4] NORMALIZACAO...
+  Staging: 143 linhas (143 high + 0 fuzzy)
+    ('Caqui Fuyu', 'PR', 'Curitiba', 2026, 7, 52.5, False, 0.0)
+    ('Nectarina Importada', 'PR', 'Curitiba', 2026, 7, 40.0, False, 0.0)
+    ('Salsa', 'PR', 'Curitiba', 2026, 7, 4.515, False, 0.0)
+    ('Quiabo', 'PR', 'Curitiba', 2026, 7, 46.6667, False, 0.0)
+    ('Manga Haden', 'PR', 'Curitiba', 2026, 7, 0.0, False, 0.0)
+
+[3/4] CARGA NO BANCO...
+  Inseridas/atualizadas: 128 linhas (batch=2110757d)
+
+[4/4] VERIFICACAO...
+  Registros com batch_id 2110757d: 120
+    Melancia                       PR  R$ 0.50
+    Manga Tommy                    PR  R$ 50.00
+    Tomate Carmem                  PR  R$ 95.00
+    Uva Niagara                    PR  R$ 50.00
+    Batata Yakon                   PR  R$ 32.50
+  Total geral na fact_precos_mensais: 23921
+
+VALIDACAO E2E CONCLUIDA - dados coletados, normalizados e persistidos

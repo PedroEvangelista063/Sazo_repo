@@ -7,7 +7,8 @@ from app.core.config import get_settings
 
 async def main():
     settings = get_settings()
-    conn = await asyncpg.connect(settings.database_url)
+    db_url = settings.database_url_etl or settings.database_url
+    conn = await asyncpg.connect(db_url)
     try:
         sql = open("database/05_recalibracao_baseline_2025.sql", encoding="utf-8").read()
         await conn.execute(sql)

@@ -3,18 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from backend.app.core.config import get_settings
 from backend.app.core.ratelimit import RateLimitMiddleware
-from backend.app.db.session import get_pool, close_pool
+from backend.app.db.session import get_api_pool, get_etl_pool, close_pools
 from backend.app.api.v1.endpoints.produtos import router as produtos_router
 from backend.app.api.v1.endpoints.categorias import router as categorias_router
 from backend.app.api.v1.endpoints.internal import router as internal_router
 from backend.app.api.v1.endpoints.municipios import router as municipios_router
+from backend.app.api.v1.endpoints.stream import router as stream_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await get_pool()
+    await get_api_pool()
+    await get_etl_pool()
     yield
-    await close_pool()
+    await close_pools()
 
 
 settings = get_settings()
@@ -43,6 +45,7 @@ app.include_router(produtos_router, prefix=settings.api_v1_prefix)
 app.include_router(categorias_router, prefix=settings.api_v1_prefix)
 app.include_router(internal_router, prefix=settings.api_v1_prefix)
 app.include_router(municipios_router, prefix=settings.api_v1_prefix)
+app.include_router(stream_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/health")

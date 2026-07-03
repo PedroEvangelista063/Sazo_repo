@@ -1,3 +1,4 @@
 {
-  "utilities/teste_apication/pipeline/test_seasonality.py::TestFallback::test_fallback_aplica_dado_uf_para_insuficiente": true
+  "pipeline/tests/test_preditiva.py::TestZeroNullTolerance::test_threshold_85_1_porcento_verde": true,
+  "pipeline/tests/test_preditiva.py::TestZeroNullTolerance::test_threshold_115_1_porcento_vermelho": true
 }

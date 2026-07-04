@@ -1,9 +1,9 @@
 {
   "ano": 2026,
   "mes": 7,
-  "cobertura_pct": 71.15,
-  "status": "LOADED",
-  "linhas_carregadas": 646,
-  "timestamp": "2026-07-03T14:19:14.534001",
-  "batch_id": "2d11cae4-a92e-4058-bf74-e786b5b02deb"
+  "cobertura_pct": 0.0,
+  "status": "FAILED",
+  "linhas_carregadas": 0,
+  "timestamp": "2026-07-03T19:10:55.396719",
+  "batch_id": "6ded5697-3756-42b7-b1cd-e3a1a8f0941e"
 }

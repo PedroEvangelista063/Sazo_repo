@@ -129,6 +129,7 @@ async def _query_sazonalidade_snapshot(
             v.preco_atual,
             v.data_referencia_atual,
             v.usou_fallback_12m,
+            v.preco_estimado,
             v.status_cor,
             v.fonte
         FROM mart.vw_api_produtos_sazonalidade v
@@ -193,10 +194,11 @@ async def _query_sazonalidade_por_mes(
                 preco_referencia=r.get("preco_referencia"),
                 preco_atual=r.get("preco_atual"),
                 usou_fallback_12m=r.get("usou_fallback_12m", False),
+                preco_estimado=r.get("preco_estimado", False),
                 status_cor=r["status_cor"],
                 fonte=r["fonte"],
                 categoria=r.get("categoria"),
-            ).model_dump()
+            )
         )
 
     cache.set(hist_key, full, _HIST_CACHE_TTL)
@@ -215,7 +217,9 @@ def _slice_periodo(full_dicts, produto, status_cor, pagina, por_pagina):
 
     total = len(filtered)
     start = (pagina - 1) * por_pagina
-    page = [SazonalidadeResponse(**d) for d in filtered[start : start + por_pagina]]
+    page = filtered[start : start + por_pagina]
+    if page and isinstance(page[0], dict):
+        page = [SazonalidadeResponse(**d) for d in page]
     return SazonalidadeListResponse(data=page, total=total, pagina=pagina, por_pagina=por_pagina)
 
 
@@ -252,6 +256,7 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
             v.preco_referencia,
             v.preco_atual,
             v.usou_fallback_12m,
+            v.preco_estimado,
             v.status_cor,
             v.fonte
         FROM mart.vw_api_produtos_sazonalidade v
@@ -279,6 +284,7 @@ def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
                 preco_referencia=r.get("preco_referencia"),
                 preco_atual=r.get("preco_atual"),
                 usou_fallback_12m=r.get("usou_fallback_12m", False),
+                preco_estimado=r.get("preco_estimado", False),
                 status_cor=r["status_cor"],
                 fonte=r["fonte"],
                 categoria=r.get("categoria"),

@@ -9,7 +9,7 @@ import sys
 import time
 import uuid
 from datetime import date, datetime
-from typing import Any, NoReturn
+from typing import Any
 
 import polars as pl
 
@@ -22,6 +22,11 @@ from pipeline.scraper.data_normalizer import DataNormalizer
 from pipeline.scraper.adapters import AgrolinkCEASAAdapter, CotacaoRegional
 from pipeline.scraper.price_collector import PriceCollector
 from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS
+from pipeline.scraper.transport import (
+    BrowserConfig,
+    EngineType,
+    SelfHealingOrganism,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -380,9 +385,10 @@ async def _coletar_mes(
     collector: PriceCollector,
     normalizer: DataNormalizer,
     smartcrawler_alvos: list[str] | None = None,
+    organism: SelfHealingOrganism | None = None,
 ) -> list[pl.DataFrame]:
     blocos: list[pl.DataFrame] = []
-    crawler = SmartCrawler2026()
+    crawler = SmartCrawler2026(organism=organism)
     for ano, mes in meses:
         logger.info("--- Coletando %04d/%02d ---", ano, mes)
         collector.definir_mes_alvo(ano, mes)
@@ -410,7 +416,7 @@ async def _coletar_mes(
         # SmartCrawler: alvos que o PriceCollector legacy nao cobre
         if smartcrawler_alvos:
             logger.info("SmartCrawler: %d alvos adicionais...", len(smartcrawler_alvos))
-            sc_resultados = await crawler.executar_alvos(smartcrawler_alvos)
+            sc_resultados = await crawler.executar_alvos(smartcrawler_alvos, ano=ano, mes=mes)
             sc_items = _cotacao_regional_para_historica(sc_resultados)
             if sc_items:
                 sc_df = formatar_staging(sc_items, normalizer)
@@ -441,38 +447,19 @@ def _separar_por_mes(df: pl.DataFrame) -> dict[tuple[int, int], pl.DataFrame]:
 # ── Main ────────────────────────────────────────────────────────────
 
 
-async def main() -> NoReturn:
+async def main() -> None:
     parser = argparse.ArgumentParser(description="Scraper + Carga Medalhao — Qualidade Progressiva")
-    parser.add_argument(
-        "--descobrir",
-        action="store_true",
-        help="Executa descoberta de novas fontes antes da coleta",
-    )
-    parser.add_argument(
-        "--concorrencia", type=int, default=4, help="Maximo de requisicoes simultaneas"
-    )
-    parser.add_argument(
-        "--desde", type=str, default=None, help="Mes inicial (YYYY-MM). Omitir = mes corrente"
-    )
-    parser.add_argument(
-        "--ate", type=str, default=None, help="Mes final (YYYY-MM). Omitir = mes corrente"
-    )
-    parser.add_argument(
-        "--qualidade-minima",
-        type=float,
-        default=QUALIDADE_MINIMA_PCT,
-        help="%% minima de cobertura para ignorar mes (0-100)",
-    )
-    parser.add_argument(
-        "--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range"
-    )
+    parser.add_argument("--descobrir", action="store_true", help="Executa descoberta de novas fontes antes da coleta")
+    parser.add_argument("--concorrencia", type=int, default=4, help="Maximo de requisicoes simultaneas")
+    parser.add_argument("--desde", type=str, default=None, help="Mes inicial (YYYY-MM). Omitir = mes corrente")
+    parser.add_argument("--ate", type=str, default=None, help="Mes final (YYYY-MM). Omitir = mes corrente")
+    parser.add_argument("--qualidade-minima", type=float, default=QUALIDADE_MINIMA_PCT, help="%% minima de cobertura para ignorar mes (0-100)")
+    parser.add_argument("--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range")
     parser.add_argument("--db-url", type=str, default=DATABASE_URL, help="PostgreSQL URL")
-    parser.add_argument(
-        "--skip-load", action="store_true", help="So salva parquet, nao carrega no banco"
-    )
+    parser.add_argument("--skip-load", action="store_true", help="So salva parquet, nao carrega no banco")
     args = parser.parse_args()
 
-    logger.info("=== SCRAPER REGIONAL + CARGA MEDALHAO ===")
+    logger.info("=== SCRAPER REGIONAL + CARGA MEDALHAO (w/ SelfHealingOrganism) ===")
     logger.info("Qualidade minima: %.1f%% | DB: %s", args.qualidade_minima, args.db_url)
 
     hoje = date.today()
@@ -480,12 +467,7 @@ async def main() -> NoReturn:
         ano_inicio, mes_inicio = (int(x) for x in args.desde.split("-"))
         ano_fim, mes_fim = (int(x) for x in (args.ate or args.desde).split("-"))
         meses_planejados = _iterar_meses(ano_inicio, mes_inicio, ano_fim, mes_fim)
-        logger.info(
-            "Range: %d meses (%s a %s)",
-            len(meses_planejados),
-            args.desde,
-            f"{ano_fim:04d}-{mes_fim:02d}",
-        )
+        logger.info("Range: %d meses (%s a %s)", len(meses_planejados), args.desde, f"{ano_fim:04d}-{mes_fim:02d}")
     else:
         meses_planejados = [(hoje.year, hoje.month)]
 
@@ -496,16 +478,11 @@ async def main() -> NoReturn:
     else:
         try:
             import asyncpg
-
             if sys.platform == "win32":
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
             conn = await asyncpg.connect(args.db_url)
             try:
-                meses_para_raspar, coberturas_conhecidas = await _meses_com_qualidade_insuficiente(
-                    conn,
-                    meses_planejados,
-                    args.qualidade_minima,
-                )
+                meses_para_raspar, coberturas_conhecidas = await _meses_com_qualidade_insuficiente(conn, meses_planejados, args.qualidade_minima)
             finally:
                 await conn.close()
         except Exception as e:
@@ -513,10 +490,8 @@ async def main() -> NoReturn:
             meses_para_raspar = meses_planejados
 
     if not meses_para_raspar:
-        logger.info(
-            "Nenhum mes precisa de raspagem (todos acima de %.1f%%).", args.qualidade_minima
-        )
-        sys.exit(0)
+        logger.info("Nenhum mes precisa de raspagem (todos acima de %.1f%%).", args.qualidade_minima)
+        return
 
     logger.info("Meses para raspar: %d de %d", len(meses_para_raspar), len(meses_planejados))
 
@@ -525,7 +500,6 @@ async def main() -> NoReturn:
 
     if args.descobrir:
         from pipeline.scraper.buscador_fontes import descobrir_fontes, fontes_para_localidades
-
         rel = await descobrir_fontes()
         novas = fontes_para_localidades(rel.fontes)
         logger.info("Descoberta: %d novas fontes", len(novas))
@@ -538,88 +512,98 @@ async def main() -> NoReturn:
     normalizer = DataNormalizer(fuzzy_cutoff=75.0)
     normalizer.carregar_csv()
 
-    # SmartCrawler: alvos que exigem Playwright stealth / agentic html
     smartcrawler_alvos = [
-        "cepea", "cepea_banco", "ceasa_pr", "ceasa_pr_hoje", "ceasa_pr_2025",
+        "cepea", "ceasa_pr", "ceasa_pr_hoje", "ceasa_pr_2025",
         "ceasa_mg", "ceasa_mg_minas1", "conab", "conab_pentaho",
         "ceasa_es", "ceasa_pe", "ceasa_rn", "ceasa_ms",
         "calculadorarural",
+        "agrolink", "ceagesp",
     ]
-    logger.info("SmartCrawler: %d alvos adicionais", len(smartcrawler_alvos))
+    logger.info("SmartCrawler: %d alvos adicionais (organism=%d)", len(smartcrawler_alvos), 4)
 
-    # ── 3. Raspar ────────────────────────────────────────────────
-    blocos = await _coletar_mes(meses_para_raspar, collector, normalizer, smartcrawler_alvos)
-
-    if not blocos:
-        logger.warning("Nenhum dado coletado em nenhum mes.")
-        sys.exit(0)
-
-    df_final = pl.concat(blocos).unique()
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
-    df_final.write_parquet(OUTPUT)
-    logger.info("Output parquet: %d registros -> %s", df_final.height, OUTPUT)
-
-    if args.skip_load:
-        logger.info("--skip-load ativo: parquet salvo, banco nao alterado.")
-        sys.exit(0)
-
-    # ── 4. Carga atomica por mes ─────────────────────────────────
-    conn = _get_pg_conn()
-    meses_por_mes = _separar_por_mes(df_final)
-
+    # ── Organism singleton (criado UMA vez — evita N browsers paralelos) ──
+    organism: SelfHealingOrganism | None = None
     try:
-        todas_ufs = _extrair_ufs(df_final)
-        todos_produtos = _extrair_produtos(df_final)
-        mapping = _ensure_dimensions(conn, todos_produtos, todas_ufs)
-
-        total_inseridas = 0
-        meses_ok = 0
-        meses_falha = 0
-
-        for (ano, mes), df_mes in sorted(meses_por_mes.items()):
-            logger.info("--- Carregando %04d/%02d (%d linhas) ---", ano, mes, df_mes.height)
-            try:
-                inseridas = _load_mes_into_fact(conn, df_mes, mapping, None)
-                linhas_pos = inseridas
-                cobertura_pos = coberturas_conhecidas.get((ano, mes), 0.0)
-                status = "LOADED"
-                logger.info("  %04d/%02d: %d linhas inseridas/atualizadas", ano, mes, inseridas)
-                meses_ok += 1
-            except Exception:
-                conn.rollback()
-                linhas_pos = 0
-                cobertura_pos = 0.0
-                status = "FAILED"
-                logger.exception("  %04d/%02d: FALHA NA CARGA", ano, mes)
-                meses_falha += 1
-
-            _salvar_audit_mes(ano, mes, cobertura_pos, status, linhas_pos)
-            total_inseridas += linhas_pos
-
-        # ── 5. Ciclo medalhao (unico, apos todos os meses) ───────
-        if meses_ok > 0 and not meses_falha > meses_ok:
-            try:
-                _executar_ciclo_medalhao(conn)
-                _notificar_backend_etl_fim()
-            except Exception:
-                conn.rollback()
-                logger.exception("Ciclo medalhao falhou")
-
-        logger.info(
-            "=== RESUMO: %d meses OK, %d falha, %d linhas ===",
-            meses_ok,
-            meses_falha,
-            total_inseridas,
+        organism = SelfHealingOrganism(
+            base_browser_config=BrowserConfig(
+                engine=EngineType.PATCHRIGHT,
+                headless=True,
+            ),
+            identity_pool_size=3,
+            max_retries_per_url=3,
+            cooldown_after_failure_s=30,
         )
+        logger.info("SelfHealingOrganism inicializado (pool=%d retries=%d)", 3, 3)
 
-    except Exception:
-        conn.rollback()
-        logger.exception("Erro fatal na preparacao — nenhum mes carregado")
-        sys.exit(1)
+        # ── 3. Raspar ────────────────────────────────────────────
+        blocos = await _coletar_mes(meses_para_raspar, collector, normalizer, smartcrawler_alvos, organism)
+
+        if not blocos:
+            logger.warning("Nenhum dado coletado em nenhum mes.")
+            return
+
+        df_final = pl.concat(blocos).unique()
+        RAW_DIR.mkdir(parents=True, exist_ok=True)
+        df_final.write_parquet(OUTPUT)
+        logger.info("Output parquet: %d registros -> %s", df_final.height, OUTPUT)
+
+        if args.skip_load:
+            logger.info("--skip-load ativo: parquet salvo, banco nao alterado.")
+            return
+
+        # ── 4. Carga atomica por mes ─────────────────────────────────
+        conn = _get_pg_conn()
+        meses_por_mes = _separar_por_mes(df_final)
+
+        try:
+            todas_ufs = _extrair_ufs(df_final)
+            todos_produtos = _extrair_produtos(df_final)
+            mapping = _ensure_dimensions(conn, todos_produtos, todas_ufs)
+
+            total_inseridas = 0
+            meses_ok = 0
+            meses_falha = 0
+
+            for (ano, mes), df_mes in sorted(meses_por_mes.items()):
+                logger.info("--- Carregando %04d/%02d (%d linhas) ---", ano, mes, df_mes.height)
+                try:
+                    inseridas = _load_mes_into_fact(conn, df_mes, mapping, None)
+                    linhas_pos = inseridas
+                    cobertura_pos = coberturas_conhecidas.get((ano, mes), 0.0)
+                    status = "LOADED"
+                    logger.info("  %04d/%02d: %d linhas inseridas/atualizadas", ano, mes, inseridas)
+                    meses_ok += 1
+                except Exception:
+                    conn.rollback()
+                    linhas_pos = 0
+                    cobertura_pos = 0.0
+                    status = "FAILED"
+                    logger.exception("  %04d/%02d: FALHA NA CARGA", ano, mes)
+                    meses_falha += 1
+
+                _salvar_audit_mes(ano, mes, cobertura_pos, status, linhas_pos)
+                total_inseridas += linhas_pos
+
+            if meses_ok > 0 and not meses_falha > meses_ok:
+                try:
+                    _executar_ciclo_medalhao(conn)
+                    _notificar_backend_etl_fim()
+                except Exception:
+                    conn.rollback()
+                    logger.exception("Ciclo medalhao falhou")
+
+            logger.info("=== RESUMO: %d meses OK, %d falha, %d linhas ===", meses_ok, meses_falha, total_inseridas)
+
+        except Exception:
+            conn.rollback()
+            logger.exception("Erro fatal na preparacao — nenhum mes carregado")
+        finally:
+            conn.close()
+
     finally:
-        conn.close()
-
-    sys.exit(0)
+        if organism:
+            await organism.close()
+            logger.info("SelfHealingOrganism resources released")
 
 
 if __name__ == "__main__":

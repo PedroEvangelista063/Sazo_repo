@@ -148,6 +148,19 @@
         "read": true,
         "write": true
       }
+    },
+    "Build": {
+      "name": "Build",
+      "model": "deepseek-ai/deepseek-v4-flash",
+      "provider": "nvidia",
+      "config": {
+        "extra_body": {
+          "chat_template_kwargs": {
+            "thinking": true,
+            "reasoning_effort": "high"
+          }
+        }
+      }
     }
   },
   "mcp": {

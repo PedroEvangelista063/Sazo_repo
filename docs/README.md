@@ -189,8 +189,10 @@ cp .env.example .env  # configure DATABASE_URL
 npm run dev:backend   # FastAPI :8000
 npm run dev:frontend  # Vite :5173
 # ou:
-npm run dev:all       # ambos + scraper
+npm run dev:all       # FastAPI + Vite (sem scraper — desacoplado)
 ```
+
+> **Nota:** O scraper foi desacoplado do `dev:all` para evitar consumo de RAM/CPU e bloqueio de IP (WAF) durante hot-reloads. Use `npm run scrape:manual` em terminal separado quando precisar atualizar dados.
 
 ---
 
@@ -212,7 +214,7 @@ Gera em `database/processed_data/`:
 ## ⚙️ Comandos Úteis
 
 ```bash
-npm run scraper              # Coleta CEASA (4 concorrentes)
+npm run scrape:manual          # Coleta CEASA sob demanda (terminal separado)
 npm run build:frontend       # Build PWA
 python backend/get_data_summary.py --verbose  # Health check do banco
 python -m pipeline.audit_local_db              # Auditoria TXT × banco

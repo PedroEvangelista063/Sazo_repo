@@ -321,8 +321,7 @@ class CeasaStandardAdapter(BaseAdapter):
                     continue
                 seen.add(dedup_key)
 
-                resultados.append(
-                    CotacaoRegional(
+                cot = CotacaoRegional(
                         produto_original=produto_raw,
                         produto_normalizado=produto_norm,
                         uf=uf_row,
@@ -339,7 +338,8 @@ class CeasaStandardAdapter(BaseAdapter):
                         fator_kg=fator,
                         status_coleta="sucesso",
                     )
-                )
+                if self._validate_cotacao_coleta(cot):
+                    resultados.append(cot)
 
         logger.info("%s: %d cotacoes", self.fonte, len(resultados))
         return resultados

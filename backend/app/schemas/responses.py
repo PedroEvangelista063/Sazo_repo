@@ -68,7 +68,10 @@ class SazonalidadeResponse(BaseModel):
         None, description="Preço âncora: COALESCE(media 2025, fallback 12m)"
     )
     preco_atual: float | None = Field(
-        None, description="Último preço registrado do produto na localidade"
+        None, description="Último preço registrado do produto na localidade"
+    )
+    preco_estimado: bool = Field(
+        False, description="True se o preço atual foi estimado por interpolação (gap de coleta)"
     )
     usou_fallback_12m: bool = Field(
         ..., description="True se a âncora veio do fallback 12m (produto sem 2025)"

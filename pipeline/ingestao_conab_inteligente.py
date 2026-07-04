@@ -109,14 +109,15 @@ class MotorCategorizacao:
         "MAQUINARIO_FERRAMENTA": (
             r"(?i)^(TRATOR|ESCARIFICADOR|ESCADA|PAQUIMETRO|"
             r"BOTA|LUVAS|TRAPICHO|COLHEDEIRA|PULVERIZADOR|"
-            r"SEMEADEIRA|ADUBADEIRA|ARADO|GRADE)\b"
+            r"SEMEADEIRA|ADUBADEIRA|ARADO|GRADE|"
+            r"OLEO DIESEL|OLEO LUBRIFICANTE)\b"
         ),
         # ── Caixa 2: Insumos agrícolas (fertilizantes, defensivos) ──
         # Fórmulas N-P-K como "00-18-18", nomes comerciais e genéricos.
         # Ex: "ZINCO QUELATIZADO", "00-18-18", "SENCOR 500 SC"
         "INSUMO_AGRICOLA": (
             r"(?i)^(00-\d{2}-\d{2}|ZINCO|FLUMYZIN|NATIVO|SENCOR|"
-            r"SEMENTE|NEMAT|FLUIL|NHT|OLEO VEGETA|PARA BROCA|"
+            r"SEMENTE|NEMAT|FLUIL|NHT|OLEO VEGETA|OLEO MINERAL|PARA BROCA|"
             r"UREIA|SULFATO|CLORETO|FERTIL|FOSFATO|"
             r"FUNGICIDA|HERBICIDA|INSETICIDA|ACARICIDA|"
             r"GLIFOSATO|ATRAZINA|MANCOZEB)\b"

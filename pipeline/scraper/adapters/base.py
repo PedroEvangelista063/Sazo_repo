@@ -6,6 +6,11 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import date
+from typing import Any
+
+from pydantic import ValidationError
+
+from pipeline.scraper.schemas.coleta import CotacaoColeta
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +50,25 @@ UNIDADES_PADRAO: dict[str, float] = {
 }
 
 
+def validar_cotacao(cotacao: CotacaoRegional) -> CotacaoRegional | None:
+    dados: dict[str, Any] = {
+        "produto_original": cotacao.produto_original,
+        "uf": cotacao.uf or "XX",
+        "municipio": cotacao.municipio or "desconhecido",
+        "ano": cotacao.ano or 0,
+        "mes": cotacao.mes or 0,
+        "fonte": cotacao.fonte or "desconhecida",
+        "preco_bruto": cotacao.preco_bruto,
+        "fator_kg": max(cotacao.fator_kg, 0.1),
+    }
+    try:
+        CotacaoColeta.model_validate(dados)
+        return cotacao
+    except ValidationError as e:
+        logger.warning("[LIXO DESCARTADO] %s: %s", cotacao.produto_original[:60], e)
+        return None
+
+
 @dataclass
 class CotacaoRegional:
     produto_original: str
@@ -82,6 +106,9 @@ class BaseAdapter(ABC):
 
     @abstractmethod
     async def fetch(self) -> list[CotacaoRegional]: ...
+
+    def _validate_cotacao_coleta(self, cotacao: CotacaoRegional) -> CotacaoRegional | None:
+        return validar_cotacao(cotacao)
 
     def normalizar_unidade(self, descricao: str) -> float:
         if not descricao:

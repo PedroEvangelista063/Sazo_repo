@@ -13,6 +13,7 @@ export interface ProdutoVarejo {
   data_referencia_atual: string
   preco_referencia: number | null
   preco_atual: number | null
+  preco_estimado: boolean
   usou_fallback_12m: boolean
   status_cor: StatusCor
   status_oferta?: StatusOferta | null

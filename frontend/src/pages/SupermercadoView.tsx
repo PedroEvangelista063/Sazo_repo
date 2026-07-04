@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Calendar, Search, X, Plus, ChevronDown, TrendingUp, Salad, Layers } from 'lucide-react'
+import { Calendar, Search, X, Plus, ChevronDown, TrendingUp, Salad, Layers, Filter } from 'lucide-react'
 import { useHortifruti } from '../hooks/useHortifruti'
 import { ProductCard } from '../components/ProductCard'
 import { SkeletonCard } from '../components/SkeletonCard'
@@ -7,6 +7,12 @@ import { CategoriesModal } from '../components/CategoriesModal'
 import { ThemeToggle } from '../components/ThemeToggle'
 
 const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+
+const STATUS_FILTERS: { key: string; label: string; bg: string; border: string; text: string; activeBg: string }[] = [
+  { key: 'VERDE',  label: 'Melhor Época',  bg: 'bg-green-50',               border: 'border-green-300',               text: 'text-green-700',               activeBg: 'bg-green-500 text-white border-green-600' },
+  { key: 'AMARELO', label: 'Preço Normal',  bg: 'bg-yellow-50',              border: 'border-yellow-300',              text: 'text-yellow-700',              activeBg: 'bg-yellow-500 text-white border-yellow-600' },
+  { key: 'VERMELHO', label: 'Péssima Época', bg: 'bg-red-50',               border: 'border-red-300',                 text: 'text-red-700',                 activeBg: 'bg-red-500 text-white border-red-600' },
+]
 
 interface SupermercadoViewProps {
   isDark: boolean
@@ -17,6 +23,7 @@ export function SupermercadoView({ isDark, onToggleTheme }: SupermercadoViewProp
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
   const [listOpen, setListOpen] = useState(true)
   const [productsOpen, setProductsOpen] = useState(true)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
@@ -53,6 +60,7 @@ export function SupermercadoView({ isDark, onToggleTheme }: SupermercadoViewProp
   const handleYearChange = (year: number) => {
     setSelectedYear(year)
     setSelectedMonth(null)
+    setSelectedStatus(null)
   }
 
   const handleMonthClick = (month: number) => {
@@ -72,8 +80,11 @@ export function SupermercadoView({ isDark, onToggleTheme }: SupermercadoViewProp
     if (selectedProducts.length > 0) {
       filtered = filtered.filter((p) => selectedProducts.includes(p.nome_produto))
     }
+    if (selectedStatus) {
+      filtered = filtered.filter((p) => p.status_cor === selectedStatus)
+    }
     return filtered
-  }, [produtos, selectedProducts])
+  }, [produtos, selectedProducts, selectedStatus])
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-gray-950">
@@ -279,6 +290,34 @@ export function SupermercadoView({ isDark, onToggleTheme }: SupermercadoViewProp
               </button>
               {productsOpen && (
                 <div className="border-t border-gray-100 px-5 pb-5 pt-4 dark:border-gray-800">
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {STATUS_FILTERS.map((f) => {
+                      const active = selectedStatus === f.key
+                      return (
+                        <button
+                          key={f.key}
+                          onClick={() => setSelectedStatus(active ? null : f.key)}
+                          className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
+                            active
+                              ? f.activeBg + ' shadow-sm'
+                              : `${f.bg} ${f.border} ${f.text} hover:brightness-95`
+                          }`}
+                        >
+                          <Filter size={12} />
+                          {f.label}
+                        </button>
+                      )
+                    })}
+                    {selectedStatus && (
+                      <button
+                        onClick={() => setSelectedStatus(null)}
+                        className="flex items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2 text-xs font-semibold text-gray-500 transition-all hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+                      >
+                        <X size={12} />
+                        Limpar
+                      </button>
+                    )}
+                  </div>
                   {displayProducts.length > 0 ? (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                       {displayProducts.map((p) => (

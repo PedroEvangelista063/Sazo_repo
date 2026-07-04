@@ -1,5 +1,7 @@
 {
   "devDependencies": {
+    "@opencode-ai/plugin": "^1.17.13",
+    "@types/node": "^26.1.0",
     "concurrently": "^9.2.3",
     "husky": "^9.1.7",
     "typescript": "^6.0.3"
@@ -8,9 +10,10 @@
     "prepare": "husky",
     "install:all": "npm install && npm --prefix frontend install && pip install -r backend/requirements.txt",
     "scraper": "python -m pipeline.run_scraper_historico --concorrencia 4",
+    "scrape:manual": "python -m pipeline.run_scraper_historico",
     "dev:backend": "python -m uvicorn backend.app.main:app --reload --port 8000",
     "dev:frontend": "npm --prefix frontend run dev",
-    "dev:all": "concurrently -n BE,FE,SCRAPER -c cyan,green,yellow \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run scraper\"",
+    "dev:all": "concurrently -n BE,FE -c cyan,green \"npm run dev:backend\" \"npm run dev:frontend\"",
     "start": "./backend/start.sh",
     "build:frontend": "npm --prefix frontend run build"
   }

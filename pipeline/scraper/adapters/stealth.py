@@ -113,6 +113,10 @@ class PlaywrightStealthAdapter(BaseTargetAdapter):
     movements, scrolls, and auto-dismisses cookie banners.
     """
 
+    CEAGESP_CATEGORIES = [
+        "DIVERSOS", "FRUTAS", "LEGUMES", "VERDURAS", "FLORES", "PESCADOS",
+    ]
+
     def __init__(self, url: str = ""):
         self.url = url
 
@@ -141,7 +145,22 @@ class PlaywrightStealthAdapter(BaseTargetAdapter):
         await page.mouse.wheel(0, random.randint(200, 600))
 
     async def execute(self, page: Page) -> list[CotacaoRegional]:
+        if "ceagesp" in self.url.lower():
+            return await self._execute_ceagesp(page)
+
         logger.info("[Stealth] Modo stealth ativado para %s", self.url)
+        await page.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        await page.goto(self.url, wait_until="domcontentloaded")
+        await self._bypass_cookie_banners(page)
+        await self._human_jitter(page)
+        html = await page.content()
+        return self._agentic_parse(html)
+
+    async def _execute_ceagesp(self, page: Page) -> list[CotacaoRegional]:
+        logger.info("[CEAGESP] Modo formulario ativado")
+        todas: list[CotacaoRegional] = []
 
         await page.add_init_script(
             "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
@@ -150,27 +169,108 @@ class PlaywrightStealthAdapter(BaseTargetAdapter):
         await self._bypass_cookie_banners(page)
         await self._human_jitter(page)
 
-        html = await page.content()
-        return self._agentic_parse(html)
+        await page.wait_for_selector("select#grupo", timeout=10000)
+        await page.wait_for_selector("input.cot_data", timeout=10000)
+
+        grupos = await page.evaluate("() => Grupos")
+        logger.info("[CEAGESP] Grupos disponiveis: %s", {k: v for k, v in grupos.items() if v})
+
+        for categoria in self.CEAGESP_CATEGORIES:
+            datas = grupos.get(categoria)
+            if not datas or not isinstance(datas, list) or len(datas) == 0:
+                logger.debug("[CEAGESP] %s sem datas, pulando", categoria)
+                continue
+
+            await page.select_option("select#grupo", categoria)
+            await asyncio.sleep(1.0)
+
+            ultima_data = datas[-1]
+            await page.evaluate(
+                f'document.querySelector("input.cot_data").value = "{ultima_data}"'
+            )
+            await asyncio.sleep(0.5)
+
+            async with page.expect_navigation(wait_until="domcontentloaded", timeout=15000):
+                await page.click("button:has-text('Consultar')")
+
+            html = await page.content()
+            items = self._agentic_parse(html)
+            logger.info(
+                "[CEAGESP] %s (%s): %d produtos",
+                categoria, ultima_data, len(items),
+            )
+            for item in items:
+                item.fonte = "CEAGESP"
+            todas.extend(items)
+
+            await asyncio.sleep(1.0)
+
+        logger.info("[CEAGESP] Total: %d cotacoes em %d categorias", len(todas), len(set(i.produto_original for i in todas)))
+        return todas
+
+    @staticmethod
+    def _is_noise_entry(produto: str) -> bool:
+        noise_patterns = [
+            r"(?i)\bdownload\b",
+            r"(?i)\bpdf\b",
+            r"^\d{4}\s*$",
+            r"^\d{1,2}\s*$",
+            r"(?i)\b(boletim|relatorio|planilha)\b",
+        ]
+        return any(re.search(p, produto) for p in noise_patterns)
 
     def _agentic_parse(self, html: str) -> list[CotacaoRegional]:
         soup = BeautifulSoup(html, "lxml")
         resultados: list[CotacaoRegional] = []
 
         for table in soup.find_all("table"):
-            headers = table.get_text().lower()
-            if "produto" not in headers or ("preço" not in headers and "cotacao" not in headers):
+            rows = table.find_all("tr")
+            if len(rows) < 2:
                 continue
-            rows = table.find_all("tr")[1:]
-            for row in rows:
+
+            header_text = table.get_text().lower()
+            if "produto" not in header_text:
+                continue
+            if not any(k in header_text for k in ("preço", "preco", "cotacao", "menor", "comum")):
+                continue
+
+            header_row_idx = 0
+            col_produto = 0
+            col_preco = 1
+
+            for i, row in enumerate(rows):
+                cells = row.find_all(["th", "td"])
+                cell_texts = [c.get_text(strip=True).lower() for c in cells]
+                joined = "|".join(cell_texts)
+
+                if "produto" in joined:
+                    header_row_idx = i
+                    col_produto = next(
+                        (j for j, t in enumerate(cell_texts) if "produto" in t), 0
+                    )
+                    for j, t in enumerate(cell_texts):
+                        if t in ("comum", "preço", "preco", "comum (r$)"):
+                            col_preco = j
+                            break
+                        if t == "menor":
+                            col_preco = j
+                    break
+
+            data_rows = rows[header_row_idx + 1:]
+            for row in data_rows:
                 cols = row.find_all(["td", "th"])
-                if len(cols) < 2:
+                if len(cols) <= max(col_produto, col_preco):
                     continue
-                produto = cols[0].get_text(strip=True)
-                preco_raw = cols[1].get_text(strip=True)
+
+                produto = cols[col_produto].get_text(strip=True)
+                if not produto or self._is_noise_entry(produto):
+                    continue
+
+                preco_raw = cols[col_preco].get_text(strip=True)
                 preco = self._limpar_preco(preco_raw)
-                if not produto or preco is None:
+                if preco is None:
                     continue
+
                 resultados.append(
                     CotacaoRegional(
                         produto_original=produto,
@@ -178,6 +278,7 @@ class PlaywrightStealthAdapter(BaseTargetAdapter):
                         status_coleta="sucesso",
                     )
                 )
+
             if resultados:
                 break
 
@@ -207,16 +308,28 @@ class LegacyPostbackAdapter(BaseTargetAdapter):
 
     async def execute(self, page: Page) -> list[CotacaoRegional]:
         logger.info("[LegacyPostback] WebForms em %s", self.url)
-        await page.goto(self.url, wait_until="domcontentloaded")
+        await page.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        await page.goto(self.url, wait_until="domcontentloaded", timeout=60000)
 
         try:
-            await page.select_option(
-                "select[name*='Produto'], select[id*='Produto']", label="Tomate"
+            await page.wait_for_selector(
+                "select[name*='Produto'], select[id*='Produto'], select",
+                timeout=30000,
             )
+            await asyncio.sleep(2.0)
+
+            try:
+                await page.select_option(
+                    "select[name*='Produto'], select[id*='Produto']", label="Tomate"
+                )
+            except Exception:
+                logger.warning("[LegacyPostback] Seletor produto nao encontrado, tentando submit direto")
             await asyncio.sleep(random.uniform(1.0, 2.5))
 
             async with page.expect_navigation(wait_until="domcontentloaded"):
-                await page.click("input[type='submit'], button:has-text('Consultar')")
+                await page.click("input[type='submit'], button:has-text('Consultar'), button:has-text('Buscar')")
 
             html = await page.content()
             return self._parse_result_table(html)

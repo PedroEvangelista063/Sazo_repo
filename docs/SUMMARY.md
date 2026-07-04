@@ -85,8 +85,21 @@ Acessado pelo pipeline (`ingestao_conab.py`) e pela API FastAPI.
 | `database/04_reestruturacao_b2c.sql` | Reestruturação B2C com documentação das regras da Sala de Estar |
 | `database/05_recalibracao_baseline_2025.sql` | Baseline 2025 com fallback híbrido de 12 meses. Abandono da média móvel contínua. SP `sp_calcular_sazonalidade_baseline()` com 4 CTEs |
 | `database/06_audit_triggers.sql` | Tabela `ops.audit_logs` + trigger de mudança de `status_cor` em `mart.sazonalidade_produto` |
-| `database/07_refatoracao_categorias.sql` | **NOVO** — Normalização: `staging.dim_categoria` + FK `id_categoria` em `dim_produto` + migração de dados existentes |
-| `database/08_data_hygiene.sql` | **NOVO** — Landing Zone: `raw.scraper_data` (append-only log, row_hash, UNIQUE por dia) + `ops.sp_limpeza_diaria_scraper()` (upsert + GC 30 dias) |
+| `database/07_refatoracao_categorias.sql` | Normalização: `staging.dim_categoria` + FK `id_categoria` em `dim_produto` + migração de dados existentes |
+| `database/08_data_hygiene.sql` | Landing Zone: `raw.scraper_data` (append-only log, row_hash, UNIQUE por dia) + `ops.sp_limpeza_diaria_scraper()` (upsert + GC 30 dias) |
+| `database/09_update_view_categorias.sql` | Recriação de `mart.vw_api_produtos_sazonalidade` com suporte a FK `id_categoria` |
+| `database/10_zscore_classificacao_produtos.sql` | Classificação por Z-Score — estatística descritiva para precificação inteligente |
+| `database/11_status_imagem_produto.sql` | Status de imagem na dimensão produto |
+| `database/12_status_fonte_produto.sql` | Status da fonte de dados na dimensão produto (coluna `status_fonte`) |
+| `database/15_schema_agro_regional.sql` | Schema Agro-Regional — cotações regionalizadas por fonte (CEASAs + CONAB ProHort) |
+| `database/16_baseline_2025_interpolado.sql` | Baseline 2025 com imputação matemática de gaps — Polars (Layer A) + Confiança (Layer B) |
+| `database/17_mom_seasonality.sql` | Seasonality MoM (Month-over-Month) — estratégia de contorno para gaps |
+| `database/18_sazonalidade_preditiva_v2.sql` | Heurística preditiva com degradação graciosa — trindade estrita (VERDE/AMARELO/VERMELHO) |
+| `database/19_fix_supressao_preditiva.sql` | Fix supressão silenciosa — forward fill com último preço conhecido (zero data loss) |
+| `database/20_hotfix_filtro_varejo.sql` | Hotfix: trava de domínio B2C — data leak de insumos B2B no frontend B2C |
+| `database/21_reclassifica_orfaos.sql` | Reclassificação de produtos órfãos (v1.0.0-rc2) |
+| `database/22_data_healing_schema.sql` | Data Healing Engine — cura analítica + corta-fogo de confiança |
+| `database/22b_data_healing_hotfix.sql` | Hotfix Fase 22b: patch de segurança para Data Healing |
 
 ### Artefatos Estáticos (Camada de Auditoria)
 
@@ -146,6 +159,7 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 | `backend/app/api/v1/endpoints/produtos.py` | `GET /api/v1/sazonalidade` com filtros UF, município, mês, produto, status_cor; paginação; `ano`+`mes` dispara computação dinâmica por mês |
 | `backend/app/api/v1/endpoints/municipios.py` | `GET /api/v1/municipios?uf=SP` |
 | `backend/app/api/v1/endpoints/internal.py` | `GET/POST /api/v1/_internal/cache-clear` (protegido por API Key) |
+| `backend/app/api/v1/endpoints/stream.py` | SSE endpoint `GET /api/v1/stream/updates` — broadcast de eventos `ETL_FINISHED` para invalidar cache do frontend em tempo real; keepalive 30s |
 | `backend/get_data_summary.py` | Script ad-hoc: health check do banco (counts, distribuição, freshness) |
 | `backend/run_migration.py` | Executa migração SQL via asyncpg |
 | `backend/requirements.txt` | Dependências: fastapi, uvicorn, asyncpg, pydantic-settings, httpx, polars, rapidfuzz |
@@ -158,7 +172,7 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 
 **Regras**:
 - **Nunca exibe R$** — apenas o semáforo (🟢🟡🔴)
-- `staleTime` de 12h para sazonalidade, 24h para municípios
+- `staleTime` de 12h para sazonalidade (`useHortifruti`), 24h para categorias (`useCategorias`)
 - Service Worker com Cache-First (assets) e Stale-While-Revalidate (API)
 - IndexedDB para cache persistente (em vez de localStorage)
 - Background Sync para ações offline futuras
@@ -166,14 +180,15 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 
 ### Fluxo de Interação (User Journey Pipeline)
 
-O usuário percorre 4 etapas implementadas dentro da `SupermercadoView`:
+O usuário percorre 3 etapas implementadas inline na `SupermercadoView` (sem modal de onboarding):
 
 | Etapa | Funcionalidade | Descrição |
 |---|---|---|
-| 1. 📍 Localização | `LocationModal` | Modal de onboarding: seleção de UF e Município |
-| 2. 🛒 Lista | Seletor de produtos (inline) | Botões toggle com +/X; filtro por categorias de varejo |
-| 3. 📅 Mês | Seletor de período (inline) | Chips de mês extraídos do `data_referencia_atual` da API |
-| 4. 🚦 Resultado | Grid de `ProductCard` (inline) | Ordenação por status: 🟢 VERDE → 🟡 AMARELO → 🔴 VERMELHO |
+| 1. 📅 Período | Seletor de ano (dropdown) + mês (chips) | Anos disponíveis extraídos da API; chips de mês com indicador de dados. Seleção de ano+mes dispara computação dinâmica de sazonalidade |
+| 2. 🛒 Lista | Seletor de produtos (inline, colapsável) | Botões toggle com +/X; acesso ao modal de categorias (`CategoriesModal`) via botão no header |
+| 3. 🚦 Resultado | Grid de `ProductCard` (colapsável) | Ordenação por status: 🟢 VERDE → 🟡 AMARELO → 🔴 VERMELHO; contador de itens |
+
+A localização é fixa (SP, dados CONAB). Não há mais modal de onboarding — o usuário entra direto na página com o ano corrente pré-selecionado e os meses com dados disponíveis marcados.
 
 ### Arquivos
 
@@ -181,14 +196,17 @@ O usuário percorre 4 etapas implementadas dentro da `SupermercadoView`:
 |---|---|
 | `frontend/vite.config.ts` | Vite 6 + PWA Plugin (Manifest, Workbox, Background Sync) + manualChunks |
 | `frontend/tailwind.config.js` | Cores sazonais personalizadas (verde/amarelo/vermelho) |
-| `frontend/src/store/useUserStore.ts` | Zustand 5 + persist via IndexedDB (idb-keyval) — UF/Cidade |
+| `frontend/src/store/useUserStore.ts` | Zustand 5 + persist via IndexedDB (idb-keyval) — `selectedProducts`, `selectedMonth` |
 | `frontend/src/services/api.ts` | Axios + hooks TanStack Query v5 |
-| `frontend/src/components/LocationModal.tsx` | Modal de onboarding: UF dropdown + city datalist + prefetch debounce 600ms |
-| `frontend/src/components/ProductCard.tsx` | Card com semáforo visual + emoji fallback + skeleton |
-| `frontend/src/components/SkeletonCard.tsx` | Skeleton loading pulsante (`animate-pulse-soft`) |
-| `frontend/src/pages/SupermercadoView.tsx` | View principal única: onboarding → multi-select (colapsável) → mês → dashboard (colapsável); ChevronDown com rotação para toggle |
-| `frontend/src/hooks/useHortifruti.ts` | Hook TanStack Query dual-query: `hortifruti-meta` (snapshot sem filtro) + `hortifruti-filter` (ativada com ano+mes). StaleTime 12h. |
-| `frontend/src/hooks/useMunicipios.ts` | Hook TanStack Query para lista de municípios (staleTime 24h) |
+| `frontend/src/components/ProductCard.tsx` | Card com semáforo visual + emoji fallback (nunca exibe R$) |
+| `frontend/src/components/SkeletonCard.tsx` | Skeleton loading pulsante |
+| `frontend/src/components/CategoriesModal.tsx` | Modal de drill-down por categoria — agrupa produtos, toggle multi-select |
+| `frontend/src/components/ThemeToggle.tsx` | Toggle dark/light mode |
+| `frontend/src/pages/SupermercadoView.tsx` | View principal inline: período (ano+mês) → lista de produtos (colapsável) → grid de resultados (colapsável); `CategoriesModal` acionado via header |
+| `frontend/src/hooks/useHortifruti.ts` | Hook TanStack Query dual-query: `hortifruti-meta` (snapshot sem filtro) + `hortifruti-filter` (ativada com ano+mes). StaleTime 12h. Ordena por `STATUS_ORDER` (VERDE=0, AMARELO=1, VERMELHO=2) |
+| `frontend/src/hooks/useCategorias.ts` | Hook TanStack Query para lista de categorias de varejo (staleTime 24h) |
+| `frontend/src/hooks/useDataStream.ts` | Hook SSE — conecta ao endpoint `/api/v1/stream/updates`, invalida cache TanStack Query ao receber evento `ETL_FINISHED` (exponential backoff reconnect) |
+| `frontend/src/hooks/useTheme.ts` | Hook de tema dark/light |
 | `frontend/src/types/domain.ts` | Interfaces TypeScript: ProdutoVarejo, StatusCor, SazonalidadeResponse |
 | `frontend/src/types/index.ts` | Barrel export dos tipos |
 

@@ -1,0 +1,320 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Ir para o conteúdo" [ref=e3] [cursor=pointer]:
+      - /url: "#conteudoInicio"
+    - link "Ir para o menu" [ref=e4] [cursor=pointer]:
+      - /url: "#menuInicio"
+    - link "Ir para a busca" [ref=e5] [cursor=pointer]:
+      - /url: "#buscageralTextBox"
+  - generic [ref=e8]:
+    - link "RS.GOV.BR" [ref=e9] [cursor=pointer]:
+      - /url: https://www.rs.gov.br/
+      - img "RS.GOV.BR" [ref=e10]
+    - generic:
+      - generic:
+        - generic: •••
+  - generic [ref=e21]:
+    - link "Secretaria de Desenvolvimento Rural" [ref=e22] [cursor=pointer]:
+      - /url: ""
+    - generic [ref=e23]:
+      - text: 
+      - list [ref=e24]:
+        - listitem [ref=e25]:
+          - link " Contraste" [ref=e26] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - generic [ref=e27]: 
+            - text: Contraste
+          - text: 
+        - listitem [ref=e28]:
+          - link " Ouvidoria" [ref=e29] [cursor=pointer]:
+            - /url: /ouvidoria
+            - generic [ref=e30]: 
+            - text: Ouvidoria
+        - listitem [ref=e31]:
+          - link " Mapa do site" [ref=e32] [cursor=pointer]:
+            - /url: /mapa-do-site
+            - generic [ref=e33]: 
+            - text: Mapa do site
+  - banner [ref=e34]:
+    - generic [ref=e35]:
+      - link "CEASA" [ref=e36] [cursor=pointer]:
+        - /url: /
+        - heading "CEASA" [level=1]
+      - generic [ref=e37]:
+        - button "Alterna a navegação" [ref=e38] [cursor=pointer]:
+          - generic [ref=e39]: Alterna a navegação
+        - button "Abrir a busca " [ref=e43] [cursor=pointer]:
+          - generic [ref=e44]: Abrir a busca
+          - generic [ref=e45]: 
+    - text: 
+  - text:    
+  - generic [ref=e46]: Início do conteúdo
+  - article [ref=e50]:
+    - list [ref=e51]:
+      - listitem [ref=e52]: 
+      - listitem [ref=e53]: "> Cotações"
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - link " Voltar" [ref=e56] [cursor=pointer]:
+          - /url: "javascript: window.history.back();"
+          - generic [ref=e57]: 
+          - text: Voltar
+        - link " Imprimir" [ref=e58] [cursor=pointer]:
+          - /url: "javascript: this.print();"
+          - generic [ref=e59]: 
+          - text: Imprimir
+      - generic [ref=e62]:
+        - link "Facebook" [ref=e63] [cursor=pointer]:
+          - /url: /#facebook
+          - generic [ref=e64]: Facebook
+        - link "X" [ref=e65] [cursor=pointer]:
+          - /url: /#x
+          - generic [ref=e66]: X
+        - link "WhatsApp" [ref=e67] [cursor=pointer]:
+          - /url: /#whatsapp
+          - generic [ref=e68]: WhatsApp
+    - heading "Cotações" [level=1] [ref=e70]
+    - generic [ref=e72]:
+      - generic [ref=e74]:
+        - heading "2026" [level=4] [ref=e76]:
+          - link "2026" [ref=e77] [cursor=pointer]:
+            - /url: "#panel-1760537476493"
+        - generic [ref=e79]:
+          - paragraph [ref=e80]:
+            - strong [ref=e81]:
+              - link "JANEIRO" [ref=e82] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/folders/11rUjgzDqn89DVZrhPdWcP02LP9Ja4EoK
+          - paragraph [ref=e83]:
+            - strong [ref=e84]:
+              - link "FEVEREIRO" [ref=e85] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/folders/1WMryDfV3gbj7zRk3jP1mDtl-vIE9vAHb?usp=drive_link
+          - paragraph [ref=e86]:
+            - strong [ref=e87]:
+              - link "MARÇO" [ref=e88] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/folders/1rFc6Z9rOw5xVa4OjfVw--0-UzzsB8TzM
+          - paragraph [ref=e89]:
+            - strong [ref=e90]:
+              - link "ABRIL" [ref=e91] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1b6asTJ_sXoARJTuTF4tSK2UMdQkE91Wo
+          - paragraph [ref=e92]:
+            - strong [ref=e93]:
+              - link "MAIO" [ref=e94] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/folders/16v6bWKgFIvjeM1p_xZHDXOKmiUhxaEh0
+          - paragraph [ref=e95]:
+            - strong [ref=e96]:
+              - link "JUNHO" [ref=e97] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/folders/18RTfDm-OdK20nLiKtfGewehBQOHzGnI5
+      - generic [ref=e99]:
+        - heading "2025" [level=4] [ref=e101]:
+          - link "2025" [ref=e102] [cursor=pointer]:
+            - /url: "#panel-1767711723948"
+        - generic [ref=e104]:
+          - paragraph [ref=e105]:
+            - strong [ref=e106]:
+              - link "JANEIRO" [ref=e107] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/folders/10SWzeoDawGWprypRLhLMUVd97s-Kf17I
+          - paragraph [ref=e108]:
+            - strong [ref=e109]:
+              - link "FEVEREIRO" [ref=e110] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1W_yLS8pgfBhB_TgjG1L-RO0AE6RuyC0G
+          - paragraph [ref=e111]:
+            - link "MARÇO" [ref=e112] [cursor=pointer]:
+              - /url: https://drive.google.com/drive/u/0/folders/1VloQjTaLYRI2D3Je5_Of3KZ1PaU3W9Jb
+              - strong [ref=e113]: MARÇO
+          - paragraph [ref=e114]:
+            - strong [ref=e115]:
+              - link "ABRIL" [ref=e116] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1yoQhm2ovgXxpK0vvr4aST7bhnWK4BEJD
+          - paragraph [ref=e117]:
+            - strong [ref=e118]:
+              - link "MAIO" [ref=e119] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1aNMcZfkufEg5VhoK4FtvMHOSqxsZGgB4
+          - paragraph [ref=e120]:
+            - strong [ref=e121]:
+              - link "JUNHO" [ref=e122] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1G4Uc7KEHffebxarUKKBWu1rP2bxdzBhT
+          - paragraph [ref=e123]:
+            - strong [ref=e124]:
+              - link "JULHO" [ref=e125] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/19ihcDWqUxxDiSvPGD3xm29D_dMmWbv4l
+          - paragraph [ref=e126]:
+            - strong [ref=e127]:
+              - link "AGOSTO" [ref=e128] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1YHJzMbNX1S3gAYhkm9ahIal02fW3H-1G
+          - paragraph [ref=e129]:
+            - strong [ref=e130]:
+              - link "SETEMBRO" [ref=e131] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/16XIpMqDfVo7c8ObcvFj-3eemnXwbjEpB
+          - paragraph [ref=e132]:
+            - strong [ref=e133]:
+              - link "OUTUBRO" [ref=e134] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1y0WWByRyj6dGTbKvvFXpBBv9GV9NY9Db
+          - paragraph [ref=e135]:
+            - strong [ref=e136]:
+              - link "NOVEMBRO" [ref=e137] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/14ZKhUPV6rt20_QizGn5Tw7D7_4lyEd3j
+          - paragraph [ref=e138]:
+            - link "DEZEMBRO" [ref=e139] [cursor=pointer]:
+              - /url: https://drive.google.com/drive/folders/1H7amJHE6-sysxqZYLjEq9bArQ0K_EvxY?usp=drive_link
+              - strong [ref=e140]: DEZEMBRO
+      - generic [ref=e142]:
+        - heading "2024" [level=4] [ref=e144]:
+          - link "2024" [ref=e145] [cursor=pointer]:
+            - /url: "#panel-1760537981372"
+        - generic [ref=e147]:
+          - paragraph [ref=e148]:
+            - strong [ref=e149]:
+              - link "JANEIRO" [ref=e150] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1O0S6NSlJdRapBfSgmH6shanNvF0otmRy
+          - paragraph [ref=e151]:
+            - strong [ref=e152]:
+              - link "FEVEREIRO" [ref=e153] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1-7SzKCliuEFPdUnU1rUUs60aSEPGerPl
+          - paragraph [ref=e154]:
+            - strong [ref=e155]:
+              - link "MARÇO" [ref=e156] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1B0BuECbQk9hqLPTx88wz4zBosQEleUTY
+          - paragraph [ref=e157]:
+            - strong [ref=e158]:
+              - link "ABRIL" [ref=e159] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1-cnE1fsbcs9eh6HdqhWuCM-K7FW0ys57
+          - paragraph [ref=e160]:
+            - strong [ref=e161]:
+              - link "MAIO" [ref=e162] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1KtB5BfNbOReatrkGDjSE2hKZPqNohMiJ
+          - paragraph [ref=e163]:
+            - strong [ref=e164]:
+              - link "JUNHO" [ref=e165] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1Wjf1BF3X0zfSS4r90p6NjYTGvQCUHFZE
+          - paragraph [ref=e166]:
+            - strong [ref=e167]:
+              - link "JULHO" [ref=e168] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1zOMnbj07NBK7eJ148L3mCQYnQhzJEAYX
+          - paragraph [ref=e169]:
+            - strong [ref=e170]:
+              - link "AGOSTO" [ref=e171] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1RD3XbL3KCrFqq5ARyxbGy9ljoreeKBCr
+          - paragraph [ref=e172]:
+            - strong [ref=e173]:
+              - link "SETEMBRO" [ref=e174] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1RUkEp5CD-AbTJFd_vIdM_ndJL9LkOZWq
+          - paragraph [ref=e175]:
+            - strong [ref=e176]:
+              - link "OUTUBRO" [ref=e177] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1886ZIYZvIR_2fnZ4u7p0KWZQeC8LXfYX
+          - paragraph [ref=e178]:
+            - strong [ref=e179]:
+              - link "NOVEMBRO" [ref=e180] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/10bIz7G0CCQthHV33TUtZGqwi40BBiwJV
+          - paragraph [ref=e181]:
+            - strong [ref=e182]:
+              - link "DEZEMBRO" [ref=e183] [cursor=pointer]:
+                - /url: https://drive.google.com/drive/u/0/folders/1xvf3shX6NB8Q4iDP6IDkZE7Noekmf09Q
+      - paragraph
+      - paragraph
+    - iframe [ref=e184]:
+      
+  - contentinfo [ref=e189]:
+    - list [ref=e194]:
+      - listitem [ref=e195]:
+        - link "Institucional" [ref=e196] [cursor=pointer]:
+          - /url: /institucional
+        - list [ref=e197]:
+          - listitem [ref=e198]:
+            - link "Acesso à Informação" [ref=e199] [cursor=pointer]:
+              - /url: /acesso-a-informacao
+          - listitem [ref=e200]:
+            - link "História" [ref=e201] [cursor=pointer]:
+              - /url: /historia
+          - listitem [ref=e202]:
+            - link "Regimento Interno CEASA/RS 2017" [ref=e203] [cursor=pointer]:
+              - /url: /regimento-interno
+          - listitem [ref=e204]:
+            - link "Regulamento do Pessoal CEASA/RS" [ref=e205] [cursor=pointer]:
+              - /url: /regulamento-do-pessoal-ceasa-rs-2021
+          - listitem [ref=e206]:
+            - link "Código de Conduta e Integridade" [ref=e207] [cursor=pointer]:
+              - /url: /codigo-de-conduta-e-integridade-da-alta-administracao
+          - listitem [ref=e208]:
+            - link "Código de Ética dos Servidores" [ref=e209] [cursor=pointer]:
+              - /url: /codigo-de-etica-dos-sevidores-da-ceasa-rs
+          - listitem [ref=e210]:
+            - link "Regulamento Interno (Licitações)" [ref=e211] [cursor=pointer]:
+              - /url: /regulamento-interno-das-licitacoes-e-contratos-da-ceasa-rs-2018
+          - listitem [ref=e212]:
+            - link "Lei 12846 - Anticorrupção" [ref=e213] [cursor=pointer]:
+              - /url: /lei-12846-01-08-2013-anticorrupcao
+          - listitem [ref=e214]:
+            - link "Lei 6404 - Sociedades por ações" [ref=e215] [cursor=pointer]:
+              - /url: /lei-6404-15-12-1976-sociedades-por-acoes
+          - listitem [ref=e216]:
+            - link "Regulamento do Mercado" [ref=e217] [cursor=pointer]:
+              - /url: /regulamento-do-mercado
+          - listitem [ref=e218]:
+            - link "Lei de Criação CEASA/RS" [ref=e219] [cursor=pointer]:
+              - /url: /lei-de
+      - listitem [ref=e220]:
+        - link "Comunicação" [ref=e221] [cursor=pointer]:
+          - /url: /comunicacao
+        - list [ref=e222]:
+          - listitem [ref=e223]:
+            - link "Galerias de Fotos" [ref=e224] [cursor=pointer]:
+              - /url: /galerias-de-fotos
+          - listitem [ref=e225]:
+            - link "Galerias de Vídeos" [ref=e226] [cursor=pointer]:
+              - /url: /galerias-de-videos
+      - listitem [ref=e227]:
+        - link "Serviços e Informações" [ref=e228] [cursor=pointer]:
+          - /url: /servicos-e-informacoes
+        - list [ref=e229]:
+          - listitem [ref=e230]:
+            - link "Central do Cidadão" [ref=e231] [cursor=pointer]:
+              - /url: /central-do-cidadao
+          - listitem [ref=e232]:
+            - link "Participa RS" [ref=e233] [cursor=pointer]:
+              - /url: /sistema-estadual-de-participacao-popular-e-cidada
+      - listitem [ref=e234]:
+        - link "Cotações" [ref=e235] [cursor=pointer]:
+          - /url: /cotacoes-de-precos
+      - listitem [ref=e236]:
+        - link "Contato" [ref=e237] [cursor=pointer]:
+          - /url: /contato
+    - generic [ref=e241]:
+      - generic [ref=e243]:
+        - generic [ref=e244]: CEASA/RS
+        - text: Av Fernando Ferrari, 1001
+        - text: Anchieta
+        - text: Porto Alegre - RS -
+        - link " mapa" [ref=e246] [cursor=pointer]:
+          - /url: https://www.google.com.br/maps/place/Av+Fernando+Ferrari%2C+1001%2C+Anchieta+-+Porto+Alegre+-+RS/@-29.974928209564393,-51.167564623840676
+          - generic [ref=e247]: 
+          - text: mapa
+        - text: 90200-041
+        - text: "Fone:"
+        - link "(51) 98479-0004" [ref=e248] [cursor=pointer]:
+          - /url: tel:51-98479-0004
+        - text: "E-mail:"
+        - link "comunicacao@ceasa.rs.gov.br" [ref=e249] [cursor=pointer]:
+          - /url: mailto:comunicacao@ceasa.rs.gov.br
+      - link "Governo do Estado do Rio Grande do Sul" [ref=e251] [cursor=pointer]:
+        - /url: http://www.estado.rs.gov.br/
+        - img "Governo do Estado do Rio Grande do Sul" [ref=e252]
+    - list [ref=e258]:
+      - listitem [ref=e259]:
+        - link "Desenvolvido pela PROCERGS" [ref=e260] [cursor=pointer]:
+          - /url: http://www.procergs.rs.gov.br/
+      - listitem [ref=e261]:
+        - link "Termos de Uso" [ref=e262] [cursor=pointer]:
+          - /url: /termos-de-uso
+  - generic [ref=e264]:
+    - generic [ref=e265]:
+      - text: Utilizamos cookies necessários para o pleno funcionamento do nosso site, para aprimorar e personalizar sua experiência durante a navegação, bem como outros cookies adicionais. Ao clicar em "Aceitar Todos", você terá acesso a todas as funcionalidades da página e nos ajudará a desenvolver um site cada vez melhor. Você pode encontrar mais informações sobre quais cookies estamos utilizando no nosso
+      - link "Aviso de Cookies" [ref=e266] [cursor=pointer]:
+        - /url: /aviso-de-cookies
+      - text: .
+    - paragraph
+    - generic [ref=e267]:
+      - link "ACEITAR TODOS" [ref=e268] [cursor=pointer]:
+        - /url: javascript:void(0);
+      - link "ACEITAR NECESSÁRIOS" [ref=e269] [cursor=pointer]:
+        - /url: javascript:void(0);

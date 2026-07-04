@@ -1,11 +1,26 @@
 {
   "metadata": {
-    "version": "1.0",
-    "generated": "2026-07-01",
-    "total_sources": 14,
-    "viable": 12,
+    "version": "2.0",
+    "generated": "2026-07-03",
+    "total_sources": 15,
+    "viable": 13,
     "not_viable": 2,
-    "classification_criteria": "A=JSON_API, B=WAF_STEALTH, C=ASP_POSTBACK, D=AGENTIC_HTML"
+    "classification_criteria": "A=JSON_API, B=WAF_STEALTH, C=ASP_POSTBACK, D=AGENTIC_HTML, F=GOOGLE_DRIVE",
+    "url_placeholders": {
+      "YYYY": "ano com 4 digitos (2026)",
+      "MM": "mes com 2 digitos (07)",
+      "M": "mes sem padding (7)",
+      "YY": "ano com 2 digitos (26)",
+      "YYYY-MM": "ano-mes (2026-07)",
+      "ANOMES": "compacto (202607)",
+      "DATA": "data no formato DD/MM/YYYY (12/07/2026)",
+      "DATA_ISO": "data no formato YYYY-MM-DD (2026-07-12)",
+      "PAGE": "numero da pagina (1, 2, 3...)",
+      "uf": "UF em minusculo (sp)",
+      "UF": "UF em maiusculo (SP)",
+      "MES_NOME": "nome do mes (julho)",
+      "MES_NOME3": "nome do mes abreviado (jul)"
+    }
   },
   "sources": [
     {
@@ -76,14 +91,14 @@
     },
     {
       "name": "CEASA ES",
-      "url": "http://200.198.51.71/detec/boletim_completo_es/boletim_completo_es.php",
+      "url": "http://200.198.51.71/detec/filtro_boletim_es/filtro_boletim_es.php",
       "active": true,
       "category": "d_agentic",
       "adapter": "AgenticHtmlAdapter",
       "uf": "ES",
       "municipio": "Vitoria",
       "fonte": "CEASA-ES",
-      "notes": "IP fixo. Resposta pequena (1KB) — verificar conteudo real."
+      "notes": "Formulario ScriptCase (filtro_boletim_es). Retorna 173KB com form — precisa de POST para extrair dados. A ser migrado para Playwright no futuro."
     },
     {
       "name": "CEASA MG Minas1",
@@ -98,6 +113,7 @@
     },
     {
       "name": "CEASA PE",
+      "url_template": "https://www.ceasape.org.br/cotacao/hortalicas?data={DATA}",
       "url": "https://www.ceasape.org.br/cotacao/hortalicas?data=06/01/2025",
       "active": true,
       "category": "d_agentic",
@@ -105,7 +121,7 @@
       "uf": "PE",
       "municipio": "Recife",
       "fonte": "CEASA-PE",
-      "notes": "Tabela com data no query param. Parametro data deve ser atualizado dinamicamente."
+      "notes": "Tabela com data no query param. Placeholder {DATA} injeta DD/MM/YYYY automaticamente."
     },
     {
       "name": "CEASA RN",
@@ -116,10 +132,17 @@
       "uf": "RN",
       "municipio": "Natal",
       "fonte": "CEASA-RN",
-      "notes": "Pagina grande (1MB) com tabelas de cotacao."
+      "notes": "Pagina grande (1MB) com tabelas de cotacao. Configurar pagination se site suportar ?pagina=N.",
+      "pagination": {
+        "page_param": "pagina",
+        "page_start": 1,
+        "max_pages": 5,
+        "min_rows_to_paginate": 20
+      }
     },
     {
       "name": "CEASA MS Boletins",
+      "url_template": "https://www.ceasa.ms.gov.br/boletim-{YYYY}/",
       "url": "https://www.ceasa.ms.gov.br/boletim-2026/",
       "active": true,
       "category": "d_agentic",
@@ -127,10 +150,11 @@
       "uf": "MS",
       "municipio": "Campo Grande",
       "fonte": "CEASA-MS",
-      "notes": "Galeria de boletins (PDF links). Precisa de parser extra para extrair links de PDF."
+      "notes": "Galeria de boletins com ano dinamico via {YYYY}. Precisa de parser extra para extrair links de PDF."
     },
     {
-      "name": "CEASA PR Cotacao 2025",
+      "name": "CEASA PR Cotacao",
+      "url_template": "https://www.ceasa.pr.gov.br/Pagina/Cotacao-Diaria-de-Precos-{YYYY}",
       "url": "https://www.ceasa.pr.gov.br/Pagina/Cotacao-Diaria-de-Precos-2025",
       "active": true,
       "category": "d_agentic",
@@ -138,7 +162,7 @@
       "uf": "PR",
       "municipio": "Curitiba",
       "fonte": "CEASA-PR",
-      "notes": "Pagina institucional com tabela de cotacao diaria. Pode precisar de ano dinamico."
+      "notes": "Pagina institucional com ano dinamico via placeholder {YYYY}."
     },
     {
       "name": "CEASA MS 2025",
@@ -149,7 +173,7 @@
       "uf": "MS",
       "municipio": "Campo Grande",
       "fonte": "CEASA-MS",
-      "notes": "Mesmo padrao do boletim-2026. Manter inativo se 2026 estiver ativo."
+      "notes": "Mesmo padrao do boletim-2026. Substituivel pelo template {YYYY} em boletim-2026."
     },
     {
       "name": "Goias Procon PDF",
@@ -161,12 +185,58 @@
       "municipio": "Goiania",
       "fonte": "PROCON-GO",
       "notes": "PDF estatico de 2017. Dado historico nao automatizavel para coleta diaria."
+    },
+    {
+      "name": "CEASA RS Cotacoes",
+      "url": "https://ceasa.rs.gov.br/cotacoes-de-precos",
+      "active": true,
+      "category": "f_gdrive",
+      "adapter": "GoogleDriveAdapter",
+      "uf": "RS",
+      "municipio": "Porto Alegre",
+      "fonte": "CEASA-RS",
+      "notes": "Pagina estatica com links para Google Drive. Sheets publicos exportaveis como CSV via export?format=csv",
+      "max_sheets": 5
     }
   ],
   "adapter_map": {
     "XhrInterceptorAdapter": ["a_json"],
     "PlaywrightStealthAdapter": ["b_stealth"],
     "LegacyPostbackAdapter": ["c_postback"],
-    "AgenticHtmlAdapter": ["d_agentic"]
-  }
+    "AgenticHtmlAdapter": ["d_agentic"],
+    "GoogleDriveAdapter": ["f_gdrive"]
+  },
+  "exemplos_url_template": [
+    {
+      "name": "Placeholder temporal simples",
+      "url_template": "https://www.ceasa.pr.gov.br/Pagina/Cotacao-Diaria-de-Precos-{YYYY}",
+      "exemplo": "https://www.ceasa.pr.gov.br/Pagina/Cotacao-Diaria-de-Precos-2026"
+    },
+    {
+      "name": "Placeholder com data completa",
+      "url_template": "https://www.ceasape.org.br/cotacao/hortalicas?data={DATA}",
+      "exemplo": "https://www.ceasape.org.br/cotacao/hortalicas?data=01/07/2026"
+    },
+    {
+      "name": "Placeholder com paginacao",
+      "url_template": "https://transparencia.ceasa.rn.gov.br/cotacoes?pagina={PAGE}",
+      "exemplo": "https://transparencia.ceasa.rn.gov.br/cotacoes?pagina=2"
+    },
+    {
+      "name": "Placeholder composto",
+      "url_template": "https://{uf}.gov.br/precos/{YYYY}/{MM}/dados.csv",
+      "exemplo": "https://sp.gov.br/precos/2026/07/dados.csv",
+      "columns": {
+        "header_row": true,
+        "produto_col": "Produto",
+        "preco_col": "Valor (R$)",
+        "delimiter": ";"
+      },
+      "pagination": {
+        "page_param": "pagina",
+        "page_start": 1,
+        "max_pages": 3
+      }
+    }
+  ]
 }

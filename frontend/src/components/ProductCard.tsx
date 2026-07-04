@@ -114,6 +114,14 @@ export function ProductCard({ product }: ProductCardProps) {
         >
           {emoji}
         </div>
+        {product.preco_estimado && (
+          <span
+            className="absolute ml-16 mt-14 inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+            title="Preço estimado por inteligência artificial devido à falta de cotação oficial no período."
+          >
+            IA
+          </span>
+        )}
       </div>
 
       <h3 className={`mb-1 text-center text-sm font-semibold ${config.text}`}>
@@ -128,6 +136,11 @@ export function ProductCard({ product }: ProductCardProps) {
       {product.usou_fallback_12m && (
         <p className="mt-2 text-center text-[10px] leading-tight text-gray-400 dark:text-gray-500">
           * Comparação baseada na média dos últimos 12 meses (novo produto).
+        </p>
+      )}
+      {product.preco_estimado && !product.usou_fallback_12m && (
+        <p className="mt-2 text-center text-[10px] leading-tight text-gray-400 dark:text-gray-500">
+          Preço estimado por inteligência artificial devido à falta de cotação oficial no período.
         </p>
       )}
     </div>

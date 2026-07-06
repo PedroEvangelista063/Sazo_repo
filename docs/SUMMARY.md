@@ -170,45 +170,103 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 
 **Propósito**: Aplicativo B2C instalável (PWA) — funcionamento offline-first.
 
+**Stack**:
+
+| Tecnologia | Versão | Função |
+|---|---|---|
+| React | 19 | Core UI |
+| Mantine | 9 | Component library (AppShell, Select, SimpleGrid, Card, Chip, Modal, Badge) |
+| Vite | 6 | Bundler + PWA plugin |
+| TailwindCSS | 3.4 | Utility classes (co-existe com Mantine, dark mode sync) |
+| TanStack Query | 5 | Cache offline-first, stale-while-revalidate |
+| Zustand | 5 | Estado persistente do usuário |
+| Axios | — | HTTP client |
+| Lucide React | — | Ícones (ícones de estado, actions) |
+
 **Regras**:
 - **Nunca exibe R$** — apenas o semáforo (🟢🟡🔴)
-- `staleTime` de 12h para sazonalidade (`useHortifruti`), 24h para categorias (`useCategorias`)
+- `staleTime` de 5min para sazonalidade, retry 2
 - Service Worker com Cache-First (assets) e Stale-While-Revalidate (API)
 - IndexedDB para cache persistente (em vez de localStorage)
-- Background Sync para ações offline futuras
 - Mobile-first com skeletons (sem spinners bloqueantes)
+- Touch targets mínimos de 44×44px para usuários 60+
+- Dark mode via Mantine `useMantineColorScheme` sync com classe `.dark` do Tailwind
 
-### Fluxo de Interação (User Journey Pipeline)
+### Fluxo de Interação (User Journey)
 
-O usuário percorre 3 etapas implementadas inline na `SupermercadoView` (sem modal de onboarding):
+O usuário entra direto na página com SP + ano corrente pré-selecionados:
 
-| Etapa | Funcionalidade | Descrição |
+| Etapa | Componente | Descrição |
 |---|---|---|
-| 1. 📅 Período | Seletor de ano (dropdown) + mês (chips) | Anos disponíveis extraídos da API; chips de mês com indicador de dados. Seleção de ano+mes dispara computação dinâmica de sazonalidade |
-| 2. 🛒 Lista | Seletor de produtos (inline, colapsável) | Botões toggle com +/X; acesso ao modal de categorias (`CategoriesModal`) via botão no header |
-| 3. 🚦 Resultado | Grid de `ProductCard` (colapsável) | Ordenação por status: 🟢 VERDE → 🟡 AMARELO → 🔴 VERMELHO; contador de itens |
+| 1. 📍 UF + Ano | 2× `Select` Mantine | Dropdown de estado (SP default) + dropdown de anos disponíveis. Resetam mês e status ao trocar |
+| 2. 📅 Mês | `SimpleGrid` de `Button` Mantine | 12 botões (4/mobile, 6/tablet, 12/desktop). Verde = com dados, cinza = sem, preenchido = selecionado. Cada um com `minHeight: 44px`. Clique no mesmo mês destoggle. Dispara computação dinâmica no backend |
+| 3. 🛒 Produtos | `Chip.Group` Mantine | Multi-select chips com todos os produtos do ano. Funciona em AND com o filtro de mês |
+| 4. 🚦 Status | `Chip` exclusivo Mantine | Filtro VERDE/AMARELO/VERMELHO. Clique no mesmo chip limpa. Botão X explícito |
+| 5. 🃏 Grid | `SimpleGrid` de `ProductCard` | 2/mobile, 3/tablet, 4/desktop. Ordenação VERDE → AMARELO → VERMELHO. Badge contagem no topo |
+| 6. 📂 Categorias | `Modal` Mantine + `ScrollArea.Autosize` | Drill-down: lista de categorias → chips de produtos. Multi-select via `Chip.Group` |
 
-A localização é fixa (SP, dados CONAB). Não há mais modal de onboarding — o usuário entra direto na página com o ano corrente pré-selecionado e os meses com dados disponíveis marcados.
-
-### Arquivos
+### Componentes
 
 | Caminho | Descrição |
 |---|---|
-| `frontend/vite.config.ts` | Vite 6 + PWA Plugin (Manifest, Workbox, Background Sync) + manualChunks |
-| `frontend/tailwind.config.js` | Cores sazonais personalizadas (verde/amarelo/vermelho) |
-| `frontend/src/store/useUserStore.ts` | Zustand 5 + persist via IndexedDB (idb-keyval) — `selectedProducts`, `selectedMonth` |
-| `frontend/src/services/api.ts` | Axios + hooks TanStack Query v5 |
-| `frontend/src/components/ProductCard.tsx` | Card com semáforo visual + emoji fallback (nunca exibe R$) |
-| `frontend/src/components/SkeletonCard.tsx` | Skeleton loading pulsante |
-| `frontend/src/components/CategoriesModal.tsx` | Modal de drill-down por categoria — agrupa produtos, toggle multi-select |
-| `frontend/src/components/ThemeToggle.tsx` | Toggle dark/light mode |
-| `frontend/src/pages/SupermercadoView.tsx` | View principal inline: período (ano+mês) → lista de produtos (colapsável) → grid de resultados (colapsável); `CategoriesModal` acionado via header |
-| `frontend/src/hooks/useHortifruti.ts` | Hook TanStack Query dual-query: `hortifruti-meta` (snapshot sem filtro) + `hortifruti-filter` (ativada com ano+mes). StaleTime 12h. Ordena por `STATUS_ORDER` (VERDE=0, AMARELO=1, VERMELHO=2) |
-| `frontend/src/hooks/useCategorias.ts` | Hook TanStack Query para lista de categorias de varejo (staleTime 24h) |
-| `frontend/src/hooks/useDataStream.ts` | Hook SSE — conecta ao endpoint `/api/v1/stream/updates`, invalida cache TanStack Query ao receber evento `ETL_FINISHED` (exponential backoff reconnect) |
-| `frontend/src/hooks/useTheme.ts` | Hook de tema dark/light |
-| `frontend/src/types/domain.ts` | Interfaces TypeScript: ProdutoVarejo, StatusCor, SazonalidadeResponse |
-| `frontend/src/types/index.ts` | Barrel export dos tipos |
+| `frontend/src/main.tsx` | Bootstrap: `MantineProvider` (tema verde), `QueryClientProvider`, import de `@mantine/core/styles.css` |
+| `frontend/src/App.tsx` | `App` → `useSyncDarkMode()` (Mantine ↔ Tailwind `.dark` class) + `useDataStream()` + `SupermercadoView` |
+| `frontend/src/pages/SupermercadoView.tsx` | View principal (~280 linhas): `AppShell` com header fixo, seletor UF/ano, grid de meses, `Chip.Group` de produtos, filtro de status, `SimpleGrid` de `ProductCard`, `CategoriesModal` |
+| `frontend/src/components/ProductCard.tsx` | `Card` Mantine: emoji 28px (mapa `PRODUTO_EMOJI`), nome, ícone+label status, borda esquerda colorida por status, nota fallback |
+| `frontend/src/components/SkeletonCard.tsx` | `Skeleton` Mantine: círculo 80px + 2 barras |
+| `frontend/src/components/CategoriesModal.tsx` | `Modal` Mantine: nível 1 com `Button` fullWidth (categorias), nível 2 com `Chip.Group` (produtos), `ScrollArea.Autosize` |
+| `frontend/src/components/ThemeToggle.tsx` | `ActionIcon` Mantine → `toggleColorScheme()` |
+| `frontend/src/hooks/useHortifruti.ts` | TanStack Query dual-query: `hortifruti-meta` (snapshot) + `hortifruti-filter` (ano+mes). Ordena por `STATUS_ORDER` (VERDE=0) |
+| `frontend/src/hooks/useCategorias.ts` | TanStack Query para categorias de varejo |
+| `frontend/src/hooks/useDataStream.ts` | SSE → `/api/v1/stream/updates`, invalida queries ao `ETL_FINISHED`, exponential backoff 1s→30s |
+| `frontend/src/hooks/useUfs.ts` | TanStack Query para lista de UFs disponíveis |
+| `frontend/src/types/domain.ts` | Interfaces: `ProdutoVarejo`, `StatusCor`, `SazonalidadeResponse`, `Categoria` |
+| `frontend/postcss.config.js` | PostCSS: `postcss-preset-mantine` + TailwindCSS + Autoprefixer |
+| `frontend/vite.config.ts` | Vite 6 + PWA Plugin (Manifest, Workbox, manualChunks) |
+| `frontend/tailwind.config.js` | `darkMode: 'class'`, cores sazonais personalizadas |
+
+### Detalhamento da Experiência
+
+**Header (AppShell.Header)**:
+- Ícone decorativo verde + título "Sazonalidade" + subtítulo com UF
+- `ActionIcon` ThemeToggle (🌙/☀️) — alterna Mantine `colorScheme`, sincroniza classe `.dark`
+- Botão "Categorias": `visibleFrom="sm"` mostra texto, `hiddenFrom="sm"` só ícone
+
+**Loading state**:
+- `SimpleGrid` 2/3/4 colunas com 6 `SkeletonCard` (círculo + barras animadas)
+
+**Error state**:
+- `Alert` variant="light" color="red" — mensagem de erro amigável
+
+**Empty state**:
+- `Center` com ícone `Salad` (lucide) + "Nenhum dado disponível"
+
+**Seletor UF/Ano**:
+- `Select` Mantine com 90px (UF) e 100px (ano). Trocar UF ou ano reseta mês e status
+- `Badge` ao lado com contagem de itens visíveis
+
+**Grid de Meses**:
+- `SimpleGrid` cols base:4 sm:6 lg:12, spacing 6
+- `Button` com `styles={{ inner: { flexDirection: 'column' } }}` e `minHeight: 44`
+- Variants: `filled`=selecionado, `light`=com dados, `default`=sem dados
+- Colors: `green`=com dados, `gray`=sem dados
+- Botão "Visão Completa" aparece quando um mês está selecionado
+
+**Filtro Produto**:
+- `Chip.Group` com `multiple`, `onChange={setSelectedProducts}`
+- `Chip` com `size="sm"` e `radius="xl"`
+
+**Filtro Status**:
+- 3 `Chip` exclusivos: Melhor Época (green), Preço Normal (yellow), Péssima Época (red)
+- `ActionIcon` X para limpar quando ativo
+
+**Grid de Cards**:
+- `SimpleGrid` cols base:2 sm:3 lg:4
+- Chave: `p.id_produto` (agora `id_sazonalidade` do backend — único por linha)
+
+### Arquivos removidos
+
+- `frontend/src/hooks/useTheme.ts` — substituído por `useMantineColorScheme` nativo do Mantine
 
 ---
 

@@ -274,7 +274,7 @@ class GoogleDriveAdapter(BaseTargetAdapter):
                     "LEGUMES",
                 ):
                     current_category = maybe_cat
-                continue
+                    continue
 
             produto = col1.strip().upper()
             unidade = (row[2] or "").strip()

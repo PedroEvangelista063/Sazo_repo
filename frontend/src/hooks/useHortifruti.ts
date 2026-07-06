@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '../services/api'
 import type { ProdutoVarejo, SazonalidadeResponse } from '../types/domain'
 
-const STALE_TIME = 1000 * 60 * 60 * 12
-const GC_TIME = 1000 * 60 * 60 * 24
+const STALE_TIME = 1000 * 60 * 5
+const GC_TIME = 1000 * 60 * 30
 
 const STATUS_ORDER: Record<string, number> = {
   VERDE: 0,
@@ -28,15 +28,18 @@ function sortByStatus(products: ProdutoVarejo[]): ProdutoVarejo[] {
  *  - `products`     – the actively displayed list (honors ano+mes when both set)
  *  - `allProducts`  – the full unfiltered snapshot (for calendar / filter chips)
  */
-export function useHortifruti(ano?: number | null, mes?: number | null) {
+export function useHortifruti(uf: string = 'SP', ano?: number | null, mes?: number | null) {
   const hasFilter = ano != null && mes != null
+  const hasUF = uf && uf !== 'ALL'
 
   const metaQuery = useQuery({
-    queryKey: ['hortifruti-meta'],
+    queryKey: ['hortifruti-meta', hasUF ? uf : '__all__'],
     queryFn: async ({ signal }) => {
+      const params: Record<string, unknown> = { por_pagina: 1000 }
+      if (hasUF) params.uf = uf
       const { data } = await api.get<SazonalidadeResponse>(
         '/sazonalidade',
-        { params: { uf: 'SP', por_pagina: 500 }, signal },
+        { params, signal },
       )
       return data
     },
@@ -48,9 +51,10 @@ export function useHortifruti(ano?: number | null, mes?: number | null) {
   })
 
   const filterQuery = useQuery({
-    queryKey: ['hortifruti-filter', ano, mes],
+    queryKey: ['hortifruti-filter', hasUF ? uf : '__all__', ano, mes],
     queryFn: async ({ signal }) => {
-      const params: Record<string, unknown> = { uf: 'SP', por_pagina: 500, ano, mes }
+      const params: Record<string, unknown> = { por_pagina: 1000, ano, mes }
+      if (hasUF) params.uf = uf
       const { data } = await api.get<SazonalidadeResponse>(
         '/sazonalidade',
         { params, signal },

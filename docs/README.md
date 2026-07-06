@@ -98,41 +98,111 @@ API RESTful enxuta que só serve o que o app precisa — nada mais.
 
 ---
 
-## 🛋️ Sala de Estar — PWA React Mobile-First
+## 🛋️ Sala de Estar — PWA React Mobile-First (Mantine UI)
 
 Um app que funciona **na feira, no ônibus, no sinal 3G**.
 
-### Jornada do Usuário em 4 Etapas
+### Experiência do Usuário Passo a Passo
 
 ```
-📍 Onde você está?  →  🛒 Monte sua lista  →  📅 Escolha o mês  →  🚦 Resultado na hora
+👤 Entra → [SP ▼] [2026 ▼] → 🗓️ Clica num mês → 🛒 Filtra produtos → 🚦 Grid colorido
 ```
 
-1. **📍 Localização** — O usuário seleciona UF e município. A partir daí, tudo é regionalizado.
-2. **🛒 Lista** — Seção colapsável com multi-select de produtos. Filtro inteligente focado em hortifrutigranjeiros.
-3. **📅 Mês** — Chips de mês extraídos da API. Cada clique dispara computação dinâmica de sazonalidade.
-4. **🚦 Resultado** — Grid de cartões com emoji + semáforo. Ordenação: 🟢 → 🟡 → 🔴.
+**1. Header Fixo** (`AppShell.Header`)
+```
+┌──────────────────────────────────────────────┐
+│ [📈] Sazonalidade                     [🌙] [📂] │
+│      Preços de Alimentos — CONAB · SP         │
+└──────────────────────────────────────────────┘
+```
+- Logo + título + subtítulo com UF
+- 🌙/☀️ — alterna dark/light (Mantine `useMantineColorScheme` sincronizado com classe `.dark` do Tailwind)
+- 📂 Categorias — texto em desktop, só ícone em mobile
+
+**2. Seletor de Período**
+```
+[SP ▼] [2026 ▼]                              [42 itens]
+┌────┬────┬────┬────┬────┬────┐ ← 4 colunas mobile, 12 desktop
+│ 01 │ 02 │ 03 │ 04 │ 05 │ 06 │
+│ Jan│ Fev│ Mar│ Abr│ Mai│ Jun│
+├────┼────┼────┼────┼────┼────┤
+│ 07 │ 08 │ 09 │ 10 │ 11 │ 12 │
+│ Jul│ Ago│ Set│ Out│ Nov│ Dez│
+└────┴────┴────┴────┴────┴────┘
+```
+- **Select UF** + **Select Ano** (Mantine) — resetam mês e status ao trocar
+- Grid de **12 botões** com `minHeight: 44px` (touch target): verde = com dados, cinza = sem, preenchido = selecionado
+- Clique no mesmo mês **destoggle** → volta visão completa
+- **Badge** verde com contagem de itens visíveis
+
+**3. Filtro por Produto** (`Chip.Group` Mantine)
+```
+[Abacate Avocado] [Abacate Breda] [Banana] [Batata] [+]
+```
+- Multi-select chips — toque alterna seleção
+- Filtro AND com o mês selecionado
+
+**4. Filtro por Status** (`Chip` exclusivo Mantine)
+```
+[Melhor Época] [Preço Normal] [Péssima Época] [✕]
+```
+- Apenas 1 ativo por vez. ✕ aparece para limpar
+
+**5. Grid de Produtos** (`SimpleGrid` + `ProductCard`)
+```
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│    🥑    │  │    🍌    │  │    🥔    │
+│Abacate   │  │Banana    │  │Batata    │
+│Avocado   │  │Prata     │  │           │
+│ ✅ Melhor│  │ ⚠ Normal │  │ ❌ Péssim│
+└──────────┘  └──────────┘  └──────────┘
+```
+- 2 colunas mobile, 3 tablet, 4 desktop
+- Ordenação: VERDE → AMARELO → VERMELHO
+- Cada `Card` Mantine: emoji 28px + nome + ícone status + borda colorida por status + nota de rodapé
+
+**6. Modal de Categorias** (`Modal` + `ScrollArea.Autosize`)
+```
+Nível 1:          Nível 2:
+┌──────────────┐  ┌──────────────┐
+│ 🥩 CARNES 12 │  │ ← Categorias │
+│ 🥬 HORTALI  8│  │              │
+│ 🍇 FRUTAS  22│  │ [🍇Uva][🍊Laranja] │
+│ ...          │  │ [🍌Banana]   │
+└──────────────┘  └──────────────┘
+```
+- Drill-down: categoria → produtos (chips clicáveis)
+- Scroll nativo, sem travamento
 
 ### Stack Frontend
 
-| Tecnologia | Pra quê |
-|---|---|
-| React 18.3 + Vite 6 | Core |
-| TailwindCSS 3.4 | Utility-first, cores sazonais |
-| Zustand 5 + idb-keyval | Estado persistente do usuário (UF/Cidade) |
-| TanStack Query v5 | Cache offline-first, stale-while-revalidate |
-| Service Worker (Workbox) | PWA, cache de API, assets, fontes |
-| Axios | HTTP client |
+| Tecnologia | Versão | Pra quê |
+|---|---|---|
+| React | 19 | Core UI |
+| Mantine | 9 | Component library — AppShell, Select, SimpleGrid, Card, Chip, Modal, Badge, ActionIcon |
+| Vite | 6 | Bundler + PWA plugin |
+| TailwindCSS | 3.4 | Utility classes (co-existe com Mantine via `darkMode: 'class'`) |
+| TanStack Query | 5 | Cache offline-first, stale-while-revalidate |
+| Zustand | 5 | Estado persistente do usuário |
+| Lucide React | — | Ícones (TrendingUp, Layers, Sun, Moon, X, Salad) |
+| Axios | — | HTTP client |
 
 ### Regras de Ouro do Frontend
 
 - 🚫 **Nunca exibe R$** — só o semáforo. Zero preços na tela.
 - 🚫 **Sem imagens** — emoji unicode exclusivamente.
-- ⚡ Skeletons no lugar de spinners.
-- 📱 Mobile-first 100%.
-- 🧩 `manualChunks` no Vite: vendor-react, vendor-icons, vendor-store, vendor-http.
+- ⚡ Skeletons (`Skeleton` Mantine) no lugar de spinners.
+- 📱 Mobile-first 100%. Touch targets ≥ 44×44px.
+- 🌗 Dark mode via Mantine `useMantineColorScheme` + `.dark` class Tailwind.
+- 🧩 `manualChunks` no Vite: vendor-react, vendor-mantine, vendor-icons, vendor-store, vendor-http.
 
 **Offline:** Service Worker com CacheFirst para assets (30d), StaleWhileRevalidate para API de sazonalidade (7d), CacheFirst para municípios (24h). IndexedDB como cache persistente.
+
+### Conexão em Tempo Real (SSE)
+
+- `useDataStream()` conecta ao `/api/v1/stream/updates`
+- Evento `ETL_FINISHED` invalida queries TanStack automaticamente
+- Reconexão exponencial: 1s → 2s → 4s → ... → 30s max
 
 ---
 

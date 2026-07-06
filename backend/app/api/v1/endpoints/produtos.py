@@ -114,27 +114,46 @@ async def _query_sazonalidade_snapshot(
 
     where = " AND ".join(where_clauses)
 
-    count_query = f"SELECT COUNT(*) as total FROM mart.vw_api_produtos_sazonalidade v WHERE {where}"
+    count_query = f"""
+        SELECT COUNT(*) as total FROM (
+            SELECT v.id_produto, v.uf,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY v.id_produto, v.uf
+                       ORDER BY v.ano DESC, v.mes DESC
+                   ) AS rn
+            FROM mart.vw_api_produtos_sazonalidade v
+            WHERE {where}
+        ) sub WHERE sub.rn = 1
+    """
     data_query = f"""
-        SELECT
-            v.id_sazonalidade,
-            v.produto,
-            v.categoria,
-            v.uf,
-            v.municipio,
-            v.municipio_id,
-            v.ano,
-            v.mes,
-            v.preco_referencia,
-            v.preco_atual,
-            v.data_referencia_atual,
-            v.usou_fallback_12m,
-            v.preco_estimado,
-            v.status_cor,
-            v.fonte
-        FROM mart.vw_api_produtos_sazonalidade v
-        WHERE {where}
-        ORDER BY v.status_cor, v.uf, v.produto
+        SELECT * FROM (
+            SELECT
+                v.id_sazonalidade,
+                v.id_produto,
+                v.produto,
+                v.categoria,
+                v.uf,
+                v.municipio,
+                v.municipio_id,
+                v.ano,
+                v.mes,
+                v.preco_referencia,
+                v.preco_atual,
+                v.data_referencia_atual,
+                v.usou_fallback_12m,
+                v.preco_estimado,
+                v.status_cor,
+                v.fonte,
+                v.tendencia_futura,
+                ROW_NUMBER() OVER (
+                    PARTITION BY v.id_produto, v.uf
+                    ORDER BY v.ano DESC, v.mes DESC
+                ) AS rn
+            FROM mart.vw_api_produtos_sazonalidade v
+            WHERE {where}
+        ) sub
+        WHERE sub.rn = 1
+        ORDER BY sub.status_cor, sub.uf, sub.produto
         OFFSET ${idx} LIMIT ${idx + 1}
     """
     params.extend([offset_val, por_pagina])
@@ -179,10 +198,10 @@ async def _query_sazonalidade_por_mes(
     rows = await _compute_periodo_full(ano, mes, uf, municipio, categoria)
 
     full = []
-    for i, r in enumerate(rows):
+    for r in rows:
         full.append(
             SazonalidadeResponse(
-                id_produto=i + 1,
+                id_produto=r.get("id_sazonalidade", 0),
                 nome_produto=r["produto"],
                 icone_url=None,
                 uf=r["uf"],
@@ -198,6 +217,7 @@ async def _query_sazonalidade_por_mes(
                 status_cor=r["status_cor"],
                 fonte=r["fonte"],
                 categoria=r.get("categoria"),
+                tendencia_futura=r.get("tendencia_futura"),
             )
         )
 
@@ -227,7 +247,7 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
     params = [ano, mes]
     idx = 3
 
-    dim = []
+    dim = [f"v.ano = $1", f"v.mes = $2"]
     if uf:
         dim.append(f"v.uf = ${idx}")
         params.append(uf.upper())
@@ -245,6 +265,7 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
 
     sql = f"""
         SELECT
+            v.id_produto,
             v.produto,
             v.categoria,
             v.uf,
@@ -258,7 +279,8 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
             v.usou_fallback_12m,
             v.preco_estimado,
             v.status_cor,
-            v.fonte
+            v.fonte,
+            v.tendencia_futura
         FROM mart.vw_api_produtos_sazonalidade v
         WHERE {dim_sql}
         ORDER BY v.status_cor, v.produto
@@ -288,6 +310,7 @@ def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
                 status_cor=r["status_cor"],
                 fonte=r["fonte"],
                 categoria=r.get("categoria"),
+                tendencia_futura=r.get("tendencia_futura"),
             )
         )
 
@@ -306,7 +329,7 @@ async def listar_sazonalidade(
     ano: int | None = Query(None, ge=2020, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
-    por_pagina: int = Query(100, ge=1, le=500),
+    por_pagina: int = Query(100, ge=1, le=2000),
 ):
     return await _query_sazonalidade(
         uf=uf,
@@ -329,7 +352,7 @@ async def listar_por_localidade(
     ano: int | None = Query(None, ge=2020, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
-    por_pagina: int = Query(100, ge=1, le=500),
+    por_pagina: int = Query(100, ge=1, le=2000),
 ):
     return await _query_sazonalidade(
         uf=uf,

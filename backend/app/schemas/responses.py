@@ -84,6 +84,9 @@ class SazonalidadeResponse(BaseModel):
     categoria: str | None = Field(
         None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)"
     )
+    tendencia_futura: Literal['QUEDA', 'ALTA', 'ESTAVEL'] | None = Field(
+        None, description="Previsão ML (Holt-Winters) para o próximo mês: QUEDA/ALTA/ESTAVEL"
+    )
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
 

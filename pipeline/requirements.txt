@@ -28,6 +28,10 @@ python-dotenv>=1.0.0
 tenacity>=9.1.2
 psycopg2-binary>=2.9.10
 
+# ─── CAMADA 6: Machine Learning (Séries Temporais) ───
+statsmodels>=0.14.0
+scipy>=1.13.0
+
 # ─── Testes ───
 pytest>=8.4.0
 pytest-cov>=6.1.0

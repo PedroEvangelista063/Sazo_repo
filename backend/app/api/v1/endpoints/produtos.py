@@ -39,7 +39,7 @@ async def _query_sazonalidade(
         ).encode()
     ).hexdigest()
 
-    cached = cache.get(cache_key)
+    cached = await cache.get(cache_key)
     if cached is not None:
         return SazonalidadeListResponse(**cached)
 
@@ -87,35 +87,41 @@ async def _query_sazonalidade_snapshot(
     cache_key,
     settings,
 ) -> SazonalidadeListResponse:
-    where_clauses = ["1=1"]
-    params = []
-    idx = 1
+    conds: list[tuple[str, str | None]] = [("1=1", None)]
 
     if uf:
-        where_clauses.append(f"v.uf = ${idx}")
-        params.append(uf.upper())
-        idx += 1
+        conds.append(("v.uf =", uf.upper()))
     if municipio:
-        where_clauses.append(f"v.municipio ILIKE ${idx}")
-        params.append(f"%{municipio}%")
-        idx += 1
+        conds.append(("v.municipio ILIKE", f"%{municipio}%"))
     if produto:
-        where_clauses.append(f"v.produto ILIKE ${idx}")
-        params.append(f"%{produto}%")
-        idx += 1
+        conds.append(("v.produto ILIKE", f"%{produto}%"))
     if status_cor:
-        where_clauses.append(f"v.status_cor = ${idx}")
-        params.append(status_cor.upper())
-        idx += 1
+        conds.append(("v.status_cor =", status_cor.upper()))
     if categoria:
-        where_clauses.append(f"v.categoria = ${idx}")
-        params.append(categoria.upper())
-        idx += 1
+        conds.append(("v.categoria =", categoria.upper()))
 
-    where = " AND ".join(where_clauses)
+    params: list = []
+    parts: list[str] = []
+    idx = 1
+    for col, val in conds:
+        if val is None:
+            parts.append(col)
+        else:
+            parts.append(f"{col} ${idx}")
+            params.append(val)
+            idx += 1
+    where = " AND ".join(parts)
+
+    BASE_COLS = """
+        v.id_sazonalidade, v.id_produto, v.produto, v.categoria,
+        v.uf, v.municipio, v.municipio_id, v.ano, v.mes,
+        v.preco_referencia, v.preco_atual, v.data_referencia_atual,
+        v.usou_fallback_12m, v.preco_estimado, v.status_cor, v.fonte,
+        v.tendencia_futura
+    """
 
     count_query = f"""
-        SELECT COUNT(*) as total FROM (
+        SELECT COUNT(*) AS total FROM (
             SELECT v.id_produto, v.uf,
                    ROW_NUMBER() OVER (
                        PARTITION BY v.id_produto, v.uf
@@ -127,28 +133,11 @@ async def _query_sazonalidade_snapshot(
     """
     data_query = f"""
         SELECT * FROM (
-            SELECT
-                v.id_sazonalidade,
-                v.id_produto,
-                v.produto,
-                v.categoria,
-                v.uf,
-                v.municipio,
-                v.municipio_id,
-                v.ano,
-                v.mes,
-                v.preco_referencia,
-                v.preco_atual,
-                v.data_referencia_atual,
-                v.usou_fallback_12m,
-                v.preco_estimado,
-                v.status_cor,
-                v.fonte,
-                v.tendencia_futura,
-                ROW_NUMBER() OVER (
-                    PARTITION BY v.id_produto, v.uf
-                    ORDER BY v.ano DESC, v.mes DESC
-                ) AS rn
+            SELECT {BASE_COLS},
+                   ROW_NUMBER() OVER (
+                       PARTITION BY v.id_produto, v.uf
+                       ORDER BY v.ano DESC, v.mes DESC
+                   ) AS rn
             FROM mart.vw_api_produtos_sazonalidade v
             WHERE {where}
         ) sub
@@ -163,11 +152,11 @@ async def _query_sazonalidade_snapshot(
 
     if total == 0:
         result = SazonalidadeListResponse(data=[], total=0, pagina=pagina, por_pagina=por_pagina)
-        cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+        await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
         return result
 
     rows = await fetch(data_query, *params)
-    return _build_response(rows, total, pagina, por_pagina, cache_key, settings)
+    return await _build_response(rows, total, pagina, por_pagina, cache_key, settings)
 
 
 _HIST_CACHE_TTL = 86_400  # 24h — dados históricos imutáveis
@@ -191,7 +180,7 @@ async def _query_sazonalidade_por_mes(
     hist_parts = [str(ano), str(mes), uf or "", municipio or "", categoria or ""]
     hist_key = "saz_hist_" + "_".join(hist_parts).rstrip("_")
 
-    cached_full = cache.get(hist_key)
+    cached_full = await cache.get(hist_key)
     if cached_full is not None:
         return _slice_periodo(cached_full, produto, status_cor, pagina, por_pagina)
 
@@ -221,7 +210,7 @@ async def _query_sazonalidade_por_mes(
             )
         )
 
-    cache.set(hist_key, full, _HIST_CACHE_TTL)
+    await cache.set(hist_key, full, _HIST_CACHE_TTL)
 
     return _slice_periodo(full, produto, status_cor, pagina, por_pagina)
 
@@ -244,78 +233,71 @@ def _slice_periodo(full_dicts, produto, status_cor, pagina, por_pagina):
 
 
 async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
-    params = [ano, mes]
-    idx = 3
+    params: list = [ano, mes]
+    conds: list[tuple[str, str | None]] = [
+        ("v.ano = $1", None),
+        ("v.mes = $2", None),
+    ]
 
-    dim = [f"v.ano = $1", f"v.mes = $2"]
+    idx = 3
     if uf:
-        dim.append(f"v.uf = ${idx}")
+        conds.append((f"v.uf = ${idx}", uf.upper()))
         params.append(uf.upper())
         idx += 1
     if municipio:
-        dim.append(f"v.municipio ILIKE ${idx}")
+        conds.append((f"v.municipio ILIKE ${idx}", f"%{municipio}%"))
         params.append(f"%{municipio}%")
         idx += 1
     if categoria:
-        dim.append(f"v.categoria = ${idx}")
+        conds.append((f"v.categoria = ${idx}", categoria.upper()))
         params.append(categoria.upper())
         idx += 1
 
-    dim_sql = " AND ".join(dim) if dim else "1=1"
+    where = " AND ".join(c[0] for c in conds)
 
     sql = f"""
         SELECT
-            v.id_produto,
-            v.produto,
-            v.categoria,
-            v.uf,
-            v.municipio,
-            v.municipio_id,
+            v.id_sazonalidade, v.id_produto, v.produto, v.categoria,
+            v.uf, v.municipio, v.municipio_id,
             $1::INTEGER AS ano_pesquisa,
             $2::INTEGER AS mes_pesquisa,
-            v.data_referencia_atual,
-            v.preco_referencia,
-            v.preco_atual,
-            v.usou_fallback_12m,
-            v.preco_estimado,
-            v.status_cor,
-            v.fonte,
-            v.tendencia_futura
+            v.data_referencia_atual, v.preco_referencia, v.preco_atual,
+            v.usou_fallback_12m, v.preco_estimado, v.status_cor,
+            v.fonte, v.tendencia_futura
         FROM mart.vw_api_produtos_sazonalidade v
-        WHERE {dim_sql}
+        WHERE {where}
         ORDER BY v.status_cor, v.produto
     """
 
     return await fetch(sql, *params)
 
 
-def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
-    items = []
-    for r in rows:
-        items.append(
-            SazonalidadeResponse(
-                id_produto=r.get("id_sazonalidade", 0),
-                nome_produto=r["produto"],
-                icone_url=None,
-                uf=r["uf"],
-                municipio=r.get("municipio"),
-                municipio_id=r.get("municipio_id"),
-                ano=r["ano"],
-                mes=r["mes"],
-                data_referencia_atual=r["data_referencia_atual"],
-                preco_referencia=r.get("preco_referencia"),
-                preco_atual=r.get("preco_atual"),
-                usou_fallback_12m=r.get("usou_fallback_12m", False),
-                preco_estimado=r.get("preco_estimado", False),
-                status_cor=r["status_cor"],
-                fonte=r["fonte"],
-                categoria=r.get("categoria"),
-                tendencia_futura=r.get("tendencia_futura"),
-            )
+async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
+    items = [
+        SazonalidadeResponse(
+            id_produto=r.get("id_sazonalidade", 0),
+            nome_produto=r["produto"],
+            icone_url=None,
+            uf=r["uf"],
+            municipio=r.get("municipio"),
+            municipio_id=r.get("municipio_id"),
+            ano=r["ano"],
+            mes=r["mes"],
+            data_referencia_atual=r["data_referencia_atual"],
+            preco_referencia=r.get("preco_referencia"),
+            preco_atual=r.get("preco_atual"),
+            usou_fallback_12m=r.get("usou_fallback_12m", False),
+            preco_estimado=r.get("preco_estimado", False),
+            status_cor=r["status_cor"],
+            fonte=r["fonte"],
+            categoria=r.get("categoria"),
+            tendencia_futura=r.get("tendencia_futura"),
         )
+        for r in rows
+    ]
 
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
-    cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+    await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
 
 

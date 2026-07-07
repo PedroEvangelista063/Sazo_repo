@@ -2,13 +2,18 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 from typing import Any
+
+import httpx
+from bs4 import BeautifulSoup
 
 from pipeline.scraper.circuit_breaker import CircuitBreaker
 from pipeline.scraper.adapters.agentic_html import AgenticHtmlAdapter
-from pipeline.scraper.adapters.base import CotacaoRegional
+from pipeline.scraper.adapters.base import CotacaoRegional, validar_cotacao
 from pipeline.scraper.adapters.organism_adapter import OrganismAdapter
 from pipeline.scraper.adapters.google_drive_adapter import GoogleDriveAdapter
+from pipeline.scraper.adapters.santo_graal_adapter import SantoGraalAdapter
 from pipeline.scraper.adapters.stealth import (
     BaseTargetAdapter,
     LegacyPostbackAdapter,
@@ -16,9 +21,417 @@ from pipeline.scraper.adapters.stealth import (
     XhrInterceptorAdapter,
     executar_adapters_playwright,
 )
+from pipeline.scraper.transport.fingerprint import build_context_kwargs
 from pipeline.scraper.url_manager import PaginationConfig
 
 logger = logging.getLogger(__name__)
+
+BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/125.0.0.0 Safari/537.36"
+    ),
+    "Accept-Language": "pt-BR,pt;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+}
+
+# ── Cascata de Resiliência: Roteamento UF → Fonte ──────────────────────
+
+TODAS_UFS: list[str] = sorted([
+    "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
+    "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN",
+    "RO", "RR", "RS", "SC", "SE", "SP", "TO",
+])
+
+UF_ALVOS_DEDICADOS: dict[str, list[str]] = {
+    "SP": ["agrolink", "ceagesp", "cepea"],
+    "PR": ["ceasa_pr", "ceasa_pr_hoje", "ceasa_pr_2025"],
+    "MG": ["ceasa_mg", "ceasa_mg_minas1"],
+    "ES": ["ceasa_es"],
+    "PE": ["ceasa_pe"],
+    "RN": ["ceasa_rn"],
+    "MS": ["ceasa_ms"],
+    "RS": ["ceasa_rs"],
+    "BR": ["conab", "conab_pentaho", "calculadorarural"],
+}
+
+MAPA_CEASA_UF: dict[str, str] = {
+    "campinas": "SP", "ceagesp": "SP", "saopaulo": "SP", "sao paulo": "SP",
+    "belo horizonte": "MG", "contagem": "MG", "minas gerais": "MG",
+    "rio de janeiro": "RJ", "rj": "RJ",
+    "brasilia": "DF", "bsb": "DF",
+    "curitiba": "PR", "parana": "PR",
+    "goiania": "GO", "goias": "GO",
+    "porto alegre": "RS",
+    "florianopolis": "SC", "santa catarina": "SC",
+    "salvador": "BA",
+    "recife": "PE",
+    "fortaleza": "CE",
+    "natal": "RN",
+    "belem": "PA",
+    "manaus": "AM",
+    "campo grande": "MS",
+    "cuiaba": "MT",
+    "vitoria": "ES",
+    "sao luis": "MA",
+    "teresina": "PI",
+    "aracaju": "SE",
+    "joao pessoa": "PB",
+    "maceio": "AL",
+    "palmas": "TO",
+}
+
+RE_CEASA_UF = re.compile(r"([A-Z]{2})\s*\)?\s*$")
+
+CATEGORIAS_AGREGADOR = [
+    "legumes", "frutas", "verduras",
+]
+
+
+def _extrair_uf_de_ceasa(nome_ceasa: str) -> str | None:
+    nome = nome_ceasa.lower().strip()
+    nome = nome.replace("ceasa", "").replace("ceagesp", "").replace("-", "").replace("/", " ").strip()
+    nome = re.sub(r"\s+", " ", nome)
+
+    if "campinas" in nome or "ceagesp" in nome:
+        return "SP"
+    if "belo horizonte" in nome or "contagem" in nome:
+        return "MG"
+    if "rio de janeiro" in nome:
+        return "RJ"
+    if "brasilia" in nome:
+        return "DF"
+    if "curitiba" in nome:
+        return "PR"
+    if "goiania" in nome:
+        return "GO"
+    if "porto alegre" in nome:
+        return "RS"
+    if "salvador" in nome:
+        return "BA"
+    if "recife" in nome:
+        return "PE"
+    if "fortaleza" in nome:
+        return "CE"
+    if "natal" in nome:
+        return "RN"
+    if "belem" in nome:
+        return "PA"
+    if "campo grande" in nome:
+        return "MS"
+    if "cuiaba" in nome:
+        return "MT"
+    if "vitoria" in nome:
+        return "ES"
+    if "florianopolis" in nome:
+        return "SC"
+
+    m = RE_CEASA_UF.search(nome)
+    if m:
+        uf = m.group(1).upper()
+        if uf in TODAS_UFS:
+            return uf
+    return None
+
+
+class AgregadorMercadoAdapter:
+    """Camada 2 — Fallback universal via portais agregadores de mercado.
+
+    Fontes (em ordem):
+      1. Noticias Agricolas (cotacoes/legumes, frutas, verduras)
+      2. HF Brasil (estatistica/{produto}.aspx)
+
+    Usa httpx async, sem Playwright. Tabelas HTML simples com precos
+    organizados por CEASA de origem.
+    """
+    TIMEOUT_S = 25
+
+    def __init__(self, uf: str, municipio: str = "", fonte: str = "AGREGADOR"):
+        self.uf = uf.upper()
+        self.municipio = municipio or "Nacional"
+        self.fonte = fonte or "AGREGADOR-MERCADO"
+
+    async def fetch(self) -> list[CotacaoRegional]:
+        resultados: list[CotacaoRegional] = []
+
+        resultados = await self._tentar_noticias_agricolas()
+        if resultados:
+            logger.info(
+                "[Agregador] UF=%s: %d cotacoes via Noticias Agricolas",
+                self.uf, len(resultados),
+            )
+            return resultados
+
+        resultados = await self._tentar_hf_brasil()
+        if resultados:
+            logger.info(
+                "[Agregador] UF=%s: %d cotacoes via HF Brasil",
+                self.uf, len(resultados),
+            )
+            return resultados
+
+        logger.info("[Agregador] UF=%s: sem dados nas fontes disponiveis (graceful degradation)", self.uf)
+        return []
+
+    async def _tentar_noticias_agricolas(self) -> list[CotacaoRegional]:
+        resultados: list[CotacaoRegional] = []
+        seen: set[str] = set()
+        hoje = __import__("datetime", fromlist=["date"]).date.today()
+
+        async with httpx.AsyncClient(
+            headers=BROWSER_HEADERS, timeout=15, follow_redirects=True
+        ) as client:
+            for categoria in CATEGORIAS_AGREGADOR:
+                url = f"https://www.noticiasagricolas.com.br/cotacoes/{categoria}"
+                try:
+                    r = await client.get(url)
+                    if r.status_code != 200:
+                        continue
+                    soup = BeautifulSoup(r.text, "lxml")
+                    items = self._parse_tabela_noticias(soup, seen)
+                    resultados.extend(items)
+                except Exception as e:
+                    logger.debug("[Agregador] Noticias Agricolas %s: %s", categoria, e)
+
+        return resultados
+
+    def _parse_tabela_noticias(self, soup: BeautifulSoup, seen: set[str]) -> list[CotacaoRegional]:
+        resultados: list[CotacaoRegional] = []
+        ceasa_atual: str | None = None
+
+        for table in soup.find_all("table"):
+            rows = table.find_all("tr")
+            if len(rows) < 2:
+                continue
+            header = " ".join(c.get_text(strip=True).lower() for c in rows[0].find_all(["th", "td"]))
+            if not any(k in header for k in ("ceasas", "preço", "preco")):
+                continue
+
+            for row in rows[1:]:
+                cells = [c.get_text(strip=True) for c in row.find_all(["td", "th"])]
+                if not cells:
+                    continue
+                texto = cells[0].strip()
+
+                if any(k in texto.lower() for k in ("ceasa", "ceagesp")):
+                    ceasa_atual = texto
+                    continue
+
+                if "***" in texto or not texto or len(texto) < 3:
+                    continue
+
+                if len(cells) < 2:
+                    continue
+
+                preco_raw = cells[1].strip()
+                if not preco_raw or "***" in preco_raw or preco_raw in ("-", "--", ""):
+                    continue
+                preco = self._parse_valor(preco_raw)
+                if preco is None:
+                    continue
+
+                dedup = f"{texto}|{preco}"
+                if dedup in seen:
+                    continue
+                seen.add(dedup)
+
+                uf_encontrada = None
+                if ceasa_atual:
+                    uf_encontrada = _extrair_uf_de_ceasa(ceasa_atual)
+                if not uf_encontrada:
+                    continue
+                if uf_encontrada != self.uf and self.uf != "BR":
+                    continue
+
+                resultados.append(CotacaoRegional(
+                    produto_original=texto,
+                    uf=uf_encontrada,
+                    municipio=self.municipio,
+                    ano=__import__("datetime", fromlist=["date"]).date.today().year,
+                    mes=__import__("datetime", fromlist=["date"]).date.today().month,
+                    fonte=self.fonte,
+                    preco_bruto=preco,
+                    preco_medio=preco,
+                    status_coleta="sucesso",
+                ))
+
+        return resultados
+
+    HF_PRODUTOS = [
+        "batata", "tomate", "cebola", "alface", "cenoura", "beterraba",
+        "abobrinha", "pepino", "pimentao", "banana", "laranja", "maca",
+        "mamao", "uva", "melancia", "morango", "abacate", "abacaxi",
+        "manga", "goiaba", "maracuja", "limao",
+    ]
+
+    HF_MAPA_REGIAO_UF: dict[str, str] = {
+        "sao paulo": "SP",
+        "belo horizonte": "MG", "contagem": "MG", "minas gerais": "MG",
+        "rio de janeiro": "RJ", "rj": "RJ",
+        "brasilia": "DF", "df": "DF",
+        "curitiba": "PR", "parana": "PR",
+        "santa catarina": "SC",
+        "rio grande do sul": "RS",
+        "goiania": "GO", "goias": "GO",
+        "capital": "SP",
+    }
+
+    async def _tentar_hf_brasil(self) -> list[CotacaoRegional]:
+        resultados: list[CotacaoRegional] = []
+        seen: set[str] = set()
+
+        async with httpx.AsyncClient(
+            headers=BROWSER_HEADERS, timeout=15, follow_redirects=True
+        ) as client:
+            for produto in self.HF_PRODUTOS:
+                url = f"https://www.hfbrasil.org.br/br/estatistica/{produto}.aspx"
+                try:
+                    r = await client.get(url)
+                    if r.status_code != 200:
+                        continue
+                    soup = BeautifulSoup(r.text, "lxml")
+                    items = self._parse_tabela_hf(soup, seen, produto)
+                    resultados.extend(items)
+                except Exception:
+                    continue
+
+        return resultados
+
+    def _parse_tabela_hf(self, soup: BeautifulSoup, seen: set[str], produto_base: str) -> list[CotacaoRegional]:
+        resultados: list[CotacaoRegional] = []
+
+        for table in soup.find_all("table"):
+            rows = table.find_all("tr")
+            if len(rows) < 2:
+                continue
+            header = " ".join(c.get_text(strip=True).lower() for c in rows[0].find_all(["th", "td"]))
+            if not any(k in header for k in ("produto", "regi", "preco")):
+                continue
+
+            headers = [c.get_text(strip=True).lower() for c in rows[0].find_all(["th", "td"])]
+
+            col_preco = None
+            for i, h in enumerate(headers):
+                match = re.search(r"(\d{2})/(\d{2})", h)
+                if match:
+                    col_preco = i
+
+            if col_preco is None:
+                for col_idx in range(len(headers) - 1, max(0, len(headers) - 7), -1):
+                    col_preco = col_idx
+                    break
+
+            col_regiao = None
+            for i, h in enumerate(headers):
+                if "regi" in h:
+                    col_regiao = i
+                    break
+            if col_regiao is None:
+                col_regiao = 1 if len(headers) > 1 else 0
+
+            col_produto = None
+            for i, h in enumerate(headers):
+                if "produto" in h:
+                    col_produto = i
+                    break
+
+            if col_preco is None:
+                continue
+
+            for row in rows[1:]:
+                cells = [c.get_text(strip=True) for c in row.find_all(["td", "th"])]
+                if len(cells) <= max(col_regiao, col_preco, col_produto or 0):
+                    continue
+
+                regiao = cells[col_regiao].strip().lower()
+                if not regiao or regiao in ("regi", "região", ""):
+                    continue
+
+                uf_encontrada = self._hf_regiao_para_uf(regiao)
+                if not uf_encontrada:
+                    continue
+                if uf_encontrada != self.uf and self.uf != "BR":
+                    continue
+
+                preco_raw = cells[col_preco].strip() if col_preco is not None else ""
+                preco = self._parse_valor(preco_raw)
+                if preco is None or preco <= 0:
+                    continue
+
+                produto_nome = cells[col_produto].strip() if col_produto is not None and len(cells) > col_produto else produto_base
+                if not produto_nome or len(produto_nome) < 3:
+                    produto_nome = produto_base
+
+                dedup = f"{produto_nome}|{preco}|{uf_encontrada}"
+                if dedup in seen:
+                    continue
+                seen.add(dedup)
+
+                resultados.append(CotacaoRegional(
+                    produto_original=produto_nome,
+                    uf=uf_encontrada,
+                    municipio=self.municipio,
+                    ano=__import__("datetime", fromlist=["date"]).date.today().year,
+                    mes=__import__("datetime", fromlist=["date"]).date.today().month,
+                    fonte=self.fonte,
+                    preco_bruto=preco,
+                    preco_medio=preco,
+                    status_coleta="sucesso",
+                ))
+
+        return resultados
+
+    @staticmethod
+    def _hf_regiao_para_uf(regiao: str) -> str | None:
+        for nome, uf in AgregadorMercadoAdapter.HF_MAPA_REGIAO_UF.items():
+            if nome in regiao:
+                return uf
+        m = re.search(r"\(([A-Z]{2})\)", regiao)
+        if m:
+            uf = m.group(1).upper()
+            if len(uf) == 2 and uf.isalpha():
+                return uf
+        return None
+
+    @staticmethod
+    def _parse_valor(valor: object) -> float | None:
+        if valor is None:
+            return None
+        if isinstance(valor, (int, float)):
+            return float(valor)
+        if isinstance(valor, str):
+            v = valor.strip().replace("R$", "").replace("r$", "").replace(" ", "")
+            v = v.replace(".", "").replace(",", ".")
+            try:
+                return float(v)
+            except ValueError:
+                return None
+        return None
+
+
+def get_estrategia(uf: str, ano: int | None = None, mes: int | None = None) -> dict:
+    """Cascata de Resiliencia: retorna a melhor estrategia para uma UF.
+
+    Camada 0 (HISTORICO): ano < ano corrente -> SantoGraalAdapter (CEPEA/CEAGESP).
+    Camada 1 (DEDICADO): UF tem CEASA mapeada -> adapter especifico.
+    Camada 2 (FALLBACK): UF sem CEASA -> AgregadorMercadoAdapter.
+    """
+    uf = uf.upper()
+    if ano is not None and mes is not None:
+        hoje = __import__("datetime", fromlist=["date"]).date.today()
+        if ano < hoje.year or (ano == hoje.year and mes < hoje.month - 1):
+            return {
+                "tipo": "HISTORICO",
+                "alvos": None,
+                "uf": uf,
+                "ano": ano,
+                "mes": mes,
+            }
+    if uf in UF_ALVOS_DEDICADOS:
+        return {"tipo": "DEDICADO", "alvos": UF_ALVOS_DEDICADOS[uf], "uf": uf}
+    return {"tipo": "FALLBACK", "alvos": None, "uf": uf}
+
 
 ROTA_ADAPTERS: list[tuple[str, type[BaseTargetAdapter], dict[str, Any]]] = [
     ("pentaho", XhrInterceptorAdapter, {}),
@@ -456,6 +869,122 @@ class SmartCrawler2026:
                     logger.error("[GDrive] %s falhou: %s", nome, e)
                     resultados[nome] = []
                     self._get_breaker(nome).registrar_falha()
+
+        return resultados
+
+    async def executar_para_ufs(
+        self,
+        ufs: list[str],
+        ano: int | None = None,
+        mes: int | None = None,
+    ) -> dict[str, list[CotacaoRegional]]:
+        """Executa coleta para UFs com cascata de fallback.
+        Camada 1 (DEDICADO): UFs com CEASA -> executar_alvos() em lote.
+        Camada 2 (FALLBACK): UFs sem CEASA -> AgregadorMercadoAdapter httpx.
+        Retorna dict[uf_str, list[CotacaoRegional]].
+        """
+        import time as _time
+
+        resultados: dict[str, list[CotacaoRegional]] = {}
+        ufs_dedicadas: dict[str, list[str]] = {}
+        ufs_fallback: list[str] = []
+
+        for uf in ufs:
+            uf = uf.upper()
+            est = get_estrategia(uf, ano=ano, mes=mes)
+            t = est["tipo"]
+            if t == "HISTORICO":
+                ufs_dedicadas.setdefault(uf, "__santo_graal__")
+            elif t == "DEDICADO":
+                ufs_dedicadas[uf] = est["alvos"]
+            else:
+                ufs_fallback.append(uf)
+
+        # Camada 0 — Histórico profundo via SantoGraalAdapter
+        ufs_santo_graal = [
+            uf for uf, alvos in ufs_dedicadas.items()
+            if alvos == "__santo_graal__"
+        ]
+        if ufs_santo_graal:
+            logger.info(
+                "[CASCATA] Camada 0: %d UFs via SantoGraal (CEPEA) historico=%04d/%02d",
+                len(ufs_santo_graal), ano or 0, mes or 0,
+            )
+            try:
+                adp = SantoGraalAdapter(ano=ano or 0, mes=mes or 0)
+                fp_kwargs = {}
+                if self._organism is not None:
+                    fp_cfg = getattr(self._organism, "_base_config", None)
+                    if fp_cfg is not None:
+                        fp_cfg = getattr(fp_cfg, "fingerprint", None)
+                    if fp_cfg is not None:
+                        fp_kwargs = build_context_kwargs(fp_cfg)
+                pw_resultados = await executar_adapters_playwright([adp], **fp_kwargs)
+                for chave_url, items in pw_resultados.items():
+                    for item in items:
+                        uf_item = item.uf or ufs_santo_graal[0] if ufs_santo_graal else ""
+                        resultados.setdefault(uf_item, []).append(item)
+                        for uf in ufs_santo_graal:
+                            if uf_item == uf or not uf_item:
+                                resultados.setdefault(uf, []).append(item)
+                    logger.info(
+                        "[SantoGraal] %d cotacoes via %s", len(items), chave_url
+                    )
+                for uf in ufs_santo_graal:
+                    ufs_dedicadas.pop(uf, None)
+            except Exception as e:
+                logger.error("[SantoGraal] Falha: %s", e)
+                for uf in ufs_santo_graal:
+                    ufs_dedicadas.pop(uf, None)
+                    ufs_fallback.append(uf)
+
+        # Camada 1 — alvos dedicados em lote (reutiliza browsers)
+        if ufs_dedicadas:
+            todos_alvos: list[str] = []
+            for alvos in ufs_dedicadas.values():
+                todos_alvos.extend(a for a in alvos if a not in todos_alvos)
+            logger.info(
+                "[CASCATA] Camada 1: %d UFs dedicadas, %d alvos unicos",
+                len(ufs_dedicadas), len(todos_alvos),
+            )
+            sc_resultados = await self.executar_alvos(todos_alvos, ano=ano, mes=mes)
+            for uf, alvos in ufs_dedicadas.items():
+                items_uf: list[CotacaoRegional] = []
+                for alvo in alvos:
+                    for chave, items in sc_resultados.items():
+                        if alvo == chave or alvo in chave:
+                            items_uf.extend(items)
+                            break
+                if items_uf:
+                    resultados[uf] = items_uf
+
+        # Camada 2 — fallback via agregadores de mercado (httpx rapido, por UF)
+        if ufs_fallback:
+            logger.info(
+                "[CASCATA] Camada 2: %d UFs sem CEASA, via Agregadores de Mercado",
+                len(ufs_fallback),
+            )
+            for uf in ufs_fallback:
+                t0 = _time.perf_counter()
+                try:
+                    proxy = AgregadorMercadoAdapter(uf=uf)
+                    items = await proxy.fetch()
+                    if items:
+                        resultados[uf] = items
+                        logger.info(
+                            "[CASCATA] UF=%s via Agregador: %d cotacoes (%.1fs)",
+                            uf, len(items), _time.perf_counter() - t0,
+                        )
+                    else:
+                        logger.warning(
+                            "[CASCATA] UF=%s via Agregador: 0 cotacoes — grace. degradation (%.1fs)",
+                            uf, _time.perf_counter() - t0,
+                        )
+                except Exception as e:
+                    logger.error(
+                        "[CASCATA] UF=%s Agregador fallback falhou (%.1fs): %s",
+                        uf, _time.perf_counter() - t0, e,
+                    )
 
         return resultados
 

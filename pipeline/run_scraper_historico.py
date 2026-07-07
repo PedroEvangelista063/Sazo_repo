@@ -21,7 +21,7 @@ from pipeline.scraper.ceasa_spider import (
 from pipeline.scraper.data_normalizer import DataNormalizer
 from pipeline.scraper.adapters import AgrolinkCEASAAdapter, CotacaoRegional
 from pipeline.scraper.price_collector import PriceCollector
-from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS
+from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS, TODAS_UFS
 from pipeline.scraper.transport import (
     BrowserConfig,
     EngineType,
@@ -384,7 +384,7 @@ async def _coletar_mes(
     meses: list[tuple[int, int]],
     collector: PriceCollector,
     normalizer: DataNormalizer,
-    smartcrawler_alvos: list[str] | None = None,
+    smartcrawler_ufs: list[str] | None = None,
     organism: SelfHealingOrganism | None = None,
 ) -> list[pl.DataFrame]:
     blocos: list[pl.DataFrame] = []
@@ -413,10 +413,9 @@ async def _coletar_mes(
                     logger.info("Fallback data recuperou %d registros", df_fb.height)
                     df = df_fb if df.height == 0 else pl.concat([df, df_fb]).unique()
 
-        # SmartCrawler: alvos que o PriceCollector legacy nao cobre
-        if smartcrawler_alvos:
-            logger.info("SmartCrawler: %d alvos adicionais...", len(smartcrawler_alvos))
-            sc_resultados = await crawler.executar_alvos(smartcrawler_alvos, ano=ano, mes=mes)
+        if smartcrawler_ufs:
+            logger.info("SmartCrawler: %d UFs com cascata fallback...", len(smartcrawler_ufs))
+            sc_resultados = await crawler.executar_para_ufs(smartcrawler_ufs, ano=ano, mes=mes)
             sc_items = _cotacao_regional_para_historica(sc_resultados)
             if sc_items:
                 sc_df = formatar_staging(sc_items, normalizer)
@@ -512,14 +511,8 @@ async def main() -> None:
     normalizer = DataNormalizer(fuzzy_cutoff=75.0)
     normalizer.carregar_csv()
 
-    smartcrawler_alvos = [
-        "cepea", "ceasa_pr", "ceasa_pr_hoje", "ceasa_pr_2025",
-        "ceasa_mg", "ceasa_mg_minas1", "conab", "conab_pentaho",
-        "ceasa_es", "ceasa_pe", "ceasa_rn", "ceasa_ms",
-        "calculadorarural",
-        "agrolink", "ceagesp",
-    ]
-    logger.info("SmartCrawler: %d alvos adicionais (organism=%d)", len(smartcrawler_alvos), 4)
+    smartcrawler_ufs: list[str] = TODAS_UFS
+    logger.info("SmartCrawler: %d UFs com cascata fallback dedicada+CONAB", len(smartcrawler_ufs))
 
     # ── Organism singleton (criado UMA vez — evita N browsers paralelos) ──
     organism: SelfHealingOrganism | None = None
@@ -536,7 +529,7 @@ async def main() -> None:
         logger.info("SelfHealingOrganism inicializado (pool=%d retries=%d)", 3, 3)
 
         # ── 3. Raspar ────────────────────────────────────────────
-        blocos = await _coletar_mes(meses_para_raspar, collector, normalizer, smartcrawler_alvos, organism)
+        blocos = await _coletar_mes(meses_para_raspar, collector, normalizer, smartcrawler_ufs, organism)
 
         if not blocos:
             logger.warning("Nenhum dado coletado em nenhum mes.")

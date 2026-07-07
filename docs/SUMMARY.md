@@ -35,7 +35,7 @@ quero_comprar_vg/
 
 ## 🚗 Garagem (Pipeline de Ingestão — ETL Worker)
 
-**Propósito**: Ingerir dados brutos CONAB, limpar, categorizar e carregar no banco ou em arquivos estáticos.
+**Propósito**: Ingerir dados brutos CONAB e CEASA, limpar, categorizar, enriquecer com deflação SIDRA e carregar no banco.
 
 **Regras**:
 - Nunca usa pandas → Polars para performance
@@ -44,19 +44,96 @@ quero_comprar_vg/
 - Categoria `ALIMENTO_VAREJO` é a única que chega ao consumidor
 - Variação de formato CONAB: arquivos podem ter 9 ou 11 colunas e podem ou não incluir linha de cabeçalho. O motor detecta automaticamente via `_ler_csv()` e normaliza para o schema padrão.
 
+### Pipelines e Scripts Principais
+
 | Caminho | Descrição |
 |---|---|---|
 | `pipeline/ingestao_conab.py` | Pipeline principal: extract → transform → load → medalhão |
 | `pipeline/ingestao_conab_inteligente.py` | Leitura lazy Polars paralela + semantic engine (regex) para carga rápida de ALIMENTO_VAREJO |
+| `pipeline/process_to_files.py` | ETL offline: processa LISTA*.txt → JSON/Parquet/SQL estáticos |
+| `pipeline/transform.py` | Transform ETL: limpeza, normalização, validação de dados CONAB |
+| `pipeline/load.py` | Módulo de carga: `execute_values` para INSERT em massa |
+| `pipeline/load_master_list.py` | Carga da lista mestre de produtos no banco |
+| `pipeline/enrich_master_list.py` | Enriquece lista mestre com cotações CEASA (parquet em `01_raw/`) |
 | `pipeline/seasonality.py` | Cálculo do IS por município + fallback UF (baseline 2025 + fallback 12m) |
 | `pipeline/ghost_dba_agent.py` | Agente de autocura com LLM (polling 300s, self-heal, webhook) |
-| `pipeline/audit_local_db.py` | Auditoria de integridade: compara TXT locais vs banco |
-| `pipeline/process_to_files.py` | ETL offline: processa LISTA*.txt → JSON/Parquet/SQL estáticos |
 | `pipeline/db_maintenance.py` | "Gari" do banco: upsert scraper raw → staging + GC de 30 dias |
-| `pipeline/enrich_master_list.py` | Enriquece lista mestre com cotações CEASA (parquet em `01_raw/`) |
-| `pipeline/run_scraper_historico.py` | Runner de coleta histórica CEASA (multi-UF, asyncio) |
 | `pipeline/ingest.py` | Módulo auxiliar de download com httpx |
+| `pipeline/run.py` | Runner genérico: orquestração de pipelines |
+| `pipeline/run_scraper_historico.py` | Runner de coleta histórica CEASA (multi-UF, asyncio) |
+| `pipeline/run_bulk_historical_fill.py` | Pipeline de Deflacao (IBGE SIDRA) para preenchimento de gaps historicos 2020-2024 via IPCA |
+| `pipeline/run_deep_backfill.py` | Deep Backfill: varredura histórica profunda CEASA |
+| `pipeline/run_ultimate_backfill.py` | Ultimate Backfill: preenchimento completo 2020-2024 |
+| `pipeline/audit_local_db.py` | Auditoria de integridade: compara TXT locais vs banco |
+| `pipeline/audit_b2c_export.py` | Auditoria de exportação B2C |
+| `pipeline/audit_cobertura_produtos.py` | Auditoria de cobertura de produtos por UF/mês |
+| `pipeline/audit_hardcode_uf_gaps.py` | Auditoria de gaps de UF hardcoded |
+
+### Machine Learning e Data Healing
+
+| Caminho | Descrição |
+|---|---|---|
+| `pipeline/ml_forecast_engine.py` | ML Forecast Engine: modelo preditivo de preços |
+| `pipeline/data_healer.py` | Data Healing Engine: correção de anomalias com Z-Score |
+| `pipeline/imputar_gaps_baseline.py` | Imputação matemática de gaps no baseline 2025 |
+
+### Scraper CEASA — Core
+
+| Caminho | Descrição |
+|---|---|---|
 | `pipeline/scraper/` | Scrapers CEASA: engine, spider, normalizador, adaptadores, fuzzy matcher, buscador de fontes |
+| `pipeline/scraper/ceasa_engine.py` | Engine principal de scraping CEASA |
+| `pipeline/scraper/ceasa_spider.py` | Spider multi-UF: navegação e extração |
+| `pipeline/scraper/data_normalizer.py` | Normalizador de preços e unidades |
+| `pipeline/scraper/fuzzy_matcher.py` | Fuzzy matching de produtos (rapidfuzz) |
+| `pipeline/scraper/buscador_fontes.py` | Buscador de fontes CEASA |
+| `pipeline/scraper/price_collector.py` | Coletor de preços |
+| `pipeline/scraper/dispatcher.py` | Dispatcher de tarefas de scraping |
+| `pipeline/scraper/rate_limiter.py` | Rate limiter para fontes |
+| `pipeline/scraper/circuit_breaker.py` | Circuit breaker para fontes falhas |
+| `pipeline/scraper/retry.py` | Retry logic com backoff |
+| `pipeline/scraper/url_manager.py` | Gerenciador de URLs |
+| `pipeline/scraper/gap_analysis.py` | Análise de gaps de cobertura |
+| `pipeline/scraper/report_engine_gaps.py` | Relatório de gaps por engine |
+| `pipeline/scraper/schemas/coleta.py` | Schemas Pydantic de coleta |
+| `pipeline/scraper/_probe_sources.py` | Sonda de fontes: teste de conectividade |
+| `pipeline/scraper/_prospect_sources.py` | Prospecção de novas fontes |
+| `pipeline/scraper/dry_run_sprint2.py` | Dry run da sprint 2 |
+| `pipeline/scraper_hortifruti.py` | Scraper Hortifruti dedicado (fontes JS-renderizadas) |
+
+### Scraper — Adapters (Fontes Específicas)
+
+| Caminho | Descrição |
+|---|---|---|
+| `pipeline/scraper/adapters/stealth.py` | **PlaywrightStealthAdapter** — motor stealth (playwright-stealth + fingerprint) para fontes com Cloudflare/WAF. Lote único de browser via `executar_adapters_playwright()` |
+| `pipeline/scraper/adapters/smart_router.py` | **SmartCrawler2026** — roteador multi-source: httpx (HTML simples) → Playwright (JS/WAF) → Postback (ASP.NET). Agrupa adapters Playwright em lote único de browser |
+| `pipeline/scraper/adapters/agentic_html.py` | **Agentic HTML Adapter** — extração semântica via LLM para páginas sem schema fixo |
+| `pipeline/scraper/adapters/organism_adapter.py` | **Organism Adapter** — orquestrador de múltiplos adapters por fonte |
+| `pipeline/scraper/adapters/commodities/` | Adapters para commodities (soja, milho, etc.) |
+| `pipeline/scraper/adapters/hortifrut/` | Adapters especializados Hortifrúti (ProHort, CEASA Standard) |
+| `pipeline/scraper/adapters/base.py` | Classe base `BaseTargetAdapter` |
+| `pipeline/scraper/adapters/factory.py` | Factory de adapters |
+| `pipeline/scraper/adapters/legacy.py` | **LegacyPostbackAdapter** — ASP.NET WebForms com `__doPostBack` |
+| `pipeline/scraper/adapters/santo_graal_adapter.py` | **Santo Graal Adapter** — CEASA SP com recaptcha + múltiplos forms |
+| `pipeline/scraper/adapters/google_drive_adapter.py` | **Google Drive Adapter** — extrai PDFs de pastas do Drive |
+
+### Scraper — Transport Ecosystem
+
+| Caminho | Descrição |
+|---|---|---|
+| `pipeline/scraper/transport/engine.py` | Transport engine base: interface unificada para todos os transports |
+| `pipeline/scraper/transport/config.py` | Configuração de transports (proxies, timeouts, user-agents) |
+| `pipeline/scraper/transport/fingerprint.py` | Browser fingerprinting para anti-detecção |
+| `pipeline/scraper/transport/patchright_engine.py` | **Patchright Engine** — transport async usando Patchright (fork indetectável do Playwright). Fallback automático para Playwright + stealth se Patchright não disponível |
+| `pipeline/scraper/transport/pydoll_engine.py` | **Pydoll Engine** — transport alternativo via CDP direto (sem wrapper Playwright). Bypass de detecção Puppeteer/Playwright |
+| `pipeline/scraper/transport/orchestrator/` | Orquestrador de transports: JDownloader bridge, WAF bypass, Main Organism |
+| `pipeline/scraper/transport/resolver/` | Challenge solvers: Flaresolverr, Turnstile, Captcha params, DOM observer |
+| `pipeline/scraper/transport/semantic/` | Extração semântica: NER, XPath selector, block detector, interaction executor |
+
+### Utilitários
+
+| Caminho | Descrição |
+|---|---|---|
 | `pipeline/utils/entity_matcher.py` | EntityMatcher: fuzzy match com rapidfuzz (partial_ratio ≥ 85%) contra CSV mestre |
 | `pipeline/requirements.txt` | Dependências: polars, httpx, psycopg2-binary, tenacity, rapidfuzz, beautifulsoup4 |
 | `pipeline/tests/` | Testes unitários (validação, sazonalidade, baseline, dados reais) |
@@ -100,6 +177,9 @@ Acessado pelo pipeline (`ingestao_conab.py`) e pela API FastAPI.
 | `database/21_reclassifica_orfaos.sql` | Reclassificação de produtos órfãos (v1.0.0-rc2) |
 | `database/22_data_healing_schema.sql` | Data Healing Engine — cura analítica + corta-fogo de confiança |
 | `database/22b_data_healing_hotfix.sql` | Hotfix Fase 22b: patch de segurança para Data Healing |
+| `database/23_time_series_mart.sql` | Time-Series Mart: MV `vw_api_produtos_sazonalidade` com índices `(ano, mes)` e novas colunas de série temporal |
+| `database/24_predictive_schema.sql` | Schema preditivo: colunas `preco_estimado` e `tendencia_futura` na MV |
+| `database/25_fix_mv_missing_columns.sql` | Hotfix MV: adiciona colunas `preco_estimado`, `tendencia_futura`, `variacao_mom_pct` e `metodo_calculo` que a API espera |
 
 ### Artefatos Estáticos (Camada de Auditoria)
 
@@ -154,12 +234,17 @@ LISTA*.txt → [ler_csv] → 01_raw → 02_cleaned → 03_categorized → 04_b2c
 | `backend/app/core/config.py` | Settings via pydantic-settings (`DATABASE_URL` do `.env`) |
 | `backend/app/core/cache.py` | Cache in-memory thread-safe com TTL (24h) |
 | `backend/app/core/ratelimit.py` | Rate limiting por IP (60 req/min, sliding window) |
+| `backend/app/core/events.py` | Lifespan events: startup/shutdown hooks |
+| `backend/app/core/timeout.py` | Timeout handling para requisições longas |
 | `backend/app/db/session.py` | Pool asyncpg (10-50 conexões) via connection string URI |
 | `backend/app/schemas/responses.py` | Pydantic V2: SazonalidadeResponse, MunicipioListResponse, ErrorResponse |
 | `backend/app/api/v1/endpoints/produtos.py` | `GET /api/v1/sazonalidade` com filtros UF, município, mês, produto, status_cor; paginação; `ano`+`mes` dispara computação dinâmica por mês |
 | `backend/app/api/v1/endpoints/municipios.py` | `GET /api/v1/municipios?uf=SP` |
+| `backend/app/api/v1/endpoints/ufs.py` | `GET /api/v1/ufs` — lista de UFs disponíveis |
+| `backend/app/api/v1/endpoints/categorias.py` | `GET /api/v1/categorias` — categorias de varejo |
 | `backend/app/api/v1/endpoints/internal.py` | `GET/POST /api/v1/_internal/cache-clear` (protegido por API Key) |
 | `backend/app/api/v1/endpoints/stream.py` | SSE endpoint `GET /api/v1/stream/updates` — broadcast de eventos `ETL_FINISHED` para invalidar cache do frontend em tempo real; keepalive 30s |
+| `backend/tests/test_resilience.py` | Testes de resiliência: timeout, rate limit, cache |
 | `backend/get_data_summary.py` | Script ad-hoc: health check do banco (counts, distribuição, freshness) |
 | `backend/run_migration.py` | Executa migração SQL via asyncpg |
 | `backend/requirements.txt` | Dependências: fastapi, uvicorn, asyncpg, pydantic-settings, httpx, polars, rapidfuzz |

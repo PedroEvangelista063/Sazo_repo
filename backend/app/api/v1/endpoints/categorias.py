@@ -13,7 +13,7 @@ async def listar_categorias():
     settings = get_settings()
     cache_key = hashlib.md5(b"categorias").hexdigest()
 
-    cached = cache.get(cache_key)
+    cached = await cache.get(cache_key)
     if cached is not None:
         return CategoriaListResponse(**cached)
 
@@ -54,5 +54,5 @@ async def listar_categorias():
     ]
 
     result = CategoriaListResponse(data=items, total=len(items))
-    cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+    await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result

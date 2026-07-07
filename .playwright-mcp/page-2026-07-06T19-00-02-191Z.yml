@@ -1,0 +1,421 @@
+- generic [active] [ref=f3e1]:
+  - navigation "Acesso rápido":
+    - link "Ir para o Conteúdo 1" [ref=f3e2] [cursor=pointer]:
+      - /url: "#wrapper"
+      - generic [ref=f3e3]: Ir para o
+      - text: Conteúdo
+      - generic [ref=f3e4]: "1"
+    - link "Ir para a Página Inicial 2" [ref=f3e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f3e6]: Ir para a
+      - text: Página Inicial
+      - generic [ref=f3e7]: "2"
+    - link "Ir para o menu de Navegação 3" [ref=f3e8] [cursor=pointer]:
+      - /url: "#main-navigation"
+      - generic [ref=f3e9]: Ir para o menu de
+      - text: Navegação
+      - generic [ref=f3e10]: "3"
+    - link "Ir para a Busca 4" [ref=f3e11] [cursor=pointer]:
+      - /url: "#govbr-busca-input"
+      - generic [ref=f3e12]: Ir para a
+      - text: Busca
+      - generic [ref=f3e13]: "4"
+    - link "Ir para o Mapa do site 5" [ref=f3e14] [cursor=pointer]:
+      - /url: "#portal-footer"
+      - generic [ref=f3e15]: Ir para o
+      - text: Mapa do site
+      - generic [ref=f3e16]: "5"
+  - banner [ref=f3e17]:
+    - generic [ref=f3e20]:
+      - generic [ref=f3e23]:
+        - button "Abrir preferências de cookies" [ref=f3e26] [cursor=pointer]:
+          - generic [ref=f3e28]: 
+        - button "Ativar ou desativar o modo de alto contraste" [ref=f3e31] [cursor=pointer]:
+          - generic [ref=f3e33]: 
+      - banner [ref=f3e35]:
+        - generic [ref=f3e37]:
+          - generic [ref=f3e38]:
+            - link "Logomarca gov.br" [ref=f3e39] [cursor=pointer]:
+              - /url: https://www.gov.br/pt-br
+              - img "Logomarca gov.br" [ref=f3e40]
+            - link "Ministério do Desenvolvimento Agrário e Agricultura Familiar" [ref=f3e42] [cursor=pointer]:
+              - /url: https://www.gov.br/mda/pt-br
+          - generic [ref=f3e43]:
+            - generic [ref=f3e44]:
+              - button "Menu de links" [ref=f3e45] [cursor=pointer]:
+                - generic [ref=f3e46]: 
+              - text: 
+            - button "Abrir menu de seleção serviços" [ref=f3e51] [cursor=pointer]:
+              - img [ref=f3e53]
+              - generic [ref=f3e54]: Atalhos gov.br
+            - button "Entrar com gov.br" [ref=f3e58] [cursor=pointer]:
+              - generic [ref=f3e59]: 
+              - generic [ref=f3e60]: Entrar com gov.br
+    - generic [ref=f3e62]:
+      - generic [ref=f3e63]:
+        - link "Abrir menu principal de navegação" [ref=f3e64] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=f3e65]: Abrir menu principal de navegação
+          - generic [ref=f3e66]: 
+          - text: 
+        - link "Companhia Nacional de Abastecimento" [ref=f3e68] [cursor=pointer]:
+          - /url: https://www.gov.br/conab/pt-br
+      - text:        
+      - generic [ref=f3e69]:
+        - generic:
+          - combobox:
+            - search [ref=f3e70]:
+              - button "" [ref=f3e72] [cursor=pointer]
+              - searchbox "O que você procura?" [ref=f3e73]
+              - button "Pesquisar por voz" [ref=f3e74] [cursor=pointer]:
+                - generic [ref=f3e75]: 
+        - button "Fechar busca" [ref=f3e76] [cursor=pointer]:
+          - text: 
+          - generic [ref=f3e77]: 
+        - text: 
+    - text:                                      
+  - navigation "Histórico de navegação (Breadcrumbs)" [ref=f3e79]:
+    - generic [ref=f3e80]:
+      - generic [ref=f3e81]: ">Você está aqui:"
+      - link "Página Inicial" [ref=f3e83] [cursor=pointer]:
+        - /url: https://www.gov.br/conab/pt-br
+        - generic [ref=f3e84]: 
+        - generic [ref=f3e85]: Página Inicial
+      - generic [ref=f3e86]:
+        - text: ">"
+        - link "Atuação" [ref=f3e87] [cursor=pointer]:
+          - /url: https://www.gov.br/conab/pt-br/atuacao
+      - generic [ref=f3e88]:
+        - text: ">"
+        - link "Informações Agropecuárias" [ref=f3e89] [cursor=pointer]:
+          - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias
+      - generic [ref=f3e90]: "> Hortigranjeiros (PROHORT)"
+  - generic [ref=f3e91]:
+    - main [ref=f3e93]:
+      - generic [ref=f3e94]:
+        - text: 
+        - generic [ref=f3e95]:
+          - heading "PROHORT" [level=1] [ref=f3e96]
+          - generic [ref=f3e98]:
+            - generic [ref=f3e99]: Publicado em 03/07/2024 20h22
+            - generic [ref=f3e100]: Atualizado em 03/07/2026 13h40
+          - generic [ref=f3e101]:
+            - generic [ref=f3e103]:
+              - generic [ref=f3e104]:
+                - heading "PROHORT" [level=2] [ref=f3e107]
+                - generic [ref=f3e109]:
+                  - paragraph [ref=f3e110]:
+                    - text: O Programa Brasileiro de Modernização do Mercado Hortigranjeiro (Prohort) foi instituído pelo Governo Federal por meio da
+                    - link "Portaria nº 171, de 24/03/2005" [ref=f3e111] [cursor=pointer]:
+                      - /url: https://www.normasbrasil.com.br/norma/portaria-171-2005_191298.html
+                    - text: ", do Ministério da Agricultura, Pecuária e Abastecimento (Mapa), e ampliado em suas funções pela"
+                    - link "Portaria nº 339, de 11/04/2014" [ref=f3e112] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/portaria-no-339-de-11-04-2014
+                    - text: ", também do Mapa.O Prohort tem por finalidade contribuir para o desenvolvimento e modernização do setor hortigranjeiro nacional, proporcionando maior interação entre os diversos agentes governamentais envolvidos e os integrantes da cadeia de produção e distribuição, além de buscar a melhoria e a ampliação das funções dos mercados atacadistas."
+                  - paragraph [ref=f3e113]:
+                    - text: O Programa tem, entre suas principais ferramentas, os sistemas de informações, que trazem dados da comercialização de produtos hortigranjeiros nas principais
+                    - link "Centrais de Abastecimento (Ceasas)" [ref=f3e114] [cursor=pointer]:
+                      - /url: https://www.conab.gov.br/info-agro/hortigranjeiros-prohort/ceasas
+                    - text: do país. Essa plataforma possibilita o acompanhamento de preços, análises de mercado, consulta de séries históricas, identificação das regiões produtoras, entre outros estudos técnicos, como já vem sendo demonstrado pelo Boletim Hortigranjeiro, publicado mensalmente pela Conab.
+                  - paragraph [ref=f3e115]:
+                    - strong [ref=f3e116]: "Aplicativo Prohort Ceasas:"
+                    - text: Baixe o app prohort para
+                    - link "Android" [ref=f3e117] [cursor=pointer]:
+                      - /url: https://play.google.com/store/apps/details?id=prohortapp.conab.gov.br
+                    - text: Baixe o app prohort para
+                    - link "iOS" [ref=f3e118] [cursor=pointer]:
+                      - /url: https://apps.apple.com/br/app/prohort-ceasas/id1451333002
+                  - paragraph [ref=f3e119]:
+                    - link "Clique aqui" [ref=f3e120] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/atos-normativos/normas-da-organizacao/operacoes/30-305_norma_captacao_divulgacao_dados_comercializacao_20_9_23.pdf/view
+                    - text: para acessar a Norma de Captação e Divulgação dos Dados de Comercialização das Centrais de Abastecimento - 30.305
+                  - paragraph [ref=f3e121]:
+                    - strong [ref=f3e122]: "Para mais informações sobre o Prohort, contate-nos:"
+                    - text: (61) 3312-2232 / 6237 / 6378 / 6383 / 2275
+                    - link "prohort@conab.gov.br" [ref=f3e123] [cursor=pointer]:
+                      - /url: mailto:prohort@conab.gov.br
+              - generic [ref=f3e124]:
+                - 'link "Consulta: Ofertas, Preços e Origens" [ref=f3e130] [cursor=pointer]':
+                  - /url: https://dw.ceasa.gov.br/
+                  - generic [ref=f3e132]: "Consulta: Ofertas, Preços e Origens"
+                - link "Consulta Preços Diários" [ref=f3e138] [cursor=pointer]:
+                  - /url: https://app.powerbi.com/view?r=eyJrIjoiM2RiZTQ1ZTQtODg2OS00MDRmLWEzMGMtODc5MzE4MTZlYWQ0IiwidCI6ImU2ZDkwZGYzLWYxOGItNGJkZC04MDhjLWFhNmQwZjY4YjgwOSJ9
+                  - generic [ref=f3e140]: Consulta Preços Diários
+                - link "Comercialização das Ceasas" [ref=f3e146] [cursor=pointer]:
+                  - /url: http://www3.ceasa.gov.br/siscomweb/
+                  - generic [ref=f3e148]: Comercialização das Ceasas
+            - generic [ref=f3e150]:
+              - generic [ref=f3e151]:
+                - generic [ref=f3e153]:
+                  - paragraph [ref=f3e155]: Esta coleção não possui nenhum resultado.
+                  - heading "Boletim Hortigranjeiro" [level=2] [ref=f3e157]
+                  - link "Mais…" [ref=f3e159] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/boletim-hortigranjeiro/boletim-hortigranjeiro
+                - generic [ref=f3e161]:
+                  - paragraph [ref=f3e163]: Esta coleção não possui nenhum resultado.
+                  - heading "Publicações do Setor Hortigranjeiro" [level=2] [ref=f3e165]
+                  - link "Mais…" [ref=f3e167] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/publicacoes-do-setor-hortigranjeiro/publicacoes-do-setor-hortigranjeiro
+              - generic [ref=f3e170]:
+                - heading "Resumo Executivo Semanal" [level=2] [ref=f3e172]
+                - generic [ref=f3e173]:
+                  - time [ref=f3e174]: 05/01/2026 12h45
+                  - heading "Resumo Executivo 2026" [level=2] [ref=f3e175]:
+                    - link "Resumo Executivo 2026" [ref=f3e176] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/resumo-executivo-semanal/resumo-executivo-2026-1/resumo-executivo-2026
+                - generic [ref=f3e177]:
+                  - time [ref=f3e178]: 31/01/2025 11h51
+                  - heading "Resumo Executivo 2025" [level=2] [ref=f3e179]:
+                    - link "Resumo Executivo 2025" [ref=f3e180] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/resumo-executivo-semanal/resumo-executivo-2025/resumo-executivo-2025-1
+                - generic [ref=f3e181]:
+                  - time [ref=f3e182]: 31/01/2025 11h35
+                  - heading "Resumo Executivo 2024" [level=2] [ref=f3e183]:
+                    - link "Resumo Executivo 2024" [ref=f3e184] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/resumo-executivo-semanal/copy_of_resumo-executivo-2024
+                - generic [ref=f3e185]:
+                  - time [ref=f3e186]: 29/01/2025 17h09
+                  - heading "Resumo Executivo 2023" [level=2] [ref=f3e187]:
+                    - link "Resumo Executivo 2023" [ref=f3e188] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/resumo-executivo-semanal/resumo-executivo-2023/resumo-executivo-2023
+                - generic [ref=f3e189]:
+                  - time [ref=f3e190]: 29/01/2025 15h09
+                  - heading "Resumo Executivo 2022" [level=2] [ref=f3e191]:
+                    - link "Resumo Executivo 2022" [ref=f3e192] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/resumo-executivo-semanal/resumo-executivo-2022/resumo-executivo-2022
+                - link "Mais…" [ref=f3e194] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/resumo-executivo-semanal/resumo-executivo-semanal
+            - generic [ref=f3e196]:
+              - generic [ref=f3e199]:
+                - heading "Legislação" [level=2] [ref=f3e201]
+                - generic [ref=f3e202]:
+                  - paragraph [ref=f3e203]:
+                    - link "Portaria nº 339, de 11/04/2014" [ref=f3e205] [cursor=pointer]:
+                      - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/portaria-no-339-de-11-04-2014
+                  - paragraph [ref=f3e206]:
+                    - link "Portaria nº 171, de 24/03/2005" [ref=f3e207] [cursor=pointer]:
+                      - /url: http://extranet.agricultura.gov.br/sislegis-consulta/consultarLegislacao.do?operacao=visualizar&id=11486
+                  - paragraph [ref=f3e208]:
+                    - link "Decreto nº 6.268, de 22/11/2007" [ref=f3e209] [cursor=pointer]:
+                      - /url: http://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2007/Decreto/D6268.htm
+                  - paragraph [ref=f3e210]:
+                    - link "Decreto nº 10.936, de 12 de Janeiro de 2022" [ref=f3e211] [cursor=pointer]:
+                      - /url: https://www.planalto.gov.br/Ccivil_03/_Ato2019-2022/2022/Decreto/D10936.htm#art91
+                  - paragraph [ref=f3e212]:
+                    - link "Portaria nº 326, de 30/07/1997" [ref=f3e213] [cursor=pointer]:
+                      - /url: http://bvsms.saude.gov.br/bvs/saudelegis/svs1/1997/prt0326_30_07_1997.html
+                  - paragraph [ref=f3e214]:
+                    - link "Resolução - RDC nº 259, de 20/09/2002" [ref=f3e215] [cursor=pointer]:
+                      - /url: http://portal.anvisa.gov.br/legislacao#/visualizar/26993
+                  - paragraph [ref=f3e216]:
+                    - link "Resolução - RDC nº 163, de 17/08/2006" [ref=f3e217] [cursor=pointer]:
+                      - /url: http://portal.anvisa.gov.br/legislacao#/visualizar/27778
+                  - paragraph [ref=f3e218]:
+                    - link "Instrução Normativa Conjunta nº 9, de 12/11/2002" [ref=f3e219] [cursor=pointer]:
+                      - /url: http://www.ceasaminas.com.br/agroqualidade/in009.asp
+                  - paragraph [ref=f3e220]:
+                    - link "Instrução Normativa nº 5, de 16/05/2001" [ref=f3e221] [cursor=pointer]:
+                      - /url: http://extranet.agricultura.gov.br/sislegis-consulta/consultarLegislacao.do?operacao=visualizar&id=1354
+                  - paragraph [ref=f3e222]:
+                    - link "Lei nº 8.171, de 17/01/1991" [ref=f3e223] [cursor=pointer]:
+                      - /url: http://www.planalto.gov.br/ccivil_03/Leis/L8171.htm
+                  - paragraph [ref=f3e224]:
+                    - link "Lei nº 9.972, de 25/05/2000" [ref=f3e225] [cursor=pointer]:
+                      - /url: http://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2007/Decreto/D6268.htm
+                  - paragraph [ref=f3e226]:
+                    - link "Decreto nº 6.268, de 22/11/2007" [ref=f3e227] [cursor=pointer]:
+                      - /url: http://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2007/Decreto/D6268.htm
+              - generic [ref=f3e230]:
+                - 'heading "Acesso Restrito: CEASAS" [level=2] [ref=f3e232]'
+                - generic [ref=f3e233]:
+                  - paragraph [ref=f3e234]:
+                    - link "SISPRD - Sistema de Informações de Preços Diários" [ref=f3e235] [cursor=pointer]:
+                      - /url: http://www.ceasa.gov.br/publicador
+                  - paragraph [ref=f3e236]:
+                    - link "SISCOM - Sistema de Informações Setoriais de Comercialização" [ref=f3e237] [cursor=pointer]:
+                      - /url: http://www3.ceasa.gov.br/siscomcad
+                  - paragraph [ref=f3e238]:
+                    - link "SIMAB - Sistema de Informações de Mercados de Abastecimento do Brasil" [ref=f3e239] [cursor=pointer]:
+                      - /url: http://www2.ceasa.gov.br/itec/ITEFrmlogin.aspx
+                      - text: SIMAB - Sistema de Informações de Mercados de Abastecimento do Brasil
+                    - link "SIMAB WEB" [ref=f3e240] [cursor=pointer]:
+                      - /url: http://simabweb.conab.gov.br/simabweb/login
+            - heading "Outras Informações" [level=2] [ref=f3e246]
+            - generic [ref=f3e248]:
+              - link "Ceasas" [ref=f3e255] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/outras-informacoes/ceasas
+                - generic [ref=f3e257]: Ceasas
+              - link "Abracen" [ref=f3e264] [cursor=pointer]:
+                - /url: https://abracen.org.br/
+                - generic [ref=f3e266]: Abracen
+              - link "Agroqualidade" [ref=f3e273] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/outras-informacoes/agroqualidade
+                - generic [ref=f3e275]: Agroqualidade
+    - contentinfo [ref=f3e276]:
+      - generic [ref=f3e277]:
+        - list [ref=f3e279]:
+          - listitem [ref=f3e280]:
+            - link "Atuação" [ref=f3e281] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/atuacao
+            - list [ref=f3e282]:
+              - listitem [ref=f3e283]:
+                - link "Abastecimento Social" [ref=f3e284] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/abastecimento-social
+              - listitem [ref=f3e285]:
+                - link "Agricultura Familiar" [ref=f3e286] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/paa
+              - listitem [ref=f3e287]:
+                - link "Armazenagem" [ref=f3e288] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/armazenagem
+              - listitem [ref=f3e289]:
+                - link "Comercialização" [ref=f3e290] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/comercializacao
+              - listitem [ref=f3e291]:
+                - link "Informações Agropecuárias" [ref=f3e292] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias
+              - listitem [ref=f3e293]:
+                - link "Logística" [ref=f3e294] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/logistica
+              - listitem [ref=f3e295]:
+                - link "Sociobiodiversidade" [ref=f3e296] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/sociobiodiversidade
+          - listitem [ref=f3e297]:
+            - link "Assuntos" [ref=f3e298] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/assuntos
+          - listitem [ref=f3e299]:
+            - link "Acesso à Informação" [ref=f3e300] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao
+            - list [ref=f3e301]:
+              - listitem [ref=f3e302]:
+                - link "Institucional" [ref=f3e303] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional
+              - listitem [ref=f3e304]:
+                - link "Ações e Programas" [ref=f3e305] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/acoes-e-programas
+              - listitem [ref=f3e306]:
+                - link "Auditorias" [ref=f3e307] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/auditorias
+              - listitem [ref=f3e308]:
+                - link "Convênios e Transferências" [ref=f3e309] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/convenios-e-transferencias
+              - listitem [ref=f3e310]:
+                - link "Corregedoria-Geral" [ref=f3e311] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/Corregedoria-Geral
+              - listitem [ref=f3e312]:
+                - link "Dados Abertos" [ref=f3e313] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/dados-abertos
+              - listitem [ref=f3e314]:
+                - link "Empregados Públicos" [ref=f3e315] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/empregados-publicos
+              - listitem [ref=f3e316]:
+                - link "Informações Classificadas" [ref=f3e317] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/informacoes-classificadas
+              - listitem [ref=f3e318]:
+                - link "Participação Social" [ref=f3e319] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/participacao-social
+              - listitem [ref=f3e320]:
+                - link "Perguntas Frequentes" [ref=f3e321] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/perguntas-frequentes
+              - listitem [ref=f3e322]:
+                - link "Lei Geral de Proteção de Dados Pessoais" [ref=f3e323] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/lei-geral-de-protecao-de-dados-pessoais
+              - listitem [ref=f3e324]:
+                - link "Licitações e Contratos" [ref=f3e325] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/licitacoes-e-contratos
+              - listitem [ref=f3e326]:
+                - link "Receitas e Despesas" [ref=f3e327] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/receitas-e-despesas
+              - listitem [ref=f3e328]:
+                - link "Serviço de Informação ao Cidadão - SIC" [ref=f3e329] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/servico-de-informacao-ao-cidadao-sic
+              - listitem [ref=f3e330]:
+                - link "Transparência e Prestação de Contas" [ref=f3e331] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/transparencia-e-prestacao-de-contas
+              - listitem [ref=f3e332]:
+                - link "Sanções Administrativas" [ref=f3e333] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/sancoes-administrativas
+              - listitem [ref=f3e334]:
+                - link "Ferramentas e Aspectos Tecnológicos" [ref=f3e335] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/ferramentas-e-aspectos-tecnologicos
+              - listitem [ref=f3e336]:
+                - link "Política de Privacidade" [ref=f3e337] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/politica-de-privacidade
+          - listitem [ref=f3e338]:
+            - link "Canais de Atendimento" [ref=f3e339] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/canais_atendimento
+            - list [ref=f3e340]:
+              - listitem [ref=f3e341]:
+                - link "Cadastro no Mailing" [ref=f3e342] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/canais_atendimento/cadastro-no-mailing
+              - listitem [ref=f3e343]:
+                - link "Fale Conosco" [ref=f3e344] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/quem-e-quem
+              - listitem [ref=f3e345]:
+                - link "Ouvidoria" [ref=f3e346] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/ouvidoria
+              - listitem [ref=f3e347]:
+                - link "Redes Sociais" [ref=f3e348] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/canais_atendimento/redes-sociais
+              - listitem [ref=f3e349]:
+                - link "Sala de Imprensa" [ref=f3e350] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/sala-de-imprensa
+          - listitem [ref=f3e351]:
+            - link "Comunicação Institucional" [ref=f3e352] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional
+            - list [ref=f3e353]:
+              - listitem [ref=f3e354]:
+                - link "Eventos e Promoção Institucional" [ref=f3e355] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/eventos-e-promocao-institucional
+              - listitem [ref=f3e356]:
+                - link "Sala de Imprensa" [ref=f3e357] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/sala-de-imprensa
+              - listitem [ref=f3e358]:
+                - link "A Conab no seu celular!" [ref=f3e359] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/a-conab-no-seu-celular
+        - generic: 
+        - generic [ref=f3e360]:
+          - generic [ref=f3e361]:
+            - generic [ref=f3e362]: Redes sociais
+            - list [ref=f3e363]:
+              - listitem [ref=f3e364]:
+                - text: 
+                - link "Twitter" [ref=f3e365] [cursor=pointer]:
+                  - /url: https://www.twitter.com/Conab_Oficial
+              - listitem [ref=f3e366]:
+                - text: 
+                - link "YouTube" [ref=f3e367] [cursor=pointer]:
+                  - /url: https://www.youtube.com/ConabCiaNacional
+              - listitem [ref=f3e368]:
+                - text: 
+                - link "Facebook" [ref=f3e369] [cursor=pointer]:
+                  - /url: https://www.facebook.com/ConabOficial
+              - listitem [ref=f3e370]:
+                - text: 
+                - link "Flickr" [ref=f3e371] [cursor=pointer]:
+                  - /url: https://www.flickr.com/conab_oficial
+              - listitem [ref=f3e372]:
+                - text: 
+                - link "Instagram" [ref=f3e373] [cursor=pointer]:
+                  - /url: https://www.instagram.com/conab_oficial
+              - listitem [ref=f3e374]:
+                - text: 
+                - link "Linkedin" [ref=f3e375] [cursor=pointer]:
+                  - /url: https://linkedin.com/company/conab
+          - link "Acesse o portal sobre o acesso à informação" [ref=f3e378] [cursor=pointer]:
+            - /url: https://www.gov.br/acessoainformacao/pt-br
+            - img [ref=f3e379]:
+              - generic [ref=f3e384]: Acesso àInformação
+      - generic [ref=f3e385]:
+        - text: Todo o conteúdo deste site está publicado sob a licença
+        - link "Creative Commons Atribuição-SemDerivações 3.0 Não Adaptada" [ref=f3e386] [cursor=pointer]:
+          - /url: https://creativecommons.org/licenses/by-nd/3.0/deed.pt_BR
+        - text: .
+    - navigation "Voltar ao topo da página" [ref=f3e387]:
+      - link " Voltar ao topo da página" [ref=f3e388] [cursor=pointer]:
+        - /url: "#wrapper"
+        - generic [ref=f3e389]: 
+        - generic [ref=f3e390]: Voltar ao topo da página
+  - text:   
+  - generic [ref=f3e392] [cursor=pointer]:
+    - img "Conteúdo acessível em Libras usando o VLibras Widget com opções dos Avatares Ícaro, Hosana ou Guga." [ref=f3e393]
+    - img "Conteúdo acessível em Libras usando o VLibras Widget com opções dos Avatares Ícaro, Hosana ou Guga." [ref=f3e394]

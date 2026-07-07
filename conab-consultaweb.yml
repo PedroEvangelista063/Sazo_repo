@@ -1,0 +1,106 @@
+- generic [ref=e3]:
+  - img [ref=e5]
+  - group [ref=e8]:
+    - table [ref=e9]:
+      - rowgroup [ref=e10]:
+        - row [ref=e11]:
+          - cell [ref=e12]:
+            - group [ref=e17]:
+              - generic [ref=e18]:
+                - heading "Consulta:" [level=3] [ref=e19]
+                - group [ref=e20]:
+                  - table [ref=e22]:
+                    - rowgroup [ref=e23]:
+                      - 'row "UF do Armazém: Selecione" [ref=e24]':
+                        - cell "UF do Armazém:" [ref=e25]
+                        - cell "Selecione" [ref=e26]:
+                          - combobox [ref=e27]:
+                            - option "Selecione" [selected]
+                            - option "AC"
+                            - option "AL"
+                            - option "AM"
+                            - option "AP"
+                            - option "BA"
+                            - option "CE"
+                            - option "DF"
+                            - option "ES"
+                            - option "GO"
+                            - option "MA"
+                            - option "MG"
+                            - option "MS"
+                            - option "MT"
+                            - option "PA"
+                            - option "PB"
+                            - option "PE"
+                            - option "PI"
+                            - option "PR"
+                            - option "RJ"
+                            - option "RN"
+                            - option "RO"
+                            - option "RR"
+                            - option "RS"
+                            - option "SC"
+                            - option "SE"
+                            - option "SP"
+                            - option "TO"
+                      - row "Mesorregião:" [ref=e28]:
+                        - cell "Mesorregião:" [ref=e29]
+                        - cell [ref=e30]:
+                          - combobox [ref=e31]
+                      - row "Município do Armazém:" [ref=e32]:
+                        - cell "Município do Armazém:" [ref=e33]
+                        - cell [ref=e34]:
+                          - combobox [ref=e35]
+                      - row "CPF / CNPJ do Armazém:" [ref=e36]:
+                        - cell "CPF / CNPJ do Armazém:" [ref=e37]
+                        - cell [ref=e38]:
+                          - textbox [ref=e39]
+                      - row "Nome/Razão Social da Armazenadora:" [ref=e40]:
+                        - cell "Nome/Razão Social da Armazenadora:" [ref=e41]
+                        - cell [ref=e42]:
+                          - textbox [ref=e43]
+                      - row "Empresa :" [ref=e44]:
+                        - cell "Empresa :" [ref=e45]
+                        - cell [ref=e46]:
+                          - textbox [ref=e47]
+                      - row "CDA:" [ref=e48]:
+                        - cell "CDA:" [ref=e49]
+                        - cell [ref=e50]:
+                          - textbox [ref=e51]
+                      - row "Armazéns Credenciados e Habilitados" [ref=e52]:
+                        - cell "Armazéns Credenciados e Habilitados" [ref=e53]:
+                          - checkbox [ref=e54]
+                          - text: Armazéns Credenciados e Habilitados
+                      - row "Armazéns Certificados" [ref=e55]:
+                        - cell "Armazéns Certificados" [ref=e56]:
+                          - checkbox [ref=e57]
+                          - text: Armazéns Certificados
+                      - row [ref=e58]:
+                        - cell [ref=e59]
+                      - 'row "Código de Segurança: Se não conseguir visualizar a imagem clique aqui" [ref=e60]':
+                        - cell "Código de Segurança:" [ref=e61]
+                        - cell "Se não conseguir visualizar a imagem clique aqui" [ref=e62]:
+                          - table [ref=e63]:
+                            - rowgroup [ref=e64]:
+                              - row "Se não conseguir visualizar a imagem clique aqui" [ref=e65]:
+                                - cell [ref=e66]:
+                                  - img [ref=e67]
+                                - cell [ref=e68]:
+                                  - textbox [ref=e69]
+                                - cell "Se não conseguir visualizar a imagem clique aqui" [ref=e70]:
+                                  - paragraph [ref=e71]:
+                                    - text: Se não conseguir visualizar a imagem
+                                    - link "clique aqui" [ref=e72] [cursor=pointer]:
+                                      - /url: "#"
+                      - row "Consultar Limpar" [ref=e73]:
+                        - cell "Consultar Limpar" [ref=e74]:
+                          - table [ref=e75]:
+                            - rowgroup [ref=e76]:
+                              - row "Consultar Limpar" [ref=e77]:
+                                - cell [ref=e78]
+                                - cell "Consultar" [ref=e79]:
+                                  - button "Consultar" [ref=e80]
+                                - cell "Limpar" [ref=e81]:
+                                  - button "Limpar" [ref=e82]
+                                - cell [ref=e83]
+              - generic [ref=e84]: "* Campos obrigatórios"

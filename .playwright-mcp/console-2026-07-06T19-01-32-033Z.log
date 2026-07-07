@@ -1,0 +1,16 @@
+[     121ms] [WARNING] The specified value "!" does not conform to the required format.  The format is "#rrggbb" where rr, gg, bb are two-digit hexadecimal numbers. @ https://dw.ceasa.gov.br/js/jquery/jquery.min.js:4
+[     233ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://dw.ceasa.gov.br/images/src/waiting.gif:0
+[     234ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://dw.ceasa.gov.br/js/saiku/plugins/CCC_Chart/cdo.js:0
+[    1385ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:9000/livereload.js:0
+[    1594ms] [ERROR] Error performing POST on /saiku/rest/saiku/session @ https://dw.ceasa.gov.br/js/saiku/adapters/SaikuServer.js:106
+[    1594ms] [ERROR] SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>)
+    at parseJSON (https://dw.ceasa.gov.br/js/jquery/jquery.min.js:4:4412)
+    at On (https://dw.ceasa.gov.br/js/jquery/jquery.min.js:6:15599)
+    at k (https://dw.ceasa.gov.br/js/jquery/jquery.min.js:6:13940)
+    at XMLHttpRequest.r (https://dw.ceasa.gov.br/js/jquery/jquery.min.js:6:18646) @ https://dw.ceasa.gov.br/js/saiku/adapters/SaikuServer.js:107
+[    1786ms] [ERROR] Mixed Content: The page at 'https://dw.ceasa.gov.br/' was loaded over HTTPS, but requested an insecure script 'http://meteorite.bi/news.json?callback=jsonCallback&_=1783364492139'. This request has been blocked; the content must be served over HTTPS. @ https://dw.ceasa.gov.br/js/jquery/jquery.min.js:5
+[    1883ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://dw.ceasa.gov.br/saiku/rest/saiku/api/license?_=1783364492138:0
+[    1883ms] [ERROR] Error performing GET on /saiku/rest/saiku/api/license @ https://dw.ceasa.gov.br/js/saiku/adapters/SaikuServer.js:106
+[    1883ms] [ERROR] Not Found @ https://dw.ceasa.gov.br/js/saiku/adapters/SaikuServer.js:107
+[   14378ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://dw.ceasa.gov.br/saiku/rest/saiku/almir.costa/repositories:0

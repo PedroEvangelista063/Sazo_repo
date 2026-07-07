@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     pool_max_size: int = 50
     api_v1_prefix: str = "/api/v1"
     rate_limit_per_minute: int = 60
+    request_timeout_seconds: float = 29.0
     internal_api_key: str = ""
     debug: bool = False
 

@@ -393,21 +393,46 @@ class LegacyPostbackAdapter(BaseTargetAdapter):
 async def executar_adapters_playwright(
     adapters: list[BaseTargetAdapter],
     headless: bool = True,
+    **context_kwargs: Any,
 ) -> dict[str, list[CotacaoRegional]]:
-    """Executa multiplos adapters Playwright em uma unica sessao do browser."""
+    """Executa multiplos adapters Playwright em uma unica sessao do browser.
+
+    Aceita kwargs extras para new_context (ex: locale, timezone_id, user_agent,
+    viewport). Se omitidos, usa defaults seguros.
+    """
     resultados: dict[str, list[CotacaoRegional]] = {}
+    default_ctx = {
+        "viewport": {"width": 1280, "height": 720},
+        "user_agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        ),
+    }
+    default_ctx.update(context_kwargs)
 
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=headless)
-        context = await browser.new_context(
-            viewport={"width": 1280, "height": 720},
-            user_agent=(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            ),
-        )
+        context = await browser.new_context(**default_ctx)
         page = await context.new_page()
+
+        # Aplica playwright-stealth se disponivel
+        try:
+            from playwright_stealth import StealthConfig, stealth_sync
+            stealth_config = StealthConfig(
+                webdriver=True,
+                webgl_vendor="Intel Inc.",
+                webgl_renderer="Intel Iris OpenGL Engine",
+                vendor_flavor="Google Inc. (Intel)",
+                navigator_platform="Win32",
+                navigator_languages=["pt-BR", "en-US"],
+                navigator_vendor="Google Inc.",
+            )
+            await stealth_sync(context, stealth_config)
+        except ImportError:
+            pass
+        except Exception:
+            logger.debug("[Playwright] stealth_sync failed (non-fatal)")
 
         for adp in adapters:
             try:

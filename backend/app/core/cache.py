@@ -1,5 +1,5 @@
+import asyncio
 import time
-import threading
 from typing import Any, Optional
 
 
@@ -14,9 +14,9 @@ class _CacheEntry:
 class InMemoryCache:
     def __init__(self) -> None:
         self._store: dict[str, _CacheEntry] = {}
-        self._lock = threading.RLock()
+        self._lock = asyncio.Lock()
 
-    def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Optional[Any]:
         entry = self._store.get(key)
         if entry is None:
             return None
@@ -25,16 +25,16 @@ class InMemoryCache:
             return None
         return entry.value
 
-    def set(self, key: str, value: Any, ttl: float) -> None:
-        with self._lock:
+    async def set(self, key: str, value: Any, ttl: float) -> None:
+        async with self._lock:
             self._store[key] = _CacheEntry(value, ttl)
 
-    def clear(self) -> None:
-        with self._lock:
+    async def clear(self) -> None:
+        async with self._lock:
             self._store.clear()
 
-    def clear_pattern(self, pattern: str) -> None:
-        with self._lock:
+    async def clear_pattern(self, pattern: str) -> None:
+        async with self._lock:
             keys = [k for k in self._store if pattern in k]
             for k in keys:
                 self._store.pop(k, None)
@@ -44,5 +44,5 @@ cache = InMemoryCache()
 
 
 async def clear_cache() -> bool:
-    cache.clear()
+    await cache.clear()
     return True

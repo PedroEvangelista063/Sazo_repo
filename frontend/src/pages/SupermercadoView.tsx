@@ -35,25 +35,13 @@ export function SupermercadoView() {
     return ufs.map((u: string) => ({ value: u, label: u }))
   }, [ufsDisponiveis])
 
-  const { availableYears, monthsByYear } = useMemo(() => {
+  const availableYears = useMemo(() => {
     const years = new Set<number>()
-    const months: Record<number, Set<number>> = {}
     for (const p of allProducts) {
-      if (!p.ano) continue
-      years.add(p.ano)
-      if (!months[p.ano]) months[p.ano] = new Set()
-      if (p.mes) months[p.ano].add(p.mes)
+      if (p.ano) years.add(p.ano)
     }
-    return {
-      availableYears: Array.from(years).sort((a, b) => b - a),
-      monthsByYear: months,
-    }
+    return Array.from(years).sort((a, b) => b - a)
   }, [allProducts])
-
-  const monthsInYear = useMemo(() => {
-    if (!selectedYear) return new Set<number>()
-    return monthsByYear[selectedYear] ?? new Set()
-  }, [selectedYear, monthsByYear])
 
   const displayProducts = useMemo(() => {
     let filtered = produtos
@@ -225,14 +213,13 @@ export function SupermercadoView() {
                 <SimpleGrid cols={{ base: 4, sm: 6, lg: 12 }} spacing={6}>
                   {MONTHS_SHORT.map((name, idx) => {
                     const monthNum = idx + 1
-                    const hasData = monthsInYear.has(monthNum)
                     const isActive = selectedMonth === monthNum
                     return (
                       <Button
                         key={monthNum}
                         onClick={() => setSelectedMonth(isActive ? null : monthNum)}
-                        variant={isActive ? 'filled' : hasData ? 'light' : 'default'}
-                        color={isActive ? 'green' : hasData ? 'green' : 'gray'}
+                        variant={isActive ? 'filled' : 'default'}
+                        color={isActive ? 'green' : 'gray'}
                         size="sm"
                         styles={{ inner: { flexDirection: 'column', gap: 0 } }}
                         style={{ minHeight: 44 }}

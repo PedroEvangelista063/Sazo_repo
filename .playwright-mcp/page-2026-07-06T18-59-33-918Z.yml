@@ -1,0 +1,575 @@
+- generic [ref=e1]:
+  - navigation "Acesso rápido":
+    - link "Ir para o Conteúdo 1" [ref=e2] [cursor=pointer]:
+      - /url: "#wrapper"
+      - generic [ref=e3]: Ir para o
+      - text: Conteúdo
+      - generic [ref=e4]: "1"
+    - link "Ir para a Página Inicial 2" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e6]: Ir para a
+      - text: Página Inicial
+      - generic [ref=e7]: "2"
+    - link "Ir para o menu de Navegação 3" [ref=e8] [cursor=pointer]:
+      - /url: "#main-navigation"
+      - generic [ref=e9]: Ir para o menu de
+      - text: Navegação
+      - generic [ref=e10]: "3"
+    - link "Ir para a Busca 4" [ref=e11] [cursor=pointer]:
+      - /url: "#govbr-busca-input"
+      - generic [ref=e12]: Ir para a
+      - text: Busca
+      - generic [ref=e13]: "4"
+    - link "Ir para o Mapa do site 5" [ref=e14] [cursor=pointer]:
+      - /url: "#portal-footer"
+      - generic [ref=e15]: Ir para o
+      - text: Mapa do site
+      - generic [ref=e16]: "5"
+  - banner [ref=e17]:
+    - generic [ref=e20]:
+      - generic [ref=e23]:
+        - button "Abrir preferências de cookies" [ref=e26] [cursor=pointer]:
+          - generic [ref=e28]: 
+        - button "Ativar ou desativar o modo de alto contraste" [ref=e31] [cursor=pointer]:
+          - generic [ref=e33]: 
+      - banner [ref=e35]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - link "Logomarca gov.br" [ref=e39] [cursor=pointer]:
+              - /url: https://www.gov.br/pt-br
+              - img "Logomarca gov.br" [ref=e40]
+            - link "Ministério do Desenvolvimento Agrário e Agricultura Familiar" [ref=e42] [cursor=pointer]:
+              - /url: https://www.gov.br/mda/pt-br
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - button "Menu de links" [ref=e45] [cursor=pointer]:
+                - generic [ref=e46]: 
+              - text: 
+            - button "Abrir menu de seleção serviços" [ref=e51] [cursor=pointer]:
+              - img [ref=e53]
+              - generic [ref=e54]: Atalhos gov.br
+            - generic [ref=e57]:
+              - button "Entrar com gov.br" [ref=e58] [cursor=pointer]:
+                - generic [ref=e59]: 
+                - generic [ref=e60]: Entrar com gov.br
+              - generic:
+                - generic: Para começar
+                - generic: Clique em Entrar para acessar sua conta gov.br
+                - text: 
+        - button "Fechar overlay" [ref=e61] [cursor=pointer]
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - link "Abrir menu principal de navegação" [ref=e65] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e66]: Abrir menu principal de navegação
+          - generic [ref=e67]: 
+          - text: 
+        - heading "Companhia Nacional de Abastecimento" [level=1] [ref=e68]:
+          - link "Companhia Nacional de Abastecimento" [ref=e69] [cursor=pointer]:
+            - /url: https://www.gov.br/conab/pt-br
+      - text:        
+      - generic [ref=e70]:
+        - generic:
+          - combobox:
+            - search [ref=e71]:
+              - button "" [ref=e73] [cursor=pointer]
+              - searchbox "O que você procura?" [ref=e74]
+              - button "Pesquisar por voz" [ref=e75] [cursor=pointer]:
+                - generic [ref=e76]: 
+        - button "Fechar busca" [ref=e77] [cursor=pointer]:
+          - text: 
+          - generic [ref=e78]: 
+        - text: 
+    - text:                                      
+  - generic [ref=e79]:
+    - generic [ref=e80]:
+      - generic:
+        - generic:   
+        - generic [ref=e81]:
+          - link "Serviços recomendados para você" [ref=e82] [cursor=pointer]:
+            - /url: "#"
+          - link "Serviços mais acessados do govbr" [ref=e83] [cursor=pointer]:
+            - /url: "#"
+          - link "Serviços em destaque do govbr" [ref=e84] [cursor=pointer]:
+            - /url: "#"
+        - text:   
+      - main [ref=e86]:
+        - generic [ref=e87]:
+          - text: 
+          - generic [ref=e88]:
+            - generic [ref=e93]:
+              - generic [ref=e95]:
+                - generic [ref=e96]:
+                  - generic [ref=e97]:
+                    - generic [ref=e98]: 
+                    - img "BANNER SITE - Cafeeiro" [ref=e99]
+                  - link "Saiba mais sobre" [ref=e101] [cursor=pointer]:
+                    - /url: https://sistemas.conab.gov.br/conab_parque_cafe
+                - generic [ref=e102]:
+                  - generic [ref=e103]:
+                    - generic [ref=e104]: 
+                    - img "Banner - Resultado Final - PAA.jpeg" [ref=e105]
+                  - link "Saiba mais sobre" [ref=e107] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/paa/execucao-do-paa/ResultadoSementes2026.pdf
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - generic [ref=e110]: 
+                    - img "Banner - Amazonia Viva - 30-06-26.jpeg" [ref=e111]
+                  - link "Saiba mais sobre" [ref=e113] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/paa/amazonia-viva/edital-amazonia-viva/edital-amazonia-viva
+                - generic [ref=e114]:
+                  - generic [ref=e115]:
+                    - generic [ref=e116]: 
+                    - img "Banner Safra 2026.png" [ref=e117]
+                  - link "Saiba mais sobre" [ref=e119] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras/calendario-de-safras-e-prohort-2026/view
+                - generic [ref=e120]:
+                  - generic [ref=e121]:
+                    - generic [ref=e122]: 
+                    - img "banner resultado final-8.png" [ref=e123]
+                  - link "Saiba mais sobre" [ref=e125] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/paa/chamadas-publicas-compras-institucionais/comunicado-compra-institucional-no-03-2026-classificacao-das-propostas.pdf
+                - generic [ref=e126]:
+                  - generic [ref=e127]:
+                    - generic [ref=e128]: 
+                    - img "Plantação de algodão com estimativa da produção de grãos de 358,6 milhões de toneladas na safra 2025/26" [ref=e129]
+                  - link "Saiba mais sobre" [ref=e131] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras/safra-de-graos
+                - generic [ref=e132]:
+                  - generic [ref=e133]:
+                    - generic [ref=e134]: 
+                    - 'img "Imagem de cacho de uva roxa. Texto: 6º Boletim Hortigranjeiro de 2026" [ref=e135]'
+                  - link "Saiba mais sobre" [ref=e137] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/hortigranjeiros-prohort/boletim-hortigranjeiro/boletim-hortigranjeiro
+                - generic [ref=e138]:
+                  - generic [ref=e139]:
+                    - generic [ref=e140]: 
+                    - img "Banner - Anuário Agrologístico" [ref=e141]
+                  - link "Saiba mais sobre" [ref=e143] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/logistica/anuario-agrologistico
+                - generic [ref=e144]:
+                  - generic [ref=e145]:
+                    - generic [ref=e146]: 
+                    - img "WhatsApp Image 2026-05-08 at 16.45.45.jpeg" [ref=e147]
+                  - link "Saiba mais sobre" [ref=e149] [cursor=pointer]:
+                    - /url: https://www.gov.br/mma/pt-br/composicao/sbc/dpeb/politica-nacional-de-pagamento-por-servicos-ambientais/psa-pirarucu/editais/psa-pirarucu-sei_2307552_edital_de.pdf
+                - generic [ref=e150]:
+                  - generic [ref=e151]:
+                    - generic [ref=e152]: 
+                    - img "Imagem de xícara de café com grãos na mesa ao redor e com estimativa de 66,7 milhões de sacas" [ref=e153]
+                  - link "Saiba mais sobre" [ref=e155] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras/safra-de-cafe
+                - generic [ref=e156]:
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: 
+                    - img "BANNER SITE - Cafeeiro" [ref=e159]
+                  - link "Saiba mais sobre" [ref=e161] [cursor=pointer]:
+                    - /url: https://sistemas.conab.gov.br/conab_parque_cafe
+                - generic [ref=e162]:
+                  - generic [ref=e163]:
+                    - generic [ref=e164]: 
+                    - img "Banner - Resultado Final - PAA.jpeg" [ref=e165]
+                  - link "Saiba mais sobre" [ref=e167] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/atuacao/paa/execucao-do-paa/ResultadoSementes2026.pdf
+              - button "Próximo" [ref=e168] [cursor=pointer]
+              - button "Anterior" [ref=e169] [cursor=pointer]
+              - generic [ref=e170]:
+                - button "Go to slide 1" [ref=e171] [cursor=pointer]
+                - button "Go to slide 2" [ref=e172] [cursor=pointer]
+                - button "Go to slide 3" [ref=e173] [cursor=pointer]
+                - button "Go to slide 4" [ref=e174] [cursor=pointer]
+                - button "Go to slide 5" [ref=e175] [cursor=pointer]
+                - button "Go to slide 6" [ref=e176] [cursor=pointer]
+                - button "Go to slide 7" [ref=e177] [cursor=pointer]
+                - button "Go to slide 8" [ref=e178] [cursor=pointer]
+                - button "Go to slide 9" [ref=e179] [cursor=pointer]
+                - button "Go to slide 10" [ref=e180] [cursor=pointer]
+            - heading "Notícias" [level=2] [ref=e186]
+            - generic [ref=e196]:
+              - generic [ref=e200]:
+                - heading "Comunicação institucional será adaptada para o período eleitoral" [level=2] [ref=e201]:
+                  - link "Comunicação institucional será adaptada para o período eleitoral" [ref=e202] [cursor=pointer]:
+                    - /url: https://www.gov.br/conab/pt-br/assuntos/noticias/comunicacao-institucional-sera-adaptada-para-o-periodo-eleitoral-1
+                - time [ref=e203]: 03/07/2026 16h00
+              - paragraph [ref=e208]: Esta coleção não possui nenhum resultado.
+              - paragraph [ref=e213]: Esta coleção não possui nenhum resultado.
+            - link "Mais Notícias" [ref=e219] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/assuntos/noticias
+            - heading "Atuação" [level=2] [ref=e225]
+            - generic [ref=e232]:
+              - link "Abastecimento Social" [ref=e234] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/abastecimento-social
+                - generic [ref=e236]: Abastecimento Social
+              - link "Agricultura Familiar" [ref=e238] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/paa
+                - generic [ref=e240]: Agricultura Familiar
+              - link "Armazenagem" [ref=e242] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/armazenagem
+                - generic [ref=e244]: Armazenagem
+              - link "Comercialização" [ref=e246] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/comercializacao
+                - generic [ref=e248]: Comercialização
+              - link "Informações Agropecuárias" [ref=e250] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias
+                - generic [ref=e252]: Informações Agropecuárias
+              - link "Logística" [ref=e254] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/logistica
+                - generic [ref=e256]: Logística
+              - link "Política de Garantia de Preços Mínimos" [ref=e258] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/sociobiodiversidade/politica-de-garantia-de-precos-minimos
+                - generic [ref=e260]: Política de Garantia de Preços Mínimos
+              - link "Sociobiodiversidade" [ref=e262] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/sociobiodiversidade
+                - generic [ref=e264]: Sociobiodiversidade
+            - heading "Acesso à Informação" [level=2] [ref=e270]
+            - generic [ref=e277]:
+              - link "Institucional" [ref=e279] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional
+                - generic [ref=e281]: Institucional
+              - link "Ações e Programas" [ref=e283] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/acoes-e-programas
+                - generic [ref=e285]: Ações e Programas
+              - link "Participação Social" [ref=e287] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/participacao-social
+                - generic [ref=e289]: Participação Social
+              - link "Auditorias" [ref=e291] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/auditorias
+                - generic [ref=e293]: Auditorias
+              - link "Convênios e Transferências" [ref=e295] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/convenios-e-transferencias
+                - generic [ref=e297]: Convênios e Transferências
+              - link "Receitas e Despesas" [ref=e299] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/receitas-e-despesas
+                - generic [ref=e301]: Receitas e Despesas
+              - link "Licitações e Contratos" [ref=e303] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/licitacoes-e-contratos
+                - generic [ref=e305]: Licitações e Contratos
+              - link "Agenda de Autoridades" [ref=e307] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/agenda-de-autoridades
+                - generic [ref=e309]: Agenda de Autoridades
+            - link "Mais Informações" [ref=e315] [cursor=pointer]:
+              - /url: /conab/pt-br/acesso-a-informacao
+            - heading "Canais de Atendimento" [level=2] [ref=e321]
+            - generic [ref=e328]:
+              - link "Ouvidoria" [ref=e330] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/ouvidoria
+                - generic [ref=e332]: Ouvidoria
+              - link "Sala de Imprensa" [ref=e334] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/sala-de-imprensa
+                - generic [ref=e336]: Sala de Imprensa
+              - link "Cadastro no Mailing" [ref=e338] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/canais_atendimento/cadastro-no-mailing
+                - generic [ref=e340]: Cadastro no Mailing
+              - link "Fale Conosco" [ref=e342] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/quem-e-quem
+                - generic [ref=e344]: Fale Conosco
+            - heading "Acesso Rápido" [level=2] [ref=e350]
+            - generic [ref=e357]:
+              - link "Portal de Informações Agropecuárias" [ref=e359] [cursor=pointer]:
+                - /url: https://portaldeinformacoes.conab.gov.br/produtos-360.html
+                - generic [ref=e361]: Portal de Informações Agropecuárias
+              - link "Sican" [ref=e363] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-rapido/sican
+                - generic [ref=e365]: Sican
+              - link "Safras" [ref=e367] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras
+                - generic [ref=e369]: Safras
+              - link "Parque Cafeeiro" [ref=e371] [cursor=pointer]:
+                - /url: https://sistemas.conab.gov.br/conab_parque_cafe/
+                - generic [ref=e373]: Parque Cafeeiro
+              - link "Portal Armazéns do Brasil" [ref=e375] [cursor=pointer]:
+                - /url: https://app.powerbi.com/view?r=eyJrIjoiNDdkNDM4ZjctYzk0OS00NWVjLWFlYjktZWQ4Njg3MDEyMTg0IiwidCI6ImU2ZDkwZGYzLWYxOGItNGJkZC04MDhjLWFhNmQwZjY4YjgwOSJ9
+                - generic [ref=e377]: Portal Armazéns do Brasil
+              - link "Preços Agropecuários" [ref=e379] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/precos-agropecuarios
+                - generic [ref=e381]: Preços Agropecuários
+              - link "Publicações" [ref=e383] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/publicacoes
+                - generic [ref=e385]: Publicações
+              - link "Leilões" [ref=e387] [cursor=pointer]:
+                - /url: https://siscoeweb.conab.gov.br/siscoe-web-leilao/#/
+                - generic [ref=e389]: Leilões
+              - link "Licitações" [ref=e391] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/licitacoes-e-contratos/licitacoes
+                - generic [ref=e393]: Licitações
+              - link "Serviços ao fornecedor" [ref=e395] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-rapido/servicos-ao-fornecedor
+                - generic [ref=e397]: Serviços ao fornecedor
+              - link "Quem é quem" [ref=e399] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/quem-e-quem
+                - generic [ref=e401]: Quem é quem
+              - link "Análise de Conjuntura de Mercado" [ref=e403] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/analises-do-mercado-agropecuario-e-extrativista
+                - generic [ref=e405]: Análise de Conjuntura de Mercado
+            - heading "Centrais de Conteúdo (Redes Sociais)" [level=2] [ref=e411]
+            - generic [ref=e418]:
+              - link "Conabcast" [ref=e420] [cursor=pointer]:
+                - /url: http://cast.conab.gov.br/
+                - generic [ref=e421]:
+                  - generic [ref=e422]: 
+                  - generic [ref=e423]: Conabcast
+              - link "Comunicação Institucional" [ref=e425] [cursor=pointer]:
+                - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional
+                - generic [ref=e427]: Comunicação Institucional
+              - link "Facebook" [ref=e429] [cursor=pointer]:
+                - /url: https://www.facebook.com/pages/Companhia-Nacional-de-Abastecimento-Conab/110198655817162
+                - generic [ref=e430]:
+                  - generic [ref=e431]: 
+                  - generic [ref=e432]: Facebook
+              - link "Flickr" [ref=e434] [cursor=pointer]:
+                - /url: https://www.flickr.com/photos/conab_oficial
+                - generic [ref=e435]:
+                  - generic [ref=e436]: 
+                  - generic [ref=e437]: Flickr
+              - link "Instagram" [ref=e439] [cursor=pointer]:
+                - /url: https://www.instagram.com/conab_oficial/
+                - generic [ref=e440]:
+                  - generic [ref=e441]: 
+                  - generic [ref=e442]: Instagram
+              - link "Linkedin" [ref=e444] [cursor=pointer]:
+                - /url: https://www.linkedin.com/company/conab/
+                - generic [ref=e445]:
+                  - generic [ref=e446]: 
+                  - generic [ref=e447]: Linkedin
+              - link "X" [ref=e449] [cursor=pointer]:
+                - /url: https://x.com/Conab_Oficial
+                - generic [ref=e450]:
+                  - generic [ref=e451]: 
+                  - generic [ref=e452]: X
+              - link "Youtube" [ref=e454] [cursor=pointer]:
+                - /url: https://www.youtube.com/ConabCiaNacional
+                - generic [ref=e455]:
+                  - generic [ref=e456]: 
+                  - generic [ref=e457]: Youtube
+            - generic [ref=e462]:
+              - heading "Serviços da Conab" [level=2] [ref=e463]
+              - heading "Serviços em destaque" [level=3] [ref=e465]
+              - generic [ref=e466]:
+                - link "Informações e Eventos Obter informações da safra brasileira de grãos Informações referentes à área, à produção e à produtividade de grãos. " [ref=e467] [cursor=pointer]:
+                  - /url: https://www.gov.br/pt-br/servicos/obter-informacoes-da-safra-brasileira-de-graos
+                  - generic [ref=e468]: Informações e Eventos
+                  - generic [ref=e469]: Obter informações da safra brasileira de grãos
+                  - generic:
+                    - generic: Informações referentes à área, à produção e à produtividade de grãos.
+                  - text: 
+                - link "Estímulo à Agricultura Familiar Compra com Doação Simultânea Compra de gêneros alimentícios da agricultura familiar destinados à doação simultânea às unidades recebedoras " [ref=e470] [cursor=pointer]:
+                  - /url: https://www.gov.br/pt-br/servicos/vender-alimentos-da-agricultura-familiar-para-entrega-a-unidade-recebedora-ou-diretamente-aos-beneficiarios-consumidores-compra-com-doacao-simultanea
+                  - generic [ref=e471]: Estímulo à Agricultura Familiar
+                  - generic [ref=e472]: Compra com Doação Simultânea
+                  - generic:
+                    - generic: Compra de gêneros alimentícios da agricultura familiar destinados à doação simultânea às unidades recebedoras
+                  - text: 
+                - link "Estímulo à Agricultura Familiar Adquirir milho do Programa de Venda em Balcão Compra de milho em grãos a preço compatível com o mercado atacadista local. " [ref=e473] [cursor=pointer]:
+                  - /url: https://www.gov.br/pt-br/servicos/adquirir-produtos-do-programa-de-vendas-em-balcao-provb
+                  - generic [ref=e474]: Estímulo à Agricultura Familiar
+                  - generic [ref=e475]: Adquirir milho do Programa de Venda em Balcão
+                  - generic:
+                    - generic: Compra de milho em grãos a preço compatível com o mercado atacadista local.
+                  - text: 
+                - link "Serviços de Suporte Consultar a Habilitação dos Armazéns Credenciados para Operar Estoques Públicos Consulta dos armazéns que estão aptos para receber e armazenar estoques públicos " [ref=e476] [cursor=pointer]:
+                  - /url: https://www.gov.br/pt-br/servicos/consultar-a-habilitacao-dos-armazens-credenciados-para-operar-estoques-publicos
+                  - generic [ref=e477]: Serviços de Suporte
+                  - generic [ref=e478]: Consultar a Habilitação dos Armazéns Credenciados para Operar Estoques Públicos
+                  - generic:
+                    - generic: Consulta dos armazéns que estão aptos para receber e armazenar estoques públicos
+                  - text: 
+                - link "Assistência Direta Receber pagamento da Subvenção Direta ao Produtor Extrativista Subvenção direta a produtores ou cooperativas que vendam abaixo do Preço Mínimo fixado pelo Governo Federal. " [ref=e479] [cursor=pointer]:
+                  - /url: https://www.gov.br/pt-br/servicos/receber-pagamento-da-subvencao-direta-ao-produtor-extrativista-sdpe
+                  - generic [ref=e480]: Assistência Direta
+                  - generic [ref=e481]: Receber pagamento da Subvenção Direta ao Produtor Extrativista
+                  - generic:
+                    - generic: Subvenção direta a produtores ou cooperativas que vendam abaixo do Preço Mínimo fixado pelo Governo Federal.
+                  - text: 
+                - link "Serviços de Suporte Participar dos Leilões Públicos para Vender Produtos para a Conab Leilão de compra da Conab " [ref=e482] [cursor=pointer]:
+                  - /url: https://www.gov.br/pt-br/servicos/participar-dos-leiloes-publicos-para-vender-produtos-para-a-conab
+                  - generic [ref=e483]: Serviços de Suporte
+                  - generic [ref=e484]: Participar dos Leilões Públicos para Vender Produtos para a Conab
+                  - generic:
+                    - generic: Leilão de compra da Conab
+                  - text: 
+            - link "Mais serviços" [ref=e490] [cursor=pointer]:
+              - /url: https://www.gov.br/pt-br/orgaos/companhia-nacional-de-abastecimento
+    - contentinfo [ref=e491]:
+      - generic [ref=e492]:
+        - list [ref=e494]:
+          - listitem [ref=e495]:
+            - link "Atuação" [ref=e496] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/atuacao
+            - list [ref=e497]:
+              - listitem [ref=e498]:
+                - link "Abastecimento Social" [ref=e499] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/abastecimento-social
+              - listitem [ref=e500]:
+                - link "Agricultura Familiar" [ref=e501] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/paa
+              - listitem [ref=e502]:
+                - link "Armazenagem" [ref=e503] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/armazenagem
+              - listitem [ref=e504]:
+                - link "Comercialização" [ref=e505] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/comercializacao
+              - listitem [ref=e506]:
+                - link "Informações Agropecuárias" [ref=e507] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias
+              - listitem [ref=e508]:
+                - link "Logística" [ref=e509] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/logistica
+              - listitem [ref=e510]:
+                - link "Sociobiodiversidade" [ref=e511] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/atuacao/sociobiodiversidade
+          - listitem [ref=e512]:
+            - link "Assuntos" [ref=e513] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/assuntos
+          - listitem [ref=e514]:
+            - link "Acesso à Informação" [ref=e515] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao
+            - list [ref=e516]:
+              - listitem [ref=e517]:
+                - link "Institucional" [ref=e518] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional
+              - listitem [ref=e519]:
+                - link "Ações e Programas" [ref=e520] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/acoes-e-programas
+              - listitem [ref=e521]:
+                - link "Auditorias" [ref=e522] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/auditorias
+              - listitem [ref=e523]:
+                - link "Convênios e Transferências" [ref=e524] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/convenios-e-transferencias
+              - listitem [ref=e525]:
+                - link "Corregedoria-Geral" [ref=e526] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/Corregedoria-Geral
+              - listitem [ref=e527]:
+                - link "Dados Abertos" [ref=e528] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/dados-abertos
+              - listitem [ref=e529]:
+                - link "Empregados Públicos" [ref=e530] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/empregados-publicos
+              - listitem [ref=e531]:
+                - link "Informações Classificadas" [ref=e532] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/informacoes-classificadas
+              - listitem [ref=e533]:
+                - link "Participação Social" [ref=e534] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/participacao-social
+              - listitem [ref=e535]:
+                - link "Perguntas Frequentes" [ref=e536] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/perguntas-frequentes
+              - listitem [ref=e537]:
+                - link "Lei Geral de Proteção de Dados Pessoais" [ref=e538] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/lei-geral-de-protecao-de-dados-pessoais
+              - listitem [ref=e539]:
+                - link "Licitações e Contratos" [ref=e540] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/licitacoes-e-contratos
+              - listitem [ref=e541]:
+                - link "Receitas e Despesas" [ref=e542] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/receitas-e-despesas
+              - listitem [ref=e543]:
+                - link "Serviço de Informação ao Cidadão - SIC" [ref=e544] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/servico-de-informacao-ao-cidadao-sic
+              - listitem [ref=e545]:
+                - link "Transparência e Prestação de Contas" [ref=e546] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/transparencia-e-prestacao-de-contas
+              - listitem [ref=e547]:
+                - link "Sanções Administrativas" [ref=e548] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/sancoes-administrativas
+              - listitem [ref=e549]:
+                - link "Ferramentas e Aspectos Tecnológicos" [ref=e550] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/ferramentas-e-aspectos-tecnologicos
+              - listitem [ref=e551]:
+                - link "Política de Privacidade" [ref=e552] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/politica-de-privacidade
+          - listitem [ref=e553]:
+            - link "Canais de Atendimento" [ref=e554] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/canais_atendimento
+            - list [ref=e555]:
+              - listitem [ref=e556]:
+                - link "Cadastro no Mailing" [ref=e557] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/canais_atendimento/cadastro-no-mailing
+              - listitem [ref=e558]:
+                - link "Fale Conosco" [ref=e559] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/quem-e-quem
+              - listitem [ref=e560]:
+                - link "Ouvidoria" [ref=e561] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/acesso-a-informacao/institucional/ouvidoria
+              - listitem [ref=e562]:
+                - link "Redes Sociais" [ref=e563] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/canais_atendimento/redes-sociais
+              - listitem [ref=e564]:
+                - link "Sala de Imprensa" [ref=e565] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/sala-de-imprensa
+          - listitem [ref=e566]:
+            - link "Comunicação Institucional" [ref=e567] [cursor=pointer]:
+              - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional
+            - list [ref=e568]:
+              - listitem [ref=e569]:
+                - link "Eventos e Promoção Institucional" [ref=e570] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/eventos-e-promocao-institucional
+              - listitem [ref=e571]:
+                - link "Sala de Imprensa" [ref=e572] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/sala-de-imprensa
+              - listitem [ref=e573]:
+                - link "A Conab no seu celular!" [ref=e574] [cursor=pointer]:
+                  - /url: https://www.gov.br/conab/pt-br/comunicacao-institucional/a-conab-no-seu-celular
+        - generic: 
+        - generic [ref=e575]:
+          - generic [ref=e576]:
+            - generic [ref=e577]: Redes sociais
+            - list [ref=e578]:
+              - listitem [ref=e579]:
+                - text: 
+                - link "Twitter" [ref=e580] [cursor=pointer]:
+                  - /url: https://www.twitter.com/Conab_Oficial
+              - listitem [ref=e581]:
+                - text: 
+                - link "YouTube" [ref=e582] [cursor=pointer]:
+                  - /url: https://www.youtube.com/ConabCiaNacional
+              - listitem [ref=e583]:
+                - text: 
+                - link "Facebook" [ref=e584] [cursor=pointer]:
+                  - /url: https://www.facebook.com/ConabOficial
+              - listitem [ref=e585]:
+                - text: 
+                - link "Flickr" [ref=e586] [cursor=pointer]:
+                  - /url: https://www.flickr.com/conab_oficial
+              - listitem [ref=e587]:
+                - text: 
+                - link "Instagram" [ref=e588] [cursor=pointer]:
+                  - /url: https://www.instagram.com/conab_oficial
+              - listitem [ref=e589]:
+                - text: 
+                - link "Linkedin" [ref=e590] [cursor=pointer]:
+                  - /url: https://linkedin.com/company/conab
+          - link "Acesse o portal sobre o acesso à informação" [ref=e593] [cursor=pointer]:
+            - /url: https://www.gov.br/acessoainformacao/pt-br
+            - img [ref=e594]:
+              - generic [ref=e599]: Acesso àInformação
+      - generic [ref=e600]:
+        - text: Todo o conteúdo deste site está publicado sob a licença
+        - link "Creative Commons Atribuição-SemDerivações 3.0 Não Adaptada" [ref=e601] [cursor=pointer]:
+          - /url: https://creativecommons.org/licenses/by-nd/3.0/deed.pt_BR
+        - text: .
+    - navigation "Voltar ao topo da página" [ref=e602]:
+      - link " Voltar ao topo da página" [ref=e603] [cursor=pointer]:
+        - /url: "#wrapper"
+        - generic [ref=e604]: 
+        - generic [ref=e605]: Voltar ao topo da página
+  - generic [ref=e609]:
+    - generic [ref=e610]:
+      - text:  
+      - generic [ref=e611]:
+        - generic [ref=e612]:
+          - text: Para melhorar a sua experiência na plataforma e prover serviços personalizados, utilizamos cookies.
+          - strong [ref=e613]: Ao aceitar, você terá acesso a todas as funcionalidades do site. Se clicar em "Rejeitar Cookies", os cookies que não forem estritamente necessários serão desativados.
+          - text: Para escolher quais quer autorizar, clique em "Gerenciar cookies". Saiba mais em nossa
+          - link "Declaração de Cookies" [ref=e614] [cursor=pointer]:
+            - /url: https://www.gov.br/pt-br/termos-de-uso
+          - text: .
+        - text: Desativado  Ativado  Desativado  Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  • • • • • • Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado Desativado  Desligado 
+    - generic [ref=e615]:
+      - button "Gerenciar cookies" [ref=e616] [cursor=pointer]:  Gerenciar cookies
+      - button "Rejeitar cookies" [ref=e617] [cursor=pointer]
+      - button "Aceitar cookies" [ref=e618] [cursor=pointer]
+  - text:   
+  - generic [ref=e620] [cursor=pointer]:
+    - img "Conteúdo acessível em Libras usando o VLibras Widget com opções dos Avatares Ícaro, Hosana ou Guga." [ref=e621]
+    - img "Conteúdo acessível em Libras usando o VLibras Widget com opções dos Avatares Ícaro, Hosana ou Guga." [ref=e622]

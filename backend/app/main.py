@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from backend.app.core.config import get_settings
 from backend.app.core.ratelimit import RateLimitMiddleware
+from backend.app.core.timeout import TimeoutMiddleware
 from backend.app.db.session import get_api_pool, get_etl_pool, close_pools
 from backend.app.api.v1.endpoints.produtos import router as produtos_router
 from backend.app.api.v1.endpoints.categorias import router as categorias_router
@@ -21,7 +22,7 @@ async def lifespan(app: FastAPI):
     try:
         from backend.app.db.session import fetch_etl
         await fetch_etl("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade")
-        cache.clear()
+        await cache.clear()
     except Exception:
         pass
 
@@ -44,6 +45,11 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app.add_middleware(
+    TimeoutMiddleware,
+    timeout_seconds=settings.request_timeout_seconds,
 )
 
 app.add_middleware(

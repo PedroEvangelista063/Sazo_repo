@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - img "Power BI loading" [ref=e4]
+  - generic [ref=e13]:
+    - link "Microsoft Power BI (Opens in new tab)" [ref=e14] [cursor=pointer]:
+      - /url: https://go.microsoft.com/fwlink/?LinkID=722383&clcid=0x409
+      - text: Microsoft Power BI
+    - generic:
+      - generic:  
+    - generic [ref=e15]:
+      - button "About Power BI" [ref=e16] [cursor=pointer]:
+        - generic [ref=e17]: 
+      - link "Flag this content as inappropriate":
+        - /url: https://learn.microsoft.com/power-bi/support/service-support-options#how-do-i-contact-support
+        - generic [ref=e18] [cursor=pointer]: 
+      - button "Open in full-screen mode" [ref=e19] [cursor=pointer]:
+        - generic [ref=e20]: 

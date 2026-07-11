@@ -1,0 +1,186 @@
+{
+  "_metadata": {
+    "versao": "1.0",
+    "descricao": "Matriz de fontes para micro-motores — Arquitetura Pomar ELT",
+    "janela_temporal": "2024-01 a 2026-12",
+    "atualizado_em": "2026-07-09", "mudancas": "CONAB removido de core (API Pentaho morta), adicionado a agregadores (CSV direto)"
+  },
+  "core": [
+    {
+      "nome": "IBGE SIDRA Tabela 7060",
+      "fonte_id": "IBGE-SIDRA-7060",
+      "url_base": "https://apisidra.ibge.gov.br/values/t/7060",
+      "tipo": "api",
+      "uf": "BR",
+      "abrangencia": "Nacional",
+      "uso": "inflacao_modelo"
+    }
+  ],
+  "agregadores": [
+    {
+      "nome": "CONAB ProHort Diário",
+      "fonte_id": "CONAB-PENTAHO",
+      "url_base": "https://portaldeinformacoes.conab.gov.br/downloads/arquivos/ProhortDiario.txt",
+      "tipo": "csv",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    },
+    {
+      "nome": "CEPEA Banco de Dados",
+      "fonte_id": "CEPEA",
+      "url_base": "https://cepea.org.br/br/consultas-ao-banco-de-dados-do-site.aspx",
+      "tipo": "asp_postback",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    },
+    {
+      "nome": "HF Brasil",
+      "fonte_id": "HF-BRASIL",
+      "url_base": "https://www.hfbrasil.org.br",
+      "tipo": "web",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    },
+    {
+      "nome": "Notícias Agrícolas",
+      "fonte_id": "NOTICIAS-AGRICOLAS",
+      "url_base": "https://www.noticiasagricolas.com.br/cotacoes",
+      "tipo": "web",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    },
+    {
+      "nome": "Agrolink",
+      "fonte_id": "AGROLINK",
+      "url_base": "https://www.agrolink.com.br/cotacoes",
+      "tipo": "web",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    },
+    {
+      "nome": "Calculadora Rural",
+      "fonte_id": "CALC-RURAL",
+      "url_base": "https://calculadorarural.com.br/ceasa",
+      "tipo": "web",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    }
+  ],
+  "ceasas_diretas": [
+    {
+      "nome": "CEAGESP (SP)",
+      "fonte_id": "CEAGESP",
+      "url_base": "https://ceagesp.gov.br/cotacoes",
+      "uf": "SP",
+      "municipio": "Sao Paulo"
+    },
+    {
+      "nome": "CEASA MG",
+      "fonte_id": "CEASA-MG",
+      "url_base": "https://minas1.ceasa.mg.gov.br/ceasainternet",
+      "uf": "MG",
+      "municipio": "Contagem"
+    },
+    {
+      "nome": "CEASA PR",
+      "fonte_id": "CEASA-PR",
+      "url_base": "https://www.ceasa.pr.gov.br",
+      "uf": "PR",
+      "municipio": "Curitiba"
+    },
+    {
+      "nome": "IMEA (MT)",
+      "fonte_id": "IMEA-MT",
+      "url_base": "http://www.imea.com.br",
+      "tipo": "api",
+      "uf": "MT",
+      "municipio": "Cuiaba"
+    },
+    {
+      "nome": "CEASA ES",
+      "fonte_id": "CEASA-ES",
+      "url_base": "http://200.198.51.71/detec/filtro_boletim_es",
+      "uf": "ES",
+      "municipio": "Vitoria"
+    },
+    {
+      "nome": "CEASA DF",
+      "fonte_id": "CEASA-DF",
+      "url_base": "https://www.ceasa.df.gov.br",
+      "uf": "DF",
+      "municipio": "Brasilia"
+    },
+    {
+      "nome": "CEASA BA",
+      "fonte_id": "CEASA-BA",
+      "url_base": "https://www.ceasa.ba.gov.br",
+      "uf": "BA",
+      "municipio": "Salvador"
+    },
+    {
+      "nome": "CEASA PE",
+      "fonte_id": "CEASA-PE",
+      "url_base": "https://www.ceasape.org.br/cotacao",
+      "uf": "PE",
+      "municipio": "Recife"
+    },
+    {
+      "nome": "CEASA RN",
+      "fonte_id": "CEASA-RN",
+      "url_base": "https://transparencia.ceasa.rn.gov.br",
+      "uf": "RN",
+      "municipio": "Natal"
+    },
+    {
+      "nome": "CEASA MS",
+      "fonte_id": "CEASA-MS",
+      "url_base": "https://www.ceasa.ms.gov.br",
+      "uf": "MS",
+      "municipio": "Campo Grande"
+    }
+  ],
+  "perifericos": [
+    {
+      "nome": "EMATER",
+      "fonte_id": "EMATER",
+      "url_base": "https://www.emater.df.gov.br",
+      "uf": "DF",
+      "abrangencia": "Distrito Federal"
+    },
+    {
+      "nome": "EPAGRI",
+      "fonte_id": "EPAGRI",
+      "url_base": "https://www.epagri.sc.gov.br",
+      "uf": "SC",
+      "abrangencia": "Santa Catarina"
+    },
+    {
+      "nome": "DERAL",
+      "fonte_id": "DERAL",
+      "url_base": "https://www.agricultura.pr.gov.br/deral",
+      "uf": "PR",
+      "abrangencia": "Parana"
+    },
+    {
+      "nome": "IFAG",
+      "fonte_id": "IFAG",
+      "url_base": "https://www.ifag.org.br",
+      "uf": "BR",
+      "abrangencia": "Nacional"
+    },
+    {
+      "nome": "SEPROR",
+      "fonte_id": "SEPROR",
+      "url_base": "https://www.sepror.am.gov.br",
+      "uf": "AM",
+      "abrangencia": "Amazonas"
+    },
+    {
+      "nome": "SEDAP",
+      "fonte_id": "SEDAP",
+      "url_base": "https://www.sedap.pa.gov.br",
+      "uf": "PA",
+      "abrangencia": "Para"
+    }
+  ]
+}

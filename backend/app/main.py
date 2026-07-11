@@ -11,6 +11,7 @@ from backend.app.api.v1.endpoints.internal import router as internal_router
 from backend.app.api.v1.endpoints.municipios import router as municipios_router
 from backend.app.api.v1.endpoints.ufs import router as ufs_router
 from backend.app.api.v1.endpoints.stream import router as stream_router
+from backend.app.api.v1.endpoints.admin import router as admin_router
 from backend.app.core.cache import cache
 
 
@@ -63,6 +64,7 @@ app.include_router(internal_router, prefix=settings.api_v1_prefix)
 app.include_router(municipios_router, prefix=settings.api_v1_prefix)
 app.include_router(ufs_router, prefix=settings.api_v1_prefix)
 app.include_router(stream_router, prefix=settings.api_v1_prefix)
+app.include_router(admin_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/health")

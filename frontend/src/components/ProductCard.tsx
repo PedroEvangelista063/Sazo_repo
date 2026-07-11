@@ -1,4 +1,4 @@
-import { Card, Text, Group, Stack } from '@mantine/core'
+import { Badge, Card, Group, Stack, Text, Tooltip } from '@mantine/core'
 import { CheckCircle2, MinusCircle, XCircle } from 'lucide-react'
 import type { ProdutoVarejo } from '../types/domain'
 
@@ -39,9 +39,20 @@ export function ProductCard({ product }: ProductCardProps) {
       <Stack align="center" gap={4}>
         <Text fz={28} role="img" aria-label={product.nome_produto}>{emoji}</Text>
         <Text fz="sm" fw={700} ta="center" lh={1.3}>{product.nome_produto}</Text>
-        <Group gap={4} justify="center">
-          <Icon size={14} />
-          <Text fz="xs" c={config.color}>{config.label}</Text>
+        <Group gap={4} justify="center" wrap="wrap">
+          <Group gap={4}>
+            <Icon size={14} />
+            <Text fz="xs" c={config.color}>{config.label}</Text>
+          </Group>
+          {product.is_forecast && (
+            <Tooltip
+              label={`Dado estimado com base no histórico de 2024–2025. Confiança: ${product.confianca_baseline ?? '?'}%`}
+              withArrow
+              openDelay={300}
+            >
+              <Badge variant="outline" color="gray" size="xs">📊 Estimativa</Badge>
+            </Tooltip>
+          )}
         </Group>
         {product.usou_fallback_12m && (
           <Text fz={10} ta="center" c="dimmed">* Média 12 meses</Text>

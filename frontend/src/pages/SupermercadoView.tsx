@@ -1,22 +1,21 @@
 import { useState, useMemo } from 'react'
-import {
-  AppShell, Group, Stack, Title, Text, Select, Button, SimpleGrid,
-  Chip, Badge, Alert, Center, ActionIcon, Card,
-} from '@mantine/core'
-import { TrendingUp, Layers, X, Salad, RefreshCw } from 'lucide-react'
+import { Button } from '../components/ui/button'
+import { Badge } from '../components/ui/badge'
+import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft } from 'lucide-react'
 import { useHortifruti } from '../hooks/useHortifruti'
 import { useUfs } from '../hooks/useUfs'
 import { ProductCard } from '../components/ProductCard'
 import { SkeletonCard } from '../components/SkeletonCard'
 import { CategoriesModal } from '../components/CategoriesModal'
 import { ThemeToggle } from '../components/ThemeToggle'
+import { cn } from '@/lib/utils'
 
 const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 
 const STATUS_FILTERS = [
-  { value: 'VERDE', label: 'Melhor Época', color: 'green' as const },
-  { value: 'AMARELO', label: 'Preço Normal', color: 'yellow' as const },
-  { value: 'VERMELHO', label: 'Péssima Época', color: 'red' as const },
+  { value: 'VERDE', label: 'Melhor Época', activeClass: 'bg-sazonal-verde-600 text-white border-sazonal-verde-600', idleClass: 'border-sazonal-verde-600 text-sazonal-verde-600 dark:text-sazonal-verde-400' },
+  { value: 'AMARELO', label: 'Preço Normal', activeClass: 'bg-sazonal-amarelo-600 text-white border-sazonal-amarelo-600', idleClass: 'border-sazonal-amarelo-600 text-sazonal-amarelo-600 dark:text-sazonal-amarelo-dark' },
+  { value: 'VERMELHO', label: 'Péssima Época', activeClass: 'bg-sazonal-vermelho-600 text-white border-sazonal-vermelho-600', idleClass: 'border-sazonal-vermelho-600 text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400' },
 ]
 
 export function SupermercadoView() {
@@ -32,7 +31,7 @@ export function SupermercadoView() {
 
   const ufOptions = useMemo(() => {
     const ufs = ufsDisponiveis ?? ['SP', 'RS', 'PR', 'SC', 'MG', 'RJ', 'ES']
-    return ufs.map((u: string) => ({ value: u, label: u }))
+    return ufs.map((u: string) => ({ value: u, label: u === 'BR' ? 'BR (Nacional)' : u }))
   }, [ufsDisponiveis])
 
   const availableYears = useMemo(() => {
@@ -89,218 +88,217 @@ export function SupermercadoView() {
   }, [selectedUF, selectedYear, selectedMonth, selectedProducts, selectedStatus])
 
   return (
-    <AppShell header={{ height: 60 }} padding="md">
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group gap="xs">
-            <ActionIcon variant="filled" color="green" size="lg" radius="md" aria-label="Sazonalidade">
+    <div className="min-h-screen bg-[var(--bg-body)]">
+      {/* Header fixo */}
+      <header className="sticky top-0 z-40 h-14 border-b border-gray-200 dark:border-gray-700 bg-[var(--bg-header)] backdrop-blur-md">
+        <div className="flex h-full items-center justify-between px-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sazonal-verde-600 text-white" aria-label="Sazonalidade">
               <TrendingUp size={20} />
-            </ActionIcon>
-            <div>
-              <Title order={1} size="h5">Sazonalidade</Title>
-              <Text size="xs" c="dimmed">Preços de Alimentos — CONAB</Text>
             </div>
-          </Group>
-          <Group gap="xs">
+            <div>
+              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">Sazonalidade</h1>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">Preços de Alimentos — CONAB</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
             <ThemeToggle />
-            <ActionIcon
+            <Button
               onClick={() => setCategoriesOpen(true)}
-              variant="filled"
-              color="green"
-              size="lg"
-              radius="md"
+              variant="green"
+              size="icon-lg"
               aria-label="Categorias"
             >
               <Layers size={18} />
-            </ActionIcon>
-          </Group>
-        </Group>
-      </AppShell.Header>
+            </Button>
+          </div>
+        </div>
+      </header>
 
-      <AppShell.Main>
+      {/* Conteúdo principal */}
+      <main className="mx-auto max-w-5xl px-4 py-4">
+        {/* Active pills */}
         {activePills.length > 0 && (
-          <Group gap={6} mb="md" mt={0}>
+          <div className="flex flex-wrap gap-1.5 mb-4">
             {activePills.map((pill) => (
-              <Button
+              <button
                 key={pill.key}
-                size="compact-xs"
-                variant="light"
-                color="green"
-                rightSection={<X size={12} />}
                 onClick={pill.onRemove}
+                className="inline-flex items-center gap-1 rounded-full bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 px-2.5 py-1 text-xs font-medium text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30 transition-colors"
               >
                 {pill.label}
-              </Button>
+                <X size={12} />
+              </button>
             ))}
             {activePills.length > 2 && (
-              <Button
-                size="compact-xs"
-                variant="subtle"
-                color="gray"
-                onClick={() => {
-                  setSelectedMonth(null)
-                  setSelectedProducts([])
-                  setSelectedStatus(null)
-                }}
+              <button
+                onClick={() => { setSelectedMonth(null); setSelectedProducts([]); setSelectedStatus(null) }}
+                className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
               >
                 Limpar tudo
-              </Button>
+              </button>
             )}
-          </Group>
+          </div>
         )}
 
+        {/* Loading state */}
         {isLoading && (
-          <SimpleGrid cols={{ base: 2, sm: 3, lg: 4 }} spacing="md" mt="md">
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {[1, 2, 3, 4, 5, 6].map((i) => <SkeletonCard key={i} />)}
-          </SimpleGrid>
+          </div>
         )}
 
+        {/* Error state */}
         {isError && !isLoading && (
-          <Alert variant="light" color="red" title="Erro" mt="md" icon={<RefreshCw size={16} />}>
-            Não foi possível carregar os dados. Tente novamente mais tarde.
-          </Alert>
+          <div className="mt-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
+            <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
+              <RefreshCw size={16} />
+              <p className="text-sm font-medium">Erro</p>
+            </div>
+            <p className="text-sm text-red-600 dark:text-red-300 mt-1">
+              Não foi possível carregar os dados. Tente novamente mais tarde.
+            </p>
+          </div>
         )}
 
+        {/* Empty state */}
         {!isLoading && !isError && allProducts.length === 0 && (
-          <Center mt="xl" style={{ flexDirection: 'column' }}>
-            <Salad size={48} />
-            <Title order={3} mt="md">Nenhum dado disponível</Title>
-            <Text c="dimmed" size="sm">Ainda não existem dados de sazonalidade registrados pela CONAB.</Text>
-          </Center>
+          <div className="flex flex-col items-center justify-center mt-16">
+            <Salad size={48} className="text-gray-300 dark:text-gray-600" />
+            <h2 className="text-lg font-bold mt-4 text-gray-900 dark:text-gray-100">Nenhum dado disponível</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Ainda não existem dados de sazonalidade registrados pela CONAB.
+            </p>
+          </div>
         )}
 
+        {/* Data loaded */}
         {!isLoading && allProducts.length > 0 && (
-          <Stack gap="lg" mt="md">
-            {/* Período — destaque principal */}
-            <Card withBorder padding="md" radius="lg" shadow="sm">
-              <Stack gap="sm">
-                <Group justify="space-between">
-                  <Group gap="xs">
-                    <Select
-                      data={ufOptions}
+          <div className="flex flex-col gap-6 mt-4">
+            {/* Período — card de seleção */}
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm">
+              <div className="flex flex-col gap-3">
+                {/* UF + Ano + contagem */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <select
                       value={selectedUF}
-                      onChange={(v) => {
-                        if (!v) return
-                        setSelectedUF(v)
-                        setSelectedMonth(null)
-                        setSelectedStatus(null)
-                      }}
-                      size="sm"
-                      w={90}
+                      onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
+                      className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
                       aria-label="Selecionar UF"
-                    />
-                    <Select
-                      data={yearOptions}
-                      value={String(selectedYear)}
-                      onChange={(v) => {
-                        if (!v) return
-                        setSelectedYear(Number(v))
-                        setSelectedMonth(null)
-                        setSelectedStatus(null)
-                      }}
-                      size="sm"
-                      w={100}
+                    >
+                      {ufOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null) }}
+                      className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
                       aria-label="Selecionar ano"
-                    />
-                  </Group>
-                  <Group gap="xs">
-                    <Badge size="lg" variant="light" color="green">
-                      {displayProducts.length} item{displayProducts.length !== 1 ? 'ns' : ''}
-                    </Badge>
-                  </Group>
-                </Group>
+                    >
+                      {yearOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    {displayProducts.length} item{displayProducts.length !== 1 ? 'ns' : ''}
+                  </Badge>
+                </div>
 
-                <SimpleGrid cols={{ base: 4, sm: 6, lg: 12 }} spacing={6}>
+                {/* Grid de meses */}
+                <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6 lg:grid-cols-12">
                   {MONTHS_SHORT.map((name, idx) => {
                     const monthNum = idx + 1
                     const isActive = selectedMonth === monthNum
                     return (
-                      <Button
+                      <button
                         key={monthNum}
                         onClick={() => setSelectedMonth(isActive ? null : monthNum)}
-                        variant={isActive ? 'filled' : 'default'}
-                        color={isActive ? 'green' : 'gray'}
-                        size="sm"
-                        styles={{ inner: { flexDirection: 'column', gap: 0 } }}
-                        style={{ minHeight: 44 }}
+                        className={cn(
+                          'flex flex-col items-center rounded-md border px-1 py-1.5 text-xs transition-colors min-h-[44px]',
+                          isActive
+                            ? 'bg-sazonal-verde-600 text-white border-sazonal-verde-600'
+                            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700',
+                        )}
                         aria-label={`${name} ${selectedYear}`}
                       >
-                        <Text fz={10} opacity={0.7}>{String(monthNum).padStart(2, '0')}</Text>
-                        <Text fz={12} fw={700}>{name}</Text>
-                      </Button>
+                        <span className="text-[10px] opacity-70">{String(monthNum).padStart(2, '0')}</span>
+                        <span className="text-xs font-bold">{name}</span>
+                      </button>
                     )
                   })}
-                </SimpleGrid>
+                </div>
 
-                <Group justify="space-between">
+                {/* Ações: visão completa + categorias */}
+                <div className="flex items-center justify-between">
                   {selectedMonth && (
                     <Button
-                      variant="subtle"
-                      color="green"
-                      size="compact-sm"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setSelectedMonth(null)}
-                      leftSection={<X size={14} />}
                     >
+                      <ChevronLeft size={14} className="mr-1" />
                       Visão Completa
                     </Button>
                   )}
                   <Button
                     onClick={() => setCategoriesOpen(true)}
                     variant="light"
-                    color="green"
                     size="sm"
-                    leftSection={<Layers size={16} />}
-                    ml="auto"
+                    className={cn(!selectedMonth && 'ml-auto')}
                   >
+                    <Layers size={16} className="mr-1" />
                     Categorias
                   </Button>
-                </Group>
-              </Stack>
-            </Card>
+                </div>
+              </div>
+            </div>
 
-            {/* Status filter + grid */}
-            <Stack gap="sm">
-              <Group gap={6}>
+            {/* Status filter + product grid */}
+            <div className="flex flex-col gap-3">
+              {/* Status chips */}
+              <div className="flex flex-wrap gap-1.5">
                 {STATUS_FILTERS.map((f) => (
-                  <Chip
+                  <button
                     key={f.value}
-                    checked={selectedStatus === f.value}
-                    onChange={() => setSelectedStatus(selectedStatus === f.value ? null : f.value)}
-                    color={f.color}
-                    variant="filled"
-                    size="sm"
+                    onClick={() => setSelectedStatus(selectedStatus === f.value ? null : f.value)}
+                    className={cn(
+                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                      selectedStatus === f.value ? f.activeClass : f.idleClass,
+                    )}
                   >
                     {f.label}
-                  </Chip>
+                  </button>
                 ))}
                 {selectedStatus && (
-                  <ActionIcon
-                    variant="subtle"
-                    color="gray"
-                    size="sm"
+                  <button
                     onClick={() => setSelectedStatus(null)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                     aria-label="Limpar filtro"
                   >
                     <X size={14} />
-                  </ActionIcon>
+                  </button>
                 )}
-              </Group>
+              </div>
 
+              {/* Product grid */}
               {displayProducts.length > 0 ? (
-                <SimpleGrid cols={{ base: 2, sm: 3, lg: 4 }} spacing="md">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                   {displayProducts.map((p) => (
                     <ProductCard key={p.id_produto} product={p} />
                   ))}
-                </SimpleGrid>
+                </div>
               ) : (
-                <Center py="xl">
-                  <Text c="dimmed" size="sm">Nenhum produto encontrado para este período.</Text>
-                </Center>
+                <div className="flex items-center justify-center py-10">
+                  <p className="text-sm text-gray-400">Nenhum produto encontrado para este período.</p>
+                </div>
               )}
-            </Stack>
-          </Stack>
+            </div>
+          </div>
         )}
-      </AppShell.Main>
+      </main>
 
       <CategoriesModal
         open={categoriesOpen}
@@ -313,6 +311,6 @@ export function SupermercadoView() {
           )
         }
       />
-    </AppShell>
+    </div>
   )
 }

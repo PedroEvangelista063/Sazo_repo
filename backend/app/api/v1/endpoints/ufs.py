@@ -10,8 +10,9 @@ async def listar_ufs():
         """
         SELECT DISTINCT v.uf
         FROM mart.vw_api_produtos_sazonalidade v
-        WHERE v.uf IS NOT NULL AND v.uf != ''
+        WHERE v.uf IS NOT NULL AND v.uf != '' AND v.uf != 'BR'
         ORDER BY v.uf
         """
     )
-    return {"data": [r["uf"] for r in rows], "total": len(rows)}
+    ufs = [r["uf"] for r in rows]
+    return {"data": ["BR", *ufs], "total": len(ufs) + 1}

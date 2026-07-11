@@ -17,6 +17,16 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 7. **CORS e Segurança**: configurado no `main.py`. RLS ativado via migration `012_security_rls_readonly.sql`.
 8. **Janela Temporal**: endpoints de série temporal sempre aceitam `?ano_inicio=2024`.
 
+## Fluxo dos Dados — Raw → API
+```
+Scraper → raw.coleta_bruta (15)
+→ SortingEngine → staging.fact_precos_mensais (27.545)
+→ sp_executar_carga_completa → mart.sazonalidade_produto (37.013)
+→ REFRESH MV → mart.vw_api_produtos_sazonalidade (36.684) ← API lê daqui
+```
+
+A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V13). Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
+
 ## Forecast — Transparência
 - `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado) e `confianca_baseline: float | None` (% de confiança do baseline histórico)
 - A query SQL em `produtos.py` faz `LEFT JOIN mart.sazonalidade_baseline b ON b.id_produto = v.id_produto AND b.id_localidade = v.id_localidade AND b.mes = v.mes` — JOIN por FKs inteiras (mais rápido que nome+UF)
@@ -29,7 +39,7 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 
 ## Mapa Rápido
 - `app/main.py` — app FastAPI, middlewares, lifespan
-- `app/api/v1/endpoints/` — rotas: produtos, categorias, ufs, municipios, stream
+- `app/api/v1/endpoints/` — rotas: produtos, categorias, ufs, municipios, stream, admin, internal
 - `app/core/config.py` — settings via Pydantic (DATABASE_URL, etc)
 - `app/core/cache.py` — cache interno LRU/TTL
 - `app/core/ratelimit.py` — rate limiter por IP
@@ -37,3 +47,5 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 - `app/core/events.py` — EventBroadcaster (filas SSE para publish/subscribe)
 - `app/db/session.py` — pools asyncpg (api + etl)
 - `app/schemas/responses.py` — Pydantic response models (inclui `is_forecast`, `confianca_baseline`)
+- `migrations/` — scripts SQL incrementais (RLS, limpeza diária)
+- `tests/` — testes de resiliência e concorrência

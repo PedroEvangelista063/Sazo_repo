@@ -1,11 +1,11 @@
-import { Skeleton } from '@mantine/core'
+import { Skeleton } from './ui/skeleton'
 
 export function SkeletonCard() {
   return (
-    <div>
-      <Skeleton height={80} width={80} radius="50%" mx="auto" mb="sm" />
-      <Skeleton height={14} width="60%" mx="auto" mb={6} />
-      <Skeleton height={12} width="40%" mx="auto" />
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+      <Skeleton className="h-16 w-16 rounded-full" />
+      <Skeleton className="h-4 w-3/5" />
+      <Skeleton className="h-3 w-2/5" />
     </div>
   )
 }

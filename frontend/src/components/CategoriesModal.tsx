@@ -1,6 +1,14 @@
 import { useState, useMemo } from 'react'
-import { Modal, ScrollArea, Stack, Group, Text, TextInput, Badge, Button, Chip, Loader, Center } from '@mantine/core'
-import { Search } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from './ui/dialog'
+import { Button } from './ui/button'
+import { Badge } from './ui/badge'
+import { Search, X, ChevronLeft } from 'lucide-react'
 import { useCategorias } from '../hooks/useCategorias'
 import type { Categoria, ProdutoVarejo } from '../types/domain'
 
@@ -48,85 +56,116 @@ export function CategoriesModal({
     return m
   }, [categorias])
 
+  function handleClose() {
+    setDrillCategory(null)
+    setSearchQuery('')
+    onClose()
+  }
+
   return (
-    <Modal
-      opened={open}
-      onClose={() => { setDrillCategory(null); setSearchQuery(''); onClose() }}
-      title={drillCategory ? drillCategory.replace(/_/g, ' ') : 'Categorias'}
-      size="lg"
-      scrollAreaComponent={ScrollArea.Autosize}
-    >
-      {isLoading && (
-        <Center py="xl">
-          <Loader color="green" />
-        </Center>
-      )}
+    <Dialog open={open} onOpenChange={(o) => { if (!o) handleClose() }}>
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {drillCategory ? (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => { setDrillCategory(null); setSearchQuery('') }}
+                  aria-label="Voltar"
+                >
+                  <ChevronLeft size={16} />
+                </Button>
+                <span>{drillCategory.replace(/_/g, ' ')}</span>
+              </div>
+            ) : (
+              'Categorias'
+            )}
+          </DialogTitle>
+          <DialogDescription>
+            {drillCategory
+              ? 'Selecione os produtos para filtrar'
+              : 'Escolha uma categoria para explorar os produtos'}
+          </DialogDescription>
+        </DialogHeader>
 
-      {!isLoading && !drillCategory && categorias && (
-        <Stack gap="xs">
-          {categorias.map((cat) => (
-            <Button
-              key={cat.nome}
-              onClick={() => { setDrillCategory(cat.nome); setSearchQuery('') }}
-              variant="light"
-              color="gray"
-              fullWidth
-              justify="space-between"
-              leftSection={<Text fz={20}>{cat.icone || '📆'}</Text>}
-              rightSection={
-                <Group gap={4}>
-                  <Badge size="sm" variant="light" color="green">{cat.total_produtos}</Badge>
-                </Group>
-              }
-              styles={{ inner: { justifyContent: 'flex-start' } }}
-            >
-              <Text fw={600} size="sm">{cat.nome.replace(/_/g, ' ')}</Text>
-            </Button>
-          ))}
-        </Stack>
-      )}
+        {isLoading && (
+          <div className="flex items-center justify-center py-10">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-sazonal-verde-600 border-t-transparent" />
+          </div>
+        )}
 
-      {!isLoading && drillCategory && (
-        <Stack gap={4}>
-          <TextInput
-            placeholder="Buscar produto..."
-            leftSection={<Search size={14} />}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.currentTarget.value)}
-            size="sm"
-            mb="xs"
-          />
-          {catMap[drillCategory]?.descricao && (
-            <Text size="xs" c="dimmed" mb="sm">{catMap[drillCategory].descricao}</Text>
-          )}
-          {drillProdutos.length === 0 ? (
-            <Text ta="center" py="xl" c="dimmed" size="sm">Nenhum produto disponível nesta categoria</Text>
-          ) : (
-            <Chip.Group multiple value={selectedProducts} onChange={() => {}}>
-              <Group gap={6}>
-                {drillProdutos.map((prod) => (
-                  <Chip
-                    key={prod}
-                    value={prod}
-                    onClick={() => onToggleProduct(prod)}
-                    checked={selectedProducts.includes(prod)}
-                    size="sm"
-                    radius="xl"
-                  >
-                    {prod}
-                  </Chip>
-                ))}
-              </Group>
-            </Chip.Group>
-          )}
-        </Stack>
-      )}
+        {!isLoading && !drillCategory && categorias && (
+          <div className="flex flex-col gap-2">
+            {categorias.map((cat) => (
+              <Button
+                key={cat.nome}
+                onClick={() => { setDrillCategory(cat.nome); setSearchQuery('') }}
+                variant="light"
+                className="justify-between h-auto py-3"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-xl">{cat.icone || '📆'}</span>
+                  <span className="font-semibold text-sm">{cat.nome.replace(/_/g, ' ')}</span>
+                </span>
+                <Badge variant="secondary">{cat.total_produtos}</Badge>
+              </Button>
+            ))}
+          </div>
+        )}
 
-      <Text ta="center" size="xs" c="dimmed" py="sm">
-        {selectedProducts.length > 0
-          ? `${selectedProducts.length} produto${selectedProducts.length === 1 ? '' : 's'} na lista`
-          : 'Toque nos produtos para adicionar à sua lista'}
-      </Text>
-    </Modal>
+        {!isLoading && drillCategory && (
+          <div className="flex flex-col gap-2">
+            <div className="relative mb-1">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Buscar produto..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                className="w-full h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600"
+              />
+            </div>
+            {catMap[drillCategory]?.descricao && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                {catMap[drillCategory].descricao}
+              </p>
+            )}
+            {drillProdutos.length === 0 ? (
+              <p className="text-center py-6 text-sm text-gray-400">
+                Nenhum produto disponível nesta categoria
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {drillProdutos.map((prod) => {
+                  const isSelected = selectedProducts.includes(prod)
+                  return (
+                    <button
+                      key={prod}
+                      onClick={() => onToggleProduct(prod)}
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+                        isSelected
+                          ? 'bg-sazonal-verde-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      {prod}
+                      {isSelected && <X size={12} className="ml-1" />}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        <p className="text-center text-xs text-gray-400 pt-2">
+          {selectedProducts.length > 0
+            ? `${selectedProducts.length} produto${selectedProducts.length === 1 ? '' : 's'} na lista`
+            : 'Toque nos produtos para adicionar à sua lista'}
+        </p>
+      </DialogContent>
+    </Dialog>
   )
 }

@@ -8,6 +8,19 @@ import json
 
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
 
+BR_ID_LOCALIDADE: int | None = None
+MONTHS_2026 = list(range(1, 13))
+
+
+async def _get_br_localidade() -> int:
+    global BR_ID_LOCALIDADE
+    if BR_ID_LOCALIDADE is None:
+        row = await fetchrow(
+            "SELECT id_localidade FROM staging.dim_localidade WHERE uf = 'BR' AND municipio_id = '0'"
+        )
+        BR_ID_LOCALIDADE = row["id_localidade"] if row else None
+    return BR_ID_LOCALIDADE
+
 
 async def _query_sazonalidade(
     uf: str | None = None,
@@ -44,6 +57,15 @@ async def _query_sazonalidade(
         return SazonalidadeListResponse(**cached)
 
     offset_val = (pagina - 1) * por_pagina
+
+    if uf and uf.upper() == "BR":
+        if ano is not None and mes is not None:
+            return await _query_br_por_mes(
+                ano, mes, categoria, pagina, por_pagina, offset_val, cache_key, settings,
+            )
+        return await _query_br_snapshot(
+            categoria, pagina, por_pagina, offset_val, cache_key, settings,
+        )
 
     if ano is not None and mes is not None:
         return await _query_sazonalidade_por_mes(
@@ -314,6 +336,76 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
+
+
+async def _query_br_snapshot(
+    categoria, pagina, por_pagina, offset_val, cache_key, settings,
+) -> SazonalidadeListResponse:
+    br_id = await _get_br_localidade()
+    latest = await fetchrow(
+        "SELECT MAX(ano) AS ano, MAX(mes) FILTER (WHERE ano = (SELECT MAX(ano) FROM mart.vw_api_produtos_sazonalidade)) AS mes FROM mart.vw_api_produtos_sazonalidade"
+    )
+    if not latest or not latest["ano"]:
+        return SazonalidadeListResponse(data=[], total=0, pagina=pagina, por_pagina=por_pagina)
+    return await _query_br_por_mes(latest["ano"], latest["mes"], categoria, pagina, por_pagina, offset_val, cache_key, settings)
+
+
+async def _query_br_por_mes(
+    ano, mes, categoria, pagina, por_pagina, offset_val, cache_key, settings,
+) -> SazonalidadeListResponse:
+    br_id = await _get_br_localidade()
+    params: list = [ano, mes]
+    cond_parts = ["v.ano = $1", "v.mes = $2"]
+    idx = 3
+    if categoria:
+        cond_parts.append(f"v.categoria = ${idx}")
+        params.append(categoria.upper())
+        idx += 1
+    where = " AND ".join(cond_parts)
+
+    sql = f"""
+        SELECT
+            v.produto,
+            v.classificao_produto,
+            COALESCE(v.categoria, 'ALIMENTO_VAREJO') AS categoria,
+            'BR'                    AS uf,
+            'BRASIL'                AS municipio,
+            '0'                     AS municipio_id,
+            $1::INTEGER             AS ano,
+            $2::INTEGER             AS mes,
+            $1 || '-' || LPAD($2::TEXT, 2, '0') AS data_referencia_atual,
+            AVG(v.preco_referencia) AS preco_referencia,
+            AVG(v.preco_atual)      AS preco_atual,
+            BOOL_OR(v.usou_fallback_12m) AS usou_fallback_12m,
+            BOOL_OR(v.preco_estimado)   AS preco_estimado,
+            MODE() WITHIN GROUP (ORDER BY v.status_cor) AS status_cor,
+            'municipio'             AS fonte,
+            BOOL_OR(v.is_forecast)  AS is_forecast,
+            b.confianca             AS confianca_baseline
+        FROM mart.vw_api_produtos_sazonalidade v
+        LEFT JOIN mart.sazonalidade_baseline b
+            ON b.id_produto = v.id_produto
+           AND b.id_localidade = {br_id}
+           AND b.mes = v.mes
+        WHERE {where}
+        GROUP BY v.produto, v.classificao_produto, v.categoria, b.confianca
+        ORDER BY status_cor, v.produto
+        OFFSET ${idx} LIMIT ${idx + 1}
+    """
+    params.extend([offset_val, por_pagina])
+
+    total_row = await fetchrow(
+        f"SELECT COUNT(*) AS total FROM ({sql.replace(f'OFFSET ${idx} LIMIT ${idx + 1}', '')}) cnt",
+        *params[:idx - 1],
+    )
+    total = total_row["total"] if total_row else 0
+    if total == 0:
+        result = SazonalidadeListResponse(data=[], total=0, pagina=pagina, por_pagina=por_pagina)
+        await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+        return result
+
+    rows = await fetch(sql, *params)
+    return await _build_response(rows, total, pagina, por_pagina, cache_key, settings)
 
 
 @router.get("", response_model=SazonalidadeListResponse)

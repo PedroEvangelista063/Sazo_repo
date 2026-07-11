@@ -17,8 +17,68 @@ DDLs, migrações e schemas do banco PostgreSQL. Arquitetura Medalhão adaptada:
 7. **Índices Essenciais**: `raw.coleta_bruta (processado) WHERE processado = FALSE` — sem indexação excessiva.
 8. **Forecast é fallback condicional**: dados com `is_forecast = FALSE` (reais) NUNCA são sobrescritos por forecast. `ON CONFLICT DO NOTHING`.
 
+## Localização dos Dados Brutos
+
+Existem **duas fontes de dados brutos** independentes:
+
+### A. Banco PostgreSQL — `raw.coleta_bruta`
+Pipeline do scraper ao vivo. 15 registros de payloads brutos (JSONB) capturados pelos micro-motores.
+```
+Scraper → raw.coleta_bruta (15) → SortingEngine → staging.fact_precos_mensais
+```
+**DBA**: schema `raw`, tabela `coleta_bruta`. Índice `idx_coleta_bruta_processado WHERE processado = FALSE`.
+**Dev**: acessado via `asyncpg`. Usado pelo ciclo medalhão em `pipeline/scraper/persistence.py`.
+
+### B. Arquivos — `database/processed_data/01_raw/`
+Dados históricos CONAB (carga manual, não passa pelo scraper). São 20 listas de cotação (LISTA1 a LISTA20), cada uma em 3 formatos + arquivos consolidados:
+```
+database/processed_data/
+├── 01_raw/                          ← Dados brutos CONAB (fonte original)
+│   ├── LISTA{1..20} {data}.txt      ← Extração textual das listas CONAB
+│   ├── LISTA{1..20} {data}.json     ← Mesmos dados em JSON estruturado
+│   ├── LISTA{1..20} {data}.parquet  ← Mesmos dados em Parquet (otimizado)
+│   ├── cotacoes_brutas.parquet      ← Consolidação de todas as listas
+│   ├── sazonalidade_com_cotacao.parquet
+│   └── scraper_hortifruti_historico.parquet
+├── 02_cleaned/                      ← Dados limpos e tipados
+├── 03_categorized/                  ← Classificados por categoria
+├── 04_b2c_only/                     ← Filtro ALIMENTO_VAREJO
+├── 05_aggregated/                   ← Agregações por UF/produto/mês
+├── 06_seasonality/                  ← Sazonalidade calculada
+├── sql/                             ← Scripts SQL do ETL
+├── consolidated.parquet             ← Dado final consolidado
+├── ETL_REPORT.md                    ← Relatório do processo
+└── summary.json                     ← Resumo do ETL
+```
+**DBA**: arquivos `.parquet` no disco (não estão no PostgreSQL). Podem ser carregados via `COPY` ou `pandas`.
+**Dev**: ler com `polars.read_parquet()` ou `pandas.read_parquet()`. Usado pelo `backfill_2024.py` para popular o mart histórico.
+
+### Resumo para Dev e DBA
+| Quem | Onde encontrar dados brutos | Como acessar |
+|------|---------------------------|--------------|
+| **DBA** | `raw.coleta_bruta` (banco) | `SELECT * FROM raw.coleta_bruta` |
+| **DBA** | `database/processed_data/01_raw/*.parquet` | `COPY` ou ferramenta de arquivos |
+| **Dev** | `raw.coleta_bruta` (via asyncpg) | `pipeline/scraper/persistence.py` |
+| **Dev** | `database/processed_data/01_raw/*.parquet` | `polars.read_parquet()` |
+
+## Volumes Atuais por Tabela
+| Camada | Tabela | Registros |
+|--------|--------|-----------|
+| RAW | `raw.coleta_bruta` | 15 (payloads brutos, todos processados) |
+| STAGING | `staging.fact_precos_mensais` | 27.545 (dados limpos e tipados) |
+| STAGING | `staging.dim_produto` | 831 (produtos únicos) |
+| STAGING | `staging.dim_localidade` | 850 (localidades únicas) |
+| MART | `mart.sazonalidade_produto` | 37.013 (25.403 real + 11.610 forecast) |
+| MART | `mart.sazonalidade_baseline` | 17.300 (moda do status_cor) |
+| MV | `mart.vw_api_produtos_sazonalidade` | 36.684 (exposta à API) |
+
+A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. Definição em `26_forecast_baseline.sql:63`:
+- JOIN: `sazonalidade_produto` + `dim_produto` + `dim_localidade` + `dim_categoria`
+- Filtros: `categoria_b2c = 'ALIMENTO_VAREJO'`, `status_cor IN ('VERDE','AMARELO','VERMELHO')`, exclusão de `INSUMO_AGRICOLA`/`MAQUINARIO_FERRAMENTA`/`FLORES`/`OUTROS`
+- Ordenação: `is_forecast` primeiro (FALSE = real antes de TRUE = projeção)
+
 ## Novidades — Forecast Baseline (Fase 26)
-- `mart.sazonalidade_baseline` — tabela de moda do `status_cor` por `(id_produto, id_localidade, mes)`, calculada sobre dados reais de 2024-2025. ~16k combinações únicas.
+- `mart.sazonalidade_baseline` — tabela de moda do `status_cor` por `(id_produto, id_localidade, mes)`, calculada sobre dados reais de 2024-2025. 17.300 combinações únicas.
 - `is_forecast BOOLEAN NOT NULL DEFAULT FALSE` — coluna adicionada a `mart.sazonalidade_produto` para distinguir dado real (FALSE) de projeção histórica (TRUE).
 - MV V13 `vw_api_produtos_sazonalidade` — expõe `is_forecast`, `id_localidade` para JOIN com baseline. Ordena reais primeiro.
 - O baseline é calculado em Python (não SP) porque envolve moda estatística sobre múltiplos anos.
@@ -28,6 +88,19 @@ DDLs, migrações e schemas do banco PostgreSQL. Arquitetura Medalhão adaptada:
 - `calcular_baseline.py` — lê dados reais 2024-2025, calcula moda do status_cor e confiança, popula `sazonalidade_baseline`
 - `projetar_2026.py` — para cada mês futuro de 2026 sem dado real, insere forecast com `is_forecast=true`
 - `validar_forecast.py` — validação automatizada (matriz densidade, gaps, sem regressão, confiança, MV)
+
+## Conexão Externa (DBeaver / psql)
+
+| Parâmetro | Valor |
+|-----------|-------|
+| **Host** | `localhost` |
+| **Porta** | `5432` |
+| **Database** | `quero_comprar` |
+| **Username** | `postgres` |
+| **Password** | `postgres` |
+| **URL** | `postgresql://postgres:postgres@localhost:5432/quero_comprar` |
+
+> ⚡ No DBeaver, vá em **Driver properties → PostgreSQL** e marque `Show all schemas` para visualizar `raw`, `staging`, `mart`, `ops`.
 
 ## Mapa Rápido
 - `01_ddl_medalhao.sql` — DDL fundacional (schemas, dim, fact, views, triggers, roles)

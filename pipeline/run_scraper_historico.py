@@ -456,6 +456,8 @@ async def main() -> None:
     parser.add_argument("--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range")
     parser.add_argument("--db-url", type=str, default=DATABASE_URL, help="PostgreSQL URL")
     parser.add_argument("--skip-load", action="store_true", help="So salva parquet, nao carrega no banco")
+    parser.add_argument("--uf", type=str, default=None, help="Lista de UFs separadas por virgula (ex: AC,AM,AP). Padrao = todas")SQL URL")
+    parser.add_argument("--skip-load", action="store_true", help="So salva parquet, nao carrega no banco")
     args = parser.parse_args()
 
     logger.info("=== SCRAPER REGIONAL + CARGA MEDALHAO (w/ SelfHealingOrganism) ===")

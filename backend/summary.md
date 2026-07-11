@@ -1,0 +1,39 @@
+# summary.md — /backend (API B2C)
+
+## Propósito
+API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views materializadas (`mart.vw_*`). Sem ORM. Sem lógica de transformação pesada. Endpoints protegidos contra Event Loop Starvation.
+
+## Stack
+- Python 3.13+, FastAPI (via `fastapi[standard]`), Pydantic v2, asyncpg, httpx
+- Uvicorn com `--limit-concurrency` e timeouts estritos
+
+## Regras de Ouro
+1. **Sem ORM**: queries raw com asyncpg. Nada de SQLAlchemy, Django ORM ou Tortoise.
+2. **Read-Only para a API**: o backend só lê de `mart.vw_*` e `staging.*`. Escrita é exclusividade do pipeline.
+3. **Event Loop Starvation**: toda rota deve ter timeout (`asyncio.wait_for` ou middleware `TimeoutMiddleware`). Nenhuma rota pode travar o event loop.
+4. **Cache**: usar cache interno (`core/cache.py`) para respostas lentas. TTL definido por endpoint.
+5. **Rate Limit**: `core/ratelimit.py` — proteção contra abuso por IP.
+6. **Pydantic v2**: schemas de resposta em `schemas/responses.py`. Validação na borda, não no banco.
+7. **CORS e Segurança**: configurado no `main.py`. RLS ativado via migration `012_security_rls_readonly.sql`.
+8. **Janela Temporal**: endpoints de série temporal sempre aceitam `?ano_inicio=2024`.
+
+## Forecast — Transparência
+- `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado) e `confianca_baseline: float | None` (% de confiança do baseline histórico)
+- A query SQL em `produtos.py` faz `LEFT JOIN mart.sazonalidade_baseline b ON b.id_produto = v.id_produto AND b.id_localidade = v.id_localidade AND b.mes = v.mes` — JOIN por FKs inteiras (mais rápido que nome+UF)
+- Dados de forecast NUNCA substituem dados reais na resposta — a MV expõe ambos com `is_forecast` distinguindo a origem
+
+## Rotas que expõem is_forecast
+- `GET /api/v1/sazonalidade` — snapshot (último mês de cada produto)
+- `GET /api/v1/sazonalidade/{uf}/{municipio}` — por localidade
+- `GET /api/v1/sazonalidade/historico/{ano}/{mes}` — série temporal
+
+## Mapa Rápido
+- `app/main.py` — app FastAPI, middlewares, lifespan
+- `app/api/v1/endpoints/` — rotas: produtos, categorias, ufs, municipios, stream
+- `app/core/config.py` — settings via Pydantic (DATABASE_URL, etc)
+- `app/core/cache.py` — cache interno LRU/TTL
+- `app/core/ratelimit.py` — rate limiter por IP
+- `app/core/timeout.py` — middleware Starlette (TimeoutMiddleware, retorna 504)
+- `app/core/events.py` — EventBroadcaster (filas SSE para publish/subscribe)
+- `app/db/session.py` — pools asyncpg (api + etl)
+- `app/schemas/responses.py` — Pydantic response models (inclui `is_forecast`, `confianca_baseline`)

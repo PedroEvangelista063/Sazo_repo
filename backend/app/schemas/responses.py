@@ -42,9 +42,6 @@ class SazonalidadeResponse(BaseModel):
         - ``VERMELHO`` → fundo vermelho + opacidade reduzida (evite)
         - ``AMARELO``  → fundo amarelo + texto "Preço estável"
 
-    Nota: O campo ``preco_referencia_2025`` permite ao frontend calcular
-    a variação percentual ("X% mais barato que em 2025") sem expor
-    preços em reais como valor principal.
     """
 
     id_produto: int = Field(..., description="Identificador único do produto")
@@ -64,12 +61,6 @@ class SazonalidadeResponse(BaseModel):
         pattern=r"^\d{4}-\d{2}$",
         description="Data do último preço registrado (YYYY-MM)",
     )
-    preco_referencia: float | None = Field(
-        None, description="Preço âncora: COALESCE(media 2025, fallback 12m)"
-    )
-    preco_atual: float | None = Field(
-        None, description="Último preço registrado do produto na localidade"
-    )
     preco_estimado: bool = Field(
         False, description="True se o preço atual foi estimado por interpolação (gap de coleta)"
     )
@@ -86,6 +77,12 @@ class SazonalidadeResponse(BaseModel):
     )
     tendencia_futura: Literal['QUEDA', 'ALTA', 'ESTAVEL'] | None = Field(
         None, description="Previsão ML (Holt-Winters) para o próximo mês: QUEDA/ALTA/ESTAVEL"
+    )
+    is_forecast: bool = Field(
+        False, description="True se o dado foi projetado pelo modelo de baseline histórico (fallback para meses sem coleta)"
+    )
+    confianca_baseline: float | None = Field(
+        None, description="Percentual de confiança do baseline histórico (ex: 100 se 2024 e 2025 têm dados para este mês)"
     )
 
     model_config = ConfigDict(from_attributes=True, frozen=True)

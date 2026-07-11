@@ -117,7 +117,15 @@ async def _query_sazonalidade_snapshot(
         v.uf, v.municipio, v.municipio_id, v.ano, v.mes,
         v.preco_referencia, v.preco_atual, v.data_referencia_atual,
         v.usou_fallback_12m, v.preco_estimado, v.status_cor, v.fonte,
-        v.tendencia_futura
+        v.tendencia_futura, v.is_forecast,
+        b.confianca AS confianca_baseline
+    """
+
+    BASE_JOIN = """
+        LEFT JOIN mart.sazonalidade_baseline b
+            ON b.id_produto = v.id_produto
+           AND b.id_localidade = v.id_localidade
+           AND b.mes = v.mes
     """
 
     count_query = f"""
@@ -128,6 +136,7 @@ async def _query_sazonalidade_snapshot(
                        ORDER BY v.ano DESC, v.mes DESC
                    ) AS rn
             FROM mart.vw_api_produtos_sazonalidade v
+            {BASE_JOIN}
             WHERE {where}
         ) sub WHERE sub.rn = 1
     """
@@ -139,6 +148,7 @@ async def _query_sazonalidade_snapshot(
                        ORDER BY v.ano DESC, v.mes DESC
                    ) AS rn
             FROM mart.vw_api_produtos_sazonalidade v
+            {BASE_JOIN}
             WHERE {where}
         ) sub
         WHERE sub.rn = 1
@@ -199,14 +209,14 @@ async def _query_sazonalidade_por_mes(
                 ano=ano,
                 mes=mes,
                 data_referencia_atual=r["data_referencia_atual"],
-                preco_referencia=r.get("preco_referencia"),
-                preco_atual=r.get("preco_atual"),
                 usou_fallback_12m=r.get("usou_fallback_12m", False),
                 preco_estimado=r.get("preco_estimado", False),
                 status_cor=r["status_cor"],
                 fonte=r["fonte"],
                 categoria=r.get("categoria"),
                 tendencia_futura=r.get("tendencia_futura"),
+                is_forecast=r.get("is_forecast", False),
+                confianca_baseline=float(r["confianca_baseline"]) if r.get("confianca_baseline") else None,
             )
         )
 
@@ -263,8 +273,13 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
             $2::INTEGER AS mes_pesquisa,
             v.data_referencia_atual, v.preco_referencia, v.preco_atual,
             v.usou_fallback_12m, v.preco_estimado, v.status_cor,
-            v.fonte, v.tendencia_futura
+            v.fonte, v.tendencia_futura, v.is_forecast,
+            b.confianca AS confianca_baseline
         FROM mart.vw_api_produtos_sazonalidade v
+        LEFT JOIN mart.sazonalidade_baseline b
+            ON b.id_produto = v.id_produto
+           AND b.id_localidade = v.id_localidade
+           AND b.mes = v.mes
         WHERE {where}
         ORDER BY v.status_cor, v.produto
     """
@@ -284,14 +299,14 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
             ano=r["ano"],
             mes=r["mes"],
             data_referencia_atual=r["data_referencia_atual"],
-            preco_referencia=r.get("preco_referencia"),
-            preco_atual=r.get("preco_atual"),
             usou_fallback_12m=r.get("usou_fallback_12m", False),
             preco_estimado=r.get("preco_estimado", False),
             status_cor=r["status_cor"],
             fonte=r["fonte"],
             categoria=r.get("categoria"),
             tendencia_futura=r.get("tendencia_futura"),
+            is_forecast=r.get("is_forecast", False),
+            confianca_baseline=float(r["confianca_baseline"]) if r.get("confianca_baseline") else None,
         )
         for r in rows
     ]
@@ -308,7 +323,7 @@ async def listar_sazonalidade(
     produto: str | None = Query(None, description="Nome do produto"),
     status_cor: str | None = Query(None, pattern=r"^(VERDE|AMARELO|VERMELHO)$"),
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
-    ano: int | None = Query(None, ge=2020, le=2030),
+    ano: int | None = Query(None, ge=2024, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),
@@ -331,7 +346,7 @@ async def listar_por_localidade(
     uf: str,
     municipio: str,
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
-    ano: int | None = Query(None, ge=2020, le=2030),
+    ano: int | None = Query(None, ge=2024, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),

@@ -1,5 +1,4 @@
 export type StatusCor = 'VERDE' | 'AMARELO' | 'VERMELHO'
-export type StatusOferta = 'OFERTA' | 'EQUILIBRADO' | 'ALTA' | 'INSUFICIENTE'
 
 export interface ProdutoVarejo {
   id_produto: number
@@ -11,14 +10,13 @@ export interface ProdutoVarejo {
   ano: number
   mes: number
   data_referencia_atual: string
-  preco_referencia: number | null
-  preco_atual: number | null
   preco_estimado: boolean
   usou_fallback_12m: boolean
   status_cor: StatusCor
-  status_oferta?: StatusOferta | null
-  fonte: string
+  fonte: string | null
   categoria: string | null
+  is_forecast: boolean
+  confianca_baseline: number | null
 }
 
 export interface Categoria {

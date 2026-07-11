@@ -1,0 +1,296 @@
+- generic [active] [ref=e1]:
+  - button "Accessibility widget" [ref=e3] [cursor=pointer]:
+    - img [ref=e5]
+    - generic [ref=e9]: Open accessibility menu
+  - banner [ref=e10]:
+    - generic [ref=e12]:
+      - link "Brasil" [ref=e14] [cursor=pointer]:
+        - /url: https://gov.br
+      - navigation:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link [ref=e17] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e18]:
+            - link "CORONAVÍRUS (COVID-19)" [ref=e19] [cursor=pointer]:
+              - /url: http://www.saude.gov.br/coronavirus
+          - listitem [ref=e20]:
+            - link "Simplifique!" [ref=e21] [cursor=pointer]:
+              - /url: http://www.simplifique.gov.br
+          - listitem [ref=e22]:
+            - link "Participe" [ref=e23] [cursor=pointer]:
+              - /url: https://www.gov.br/pt-br/participacao-social/
+          - listitem [ref=e24]:
+            - link "Acesso à informação" [ref=e25] [cursor=pointer]:
+              - /url: http://www.acessoainformacao.gov.br
+          - listitem [ref=e26]:
+            - link "Legislação" [ref=e27] [cursor=pointer]:
+              - /url: http://www.planalto.gov.br/legislacao
+          - listitem [ref=e28]:
+            - link "Canais" [ref=e29] [cursor=pointer]:
+              - /url: https://gov.br/pt-br/canais-do-executivo-federal
+      - link [ref=e31] [cursor=pointer]:
+        - /url: "#"
+    - navigation [ref=e32]:
+      - generic [ref=e33]:
+        - generic: 
+        - list [ref=e35]:
+          - listitem [ref=e36]:
+            - link "Acesso à Informação" [ref=e37] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/acesso-a-informacao/
+          - listitem [ref=e38]:
+            - link "A CEAGESP" [ref=e39] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/a-ceagesp/
+          - listitem [ref=e40]:
+            - link "Armazéns" [ref=e41] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/armazens/
+          - listitem [ref=e42]:
+            - link "Entrepostos" [ref=e43] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/entrepostos/
+          - listitem [ref=e44]:
+            - link "Concursos" [ref=e45] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/acesso-a-informacao/empregados/concursos/
+          - listitem [ref=e46]:
+            - link "Atendimento" [ref=e47] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/atendimento/horario-ceagesp/
+          - listitem [ref=e48]:
+            - link "Imprensa" [ref=e49] [cursor=pointer]:
+              - /url: https://ceagesp.gov.br/sala-imprensa/
+    - generic [ref=e52]:
+      - link "Home" [ref=e54] [cursor=pointer]:
+        - /url: https://ceagesp.gov.br/
+      - generic [ref=e58]:
+        - textbox [ref=e59]:
+          - /placeholder: Pesquisar no site...
+        - button "Pesquisar" [ref=e60] [cursor=pointer]
+  - generic [ref=e63]:
+    - generic [ref=e64]:
+      - generic [ref=e65]:
+        - generic [ref=e66]: 26°
+        - generic [ref=e67]: 13°
+        - generic [ref=e68]: São Paulo
+        - generic [ref=e69]: 09/07/2026
+      - generic [ref=e70]:
+        - link [ref=e71] [cursor=pointer]:
+          - /url: https://www.facebook.com/ceagesp.oficial.temporaria
+        - link [ref=e72] [cursor=pointer]:
+          - /url: https://www.instagram.com/ceagesp
+        - link [ref=e73] [cursor=pointer]:
+          - /url: https://www.youtube.com/@ceagesp
+    - generic [ref=e74]:
+      - generic [ref=e76]:
+        - generic [ref=e78]:
+          - link "Home" [ref=e79] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/
+          - link "Cotações - Preços no Atacado" [ref=e81] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/cotacoes/
+        - heading "Cotações – Preços no Atacado" [level=2] [ref=e83]
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - paragraph [ref=e86]:
+              - strong [ref=e88]: Preços na capital
+              - text: A Seção de Economia e Desenvolvimento realiza, cotidianamente, a cotação de preços no atacado do Entreposto da Capital.
+            - paragraph [ref=e89]: Os dados coletados junto ao mercado por um grupo de pesquisadores também servem como referência para órgãos governamentais, produtores rurais, comerciantes, associações ligadas ao setor de alimentos e universidades.
+            - paragraph [ref=e90]: Os valores divulgados representam a média dos preços de venda no atacado da CEAGESP (transações dos permissionários da CEAGESP com supermercados, feirantes, sacolões, restaurantes, bares e outros estabelecimentos). Essa média é calculada com base nas quantidades recebidas de mercadorias e os preços fornecidos pelos comerciantes que participaram da pesquisa no período especificado.
+            - paragraph [ref=e91]: Importante ressaltar que os valores apurados são preços de venda no atacado e não os preços pagos ao produtor, já que que estes são negociados diretamente entre as partes (produtores e permissionários da CEAGESP), pois essas negociações dependem de diversos fatores, como qualidade, classificação, quantidade e frequência de entrega, região de origem, etc. e variam conforme cada negociação.
+            - paragraph [ref=e92]:
+              - strong [ref=e94]: Como consultar
+            - paragraph [ref=e95]: Para realizar uma consulta, selecione no campo abaixo uma opção de produto, em seguida escolha a data (anterior ao dia de hoje e exceto finais de semana) e clique em consultar.
+            - generic [ref=e98]:
+              - generic [ref=e99]:
+                - paragraph [ref=e100]: "Selecione a Categoria:"
+                - combobox [ref=e101]:
+                  - option "Selecione um Produto"
+                  - option "DIVERSOS"
+                  - option "FLORES"
+                  - option "FRUTAS" [selected]
+                  - option "LEGUMES"
+                  - option "ORGÂNICOS"
+                  - option "PESCADOS"
+                  - option "VERDURAS"
+              - generic [ref=e102]:
+                - paragraph [ref=e103]: "Selecione a Data:"
+                - textbox "00/00/0000" [ref=e104]
+              - button "Consultar" [ref=e106] [cursor=pointer]
+            - paragraph [ref=e107]:
+              - strong [ref=e108]: "Atenção:"
+              - text: na tabela do resultado da pesquisa, as colunas “
+              - strong [ref=e109]: Menor
+              - text: “, “
+              - strong [ref=e110]: Comum
+              - text: ” (valor mais praticado) e “
+              - strong [ref=e111]: Maior
+              - text: ” indicam os preços dos produtos em Reais (R$).
+            - paragraph [ref=e112]:
+              - strong [ref=e113]: A divulgação do Boletim ocorrerá 3 (três) vezes por semana, normalmente, às segundas, quartas e sextas-feiras.
+            - paragraph [ref=e114]:
+              - text: Esclarecimentos ou sugestões poderão ser encaminhadas para o e-mail
+              - strong [ref=e115]:
+                - link "sedes@ceagesp.gov.br" [ref=e116] [cursor=pointer]:
+                  - /url: mailto:sedes@ceagesp.gov.br
+                - text: .
+            - separator [ref=e117]
+            - paragraph [ref=e118]:
+              - strong [ref=e120]: Preços no interior
+            - paragraph [ref=e121]:
+              - text: Para realizar a pesquisa de preços das unidades do interior da CEAGESP,
+              - strong [ref=e122]:
+                - link "clique aqui" [ref=e123] [cursor=pointer]:
+                  - /url: https://ceagesp.gov.br/cotacoes/interior/
+                - text: .
+            - separator [ref=e124]
+            - paragraph [ref=e125]:
+              - strong [ref=e127]: Preços Conab
+            - paragraph [ref=e128]:
+              - text: Para realizar a pesquisa de preços Conab,
+              - strong [ref=e129]:
+                - link "clique aqui" [ref=e130] [cursor=pointer]:
+                  - /url: http://www.ceasa.gov.br/precos.php
+                - text: .
+            - separator [ref=e131]
+          - generic [ref=e133]:
+            - generic [ref=e134] [cursor=pointer]: Versão para impressão
+            - generic [ref=e136] [cursor=pointer]: Enviar para um amigo
+            - generic [ref=e138] [cursor=pointer]: Comunicar um erro
+      - generic [ref=e142]:
+        - link "Cotações - Preços no Atacado" [ref=e143] [cursor=pointer]:
+          - /url: https://ceagesp.gov.br/cotacoes/
+        - generic [ref=e144]:
+          - link "Preços no Interior" [ref=e145] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/cotacoes/interior/
+          - link "Prohort - Conab" [ref=e146] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/cotacoes/prohort/
+  - contentinfo [ref=e147]:
+    - generic [ref=e150]:
+      - generic [ref=e154]:
+        - generic [ref=e155]:
+          - link "A CEAGESP" [ref=e156] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/a-ceagesp/
+          - link "Histórico" [ref=e157] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/historico/
+          - link "Organograma" [ref=e158] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/estrutura-organizacional/organograma/
+          - link "Competências" [ref=e159] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/competencias/
+          - link "Base Jurídica da Estrutura Organizacional e das Competências" [ref=e160] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/base-juridica/
+          - link "Quem é quem" [ref=e161] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/quem-e-quem/
+          - link "Horário de Atendimento" [ref=e162] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/horario-de-atendimento/
+          - link "Acessibilidade" [ref=e163] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acessibilidade/
+          - link "Ouvidoria" [ref=e164] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/canaldocomerciante/ouvidoria-canal-do-cliente/
+          - link "Armazéns" [ref=e165] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/armazens/
+          - link "Unidades ativas" [ref=e166] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/armazens/unidades/
+          - link "Serviços CEAGESP de Armazenagem" [ref=e167] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/armazens/servicos-armazenagem/
+        - generic [ref=e168]:
+          - link "Entrepostos" [ref=e169] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/
+          - link "Capital – ETSP" [ref=e170] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/etsp/
+          - link "Interior" [ref=e171] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/interior/
+          - link "Varejões" [ref=e172] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/varejoes/
+          - link "Feira de Flores" [ref=e173] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/feiras-de-flores/
+          - link "Pescado" [ref=e174] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/pescado/
+          - link "Serviços CEAGESP de Entrepostagem" [ref=e175] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/servicos-entrepostagem/
+          - link "Canal do Comerciante" [ref=e176] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/entrepostos/canal-do-permissionario/
+          - link "Acesso à Informação" [ref=e177] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/
+          - link "Institucional" [ref=e178] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/
+          - link "Ações e Programas" [ref=e179] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/acoes-e-programas/
+          - link "Participação Social" [ref=e180] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/participacao-social/
+          - link "Auditorias" [ref=e181] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/auditorias/
+          - link "Convênios e Transferências" [ref=e182] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/convenios-e-transferencias/
+          - link "Receitas e Despesas" [ref=e183] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/receitasedespesas/
+          - link "Licitações e Contratos" [ref=e184] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/licitacoes-e-contratos-2/
+          - link "Empregados Públicos" [ref=e185] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/empregados/
+          - link "Informações Classificadas" [ref=e186] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/informacoes-classificadas/
+          - link "Serviço de Informação ao Cidadão (SIC)" [ref=e187] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/sic/
+          - link "Perguntas Frequentes" [ref=e188] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/perguntas-frequentes/
+          - link "Dados Abertos" [ref=e189] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/dados-abertos/
+        - generic [ref=e190]:
+          - link "Concursos" [ref=e191] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/empregados/concursos/
+          - link "Concurso n° 001/2018" [ref=e192] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/empregados/concursos/concurso-n-0012018/
+          - link "Concurso nº 001/2009" [ref=e193] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/empregados/concursos/concurso-no0012009/
+          - link "Estágio & Aprendiz Legal" [ref=e194] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/?page_id=1704
+          - link "Comunicação" [ref=e195] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/comunicacao/
+          - link "Visitas Monitoradas no ETSP" [ref=e196] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/comunicacao/formularios/
+          - link "Sala de imprensa" [ref=e197] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/comunicacao/sala-de-imprensa/
+        - generic [ref=e198]:
+          - link "Atendimento" [ref=e199] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/atendimento/
+          - link "Horário de Atendimento" [ref=e200] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/acesso-a-informacao/institucional/horario-de-atendimento/
+          - link "Fale Conosco" [ref=e201] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/atendimento/fale-conosco/
+          - link "Contato" [ref=e202] [cursor=pointer]:
+            - /url: https://ceagesp.gov.br/atendimento/fale-conosco/contato/
+      - generic [ref=e203]:
+        - heading "FACEBOOK" [level=2] [ref=e204]
+        - iframe [ref=e205]:
+          
+        - heading "INSTAGRAM" [level=2] [ref=e206]
+        - link [ref=e207] [cursor=pointer]:
+          - /url: https://www.instagram.com/ceagesp
+        - heading "WHATSAPP" [level=2] [ref=e208]
+        - link [ref=e209] [cursor=pointer]:
+          - /url: https://whatsapp.com/channel/0029VaMVetJ2UPBKm31iNF0X
+    - generic [ref=e212]:
+      - paragraph [ref=e214]: Copyright© Ceagesp - Todos os direitos reservados
+      - generic [ref=e215]:
+        - link [ref=e216] [cursor=pointer]:
+          - /url: https://www.facebook.com/ceagesp.oficial.temporaria
+        - link [ref=e217] [cursor=pointer]:
+          - /url: https://www.instagram.com/ceagesp
+        - link [ref=e218] [cursor=pointer]:
+          - /url: https://www.youtube.com/@ceagesp
+      - generic [ref=e219]:
+        - link "Publicações Legais" [ref=e220] [cursor=pointer]:
+          - /url: https://ceagesp.gov.br/publicacoes-legais/
+        - link "Política de Privacidade" [ref=e221] [cursor=pointer]:
+          - /url: https://ceagesp.gov.br/politica-de-privacidade/
+        - link "Intranet" [ref=e222] [cursor=pointer]:
+          - /url: https://ceagesp.gov.br/intranet/
+  - generic [ref=e225]:
+    - generic [ref=e226]:
+      - text: Usamos cookies em nosso site para fornecer a experiência mais relevante, lembrando suas preferências e visitas repetidas.
+      - text: Confira nossa
+      - link "Política de Privacidade" [ref=e227] [cursor=pointer]:
+        - /url: /politica-de-privacidade/
+    - generic [ref=e228]:
+      - button "Não aceitar" [ref=e229] [cursor=pointer]
+      - button "Aceitar" [ref=e230] [cursor=pointer]
+  - text: Mostrar mais Desativado Desativado Desativado Desativado Desativado
+  - generic [ref=e232] [cursor=pointer]:
+    - img "Conteúdo acessível em Libras usando o VLibras Widget com opções dos Avatares Ícaro, Hosana ou Guga." [ref=e233]
+    - img "Conteúdo acessível em Libras usando o VLibras Widget com opções dos Avatares Ícaro, Hosana ou Guga." [ref=e234]

@@ -1,4 +1,0 @@
-{
-  "pipeline/tests/test_preditiva.py::TestZeroNullTolerance::test_threshold_85_1_porcento_verde": true,
-  "pipeline/tests/test_preditiva.py::TestZeroNullTolerance::test_threshold_115_1_porcento_vermelho": true
-}

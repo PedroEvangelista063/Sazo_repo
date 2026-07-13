@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import logging
 import re
 from typing import Any
@@ -10,7 +9,8 @@ from bs4 import BeautifulSoup
 
 from pipeline.scraper.circuit_breaker import CircuitBreaker
 from pipeline.scraper.adapters.agentic_html import AgenticHtmlAdapter
-from pipeline.scraper.adapters.base import CotacaoRegional, validar_cotacao
+from pipeline.scraper.adapters.base import CotacaoRegional
+from pipeline.scraper.adapters.playwright_html import PlaywrightHtmlAdapter
 from pipeline.scraper.adapters.organism_adapter import OrganismAdapter
 from pipeline.scraper.adapters.google_drive_adapter import GoogleDriveAdapter
 from pipeline.scraper.adapters.santo_graal_adapter import SantoGraalAdapter
@@ -53,6 +53,9 @@ UF_ALVOS_DEDICADOS: dict[str, list[str]] = {
     "RN": ["ceasa_rn"],
     "MS": ["ceasa_ms"],
     "RS": ["ceasa_rs"],
+    "DF": ["ceasa_df"],
+    "BA": ["ceasa_ba"],
+    "MT": ["imea_mt"],
     "BR": ["conab", "conab_pentaho", "calculadorarural"],
 }
 
@@ -177,7 +180,6 @@ class AgregadorMercadoAdapter:
     async def _tentar_noticias_agricolas(self) -> list[CotacaoRegional]:
         resultados: list[CotacaoRegional] = []
         seen: set[str] = set()
-        hoje = __import__("datetime", fromlist=["date"]).date.today()
 
         async with httpx.AsyncClient(
             headers=BROWSER_HEADERS, timeout=15, follow_redirects=True
@@ -596,6 +598,38 @@ ALVOS_CONHECIDOS: dict[str, dict[str, Any]] = {
         "fonte": "CEASA-RS",
         "urls_fallback": [],
     },
+    "ceasa_df": {
+        "url": "https://www.ceasa.df.gov.br/cotacoes",
+        "categoria": "d_agentic",
+        "uf": "DF",
+        "municipio": "Brasilia",
+        "fonte": "CEASA-DF",
+        "urls_fallback": [
+            "https://www.ceasa.df.gov.br",
+            "https://ceasa.df.gov.br/precos",
+        ],
+    },
+    "ceasa_ba": {
+        "url": "https://www.ceasa.ba.gov.br/cotacoes",
+        "categoria": "d_agentic",
+        "uf": "BA",
+        "municipio": "Salvador",
+        "fonte": "CEASA-BA",
+        "urls_fallback": [
+            "https://ceasa.ba.gov.br/precos",
+            "https://sde.ba.gov.br/ceasa",
+        ],
+    },
+    "imea_mt": {
+        "url": "http://www.imea.com.br",
+        "categoria": "d_agentic",
+        "uf": "MT",
+        "municipio": "Cuiaba",
+        "fonte": "IMEA-MT",
+        "urls_fallback": [
+            "https://www.imea.com.br/boletim",
+        ],
+    },
 }
 
 
@@ -642,7 +676,7 @@ class SmartCrawler2026:
                 adapter.url = url
                 return adapter
 
-        return AgenticHtmlAdapter(
+        return PlaywrightHtmlAdapter(
             url=url, uf=uf, municipio=municipio, fonte=fonte,
             urls_fallback=urls_fallback or [], ano=ano, mes=mes,
         )
@@ -702,7 +736,7 @@ class SmartCrawler2026:
             from pipeline.scraper.url_manager import ColumnMapping
             columns = ColumnMapping(**config["columns"])
 
-        return AgenticHtmlAdapter(
+        return PlaywrightHtmlAdapter(
             url=config.get("url", ""),
             url_template=config.get("url_template", ""),
             uf=config.get("uf", ""),
@@ -722,8 +756,6 @@ class SmartCrawler2026:
         mes: int | None = None,
     ) -> dict[str, list[CotacaoRegional]]:
         playwright_adapters: list[BaseTargetAdapter] = []
-        agentic_alvos: list[dict] = []
-        agentic_nomes: list[str] = []
         organism_adapters: list[OrganismAdapter] = []
         gdrive_adapters: list[GoogleDriveAdapter] = []
         resultados: dict[str, list[CotacaoRegional]] = {}
@@ -758,30 +790,9 @@ class SmartCrawler2026:
                 if adp:
                     playwright_adapters.append(adp)
             elif cat == "d_agentic":
-                pagination_config = None
-                if config.get("pagination"):
-                    pagination_config = PaginationConfig(**config["pagination"])
-
-                columns = None
-                if config.get("columns"):
-                    from pipeline.scraper.url_manager import ColumnMapping
-                    columns = ColumnMapping(**config["columns"])
-
-                agentic_alvos.append(
-                    {
-                        "url": config.get("url", ""),
-                        "url_template": config.get("url_template", ""),
-                        "uf": config.get("uf", ""),
-                        "municipio": config.get("municipio", ""),
-                        "fonte": config.get("fonte", ""),
-                        "urls_fallback": config.get("urls_fallback", []),
-                        "ano": ano,
-                        "mes": mes,
-                        "pagination": pagination_config,
-                        "columns": columns,
-                    }
-                )
-                agentic_nomes.append(nome)
+                adp = self.criar_adapter_para_alvo(nome, ano=ano, mes=mes)
+                if adp:
+                    playwright_adapters.append(adp)
 
         if playwright_adapters:
             logger.info(
@@ -792,8 +803,8 @@ class SmartCrawler2026:
                 resultados.update(pw_resultados)
                 for nome in alvos:
                     config = ALVOS_CONHECIDOS.get(nome)
-                    if config and config["categoria"] in ("a_json", "b_stealth", "c_postback"):
-                        chave = config["url"]
+                    if config and config["categoria"] in ("a_json", "b_stealth", "c_postback", "d_agentic"):
+                        chave = config.get("url_template") or config.get("url", "")
                         items = pw_resultados.get(chave, [])
                         if items:
                             self._get_breaker(nome).registrar_sucesso()
@@ -803,30 +814,8 @@ class SmartCrawler2026:
                 logger.error("[SmartCrawler] Lote Playwright falhou: %s", e)
                 for nome in alvos:
                     config = ALVOS_CONHECIDOS.get(nome)
-                    if config and config["categoria"] in ("a_json", "b_stealth", "c_postback"):
+                    if config and config["categoria"] in ("a_json", "b_stealth", "c_postback", "d_agentic"):
                         self._get_breaker(nome).registrar_falha()
-
-        if agentic_alvos:
-            logger.info("[SmartCrawler] %d adapters Agentic em paralelo...", len(agentic_alvos))
-            from pipeline.scraper.adapters.agentic_html import coletar_multiplos_agentic
-
-            try:
-                ag_resultados = await coletar_multiplos_agentic(agentic_alvos)
-                for nome in agentic_nomes:
-                    config = ALVOS_CONHECIDOS.get(nome)
-                    if not config:
-                        continue
-                    chave = config.get("url_template") or config.get("url", "")
-                    items = ag_resultados.get(chave, [])
-                    if items:
-                        self._get_breaker(nome).registrar_sucesso()
-                    else:
-                        self._get_breaker(nome).registrar_falha()
-                resultados.update(ag_resultados)
-            except Exception as e:
-                logger.error("[SmartCrawler] Lote Agentic falhou: %s", e)
-                for nome in agentic_nomes:
-                    self._get_breaker(nome).registrar_falha()
 
         if organism_adapters:
             logger.info("[SmartCrawler] %d adapters Organism...", len(organism_adapters))

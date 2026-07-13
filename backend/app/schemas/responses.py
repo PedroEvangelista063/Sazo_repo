@@ -67,7 +67,7 @@ class SazonalidadeResponse(BaseModel):
     usou_fallback_12m: bool = Field(
         ..., description="True se a âncora veio do fallback 12m (produto sem 2025)"
     )
-    status_cor: Literal['VERDE', 'AMARELO', 'VERMELHO'] = Field(
+    status_cor: Literal["VERDE", "AMARELO", "VERMELHO"] = Field(
         ...,
         description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra) - Trindade Estrita",
     )
@@ -75,14 +75,16 @@ class SazonalidadeResponse(BaseModel):
     categoria: str | None = Field(
         None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)"
     )
-    tendencia_futura: Literal['QUEDA', 'ALTA', 'ESTAVEL'] | None = Field(
+    tendencia_futura: Literal["QUEDA", "ALTA", "ESTAVEL"] | None = Field(
         None, description="Previsão ML (Holt-Winters) para o próximo mês: QUEDA/ALTA/ESTAVEL"
     )
     is_forecast: bool = Field(
-        False, description="True se o dado foi projetado pelo modelo de baseline histórico (fallback para meses sem coleta)"
+        False,
+        description="True se o dado foi projetado pelo modelo de baseline histórico (fallback para meses sem coleta)",
     )
     confianca_baseline: float | None = Field(
-        None, description="Percentual de confiança do baseline histórico (ex: 100 se 2024 e 2025 têm dados para este mês)"
+        None,
+        description="Percentual de confiança do baseline histórico (ex: 100 se 2024 e 2025 têm dados para este mês)",
     )
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
@@ -128,7 +130,40 @@ class ErrorResponse(BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
-class SazonalidadeComPreco(SazonalidadeResponse):
-    """Schema interno com preço — APENAS PARA USO INTERNO (logs, admin)."""
+class SazonalidadeComPrecoResponse(BaseModel):
+    """Schema com preço — para endpoints analíticos (tabela/gráficos).
+    NUNCA deve ser usado no endpoint B2C /sazonalidade."""
+
+    id_produto: int
+    nome_produto: str
+    categoria: str | None = None
+    uf: str
+    municipio: str | None = None
+    municipio_id: str | None = None
+    ano: int
+    mes: int
+    data_referencia_atual: str
+    preco_referencia: float | None = None
+    preco_atual: float | None = None
+    variacao_pct: float | None = None
+    preco_estimado: bool = False
+    usou_fallback_12m: bool = False
+    status_cor: Literal["VERDE", "AMARELO", "VERMELHO"]
+    fonte: str | None = None
+    tendencia_futura: Literal["QUEDA", "ALTA", "ESTAVEL"] | None = None
+    is_forecast: bool = False
+    confianca_baseline: float | None = None
+    preco_mes_anterior: float | None = None
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
+
+
+class SazonalidadeComPrecoListResponse(BaseModel):
+    """Retorno paginado do endpoint /sazonalidade/com-preco."""
+
+    data: list[SazonalidadeComPrecoResponse]
+    total: int
+    pagina: int
+    por_pagina: int
+
+    model_config = ConfigDict(frozen=True)

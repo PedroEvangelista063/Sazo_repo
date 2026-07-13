@@ -4,16 +4,29 @@ import asyncio
 import json
 import logging
 import os
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from pipeline.scraper.adapters.base import CotacaoRegional
+from pipeline.scraper.adapters.playwright_html import PlaywrightHtmlAdapter
+from pipeline.scraper.adapters.smart_router import (
+    ALVOS_CONHECIDOS,
+    SmartCrawler2026,
+    UF_ALVOS_DEDICADOS,
+)
 from pipeline.scraper.micro_engines.base_engine import BaseMicroEngine
 from pipeline.scraper.micro_engines.ConabApiEngine import ConabApiEngine
 from pipeline.scraper.micro_engines.CeagespEngine import CeagespEngine
 
 logger = logging.getLogger(__name__)
 
-_AUDIT_FMT = "[AUDIT] UF: {uf} | Mês/Ano: {competencia} | Alvo: {alvo} | Status: {status} | Decisão: {decisao}"
+_AUDIT_FMT = "[AUDIT] UF: {uf} | Mes/Ano: {competencia} | Alvo: {alvo} | Status: {status} | Decisao: {decisao}"
+
+_UF_SMARTROUTER_ALVOS: dict[str, list[str]] = {
+    uf: alvos for uf, alvos in UF_ALVOS_DEDICADOS.items()
+    if uf != "BR"
+}
 
 def _log_audit(level: int, **kw: str) -> None:
     logger.log(level, _AUDIT_FMT.format(**kw))
@@ -31,12 +44,25 @@ _UF_CEASA_MAP: dict[str, str] = {
     "MS": "CEASA-MS",
 }
 
-_ORFAOS: set[str] = {
-    "AC", "AL", "AM", "AP", "GO", "MA", "PB", "PI",
-    "RJ", "RO", "RR", "RS", "SC", "SE", "TO",
-}
+SCRAPER_TIMEOUT_SEC = 180
 
-SCRAPER_TIMEOUT_SEC = 60
+_FONTE_ID_PARA_ALVO: dict[str, str] = {
+    "ceagesp": "ceagesp",
+    "ceasa-mg": "ceasa_mg",
+    "ceasa-pr": "ceasa_pr",
+    "ceasa-es": "ceasa_es",
+    "ceasa-pe": "ceasa_pe",
+    "ceasa-rn": "ceasa_rn",
+    "ceasa-ms": "ceasa_ms",
+    "ceasa-df": "ceasa_df",
+    "ceasa-ba": "ceasa_ba",
+    "imea-mt": "imea_mt",
+    "cepea": "cepea",
+    "conab": "conab",
+    "conab-pentaho": "conab_pentaho",
+    "agrolink": "agrolink",
+    "calc-rural": "calculadorarural",
+}
 
 
 def _carregar_sources() -> dict:
@@ -47,85 +73,24 @@ def _carregar_sources() -> dict:
 
 class AutonomousOrchestrator:
     """
-    Orquestrador autônomo em cascata (Self-Healing Flow).
-    Passo 1 → CEASA direta | Passo 2 → Agregadores | Passo 3 → Discovery.
+    Orquestrador autonomo multi-tier.
+    Tenta TODAS as fontes em cada tier, acumula resultados.
+    So cai para o proximo tier se o acumulado estiver vazio.
     """
 
     def __init__(self) -> None:
         self._sources = _carregar_sources()
 
     # ──────────────────────────────────────────────
-    # Passo 1 — Motor direto da CEASA do estado
+    # Multi-tier: tenta cada categoria de fontes
     # ──────────────────────────────────────────────
-    async def _passo_direto(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]] | None:
-        fonte_id = _UF_CEASA_MAP.get(uf.upper())
-        if not fonte_id:
-            _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=f"CEASA_DIRETA_{uf}", status="SKIP", decisao=f"UF {uf} sem CEASA direta mapeada → orfão")
-            return None
+    _TIERS: list[str] = [
+        "core",
+        "ceasas_diretas",
+        "agregadores",
+        "perifericos",
+    ]
 
-        _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TENTANDO", decisao="Passo 1: motor CEASA direto")
-        fonte = self._encontrar_fonte(fonte_id, "ceasas_diretas")
-        if not fonte:
-            return None
-
-        url = fonte["url_base"]
-        engine = self._resolver_motor(fonte_id)
-        if not engine:
-            _log_audit(logging.WARNING, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="SKIP", decisao="Nenhum motor registrado para CEASA direta")
-            return None
-        resultado = await self._executar_com_timeout(engine, url, ano, mes, fonte_id)
-        if resultado:
-            _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="SUCESSO", decisao="Dados coletados via CEASA direta")
-            return [resultado]
-        return None
-
-    # ──────────────────────────────────────────────
-    # Passo 2 — Agregadores nacionais (fallback)
-    # ──────────────────────────────────────────────
-    async def _passo_agregadores(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]] | None:
-        agregadores = self._sources.get("agregadores", [])
-        for fonte in agregadores:
-            fonte_id = fonte["fonte_id"]
-            _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TENTANDO", decisao="Passo 2: agregador nacional")
-            engine = self._resolver_motor(fonte_id)
-            if not engine:
-                _log_audit(logging.WARNING, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="SKIP", decisao="Nenhum motor registrado")
-                continue
-            url = fonte["url_base"]
-            resultado = await self._executar_com_timeout(engine, url, ano, mes, fonte_id)
-            if resultado:
-                _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="SUCESSO", decisao="Dados coletados via agregador")
-                return [resultado]
-        return None
-
-    # ──────────────────────────────────────────────
-    # Passo 3 — Discovery autônomo (web search)
-    # ──────────────────────────────────────────────
-    async def _passo_discovery(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]]:
-        _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo="DISCOVERY_AUTONOMO", status="TENTANDO", decisao="Passo 3: todos os motores falharam → acionando discovery engine")
-        from pipeline.scraper.discovery_engine import DiscoveryEngine
-
-        engine = DiscoveryEngine()
-        try:
-            resultados = await asyncio.wait_for(
-                engine.buscar(uf, ano, mes),
-                timeout=SCRAPER_TIMEOUT_SEC,
-            )
-        except asyncio.TimeoutError:
-            _log_audit(logging.WARNING, uf=uf, competencia=f"{ano}-{mes:02d}", alvo="DISCOVERY_AUTONOMO", status="TIMEOUT", decisao=f"Discovery excedeu {SCRAPER_TIMEOUT_SEC}s")
-            return []
-        _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo="DISCOVERY_AUTONOMO", status="SUCESSO" if resultados else "VAZIO", decisao=f"Discovery retornou {len(resultados)} registros")
-        return resultados
-
-    # ──────────────────────────────────────────────
-    # Orquestração principal — cascata completa
-    # ──────────────────────────────────────────────
     async def coletar(
         self, uf: str, competencia: str
     ) -> list[dict[str, Any]]:
@@ -135,20 +100,257 @@ class AutonomousOrchestrator:
         if ano < 2024 or ano > 2026:
             raise ValueError(f"competencia {competencia} fora da janela 2024-2026")
 
-        resultado: list[dict[str, Any]] | None = None
+        try:
+            return await asyncio.wait_for(
+                self._coletar_interno(uf, ano, mes),
+                timeout=SCRAPER_TIMEOUT_SEC,
+            )
+        except asyncio.TimeoutError:
+            _log_audit(logging.WARNING, uf=uf, competencia=competencia,
+                       alvo="COLETAR", status="TIMEOUT",
+                       decisao=f"Coleta excedeu {SCRAPER_TIMEOUT_SEC}s")
+            return []
 
-        resultado = await self._passo_direto(uf, ano, mes)
+    async def _coletar_interno(
+        self, uf: str, ano: int, mes: int
+    ) -> list[dict[str, Any]]:
+        acumulado: list[dict[str, Any]] = []
 
-        if not resultado:
-            resultado = await self._passo_agregadores(uf, ano, mes)
+        # Tier 1: micro-engines (Ceagesp, CONAB) — rapido, existente
+        direto = await self._passo_direto(uf, ano, mes)
+        if direto:
+            acumulado.extend(direto)
 
-        if not resultado:
-            resultado = await self._passo_discovery(uf, ano, mes)
+        # Tier 2: SmartRouter — adapters dedicados por UF (CEASA, SantoGraal)
+        smart = await self._passo_smartrouter(uf, ano, mes)
+        if smart:
+            acumulado.extend(smart)
 
-        return resultado or []
+        # Tier 3-5: categorias da sources_matrix — tenta cada fonte
+        for categoria in self._TIERS:
+            if categoria == "core":
+                continue
+            tier_result = await self._executar_tier(categoria, uf, ano, mes)
+            if tier_result:
+                acumulado.extend(tier_result)
+
+        if acumulado:
+            return acumulado
+
+        # Tier final: discovery (web search — ultimo recurso)
+        return await self._passo_discovery(uf, ano, mes)
 
     # ──────────────────────────────────────────────
-    # Execução blindada com timeout + cleanup
+    # Executa todas as fontes de uma categoria
+    # ──────────────────────────────────────────────
+    async def _executar_tier(
+        self, categoria: str, uf: str, ano: int, mes: int
+    ) -> list[dict[str, Any]]:
+        fontes = self._sources.get(categoria, [])
+        if not fontes:
+            return []
+
+        uf_alvo = uf.upper()
+        resultados: list[dict[str, Any]] = []
+
+        _log_audit(
+            logging.INFO, uf=uf_alvo,
+            competencia=f"{ano}-{mes:02d}",
+            alvo=f"TIER_{categoria.upper()}",
+            status="TENTANDO",
+            decisao=f"Tier {categoria}: {len(fontes)} fonte(s)",
+        )
+
+        for fonte in fontes:
+            fonte_uf = fonte.get("uf", "BR").upper()
+            if fonte_uf != "BR" and fonte_uf != uf_alvo:
+                continue
+
+            items = await self._executar_uma_fonte(fonte, uf_alvo, ano, mes)
+            if items:
+                resultados.extend(items)
+
+        if resultados:
+            _log_audit(
+                logging.INFO, uf=uf_alvo,
+                competencia=f"{ano}-{mes:02d}",
+                alvo=f"TIER_{categoria.upper()}",
+                status="SUCESSO",
+                decisao=f"{len(resultados)} registros de {categoria}",
+            )
+
+        return resultados
+
+    # ──────────────────────────────────────────────
+    # Dispatcher: fonte -> engine/adapter
+    # ──────────────────────────────────────────────
+    async def _executar_uma_fonte(
+        self, fonte: dict, uf: str, ano: int, mes: int
+    ) -> list[dict[str, Any]]:
+        fonte_id = fonte.get("fonte_id", "UNKNOWN").lower()
+        url = fonte.get("url_base", "")
+
+        # 1. Old micro-engines
+        engine = self._resolver_motor(fonte_id)
+        if engine:
+            resultado = await self._executar_com_timeout(engine, url, ano, mes, fonte_id)
+            return [resultado] if resultado else []
+
+        # 2. SmartRouter alvo conhecido
+        alvo_key = _FONTE_ID_PARA_ALVO.get(fonte_id)
+        if alvo_key and alvo_key in ALVOS_CONHECIDOS:
+            crawler = SmartCrawler2026()
+            adp = crawler.criar_adapter_para_alvo(alvo_key, ano=ano, mes=mes)
+            if adp:
+                try:
+                    if hasattr(adp, "fetch"):
+                        cotacoes = await adp.fetch()
+                    elif hasattr(adp, "execute"):
+                        cotacoes = await adp.execute()
+                    else:
+                        cotacoes = []
+                    return [self._cotacao_to_bruta_dict(c) for c in cotacoes if c]
+                except Exception as exc:
+                    _log_audit(
+                        logging.WARNING, uf=uf,
+                        competencia=f"{ano}-{mes:02d}",
+                        alvo=fonte_id, status="FALHA",
+                        decisao=f"SmartRouter: {exc}",
+                    )
+                    return []
+
+        # 3. Generic PlaywrightHtmlAdapter — navega com Chromium stealth para qualquer URL
+        if url and url.startswith("http"):
+            try:
+                from pipeline.scraper.adapters.stealth import async_playwright
+                async with async_playwright() as pw:
+                    browser = await pw.chromium.launch(headless=True)
+                    context = await browser.new_context(
+                        viewport={"width": 1280, "height": 720},
+                        user_agent=(
+                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                            "AppleWebKit/537.36 (KHTML, like Gecko) "
+                            "Chrome/122.0.0.0 Safari/537.36"
+                        ),
+                    )
+                    page = await context.new_page()
+                    adp = PlaywrightHtmlAdapter(
+                        url=url,
+                        uf=uf,
+                        municipio=fonte.get("municipio", ""),
+                        fonte=fonte_id,
+                        ano=ano,
+                        mes=mes,
+                    )
+                    cotacoes = await adp.execute(page)
+                    await browser.close()
+                    if cotacoes:
+                        return [self._cotacao_to_bruta_dict(c) for c in cotacoes if c]
+            except Exception:
+                pass
+
+        _log_audit(
+            logging.DEBUG, uf=uf,
+            competencia=f"{ano}-{mes:02d}",
+            alvo=fonte_id, status="SKIP",
+            decisao="Fonte sem engine/adapter registrado",
+        )
+        return []
+
+    # ──────────────────────────────────────────────
+    # Passo 1 — micro-engines (Ceagesp, CONAB)
+    # ──────────────────────────────────────────────
+    async def _passo_direto(
+        self, uf: str, ano: int, mes: int
+    ) -> list[dict[str, Any]] | None:
+        uf_upper = uf.upper()
+        fonte_id = _UF_CEASA_MAP.get(uf_upper)
+        if not fonte_id:
+            return None
+
+        _log_audit(logging.INFO, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TENTANDO", decisao="Passo 1: micro-engine CEASA")
+        fonte = self._encontrar_fonte(fonte_id, "ceasas_diretas")
+        if not fonte:
+            return None
+
+        engine = self._resolver_motor(fonte_id)
+        if not engine:
+            return None
+
+        resultado = await self._executar_com_timeout(engine, fonte["url_base"], ano, mes, fonte_id)
+        if resultado:
+            _log_audit(logging.INFO, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="SUCESSO", decisao="Dados coletados via micro-engine")
+            return [resultado]
+        return None
+
+    # ──────────────────────────────────────────────
+    # Passo 2 — SmartRouter (adapters dedicados por UF)
+    # ──────────────────────────────────────────────
+    async def _passo_smartrouter(
+        self, uf: str, ano: int, mes: int
+    ) -> list[dict[str, Any]] | None:
+        uf_upper = uf.upper()
+        alvos = _UF_SMARTROUTER_ALVOS.get(uf_upper)
+        if not alvos:
+            return None
+
+        _log_audit(
+            logging.INFO, uf=uf_upper,
+            competencia=f"{ano}-{mes:02d}",
+            alvo=f"SMARTROUTER_{'_'.join(alvos)}",
+            status="TENTANDO",
+            decisao="SmartCrawler2026 adapters dedicados",
+        )
+        crawler = SmartCrawler2026()
+        try:
+            resultados = await asyncio.wait_for(
+                crawler.executar_para_ufs([uf_upper], ano=ano, mes=mes),
+                timeout=SCRAPER_TIMEOUT_SEC,
+            )
+        except asyncio.TimeoutError:
+            _log_audit(logging.WARNING, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo="SMARTROUTER", status="TIMEOUT", decisao=f"SmartRouter excedeu {SCRAPER_TIMEOUT_SEC}s")
+            return None
+
+        cotacoes = resultados.get(uf_upper, [])
+        if not cotacoes:
+            return None
+
+        brutos = [self._cotacao_to_bruta_dict(c) for c in cotacoes]
+        _log_audit(logging.INFO, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo="SMARTROUTER", status="SUCESSO", decisao=f"{len(brutos)} registros via {len(alvos)} alvos")
+        return brutos
+
+    # ──────────────────────────────────────────────
+    # Passo final — Discovery (web search)
+    # ──────────────────────────────────────────────
+    async def _passo_discovery(
+        self, uf: str, ano: int, mes: int
+    ) -> list[dict[str, Any]]:
+        _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo="DISCOVERY_AUTONOMO", status="TENTANDO", decisao="Todas as fontes falharam -> discovery engine")
+        from pipeline.scraper.discovery_engine import DiscoveryEngine
+        engine = DiscoveryEngine()
+        try:
+            resultados = await asyncio.wait_for(
+                engine.buscar(uf, ano, mes),
+                timeout=SCRAPER_TIMEOUT_SEC,
+            )
+        except asyncio.TimeoutError:
+            return []
+        return resultados
+
+    # ──────────────────────────────────────────────
+    # Conversao CotacaoRegional -> raw.coleta_bruta
+    # ──────────────────────────────────────────────
+    @staticmethod
+    def _cotacao_to_bruta_dict(cotacao: CotacaoRegional) -> dict[str, Any]:
+        payload = asdict(cotacao)
+        return {
+            "fonte_id": cotacao.fonte or "SmartRouter",
+            "payload_bruto": payload,
+            "competencia": f"{cotacao.ano}-{cotacao.mes:02d}",
+        }
+
+    # ──────────────────────────────────────────────
+    # Execucao blindada para micro-engines
     # ──────────────────────────────────────────────
     async def _executar_com_timeout(
         self,
@@ -164,10 +366,10 @@ class AutonomousOrchestrator:
                 timeout=SCRAPER_TIMEOUT_SEC,
             )
         except asyncio.TimeoutError:
-            _log_audit(logging.WARNING, uf="?", competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TIMEOUT", decisao=f"Motor excedeu {SCRAPER_TIMEOUT_SEC}s — abortando")
+            _log_audit(logging.WARNING, uf="?", competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TIMEOUT", decisao=f"Motor excedeu {SCRAPER_TIMEOUT_SEC}s")
             return None
         except Exception as exc:
-            _log_audit(logging.WARNING, uf="?", competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="FALHA", decisao=f"Exceção: {exc}")
+            _log_audit(logging.WARNING, uf="?", competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="FALHA", decisao=f"Excecao: {exc}")
             return None
         finally:
             await engine.close()
@@ -175,9 +377,7 @@ class AutonomousOrchestrator:
     # ──────────────────────────────────────────────
     # Helpers
     # ──────────────────────────────────────────────
-    def _encontrar_fonte(
-        self, fonte_id: str, categoria: str
-    ) -> dict | None:
+    def _encontrar_fonte(self, fonte_id: str, categoria: str) -> dict | None:
         for item in self._sources.get(categoria, []):
             if item["fonte_id"] == fonte_id:
                 return item
@@ -185,11 +385,11 @@ class AutonomousOrchestrator:
 
     @staticmethod
     def _resolver_motor(fonte_id: str) -> BaseMicroEngine | None:
-        if "ceagesp" in fonte_id.lower():
+        fid = fonte_id.lower()
+        if "ceagesp" in fid:
             return CeagespEngine()
-        if "conab" in fonte_id.lower():
+        if "conab" in fid:
             return ConabApiEngine()
-        logger.debug("Nenhum motor registrado para %s", fonte_id)
         return None
 
     async def close(self) -> None:

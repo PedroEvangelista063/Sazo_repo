@@ -18,21 +18,15 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 - `PROMPT_AUDITORIA_ENRIQUECIMENTO.md` — prompt mestre de auditoria
 - `plano_micro_motores.md` — plano original dos micro-motores
 - `fase2_arquitetura_autocura.md` — arquitetura de auto-cura e fallback
-- `HISTORICO_MELHORIAS_BACKFILL.md` — changelog de backfill
+- `HISTORICO_MELHORIAS_BACKFILL.md` — changelog de backfill (inclui diagnóstico gap 2024, proposta target-list e snapshot de validação CONAB)
 - `quero_comprar_plano_tecnico.md` — plano técnico geral
 - `AUDITORIA_BANCO_FRONTEND.md` — auditoria banco + frontend
 - `README.md` — visão geral do projeto (micro-monorepo, setup, deploy)
-- `scripts/` — scripts de diagnóstico, migração e exportação
+- `scripts/` — scripts de diagnóstico e utilidades
   - `get_data_summary.py` — health check do banco
-  - `run_migration.py` / `run_migration2.py` — aplica migrations SQL
   - `start_ecosystem.py` — levanta ecossistema local
   - `verify_api.py` — valida endpoints da API
   - `load_test.py` — teste de carga
-  - `export_checklist_imagens.py` — exporta checklist de imagens
-  - `test_debug_gdrive*.py` — debug e testes de integração Google Drive
-  - `test_gdrive*.py` — testes de download/upload GDrive
-  - `test_fire_gap_report.py` — teste de relatório de gaps
-  - `test_real_scrape.py` — teste de coleta real
 
 ## Forecast Baseline (adicionado Fase 26)
 - `database/26_forecast_baseline.sql` — migration que cria `mart.sazonalidade_baseline` (moda status_cor 2024-2025), adiciona `is_forecast` à `sazonalidade_produto`, recria MV V13 com `is_forecast` e `id_localidade`
@@ -256,19 +250,13 @@ quero_comprar_vg/
         ├── PROMPT_AUDITORIA_ENRIQUECIMENTO.md
         ├── plano_micro_motores.md
         ├── fase2_arquitetura_autocura.md
-        ├── HISTORICO_MELHORIAS_BACKFILL.md
+        ├── HISTORICO_MELHORIAS_BACKFILL.md  — (inclui diagnóstico gap 2024 + proposta target-list)
         ├── quero_comprar_plano_tecnico.md
         ├── AUDITORIA_BANCO_FRONTEND.md
         ├── README.md                       — visão geral do projeto
-        └── scripts/                        — diagnóstico, migração, exportação
+        └── scripts/                        — utilitários de diagnóstico
             ├── get_data_summary.py
-            ├── run_migration.py / run_migration2.py
             ├── start_ecosystem.py
             ├── verify_api.py
-            ├── load_test.py
-            ├── export_checklist_imagens.py
-            ├── test_debug_gdrive*.py
-            ├── test_gdrive*.py
-            ├── test_fire_gap_report.py
-            └── test_real_scrape.py
+            └── load_test.py
 ```

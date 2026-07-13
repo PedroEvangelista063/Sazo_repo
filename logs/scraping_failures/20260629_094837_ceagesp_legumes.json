@@ -1,7 +1,0 @@
-{
-  "fonte": "CEAGESP/LEGUMES",
-  "url": "https://ceagesp.gov.br/cotacoes/",
-  "timestamp": "20260629_094837",
-  "xpath_tentado": "[\"//table[contains(., 'Produto')]\", \"//table[contains(., 'Preco')]\", '//table']",
-  "html_path": "D:\\D\\PROJETOS EM ANDAMENTO\\quero_comprar_vg\\logs\\scraping_failures\\20260629_094837_ceagesp_legumes.html"
-}

@@ -106,15 +106,21 @@ class MotorCategorizacao:
         # ── Caixa 1: Maquinário e ferramentas agrcolas ──────────────
         # Captura tratores, implementos, EPIs e ferramentas.
         # Ex: "TRATOR 150 16X16 JOHN DEERE", "BOTA DE SEGURANÇA"
+        # Oleos nao-comestiveis (diesel, lubrificante, hidraulico, etc.)
+        # precisam ser capturados ANTES de ALIMENTO_VAREJO.
         "MAQUINARIO_FERRAMENTA": (
             r"(?i)^(TRATOR|ESCARIFICADOR|ESCADA|PAQUIMETRO|"
             r"BOTA|LUVAS|TRAPICHO|COLHEDEIRA|PULVERIZADOR|"
             r"SEMEADEIRA|ADUBADEIRA|ARADO|GRADE|"
-            r"OLEO DIESEL|OLEO LUBRIFICANTE)\b"
+            r"OLEO DIESEL|OLEO LUBRIFICANTE|"
+            r"OLEO HIDRAULICO|OLEO SINTETICO|OLEO QUEIMADO)\b"
         ),
         # ── Caixa 2: Insumos agrícolas (fertilizantes, defensivos) ──
         # Fórmulas N-P-K como "00-18-18", nomes comerciais e genéricos.
         # Ex: "ZINCO QUELATIZADO", "00-18-18", "SENCOR 500 SC"
+        # OLEO MINERAL e OLEO VEGETA sao insumos, NAO alimentos de varejo.
+        # NOTA: OLEO VEGETA\b nao captura OLEO VEGETAL (sem word boundary
+        # entre A e L). OLEO VEGETAL é ALIMENTO_VAREJO (Caixa 4).
         "INSUMO_AGRICOLA": (
             r"(?i)^(00-\d{2}-\d{2}|ZINCO|FLUMYZIN|NATIVO|SENCOR|"
             r"SEMENTE|NEMAT|FLUIL|NHT|OLEO VEGETA|OLEO MINERAL|PARA BROCA|"
@@ -133,14 +139,27 @@ class MotorCategorizacao:
         # Alimentos de consumo doméstico direto. Produtos de açougue,
         # hortifruti, padaria e mercearia básica.
         # Ex: "CARNE BOVINA", "PAO FRANCES", "TOMATE SALADA"
+        #
+        # SEGURANÇA DE ÓLEOS:
+        #   - Óleo DIESEL/LUBRIFICANTE/HIDRAULICO/SINTETICO/QUEIMADO
+        #     são capturados pela Caixa 1 (MAQUINARIO_FERRAMENTA).
+        #   - Óleo MINERAL é capturado pela Caixa 2 (INSUMO_AGRICOLA).
+        #   - Aqui entram APENAS óleos comestı́veis explı́citos:
+        #     "OLEO DE SOJA", "OLEO VEGETAL", etc.
+        #   - Qualquer produto que começe com "OLEO" e não esteja
+        #     nas listas acima cai como MATERIA_PRIMA_B2B (seguro).
         "ALIMENTO_VAREJO": (
             r"(?i)^(CARNE|PAO|FLOCOS DE MILHO|ERVA MATE|TOMATE|"
             r"FRANGO|ARROZ|FEIJAO|BATATA|CENOURA|CEBOLA|ALFACE|"
             r"REPOLHO|ABOBRINHA|PIMENTAO|LARANJA|BANANA|MACA|"
             r"MAMAO|UVA|MELANCIA|GOIABA|ABACATE|ACEROLA|"
             r"LEITE|QUEIJO|IOGURTE|MANTEIGA|OVOS|FARINHA|"
-            r"MILHO|TRIGO|SOJA|CAFE|ACUCAR|OLEO|AZEITE|"
-            r"SAL|MACARRAO|BISCOITO|CHOCOLATE|ACHOCOLATADO)\b"
+            r"MILHO|TRIGO|SOJA|CAFE|ACUCAR|"
+            r"OLEO DE (SOJA|GIRASSOL|BABACU|COPAIBA|MURUMURU|"
+            r"PEQUI|ALGOD[ÃA]O|MILHO|CANOLA|DEND[EÊ]|COCO|"
+            r"LINHA[ÇC]A|ABACATE|PALMA|AMENDOIM|GERGELIM)|"
+            r"OLEO VEGETAL|AZEITE|"
+            r"SAL|MACARR[AÃ]O|BISCOITO|CHOCOLATE|ACHOCOLATADO)\b"
         ),
         # ── Fallback: tudo que não se encaixa acima ─────────────────
         # Ex: "BORRACHA NATURAL", "CELULOSE", "ALGODAO"
@@ -545,21 +564,6 @@ class IngestaoInteligente:
         df_b2c = df.filter(pl.col("categoria_b2c") == "ALIMENTO_VAREJO")
         df_b2b = df.filter(pl.col("categoria_b2c") != "ALIMENTO_VAREJO")
 
-        has_mun = "municipio" in df.columns or "municipio_nome" in df.columns
-
-        if has_mun:
-            cols = [
-                "produto",
-                "municipio_id",
-                "municipio_nome",
-                "uf",
-                "ano",
-                "mes",
-                "preco_medio",
-            ]
-        else:
-            cols = ["produto", "uf", "ano", "mes", "preco_medio"]
-
         if df_b2c.height == 0:
             logger.info(
                 "  %s: 0 B2C, %d B2B (ignorado)",
@@ -624,7 +628,6 @@ class IngestaoInteligente:
 
         # Concatena todos os B2C em um único DataFrame
         df_final = pl.concat(todos_b2c)
-        categorias_b2c = {k: v for k, v in todas_categorias.items() if v == "ALIMENTO_VAREJO"}
 
         logger.info(
             "Total: %d B2C, %d B2B (excluídos do app)",
@@ -633,9 +636,7 @@ class IngestaoInteligente:
         )
 
         # Carrega no medalhão
-        t0 = time.perf_counter()
         inseridas = self._carregador.carregar(df_final, todas_categorias)
-        duracao = time.perf_counter() - t0
 
         resultado = ResultadoCarga(
             arquivo=f"{len(arquivos)} arquivo(s)",

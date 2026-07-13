@@ -1,25 +1,20 @@
-from fastapi import APIRouter, Query
-from backend.app.schemas.responses import SazonalidadeResponse, SazonalidadeListResponse
-from backend.app.db.session import fetch, fetchrow
-from backend.app.core.cache import cache
-from backend.app.core.config import get_settings
+import asyncio
 import hashlib
 import json
 
+from fastapi import APIRouter, Query
+
+from backend.app.core.cache import cache
+from backend.app.core.config import get_settings
+from backend.app.db.session import fetch, fetchrow
+from backend.app.schemas.responses import (
+    SazonalidadeListResponse,
+    SazonalidadeResponse,
+    SazonalidadeComPrecoListResponse,
+    SazonalidadeComPrecoResponse,
+)
+
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
-
-BR_ID_LOCALIDADE: int | None = None
-MONTHS_2026 = list(range(1, 13))
-
-
-async def _get_br_localidade() -> int:
-    global BR_ID_LOCALIDADE
-    if BR_ID_LOCALIDADE is None:
-        row = await fetchrow(
-            "SELECT id_localidade FROM staging.dim_localidade WHERE uf = 'BR' AND municipio_id = '0'"
-        )
-        BR_ID_LOCALIDADE = row["id_localidade"] if row else None
-    return BR_ID_LOCALIDADE
 
 
 async def _query_sazonalidade(
@@ -61,10 +56,22 @@ async def _query_sazonalidade(
     if uf and uf.upper() == "BR":
         if ano is not None and mes is not None:
             return await _query_br_por_mes(
-                ano, mes, categoria, pagina, por_pagina, offset_val, cache_key, settings,
+                ano,
+                mes,
+                categoria,
+                pagina,
+                por_pagina,
+                offset_val,
+                cache_key,
+                settings,
             )
         return await _query_br_snapshot(
-            categoria, pagina, por_pagina, offset_val, cache_key, settings,
+            categoria,
+            pagina,
+            por_pagina,
+            offset_val,
+            cache_key,
+            settings,
         )
 
     if ano is not None and mes is not None:
@@ -238,7 +245,9 @@ async def _query_sazonalidade_por_mes(
                 categoria=r.get("categoria"),
                 tendencia_futura=r.get("tendencia_futura"),
                 is_forecast=r.get("is_forecast", False),
-                confianca_baseline=float(r["confianca_baseline"]) if r.get("confianca_baseline") else None,
+                confianca_baseline=float(r["confianca_baseline"])
+                if r.get("confianca_baseline")
+                else None,
             )
         )
 
@@ -328,7 +337,9 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
             categoria=r.get("categoria"),
             tendencia_futura=r.get("tendencia_futura"),
             is_forecast=r.get("is_forecast", False),
-            confianca_baseline=float(r["confianca_baseline"]) if r.get("confianca_baseline") else None,
+            confianca_baseline=float(r["confianca_baseline"])
+            if r.get("confianca_baseline")
+            else None,
         )
         for r in rows
     ]
@@ -339,73 +350,74 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
 
 
 async def _query_br_snapshot(
-    categoria, pagina, por_pagina, offset_val, cache_key, settings,
+    categoria,
+    pagina,
+    por_pagina,
+    offset_val,
+    cache_key,
+    settings,
 ) -> SazonalidadeListResponse:
-    br_id = await _get_br_localidade()
-    latest = await fetchrow(
-        "SELECT MAX(ano) AS ano, MAX(mes) FILTER (WHERE ano = (SELECT MAX(ano) FROM mart.vw_api_produtos_sazonalidade)) AS mes FROM mart.vw_api_produtos_sazonalidade"
-    )
-    if not latest or not latest["ano"]:
-        return SazonalidadeListResponse(data=[], total=0, pagina=pagina, por_pagina=por_pagina)
-    return await _query_br_por_mes(latest["ano"], latest["mes"], categoria, pagina, por_pagina, offset_val, cache_key, settings)
+    if categoria:
+        rows = await fetch("SELECT * FROM mart.fn_br_nacional_snapshot($1)", categoria.upper())
+    else:
+        rows = await fetch("SELECT * FROM mart.fn_br_nacional_snapshot(NULL)")
+    return _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings)
 
 
 async def _query_br_por_mes(
-    ano, mes, categoria, pagina, por_pagina, offset_val, cache_key, settings,
+    ano,
+    mes,
+    categoria,
+    pagina,
+    por_pagina,
+    offset_val,
+    cache_key,
+    settings,
 ) -> SazonalidadeListResponse:
-    br_id = await _get_br_localidade()
-    params: list = [ano, mes]
-    cond_parts = ["v.ano = $1", "v.mes = $2"]
-    idx = 3
     if categoria:
-        cond_parts.append(f"v.categoria = ${idx}")
-        params.append(categoria.upper())
-        idx += 1
-    where = " AND ".join(cond_parts)
+        rows = await fetch(
+            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, $3)",
+            ano,
+            mes,
+            categoria.upper(),
+        )
+    else:
+        rows = await fetch(
+            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, NULL)",
+            ano,
+            mes,
+        )
+    return _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings)
 
-    sql = f"""
-        SELECT
-            v.produto,
-            v.classificao_produto,
-            COALESCE(v.categoria, 'ALIMENTO_VAREJO') AS categoria,
-            'BR'                    AS uf,
-            'BRASIL'                AS municipio,
-            '0'                     AS municipio_id,
-            $1::INTEGER             AS ano,
-            $2::INTEGER             AS mes,
-            $1 || '-' || LPAD($2::TEXT, 2, '0') AS data_referencia_atual,
-            AVG(v.preco_referencia) AS preco_referencia,
-            AVG(v.preco_atual)      AS preco_atual,
-            BOOL_OR(v.usou_fallback_12m) AS usou_fallback_12m,
-            BOOL_OR(v.preco_estimado)   AS preco_estimado,
-            MODE() WITHIN GROUP (ORDER BY v.status_cor) AS status_cor,
-            'municipio'             AS fonte,
-            BOOL_OR(v.is_forecast)  AS is_forecast,
-            b.confianca             AS confianca_baseline
-        FROM mart.vw_api_produtos_sazonalidade v
-        LEFT JOIN mart.sazonalidade_baseline b
-            ON b.id_produto = v.id_produto
-           AND b.id_localidade = {br_id}
-           AND b.mes = v.mes
-        WHERE {where}
-        GROUP BY v.produto, v.classificao_produto, v.categoria, b.confianca
-        ORDER BY status_cor, v.produto
-        OFFSET ${idx} LIMIT ${idx + 1}
-    """
-    params.extend([offset_val, por_pagina])
 
-    total_row = await fetchrow(
-        f"SELECT COUNT(*) AS total FROM ({sql.replace(f'OFFSET ${idx} LIMIT ${idx + 1}', '')}) cnt",
-        *params[:idx - 1],
-    )
-    total = total_row["total"] if total_row else 0
-    if total == 0:
-        result = SazonalidadeListResponse(data=[], total=0, pagina=pagina, por_pagina=por_pagina)
-        await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
-        return result
-
-    rows = await fetch(sql, *params)
-    return await _build_response(rows, total, pagina, por_pagina, cache_key, settings)
+def _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings):
+    total = len(rows)
+    page = rows[offset_val : offset_val + por_pagina]
+    items = [
+        SazonalidadeResponse(
+            id_produto=0,
+            nome_produto=r["produto"],
+            icone_url=None,
+            uf="BR",
+            municipio="BRASIL",
+            municipio_id="0",
+            ano=r["ano"],
+            mes=r["mes"],
+            data_referencia_atual=r["data_referencia_atual"],
+            usou_fallback_12m=r.get("usou_fallback_12m", False),
+            preco_estimado=r.get("preco_estimado", False),
+            status_cor=r["status_cor"],
+            fonte=r.get("fonte", "municipio"),
+            categoria=r.get("categoria"),
+            tendencia_futura=None,
+            is_forecast=r.get("is_forecast", False),
+            confianca_baseline=None,
+        )
+        for r in page
+    ]
+    result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
+    asyncio.ensure_future(cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds))
+    return result
 
 
 @router.get("", response_model=SazonalidadeListResponse)
@@ -415,7 +427,7 @@ async def listar_sazonalidade(
     produto: str | None = Query(None, description="Nome do produto"),
     status_cor: str | None = Query(None, pattern=r"^(VERDE|AMARELO|VERMELHO)$"),
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
-    ano: int | None = Query(None, ge=2024, le=2030),
+    ano: int | None = Query(None, ge=2025, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),
@@ -433,12 +445,113 @@ async def listar_sazonalidade(
     )
 
 
+@router.get("/com-preco", response_model=SazonalidadeComPrecoListResponse)
+async def listar_sazonalidade_com_preco(
+    uf: str | None = Query(None, min_length=2, max_length=2),
+    produto: str | None = Query(None),
+    ano: int | None = Query(None, ge=2025, le=2030),
+    mes: int | None = Query(None, ge=1, le=12),
+    pagina: int = Query(1, ge=1),
+    por_pagina: int = Query(500, ge=1, le=2000),
+):
+    offset_val = (pagina - 1) * por_pagina
+    conds = ["1=1"]
+    params: list = []
+    idx = 1
+
+    if uf:
+        conds.append(f"v.uf = ${idx}")
+        params.append(uf.upper())
+        idx += 1
+    if produto:
+        conds.append(f"v.produto ILIKE ${idx}")
+        params.append(f"%{produto}%")
+        idx += 1
+    if ano is not None:
+        conds.append(f"v.ano = ${idx}")
+        params.append(ano)
+        idx += 1
+    if mes is not None:
+        conds.append(f"v.mes = ${idx}")
+        params.append(mes)
+        idx += 1
+
+    where = " AND ".join(conds)
+
+    sql = f"""
+        SELECT v.id_produto, v.produto, v.categoria, v.uf,
+               v.municipio, v.municipio_id, v.ano, v.mes,
+               v.data_referencia_atual,
+               v.preco_referencia, v.preco_atual,
+               v.variacao_pct, v.preco_estimado,
+               v.usou_fallback_12m, v.status_cor,
+               v.fonte, v.tendencia_futura, v.is_forecast,
+               b.confianca AS confianca_baseline,
+               NULL::NUMERIC(14,4) AS preco_mes_anterior
+        FROM mart.vw_api_produtos_sazonalidade v
+        LEFT JOIN mart.sazonalidade_baseline b
+            ON b.id_produto = v.id_produto
+           AND b.id_localidade = v.id_localidade
+           AND b.mes = v.mes
+        WHERE {where}
+        ORDER BY v.produto, v.uf, v.ano DESC, v.mes DESC
+        OFFSET ${idx} LIMIT ${idx + 1}
+    """
+    params.extend([offset_val, por_pagina])
+
+    rows = await fetch(sql, *params)
+
+    count_sql = f"""
+        SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade v
+        WHERE {where}
+    """
+    total_row = await fetchrow(count_sql, *params[: idx - 1])
+    total = total_row[0] if total_row else 0
+
+    return SazonalidadeComPrecoListResponse(
+        data=[
+            SazonalidadeComPrecoResponse(
+                id_produto=r["id_produto"],
+                nome_produto=r["produto"],
+                categoria=r.get("categoria"),
+                uf=r["uf"],
+                municipio=r.get("municipio"),
+                municipio_id=r.get("municipio_id"),
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r["data_referencia_atual"],
+                preco_referencia=float(r["preco_referencia"])
+                if r.get("preco_referencia")
+                else None,
+                preco_atual=float(r["preco_atual"]) if r.get("preco_atual") else None,
+                variacao_pct=float(r["variacao_pct"]) if r.get("variacao_pct") else None,
+                preco_estimado=r.get("preco_estimado", False),
+                usou_fallback_12m=r.get("usou_fallback_12m", False),
+                status_cor=r["status_cor"],
+                fonte=r.get("fonte"),
+                tendencia_futura=r.get("tendencia_futura"),
+                is_forecast=r.get("is_forecast", False),
+                confianca_baseline=float(r["confianca_baseline"])
+                if r.get("confianca_baseline")
+                else None,
+                preco_mes_anterior=float(r["preco_mes_anterior"])
+                if r.get("preco_mes_anterior")
+                else None,
+            )
+            for r in rows
+        ],
+        total=total,
+        pagina=pagina,
+        por_pagina=por_pagina,
+    )
+
+
 @router.get("/{uf}/{municipio}", response_model=SazonalidadeListResponse)
 async def listar_por_localidade(
     uf: str,
     municipio: str,
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
-    ano: int | None = Query(None, ge=2024, le=2030),
+    ano: int | None = Query(None, ge=2025, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),

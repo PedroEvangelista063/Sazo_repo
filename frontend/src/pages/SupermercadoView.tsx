@@ -1,21 +1,35 @@
-import { useState, useMemo } from 'react'
-import { Button } from '../components/ui/button'
-import { Badge } from '../components/ui/badge'
-import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft } from 'lucide-react'
-import { useHortifruti } from '../hooks/useHortifruti'
-import { useUfs } from '../hooks/useUfs'
-import { ProductCard } from '../components/ProductCard'
-import { SkeletonCard } from '../components/SkeletonCard'
-import { CategoriesModal } from '../components/CategoriesModal'
-import { ThemeToggle } from '../components/ThemeToggle'
-import { cn } from '@/lib/utils'
+'use client'
 
-const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+import { useState, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft, Grid, Table, BarChart3 } from 'lucide-react'
+import { useHortifruti } from '@/hooks/useHortifruti'
+import { useUfs } from '@/hooks/useUfs'
+import { ProductCard } from '@/components/ProductCard'
+import { SkeletonCard } from '@/components/SkeletonCard'
+import { CategoriesModal } from '@/components/CategoriesModal'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import { TabelaView } from '@/components/TabelaView'
+import { GraficosView } from '@/components/GraficosView'
+import { cn } from '@/lib/utils'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+
+const MONTHS_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
 const STATUS_FILTERS = [
   { value: 'VERDE', label: 'Melhor Época', activeClass: 'bg-sazonal-verde-600 text-white border-sazonal-verde-600', idleClass: 'border-sazonal-verde-600 text-sazonal-verde-600 dark:text-sazonal-verde-400' },
   { value: 'AMARELO', label: 'Preço Normal', activeClass: 'bg-sazonal-amarelo-600 text-white border-sazonal-amarelo-600', idleClass: 'border-sazonal-amarelo-600 text-sazonal-amarelo-600 dark:text-sazonal-amarelo-dark' },
   { value: 'VERMELHO', label: 'Péssima Época', activeClass: 'bg-sazonal-vermelho-600 text-white border-sazonal-vermelho-600', idleClass: 'border-sazonal-vermelho-600 text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400' },
+]
+
+type ViewMode = 'cards' | 'tabela' | 'graficos'
+
+const viewTabs: { value: ViewMode; label: string; icon: React.ReactNode }[] = [
+  { value: 'cards', label: 'Cards', icon: <Grid size={16} /> },
+  { value: 'tabela', label: 'Tabela', icon: <Table size={16} /> },
+  { value: 'graficos', label: 'Gráficos', icon: <BarChart3 size={16} /> },
 ]
 
 export function SupermercadoView() {
@@ -25,6 +39,8 @@ export function SupermercadoView() {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>('cards')
+  const [selectedProduto, setSelectedProduto] = useState<{ nome_produto: string; categoria: string | null; uf: string } | null>(null)
 
   const { products: produtos, allProducts, isLoading, isError } = useHortifruti(selectedUF, selectedYear, selectedMonth)
   const { data: ufsDisponiveis } = useUfs()
@@ -119,26 +135,38 @@ export function SupermercadoView() {
       <main className="mx-auto max-w-5xl px-4 py-4">
         {/* Active pills */}
         {activePills.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-wrap gap-1.5 mb-4"
+          >
             {activePills.map((pill) => (
-              <button
+              <motion.button
                 key={pill.key}
                 onClick={pill.onRemove}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 className="inline-flex items-center gap-1 rounded-full bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 px-2.5 py-1 text-xs font-medium text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30 transition-colors"
               >
                 {pill.label}
                 <X size={12} />
-              </button>
+              </motion.button>
             ))}
             {activePills.length > 2 && (
-              <button
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 onClick={() => { setSelectedMonth(null); setSelectedProducts([]); setSelectedStatus(null) }}
                 className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
               >
                 Limpar tudo
-              </button>
+              </motion.button>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Loading state */}
@@ -173,17 +201,22 @@ export function SupermercadoView() {
         )}
 
         {/* Data loaded */}
-        {!isLoading && allProducts.length > 0 && (
+        {!isLoading && !isError && allProducts.length > 0 && (
           <div className="flex flex-col gap-6 mt-4">
             {/* Período — card de seleção */}
-            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm"
+            >
               <div className="flex flex-col gap-3">
                 {/* UF + Ano + contagem */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <select
                       value={selectedUF}
-                      onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
+                      onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null); setSelectedProduto(null) }}
                       className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
                       aria-label="Selecionar UF"
                     >
@@ -193,7 +226,7 @@ export function SupermercadoView() {
                     </select>
                     <select
                       value={selectedYear}
-                      onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null) }}
+                      onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null); setSelectedProduto(null) }}
                       className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
                       aria-label="Selecionar ano"
                     >
@@ -213,9 +246,11 @@ export function SupermercadoView() {
                     const monthNum = idx + 1
                     const isActive = selectedMonth === monthNum
                     return (
-                      <button
+                      <motion.button
                         key={monthNum}
-                        onClick={() => setSelectedMonth(isActive ? null : monthNum)}
+                        onClick={() => { setSelectedMonth(isActive ? null : monthNum); setSelectedProduto(null) }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
                         className={cn(
                           'flex flex-col items-center rounded-md border px-1 py-1.5 text-xs transition-colors min-h-[44px]',
                           isActive
@@ -226,7 +261,7 @@ export function SupermercadoView() {
                       >
                         <span className="text-[10px] opacity-70">{String(monthNum).padStart(2, '0')}</span>
                         <span className="text-xs font-bold">{name}</span>
-                      </button>
+                      </motion.button>
                     )
                   })}
                 </div>
@@ -237,7 +272,7 @@ export function SupermercadoView() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedMonth(null)}
+                      onClick={() => { setSelectedMonth(null); setSelectedProduto(null) }}
                     >
                       <ChevronLeft size={14} className="mr-1" />
                       Visão Completa
@@ -254,48 +289,137 @@ export function SupermercadoView() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Status filter + product grid */}
-            <div className="flex flex-col gap-3">
-              {/* Status chips */}
-              <div className="flex flex-wrap gap-1.5">
-                {STATUS_FILTERS.map((f) => (
-                  <button
-                    key={f.value}
-                    onClick={() => setSelectedStatus(selectedStatus === f.value ? null : f.value)}
-                    className={cn(
-                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
-                      selectedStatus === f.value ? f.activeClass : f.idleClass,
-                    )}
-                  >
-                    {f.label}
-                  </button>
+            {/* Abas de visualização */}
+            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                {viewTabs.map((tab) => (
+                  <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2">
+                    {tab.icon}
+                    <span>{tab.label}</span>
+                  </TabsTrigger>
                 ))}
-                {selectedStatus && (
-                  <button
-                    onClick={() => setSelectedStatus(null)}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    aria-label="Limpar filtro"
-                  >
-                    <X size={14} />
-                  </button>
-                )}
-              </div>
+              </TabsList>
 
-              {/* Product grid */}
-              {displayProducts.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                  {displayProducts.map((p) => (
-                    <ProductCard key={p.id_produto} product={p} />
-                  ))}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center py-10">
-                  <p className="text-sm text-gray-400">Nenhum produto encontrado para este período.</p>
-                </div>
-              )}
-            </div>
+              <AnimatePresence mode="wait">
+                {viewMode === 'cards' && (
+                  <TabsContent value="cards" className="mt-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="flex flex-col gap-3">
+                        {/* Status chips */}
+                        <div className="flex flex-wrap gap-1.5">
+                          {STATUS_FILTERS.map((f) => (
+                            <motion.button
+                              key={f.value}
+                              onClick={() => setSelectedStatus(selectedStatus === f.value ? null : f.value)}
+                              initial={{ scale: 0.9 }}
+                              animate={{ scale: 1 }}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className={cn(
+                                'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                                selectedStatus === f.value ? f.activeClass : f.idleClass,
+                              )}
+                            >
+                              {f.label}
+                            </motion.button>
+                          ))}
+                          {selectedStatus && (
+                            <motion.button
+                              initial={{ scale: 0.9 }}
+                              animate={{ scale: 1 }}
+                              onClick={() => setSelectedStatus(null)}
+                              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                              aria-label="Limpar filtro"
+                            >
+                              <X size={14} />
+                            </motion.button>
+                          )}
+                        </div>
+
+                        {/* Product grid */}
+                        {displayProducts.length > 0 ? (
+                          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                            {displayProducts.map((p) => (
+                              <motion.div
+                                key={p.id_produto}
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.2, delay: 0.02 }}
+                              >
+                                <ProductCard
+                                  product={p}
+                                  isSelected={selectedProducts.includes(p.nome_produto)}
+                                  onToggle={() =>
+                                    setSelectedProducts((prev) =>
+                                      prev.includes(p.nome_produto)
+                                        ? prev.filter((x) => x !== p.nome_produto)
+                                        : [...prev, p.nome_produto],
+                                    )
+                                  }
+                                />
+                              </motion.div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center py-10">
+                            <p className="text-sm text-gray-400">Nenhum produto encontrado para este período.</p>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  </TabsContent>
+                )}
+
+                {viewMode === 'tabela' && (
+                  <TabsContent value="tabela" className="mt-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <TabelaView
+                        uf={selectedUF}
+                        ano={selectedMonth ? selectedYear : undefined}
+                        mes={selectedMonth ?? undefined}
+                        onSelectProduto={(prod) => setSelectedProduto({
+                          nome_produto: prod.nome_produto,
+                          categoria: prod.categoria,
+                          uf: prod.uf,
+                        })}
+                        selectedProduto={selectedProduto}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                )}
+
+                {viewMode === 'graficos' && (
+                  <TabsContent value="graficos" className="mt-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <GraficosView
+                        uf={selectedUF}
+                        ano={selectedMonth ? selectedYear : undefined}
+                        mes={selectedMonth ?? undefined}
+                        selectedProduto={selectedProduto}
+                      />
+                    </motion.div>
+                  </TabsContent>
+                )}
+              </AnimatePresence>
+            </Tabs>
           </div>
         )}
       </main>

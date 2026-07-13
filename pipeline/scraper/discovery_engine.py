@@ -1,140 +1,180 @@
+"""Discovery Engine — Cache-based com seed de URLs conhecidas.
+
+Nao depende de search engines (todos bloqueiam headless).
+Mantem cache persistente entre execucoes para acumular descobertas.
+"""
+
 from __future__ import annotations
 
+import json
 import logging
+import os
 import re
+from pathlib import Path
 from typing import Any
 
 import httpx
 
 logger = logging.getLogger(__name__)
 
-# ──────────────────────────────────────────────
-# Operadores PERMITIDOS (proibido AND/OR/filetype:)
-# ──────────────────────────────────────────────
-# Apenas: "", site:, inurl:, intext:, *
 _URL_PDF_RE = re.compile(r"\.pdf$", re.IGNORECASE)
 
-_ESTADOS_BR: dict[str, str] = {
-    "AC": "Acre", "AL": "Alagoas", "AP": "Amapá", "AM": "Amazonas",
-    "BA": "Bahia", "CE": "Ceará", "DF": "Distrito Federal",
-    "ES": "Espírito Santo", "GO": "Goiás", "MA": "Maranhão",
-    "MT": "Mato Grosso", "MS": "Mato Grosso do Sul", "MG": "Minas Gerais",
-    "PA": "Pará", "PB": "Paraíba", "PR": "Paraná", "PE": "Pernambuco",
-    "PI": "Piauí", "RJ": "Rio de Janeiro", "RN": "Rio Grande do Norte",
-    "RS": "Rio Grande do Sul", "RO": "Rondônia", "RR": "Roraima",
-    "SC": "Santa Catarina", "SP": "São Paulo", "SE": "Sergipe",
-    "TO": "Tocantins",
-}
+RE_CEASA_TABLE = re.compile(
+    r"(?i)(produto|preco|preço|cotação|cotacao)\s.*(?:comum|menor|maior|r\$)",
+)
 
+_CACHE_PATH = Path(os.getenv("DISCOVERY_CACHE_PATH", "data/discovery_cache.json"))
 
-class SimpleDorkGenerator:
-    """
-    Gera queries de busca estilo 'humano' para evitar bloqueio WAF.
-    Sem AND, OR, filetype:, parênteses — apenas operadores simples.
-    """
-
-    # Padrões aprovados — hardcoded conforme especificação
-    _PADROES: list[str] = [
-        'site:gov.br inurl:ceasa "{nome_estado}" intext:preço',
-        'site:emater.*.gov.br "boletim" "hortifrúti"',
-        'inurl:cotacao "preço atacado" "ceasa {uf_upper}"',
-        'site:*.{uf_lower}.gov.br "hortifruti" "cotação"',
-    ]
-
-    @classmethod
-    def gerar(cls, uf: str) -> list[str]:
-        nome_estado = _ESTADOS_BR.get(uf.upper(), uf)
-        uf_lower = uf.lower().strip()
-        uf_upper = uf.upper().strip()
-
-        queries: list[str] = []
-        for padrao in cls._PADROES:
-            query = (
-                padrao
-                .replace("{nome_estado}", nome_estado)
-                .replace("{uf_lower}", uf_lower)
-                .replace("{uf_upper}", uf_upper)
-            )
-            queries.append(query)
-        return queries
+_URLS_CONHECIDAS: list[str] = [
+    # CEASAs oficiais
+    "https://www.ceagesp.gov.br/cotacoes/",
+    "https://www.ceasa.pr.gov.br/cotacao",
+    "https://www.ceasa.mg.gov.br/cotacoes",
+    "https://minas1.ceasa.mg.gov.br/ceasainternet/cst_precosmaiscomumEstados/cst_precosmaiscomumEstados.php",
+    "http://200.198.51.71/detec/filtro_boletim_es/filtro_boletim_es.php",
+    "https://www.ceasape.org.br/cotacao/hortalicas",
+    "https://transparencia.ceasa.rn.gov.br/cotacoes",
+    "https://www.ceasa.ms.gov.br/boletim-2025/",
+    "https://ceasa.rs.gov.br/cotacoes-de-precos",
+    "https://www.ceasa.df.gov.br/cotacoes",
+    "https://www.ceasa.ba.gov.br/cotacoes",
+    "http://www.imea.com.br",
+    # Emater / Secretarias
+    "https://www.emater.df.gov.br",
+    "https://www.epagri.sc.gov.br",
+    "https://www.agricultura.pr.gov.br/deral",
+    "https://www.sepror.am.gov.br",
+    "https://www.sedap.pa.gov.br",
+    # Agregadores nacionais
+    "https://www.noticiasagricolas.com.br/cotacoes",
+    "https://www.hfbrasil.org.br/br/estatistica",
+    "https://www.agrolink.com.br/cotacoes",
+    "https://calculadorarural.com.br/ceasa",
+    "https://www.conab.gov.br/prohort/api/cotacoes",
+    "https://cepea.org.br/br/consultas-ao-banco-de-dados-do-site.aspx",
+    # Dados abertos
+    "https://dados.gov.br",
+    "https://dados.ba.gov.br",
+]
 
 
 class DiscoveryEngine:
-    """
-    Passo 3 do orquestrador: busca ativa na web por URLs promissoras,
-    aplica traceroute heurístico (rejeita PDFs), salva na landing zone.
+    """Discovery Engine que varre URLs conhecidas + cache persistente.
+
+    Flow:
+      1. Carrega cache de descobertas anteriores
+      2. Testa cada URL via traceroute
+      3. Filtra paginas com tabelas de preco
+      4. Salva novas URLs no cache
     """
 
     def __init__(self) -> None:
-        self._dork_gen = SimpleDorkGenerator()
+        self._cache = self._carregar_cache()
 
+    # ──────────────────────────────────────────────
+    # API publica
+    # ──────────────────────────────────────────────
     async def buscar(
         self, uf: str, ano: int, mes: int
     ) -> list[dict[str, Any]]:
-        queries = SimpleDorkGenerator.gerar(uf)
-        resultados: list[dict[str, Any]] = []
         competencia = f"{ano}-{mes:02d}"
+        urls_tentar = self._montar_lista_urls(uf)
+        resultados: list[dict[str, Any]] = []
 
         logger.info(
-            "[DISCOVERY] UF=%s | Competência=%s | %d queries geradas",
-            uf, competencia, len(queries),
+            "[DISCOVERY] UF=%s | Competencia=%s | %d URLs no cache",
+            uf, competencia, len(urls_tentar),
         )
 
-        for query in queries:
-            logger.debug("[DISCOVERY] Query: %s", query)
-            urls = await self._executar_busca(query)
-            for url in urls:
-                payload = await self._traceroute(url)
-                if payload is not None:
-                    resultados.append({
-                        "fonte_id": "DISCOVERY_AUTONOMO",
-                        "payload_bruto": payload,
-                        "competencia": competencia,
-                    })
+        for url in urls_tentar:
+            payload = await self._traceroute(url, uf)
+            if payload is not None:
+                resultados.append({
+                    "fonte_id": "DISCOVERY_AUTONOMO",
+                    "payload_bruto": payload,
+                    "competencia": competencia,
+                })
 
-        logger.info("[DISCOVERY] Total URLs coletadas: %d", len(resultados))
+        # Atualiza cache com novas URLs (caso o traceroute tenha seguido redirects)
+        novas_urls = {r["payload_bruto"]["url"] for r in resultados}
+        if novas_urls:
+            self._cache.extend(novas_urls - set(self._cache))
+            self._salvar_cache()
+
+        logger.info("[DISCOVERY] Total URLs com tabela de precos: %d", len(resultados))
         return resultados
 
     # ──────────────────────────────────────────────
-    # Simulação de busca (stub — substituir por API real de busca)
+    # Montagem de URL list
     # ──────────────────────────────────────────────
-    async def _executar_busca(self, query: str) -> list[str]:
-        """
-        Stub: retorna lista vazia.
-        Em produção: integrar com API de busca (Google Custom Search, Bing, etc.)
-        """
-        logger.debug("[DISCOVERY] Busca simulada para: %s", query)
-        return []
+    def _montar_lista_urls(self, uf: str) -> list[str]:
+        todas = list(self._cache)
+        for url in _URLS_CONHECIDAS:
+            if url not in todas:
+                todas.append(url)
+        return todas
 
     # ──────────────────────────────────────────────
-    # Traceroute heurístico — filtra PDFs
+    # Traceroute — visita URL e verifica se tem tabela
     # ──────────────────────────────────────────────
-    async def _traceroute(self, url: str) -> dict[str, Any] | None:
+    async def _traceroute(self, url: str, uf: str = "") -> dict[str, Any] | None:
         if _URL_PDF_RE.search(url):
-            logger.info("[DISCOVERY] URL .pdf descartada: %s", url)
             return None
 
         try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
-                resp = await client.get(url, follow_redirects=True)
-
-            content_type = resp.headers.get("content-type", "").lower()
-            if "application/pdf" in content_type:
-                logger.info("[DISCOVERY] Content-Type PDF descartado: %s", url)
-                return None
+            async with httpx.AsyncClient(
+                timeout=5.0, follow_redirects=True,
+                headers={
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36"
+                    ),
+                },
+            ) as client:
+                resp = await client.get(url)
 
             if resp.status_code != 200:
-                logger.debug("[DISCOVERY] Status %d para %s — descartado", resp.status_code, url)
                 return None
 
-            logger.info("[DISCOVERY] URL válida: %s (%d bytes)", url, len(resp.text))
+            ct = resp.headers.get("content-type", "").lower()
+            if "application/pdf" in ct:
+                return None
+
+            if not RE_CEASA_TABLE.search(resp.text):
+                return None
+
+            logger.info("[DISCOVERY] URL valida: %s (%d bytes)", url, len(resp.text))
             return {
-                "url": url,
+                "url": str(resp.url),
                 "status_code": resp.status_code,
-                "content_type": content_type,
+                "content_type": ct,
                 "body": resp.text,
             }
 
         except Exception as exc:
-            logger.debug("[DISCOVERY] Falha no traceroute %s: %s", url, exc)
+            logger.debug("[DISCOVERY] Traceroute falhou %s: %s", url, exc)
             return None
+
+    # ──────────────────────────────────────────────
+    # Cache persistente
+    # ──────────────────────────────────────────────
+    def _carregar_cache(self) -> list[str]:
+        try:
+            if _CACHE_PATH.exists():
+                dados = json.loads(_CACHE_PATH.read_text(encoding="utf-8"))
+                if isinstance(dados, list):
+                    return dados
+        except Exception as exc:
+            logger.debug("[DISCOVERY] Falha ao carregar cache: %s", exc)
+        return []
+
+    def _salvar_cache(self) -> None:
+        try:
+            _CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+            _CACHE_PATH.write_text(
+                json.dumps(self._cache, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            logger.debug("[DISCOVERY] Cache salvo: %d URLs", len(self._cache))
+        except Exception as exc:
+            logger.debug("[DISCOVERY] Falha ao salvar cache: %s", exc)

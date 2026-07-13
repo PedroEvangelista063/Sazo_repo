@@ -252,3 +252,73 @@ Os 23 produtos mapeados para a Tabela 7060 do IBGE:
 | REPOLHO | 7248 | 1105010.Repolho | hortalicas |
 | TOMATE | 7212 | 1103028.Tomate | hortalicas |
 | UVA | 7276 | 1106028.Uva | frutas |
+
+---
+
+## Diagnóstico: Gap 2024 (Consolidado de diagnostico_scraper_2024.md)
+
+### Duas Arquiteturas Desconectadas
+
+```
+Pipeline A (main_runner -> AutonomousOrchestrator -> micro_engines):
+  - CeagespEngine      [httpx, SP apenas]
+  - ConabApiEngine     [httpx, CSV 30MB, API CONAB declarada morta]
+
+Pipeline B (dispatcher -> SmartCrawler2026 -> adapters):
+  - SantoGraalAdapter   [Playwright → CEAGESP + CEPEA]
+  - AgenticHtmlAdapter  [httpx → CEASA-PR, CEASA-MG, CEASA-ES, ...]
+  - OrganismAdapter     [Playwright → agrolink, calculadorarural]
+  - GoogleDriveAdapter  [httpx → CEASA-RS Google Drive]
+```
+
+**Pipeline B tem Playwright e cobre 10+ CEASAs, mas NUNCA é chamado pelo ETL principal.**
+
+### Causa Raiz do Gap 2024
+
+| Problema | Impacto |
+|----------|---------|
+| `_resolver_motor()` registra apenas 2 engines | 0 fontes cobertas p/ 2024 |
+| `DiscoveryEngine._executar_busca()` é stub | Passo 3 sempre retorna vazio |
+| `SantoGraalAdapter` usa Playwright (select_option, fill, click) | Existe mas nunca é invocado |
+| Nenhum adapter de CEASA registrado no orquestrador | PR, MG, ES, PE, RN, MS sem cobertura |
+| 2024 em fact_precos_mensais = 420 linhas, 100% interpoladas | Zero dados reais de 2024 |
+
+### Cobertura por Fonte (Snapshot)
+
+| Fonte | Engine | Playwright? | Status |
+|-------|--------|-------------|--------|
+| CEAGESP (SP) | CeagespEngine | httpx | Funciona parcial |
+| CONAB Pentaho | ConabApiEngine | httpx | API morta |
+| CEASA-PR/MG/ES/PE/RN/MS | AgenticHtmlAdapter | httpx | Não conectado |
+| CEASA-RS | GoogleDriveAdapter | httpx | Não conectado |
+| CEPEA | SantoGraalAdapter | Playwright | Não conectado |
+| Agrolink | OrganismAdapter | Playwright | Não conectado |
+
+---
+
+## Proposta: Scraper Target-List Driven (Consolidado de proposta_scraper_target_list.md)
+
+**Problema:** Cobertura média de 25.5% em 2024-2025. 2024 = 0% real.
+
+**Arquitetura:**
+1. SmartRouter lê `logs/gaps_2024_2025.json` na inicialização
+2. DiscoveryEngine prioriza gaps (produtos faltantes por UF/mês)
+3. Micro-motor com fallback exponencial (5s → 10s → 20s)
+4. Ciclo fechado: batch → recalc sazonalidade → re-audita → re-alimenta gaps
+
+**Resultado:** Self-healing (gaps → scrapers → dados → baseline corrigido), zero desperdício (só rodam onde há lacunas), KPI rastreável.
+
+---
+
+## Dados de Validação CONAB (Snapshot: 2026-07-13)
+
+- Total registros em fact_precos_mensais: **42.627**
+  - is_interpolado=False: **40.555 (95.1%)**
+  - is_interpolado=True: **2.072 (4.9%)**
+- 28.426 registros novos da CONAB, preço médio R$ 10.00
+- Cobertura por UF: SP (1.931), PR (1.692), RS (1.643), MG (1.531), SC (1.450)
+- UFs com menos dados: PI, RO, AM, SE, AC, RR, AP (~7 meses cada)
+- Produto mais caro: OLEO DE PEQUI (R$ 116.65/kg)
+- Produto mais barato: LARANJA DE MESA LIMA (R$ 0.18/kg)
+- Nenhum preço negativo ou zerado passou pelo filtro
+- 0 divergências graves (>50%) entre preço real e média

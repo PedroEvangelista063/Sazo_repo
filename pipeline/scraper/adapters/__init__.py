@@ -21,6 +21,7 @@ from pipeline.scraper.adapters.stealth import (
     executar_adapters_playwright,
 )
 from pipeline.scraper.adapters.agentic_html import AgenticHtmlAdapter, coletar_multiplos_agentic
+from pipeline.scraper.adapters.playwright_html import PlaywrightHtmlAdapter
 from pipeline.scraper.adapters.organism_adapter import OrganismAdapter
 from pipeline.scraper.adapters.google_drive_adapter import GoogleDriveAdapter
 from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS
@@ -110,6 +111,7 @@ __all__ = [
     "executar_adapters_playwright",
     "AgenticHtmlAdapter",
     "coletar_multiplos_agentic",
+    "PlaywrightHtmlAdapter",
     "OrganismAdapter",
     "GoogleDriveAdapter",
     "SmartCrawler2026",

@@ -1,7 +1,0 @@
-[    2239ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://peoplestack-pa.clients6.google.com/$rpc/peoplestack.PeopleStackAutocompleteService/Autocomplete:0
-[    2534ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://peoplestack-pa.clients6.google.com/$rpc/peoplestack.PeopleStackAutocompleteService/Autocomplete:0
-[    2589ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://peoplestack-pa.clients6.google.com/$rpc/peoplestack.PeopleStackAutocompleteService/Lookup:0
-[    2651ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://peoplestack-pa.clients6.google.com/$rpc/peoplestack.PeopleStackAutocompleteService/Autocomplete:0
-[    2968ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://peoplestack-pa.clients6.google.com/$rpc/peoplestack.PeopleStackAutocompleteService/Autocomplete:0
-[    2995ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://peoplestack-pa.clients6.google.com/$rpc/peoplestack.PeopleStackAutocompleteService/Lookup:0
-[    5858ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://drive.google.com/auth_warmup:0

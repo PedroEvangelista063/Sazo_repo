@@ -1,13 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
-import { X, MapPin, ShoppingBasket } from 'lucide-react'
+import { X, MapPin, ShoppingBasket, Package, Truck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
-import type { RegiaoInfo, ProdutoVarejo } from '@/types/domain'
+import type { RegiaoInfo, ProdutoVarejo, FlowItem } from '@/types/domain'
 
 interface RegiaoPanelProps {
   regiao: RegiaoInfo | null
   produtos: ProdutoVarejo[]
+  fluxos?: FlowItem[]
   isLoading: boolean
   isError: boolean
   onClose: () => void
@@ -24,6 +25,7 @@ const STATUS_CONFIG = {
 export function RegiaoPanel({
   regiao,
   produtos,
+  fluxos,
   isLoading,
   isError,
   onClose,
@@ -138,6 +140,50 @@ export function RegiaoPanel({
                 </motion.button>
               ))}
             </div>
+
+            {/* Fluxos de Abastecimento */}
+            {fluxos && fluxos.length > 0 && (
+              <div className="mt-4 space-y-1.5">
+                <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5 flex items-center gap-1.5">
+                  <Truck size={12} />
+                  Fluxos de Abastecimento
+                </p>
+                {fluxos.map((flow) => (
+                  <div
+                    key={flow.id}
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-700/30"
+                  >
+                    <div
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ backgroundColor: flow.cor_indicadora }}
+                    />
+                    <Package size={12} className="shrink-0 text-gray-400" />
+                    <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 truncate">
+                      {flow.item}
+                    </span>
+                    <span className="text-[10px] text-gray-400 shrink-0">
+                      {flow.origem_uf} → {flow.destino_uf}
+                    </span>
+                    <span
+                      className={cn(
+                        'text-[9px] px-1.5 py-0.5 rounded-full shrink-0 font-medium',
+                        flow.tipo === 'autossuficiente'
+                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                          : flow.tipo === 'exportado'
+                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                            : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+                      )}
+                    >
+                      {flow.tipo === 'autossuficiente'
+                        ? 'local'
+                        : flow.tipo === 'exportado'
+                          ? 'exporta'
+                          : 'importa'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {regiao.id === 'sudeste' && totalUfsComDado < 4 && (
               <p className="mt-3 text-[10px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-md px-2 py-1">

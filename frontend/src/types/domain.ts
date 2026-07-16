@@ -71,12 +71,49 @@ export interface PoloInfo {
   uf: string
   municipio: string
   fonte_id: string | null
+  papel?: string | null
 }
 
 export interface RegiaoInfo {
   id: string
   nome: string
+  papel?: string | null
   ufs: string[]
   polos: PoloInfo[]
   total_ufs: number
+}
+
+// ── Fluxos de Abastecimento ──
+export interface FlowItem {
+  id: number
+  item: string
+  categoria: string
+  origem_uf: string
+  origem_polo: string
+  destino_regiao_id: string
+  destino_uf: string
+  meses: number[]
+  sazonalidade: string
+  preco_referencial: string
+  cor_indicadora: string
+  tipo: string
+  ano_referencia: number
+}
+
+export interface FlowListResponse {
+  data: FlowItem[]
+  total: number
+}
+
+// ── Mapa ──
+export interface UFCoords {
+  uf: string
+  x: number
+  y: number
+}
+
+export interface ArcFlow {
+  from: UFCoords
+  to: UFCoords
+  flow: FlowItem
 }

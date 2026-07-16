@@ -175,6 +175,7 @@ class PoloInfo(BaseModel):
     uf: str
     municipio: str
     fonte_id: str | None = None
+    papel: str | None = None
 
     model_config = ConfigDict(frozen=True)
 
@@ -182,6 +183,7 @@ class PoloInfo(BaseModel):
 class RegiaoInfo(BaseModel):
     id: str
     nome: str
+    papel: str | None = None
     ufs: list[str]
     polos: list[PoloInfo]
     total_ufs: int
@@ -223,5 +225,35 @@ class SazonalidadeNacionalListResponse(BaseModel):
     total: int
     pagina: int
     por_pagina: int
+
+    model_config = ConfigDict(frozen=True)
+
+
+# ── Fluxos de Abastecimento ──
+class FlowItem(BaseModel):
+    """Um fluxo de abastecimento logístico entre origem e destino."""
+
+    id: int
+    item: str
+    categoria: str
+    origem_uf: str
+    origem_polo: str
+    destino_regiao_id: str
+    destino_uf: str
+    meses: list[int]
+    sazonalidade: str
+    preco_referencial: str
+    cor_indicadora: str
+    tipo: str
+    ano_referencia: int
+
+    model_config = ConfigDict(frozen=True)
+
+
+class FlowListResponse(BaseModel):
+    """Retorno do endpoint ``GET /api/v1/fluxos``."""
+
+    data: list[FlowItem]
+    total: int
 
     model_config = ConfigDict(frozen=True)

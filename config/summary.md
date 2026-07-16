@@ -17,5 +17,6 @@ JSON puro, sem schema validation runtime (consumido via `json.load()` no pipelin
 - `sources_map.json` — mapeamento produto → fontes regionais (CONAB + CEASAs)
 
 ## Conexões com o Forecast
-- O baseline histórico (2024-2025) é calculado em Python, não via config — mas a janela temporal da config define o escopo dos anos analisados.
-- Nenhuma config nova foi necessária para o forecast: `calcular_baseline.py` e `projetar_2026.py` usam os mesmos sources da matrix.
+- O baseline histórico (2024-2025) agora é calculado 100% em PostgreSQL via `sp_calcular_forecast_2026()` — não mais em Python.
+- A janela temporal da config define o escopo dos anos analisados (2024-2026).
+- Scripts Python legados (`calcular_baseline.py`, `projetar_2026.py`) permanecem em `database/scripts/` para uso standalone, mas não são mais chamados pelo pipeline.

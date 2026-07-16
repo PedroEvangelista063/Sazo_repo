@@ -28,15 +28,19 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
   - `verify_api.py` — valida endpoints da API
   - `load_test.py` — teste de carga
 
-## Forecast Baseline (adicionado Fase 26)
-- `database/26_forecast_baseline.sql` — migration que cria `mart.sazonalidade_baseline` (moda status_cor 2024-2025), adiciona `is_forecast` à `sazonalidade_produto`, recria MV V13 com `is_forecast` e `id_localidade`
-- `database/scripts/calcular_baseline.py` — lê dados reais 2024-2025, calcula moda + confiança, popula baseline (~16k combinações)
-- `database/scripts/projetar_2026.py` — para cada mês futuro de 2026 sem dado real, insere forecast com `is_forecast=true` (~11.6k linhas)
-- `database/scripts/backfill_2024.py` — backfill dos 12 meses de 2024 no mart (420 linhas)
-- `database/scripts/validar_forecast.py` — validação automatizada (matriz densidade, gaps, regressão, confiança, MV)
-- `pipeline/scraper/persistence.py` — `executar_ciclo_medalhao` agora recalcula baseline + forecast + MV refresh após cada carga
-- `frontend/src/components/ProductCard.tsx` — badge `📊 Estimativa` com tooltip de confiança para dados forecast
-- `backend/app/schemas/responses.py` — `is_forecast: bool` e `confianca_baseline: float | None` no schema da API
+## Forecast — Engine Preditiva (Fase 30, 100% SQL)
+- `database/26_forecast_baseline.sql` — migration original: baseline + is_forecast + MV V13
+- `database/29_focus_2025_2026.sql` — focus 2025-2026, baseline V12, exclusão B2B
+- `database/30_engine_preditiva_forecast_2026.sql` — **SP `sp_calcular_forecast_2026()`**, baseline_24_25, MV V14 com `baseline_confianca`, `forecast_method`
+- `database/scripts/calcular_baseline.py` — legado (substituído pela SP)
+- `database/scripts/projetar_2026.py` — legado (substituído pela SP)
+- `database/scripts/backfill_2024.py` — backfill dos 12 meses de 2024 no mart
+- `database/scripts/validar_forecast.py` — validação automatizada
+- `pipeline/scraper/persistence.py` — 2 passos: SortingEngine + `sp_executar_carga_completa()` (inclui forecast SQL)
+- `frontend/src/components/GameCard.tsx` — badge `📊 Estimativa` com tooltip de confiança + confetti
+- `frontend/src/components/TabelaView.tsx` — TanStack Table com coluna is_forecast
+- `frontend/src/components/GraficosView.tsx` — Recharts com gráficos de sazonalidade
+- `backend/app/schemas/responses.py` — `is_forecast: bool`, `confianca_baseline: float | None`, `tendencia_futura: str | None`
 
 ---
 
@@ -61,12 +65,9 @@ quero_comprar_vg/
 │   │   9. Orquestrador cascata: CEASA → Agregadores → Discovery
 │   │   10. Fontes centralizadas em config/sources_matrix.json
 │   │
-│   ├── Ciclo Medalhão (5 passos em persistence.py):
+│   ├── Ciclo Medalhão (2 passos em persistence.py):
 │   │   1. SortingEngine: raw → staging.fact_precos_mensais
-│   │   2. sp_executar_carga_completa(): staging → mart.sazonalidade_produto
-│   │   3. REFRESH MV vw_api_produtos_sazonalidade
-│   │   4. Recálculo baseline + forecast
-│   │   5. REFRESH MV final
+│   │   2. sp_executar_carga_completa(): staging → mart → forecast 2026 → MV refresh
 │   │
 │   ├── Fluxo RAW → STAGING → MART → MV
 │   │   - raw.coleta_bruta: 15 registros
@@ -100,7 +101,7 @@ quero_comprar_vg/
 │   │   5. Dimensões com ON CONFLICT DO UPDATE
 │   │   6. Janela Temporal 2024-01 a 2026-12
 │   │   7. Índices essenciais (ex: idx_coleta_bruta_processado)
-│   │   8. Forecast é fallback: ON CONFLICT DO NOTHING para is_forecast=FALSE
+│   │   8. Forecast é fallback: ON CONFLICT DO UPDATE para is_forecast=FALSE
 │   │
 │   ├── Duas fontes de dados brutos:
 │   │   A. raw.coleta_bruta (banco) — 15 registros via scraper
@@ -115,10 +116,14 @@ quero_comprar_vg/
 │       ├── 24_predictive_schema.sql        — schema preditivo ML
 │       ├── 25_fix_mv_missing_columns.sql   — hotfix MV
 │       ├── 26_forecast_baseline.sql        — baseline + is_forecast + MV V13
+│       ├── 27_fix_br_nacional_weighting.sql — hotfix BR Nacional
+│       ├── 28_recalibracao_baseline_24_25.sql — recalibração baseline
+│       ├── 29_focus_2025_2026.sql          — focus 2025-2026 + exclusão B2B
+│       ├── 30_engine_preditiva_forecast_2026.sql — SP forecast 100% SQL + MV V14
 │       └── scripts/
 │           ├── backfill_2024.py            — insere dados 2024 no mart
-│           ├── calcular_baseline.py        — moda status_cor 2024-2025
-│           ├── projetar_2026.py            — forecast para 2026
+│           ├── calcular_baseline.py        — legado (substituído por SP)
+│           ├── projetar_2026.py            — legado (substituído por SP)
 │           └── validar_forecast.py         — validação automatizada
 │
 ├── backend/           (API B2C — FastAPI)
@@ -150,20 +155,20 @@ quero_comprar_vg/
 │       ├── app/core/timeout.py            — TimeoutMiddleware (504)
 │       ├── app/core/events.py             — EventBroadcaster (SSE)
 │       ├── app/db/session.py              — pools asyncpg
-│       ├── app/schemas/responses.py       — Pydantic responses (is_forecast, confianca_baseline)
+│       ├── app/schemas/responses.py       — Pydantic responses (is_forecast, confianca_baseline, tendencia_futura)
 │       ├── migrations/                     — SQL incrementais (RLS, limpeza)
 │       └── tests/                          — testes de resiliência
 │
 ├── frontend/          (Aplicativo B2C — React PWA)
 │   ├── Propósito: App offline-first, mobile-first. Cores (verde/amarelo/vermelho), sem valores.
-│   ├── Stack: React 19, Vite + PWA, TailwindCSS 3, Zustand, TanStack Query v5, Mantine v9
+│   ├── Stack: React 19, Vite + PWA, TailwindCSS 3, shadcn/ui, Framer Motion, TanStack Table, Recharts, Zustand, TanStack Query v5
 │   │
 │   ├── Regras de Ouro:
 │   │   1. Sem R$ na tela
 │   │   2. Offline-first (service worker)
 │   │   3. Mobile-first (320px, touch >=44px)
 │   │   4. Fallback visual com emoji gigante
-│   │   5. Zero MUI/Ant Design (só Mantine + Tailwind)
+│   │   5. Zero MUI/Ant Design (só shadcn/ui + Tailwind + Framer Motion)
 │   │   6. SkeletonCards (sem spinners)
 │   │   7. Streaming SSE via useDataStream
 │   │   8. Dark/light mode
@@ -174,20 +179,27 @@ quero_comprar_vg/
 │       ├── src/main.tsx                    — entry point Vite + PWA
 │       ├── src/components/
 │       │   ├── ProductCard.tsx             — card + semáforo + badge forecast
+│       │   ├── GameCard.tsx                — card animado Framer Motion + confetti
+│       │   ├── GameButton.tsx              — botão com springs Framer Motion
+│       │   ├── LivingStatus.tsx            — indicador pulsante de status
+│       │   ├── TabelaView.tsx              — TanStack Table (colunas is_forecast)
+│       │   ├── GraficosView.tsx            — Recharts (gráficos de sazonalidade)
 │       │   ├── CategoriesModal.tsx         — modal de categorias
 │       │   ├── SkeletonCard.tsx            — loading state
 │       │   └── ThemeToggle.tsx             — dark/light toggle
 │       ├── src/hooks/
 │       │   ├── useHortifruti.ts            — TanStack Query fetch
+│       │   ├── useSazonalidadeComPreco.ts  — hook /sazonalidade/com-preco
 │       │   ├── useDataStream.ts            — SSE stream
 │       │   ├── useCategorias.ts            — categorias via API
 │       │   ├── useUfs.ts                   — UFs disponíveis
-│       │   └── useTheme.ts                 — tema persistido
+│       │   ├── useTheme.ts                 — tema persistido
+│       │   └── useConfetti.ts              — canvas-confetti hook
 │       ├── src/index.css                   — TailwindCSS directives
-│       ├── src/pages/SupermercadoView.tsx  — página principal
+│       ├── src/pages/SupermercadoView.tsx  — página principal (tabs Cards/Tabela/Gráficos)
 │       ├── src/services/api.ts             — axios instance
 │       ├── src/types/
-│       │   ├── domain.ts                   — tipos ProdutoVarejo, StatusCor, Categoria
+│       │   ├── domain.ts                   — tipos ProdutoVarejo (is_forecast, tendencia_futura)
 │       │   └── index.ts                    — barrel exports
 │       ├── src/store/useUserStore.ts       — Zustand store
 │       ├── src/vite-env.d.ts               — tipos Vite

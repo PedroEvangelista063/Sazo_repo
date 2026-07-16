@@ -71,7 +71,7 @@ class SazonalidadeResponse(BaseModel):
         ...,
         description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra) - Trindade Estrita",
     )
-    fonte: str | None = Field(None, pattern=r"^(municipio|uf)$")
+    fonte: str | None = Field(None, pattern=r"^(municipio|uf|BASELINE_HISTORICO)$")
     categoria: str | None = Field(
         None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)"
     )
@@ -162,6 +162,38 @@ class SazonalidadeComPrecoListResponse(BaseModel):
     """Retorno paginado do endpoint /sazonalidade/com-preco."""
 
     data: list[SazonalidadeComPrecoResponse]
+    total: int
+    pagina: int
+    por_pagina: int
+
+    model_config = ConfigDict(frozen=True)
+
+
+class MesSazonalidade(BaseModel):
+    """Status de um mês específico na sazonalidade BR Nacional."""
+
+    mes: int = Field(..., ge=1, le=12)
+    status_cor: Literal["VERDE", "AMARELO", "VERMELHO"]
+    is_forecast: bool = False
+    baseline_confianca: float | None = None
+
+
+class SazonalidadeNacionalResponse(BaseModel):
+    """Produto com 12 meses de sazonalidade — endpoint BR Nacional."""
+
+    produto: str
+    classificao_produto: str | None = None
+    categoria: str | None = None
+    meses: list[MesSazonalidade]
+    total_ufs: int = Field(..., ge=0)
+
+    model_config = ConfigDict(frozen=True)
+
+
+class SazonalidadeNacionalListResponse(BaseModel):
+    """Retorno paginado do endpoint /sazonalidade/br-sazonalidade."""
+
+    data: list[SazonalidadeNacionalResponse]
     total: int
     pagina: int
     por_pagina: int

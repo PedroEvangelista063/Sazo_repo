@@ -8,6 +8,46 @@
         "@playwright/mcp@latest"
       ],
       "enabled": true
+    },
+    "ref-tools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "ref-tools-mcp"
+      ],
+      "enabled": true
+    },
+    "postgres": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres:postgres@localhost:5432/quero_comprar"
+      ],
+      "enabled": true
+    },
+    "github": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+      },
+      "enabled": true
+    },
+    "eslint": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@eslint/mcp"
+      ],
+      "enabled": true
     }
   }
 }

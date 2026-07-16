@@ -1,10 +1,10 @@
-import asyncio
 import hashlib
 import json
+from collections import defaultdict
 
 from fastapi import APIRouter, Query
 
-from backend.app.core.cache import cache
+from backend.app.core.cache import cache, safe_set
 from backend.app.core.config import get_settings
 from backend.app.db.session import fetch, fetchrow
 from backend.app.schemas.responses import (
@@ -12,6 +12,9 @@ from backend.app.schemas.responses import (
     SazonalidadeResponse,
     SazonalidadeComPrecoListResponse,
     SazonalidadeComPrecoResponse,
+    SazonalidadeNacionalResponse,
+    SazonalidadeNacionalListResponse,
+    MesSazonalidade,
 )
 
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
@@ -191,7 +194,7 @@ async def _query_sazonalidade_snapshot(
 
     if total == 0:
         result = SazonalidadeListResponse(data=[], total=0, pagina=pagina, por_pagina=por_pagina)
-        await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+        await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
         return result
 
     rows = await fetch(data_query, *params)
@@ -251,7 +254,7 @@ async def _query_sazonalidade_por_mes(
             )
         )
 
-    await cache.set(hist_key, full, _HIST_CACHE_TTL)
+    await safe_set(hist_key, full, float(_HIST_CACHE_TTL))
 
     return _slice_periodo(full, produto, status_cor, pagina, por_pagina)
 
@@ -345,7 +348,7 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
     ]
 
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
-    await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+    await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
 
 
@@ -361,7 +364,7 @@ async def _query_br_snapshot(
         rows = await fetch("SELECT * FROM mart.fn_br_nacional_snapshot($1)", categoria.upper())
     else:
         rows = await fetch("SELECT * FROM mart.fn_br_nacional_snapshot(NULL)")
-    return _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings)
+    return await _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings)
 
 
 async def _query_br_por_mes(
@@ -387,10 +390,10 @@ async def _query_br_por_mes(
             ano,
             mes,
         )
-    return _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings)
+    return await _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings)
 
 
-def _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings):
+async def _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings):
     total = len(rows)
     page = rows[offset_val : offset_val + por_pagina]
     items = [
@@ -416,7 +419,7 @@ def _build_br_response(rows, pagina, por_pagina, offset_val, cache_key, settings
         for r in page
     ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
-    asyncio.ensure_future(cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds))
+    await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
 
 
@@ -427,7 +430,7 @@ async def listar_sazonalidade(
     produto: str | None = Query(None, description="Nome do produto"),
     status_cor: str | None = Query(None, pattern=r"^(VERDE|AMARELO|VERMELHO)$"),
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
-    ano: int | None = Query(None, ge=2025, le=2030),
+    ano: int | None = Query(None, ge=2024, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),
@@ -449,7 +452,7 @@ async def listar_sazonalidade(
 async def listar_sazonalidade_com_preco(
     uf: str | None = Query(None, min_length=2, max_length=2),
     produto: str | None = Query(None),
-    ano: int | None = Query(None, ge=2025, le=2030),
+    ano: int | None = Query(None, ge=2024, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(500, ge=1, le=2000),
@@ -546,12 +549,91 @@ async def listar_sazonalidade_com_preco(
     )
 
 
+async def _query_br_sazonalidade(
+    ano: int,
+    categoria: str | None,
+    pagina: int,
+    por_pagina: int,
+    offset_val: int,
+    cache_key: str,
+    settings,
+) -> SazonalidadeNacionalListResponse:
+    if categoria:
+        rows = await fetch(
+            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, $2)",
+            ano,
+            categoria.upper(),
+        )
+    else:
+        rows = await fetch(
+            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1)",
+            ano,
+        )
+
+    prod_map: dict[str, dict] = {}
+    for r in rows:
+        key = r["produto"]
+        if key not in prod_map:
+            prod_map[key] = {
+                "produto": r["produto"],
+                "classificao_produto": r["classificao_produto"],
+                "categoria": r["categoria"],
+                "total_ufs": r["total_ufs_nac"],
+                "meses": [],
+            }
+        prod_map[key]["meses"].append(
+            MesSazonalidade(
+                mes=r["mes"],
+                status_cor=r["status_cor_nac"],
+                is_forecast=r["is_forecast_nac"],
+                baseline_confianca=float(r["confianca_nac"])
+                if r["confianca_nac"] is not None
+                else None,
+            )
+        )
+
+    all_items = list(prod_map.values())
+    total = len(all_items)
+    page = all_items[offset_val : offset_val + por_pagina]
+
+    items = [SazonalidadeNacionalResponse(**item) for item in page]
+    result = SazonalidadeNacionalListResponse(
+        data=items, total=total, pagina=pagina, por_pagina=por_pagina
+    )
+    await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+    return result
+
+
+@router.get("/br-sazonalidade", response_model=SazonalidadeNacionalListResponse)
+async def listar_br_sazonalidade(
+    ano: int = Query(..., ge=2024, le=2030, description="Ano da sazonalidade"),
+    categoria: str | None = Query(None, description="Filtro por categoria"),
+    pagina: int = Query(1, ge=1),
+    por_pagina: int = Query(100, ge=1, le=2000),
+):
+    settings = get_settings()
+    cache_key = hashlib.md5(
+        json.dumps(
+            {"route": "br_sazonalidade", "ano": ano, "categoria": categoria, "pagina": pagina, "por_pagina": por_pagina},
+            sort_keys=True,
+            default=str,
+        ).encode()
+    ).hexdigest()
+
+    cached = await cache.get(cache_key)
+    if cached is not None:
+        return SazonalidadeNacionalListResponse(**cached)
+
+    offset_val = (pagina - 1) * por_pagina
+    return await _query_br_sazonalidade(ano, categoria, pagina, por_pagina, offset_val, cache_key, settings)
+
+
 @router.get("/{uf}/{municipio}", response_model=SazonalidadeListResponse)
 async def listar_por_localidade(
     uf: str,
     municipio: str,
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
-    ano: int | None = Query(None, ge=2025, le=2030),
+    ano: int | None = Query(None, ge=2024, le=2030),
     mes: int | None = Query(None, ge=1, le=12),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),

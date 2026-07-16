@@ -33,3 +33,4 @@ Python 3.13+, asyncpg, httpx, argparse (ou entrada via env vars).
 - `database/scripts/validar_forecast.py` — script de validação do modelo forecast (matriz densidade, gaps 2026, sem regressão, confiança baseline, MV)
 - Executado manualmente em CLI após recálculo do baseline
 - Exit 0 se OK, 1 se falha
+- Valida também as colunas novas: `baseline_confianca`, `forecast_method`, `tendencia_futura`

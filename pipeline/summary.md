@@ -21,14 +21,17 @@ Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focad
 10. **Fontes**: centralizadas em `config/sources_matrix.json` — configuration over code.
 
 ## Pós-Coleta — Ciclo Medalhão (executar_ciclo_medalhao)
-O ciclo completo em `persistence.py` executa 5 passos:
+O ciclo completo em `persistence.py` executa **2 passos** (simplificado — forecast agora é 100% SQL):
 1. **SortingEngine** — raw.coleta_bruta → staging.fact_precos_mensais
-2. **sp_executar_carga_completa()** — staging → mart.sazonalidade_produto
-3. **REFRESH MV** — atualiza `vw_api_produtos_sazonalidade` com dados reais
-4. **Recálculo do baseline + forecast** — `calcular_baseline()` + `projetar_2026()` em Python
-5. **REFRESH MV final** — atualiza MV com os dados de forecast recém-inseridos
+2. **sp_executar_carga_completa()** — pipeline completo em uma SP:
+   - `sp_carregar_landing_para_staging()`
+   - `sp_limpar_e_normalizar_staging()`
+   - `sp_sincronizar_variedades_conab()`
+   - `sp_calcular_sazonalidade_v11()` — baseline 25-26
+   - `sp_calcular_forecast_2026()` — projeção via baseline 24-25 (Moda)
+   - `REFRESH MATERIALIZED VIEW CONCURRENTLY`
 
-Passos 4-5 garantem que após toda carga de dados reais, o baseline fica mais preciso e os gaps de 2026 são preenchidos automaticamente.
+A lógica de forecast foi migrada dos scripts Python (`calcular_baseline.py`, `projetar_2026.py`) para a SP `sp_calcular_forecast_2026()`. Os scripts Python permanecem disponíveis para uso standalone mas não são mais chamados pelo pipeline.
 
 ## Fluxo dos Dados — Volumes Reais
 
@@ -73,4 +76,4 @@ mart ──→ REFRESH MV ──→ mart.vw_api_produtos_sazonalidade
 - `scraper/discovery_engine.py` — `SimpleDorkGenerator` + `DiscoveryEngine` (anti-PDF)
 - `scraper/circuit_breaker.py` — CircuitBreaker reutilizável (CLOSED/OPEN/HALF-OPEN)
 - `processor/` — esteira de triagem (pós-coleta, NÃO faz parte da extração)
-- `scraper/persistence.py` — `executar_ciclo_medalhao` (5 passos, inclui baseline + forecast)
+- `scraper/persistence.py` — `executar_ciclo_medalhao` (2 passos: SortingEngine + SP completa)

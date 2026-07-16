@@ -1,0 +1,58 @@
+{
+  "regioes": [
+    {
+      "id": "norte",
+      "nome": "Norte",
+      "ufs": ["AC", "AM", "AP", "PA", "RO", "RR", "TO"],
+      "polos": [
+        { "nome": "Manaus", "uf": "AM", "municipio": "Manaus", "fonte_id": null },
+        { "nome": "Belém", "uf": "PA", "municipio": "Belém", "fonte_id": null }
+      ],
+      "total_ufs": 7
+    },
+    {
+      "id": "nordeste",
+      "nome": "Nordeste",
+      "ufs": ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"],
+      "polos": [
+        { "nome": "CEASA-PE", "uf": "PE", "municipio": "Recife", "fonte_id": "ceasa_pe" },
+        { "nome": "CEASA-BA", "uf": "BA", "municipio": "Salvador", "fonte_id": "ceasa_ba" },
+        { "nome": "CEASA-RN", "uf": "RN", "municipio": "Natal", "fonte_id": "ceasa_rn" }
+      ],
+      "total_ufs": 9
+    },
+    {
+      "id": "centro-oeste",
+      "nome": "Centro-Oeste",
+      "ufs": ["DF", "GO", "MS", "MT"],
+      "polos": [
+        { "nome": "CEASA-DF", "uf": "DF", "municipio": "Brasília", "fonte_id": "ceasa_df" },
+        { "nome": "IMEA-MT", "uf": "MT", "municipio": "Cuiabá", "fonte_id": "imea_mt" },
+        { "nome": "CEASA-MS", "uf": "MS", "municipio": "Campo Grande", "fonte_id": "ceasa_ms" }
+      ],
+      "total_ufs": 4
+    },
+    {
+      "id": "sudeste",
+      "nome": "Sudeste",
+      "ufs": ["ES", "MG", "RJ", "SP"],
+      "polos": [
+        { "nome": "CEAGESP", "uf": "SP", "municipio": "São Paulo", "fonte_id": "ceagesp" },
+        { "nome": "CEASA-MG", "uf": "MG", "municipio": "Contagem", "fonte_id": "ceasa_mg" },
+        { "nome": "CEASA-ES", "uf": "ES", "municipio": "Cariacica", "fonte_id": "ceasa_es" },
+        { "nome": "CEASA-RJ", "uf": "RJ", "municipio": "Rio de Janeiro", "fonte_id": null }
+      ],
+      "total_ufs": 4
+    },
+    {
+      "id": "sul",
+      "nome": "Sul",
+      "ufs": ["PR", "RS", "SC"],
+      "polos": [
+        { "nome": "CEASA-PR", "uf": "PR", "municipio": "Curitiba", "fonte_id": "ceasa_pr" },
+        { "nome": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre", "fonte_id": "ceasa_rs" }
+      ],
+      "total_ufs": 3
+    }
+  ]
+}

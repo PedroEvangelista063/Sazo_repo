@@ -2,7 +2,7 @@
 persistence.py — Load step of ELT
 ==================================
 Recebe o dicionário bruto do orquestrador e faz UPSERT no banco.
-Flow: raw.coleta_bruta → SortingEngine → staging.fact_precos_mensais → sp_executar_carga_completa → MV.
+Flow: raw.coleta_bruta → SortingEngine → sp_executar_carga_completa (inclui forecast 2026 + refresh MV).
 """
 
 from __future__ import annotations
@@ -62,8 +62,7 @@ async def executar_ciclo_medalhao(pool: asyncpg.Pool) -> None:
     """
     Executa o pipeline de transformação completo:
     1. SortingEngine (raw.coleta_bruta processado=FALSE → staging.fact_precos_mensais)
-    2. sp_executar_carga_completa (staging → mart.sazonalidade_produto)
-    3. REFRESH MATERIALIZED VIEW CONCURRENTLY
+    2. sp_executar_carga_completa (staging → mart → forecast 2026 → MV refresh)
     """
     from pipeline.processor.sorting_engine import SortingEngine
 
@@ -81,36 +80,9 @@ async def executar_ciclo_medalhao(pool: asyncpg.Pool) -> None:
         logger.info("[CICLO] Nenhum registro novo para processar — pulando medalhao cycle.")
         return
 
-    # Passo 2: Stored procedure
+    # Passo 2: SP completa (inclui cálculo sazonalidade + forecast 2026 + refresh MV)
     logger.info("[CICLO] Executando sp_executar_carga_completa()...")
     async with pool.acquire() as conn:
         await conn.execute("CALL staging.sp_executar_carga_completa()")
-
-    # Passo 3: Refresh MV
-    logger.info("[CICLO] Refrescando materialized view...")
-    async with pool.acquire() as conn:
-        await conn.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade")
-
-    # Passo 4: Recalcular baseline e projetar forecasts
-    logger.info("[CICLO] Recalculando baseline histórico...")
-    try:
-        from database.scripts.calcular_baseline import calcular_baseline as _cb
-        from database.scripts.projetar_2026 import projetar_2026 as _pj
-
-        async with pool.acquire() as conn:
-            total_baseline = await _cb(conn)
-            logger.info("[CICLO] Baseline recalculado: %d linhas em mart.sazonalidade_baseline", total_baseline)
-
-            resultados_forecast = await _pj(conn)
-            total_forecast = sum(resultados_forecast.values())
-            logger.info("[CICLO] Forecast atualizado: %d linhas projetadas para 2026", total_forecast)
-    except Exception:
-        logger.exception("[CICLO] Erro ao recalcular baseline — continuando sem forecast.")
-        return
-
-    # Passo 5: Refresh final da MV com os dados de forecast
-    logger.info("[CICLO] Refrescando MV com dados de forecast...")
-    async with pool.acquire() as conn:
-        await conn.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade")
 
     logger.info("[CICLO] Ciclo medalhao COMPLETO — dados prontos para a API.")

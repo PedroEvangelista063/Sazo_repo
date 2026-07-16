@@ -1,6 +1,7 @@
-import { Card, CardContent } from './ui/card'
+import { motion } from 'framer-motion'
 import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
+import SpotlightCard from '@/components/SpotlightCard'
 import { CheckCircle2, MinusCircle, XCircle, Check } from 'lucide-react'
 import type { ProdutoVarejo } from '../types/domain'
 
@@ -14,27 +15,24 @@ const PRODUTO_EMOJI: Record<string, string> = {
   OLEO: '🫒', ACUCAR: '🍚', FARINHA: '🌾', MACARRAO: '🍝',
 }
 
-const STATUS_CONFIG: Record<string, { label: string; icon: typeof CheckCircle2; border: string; bg: string; text: string }> = {
+const STATUS_CONFIG: Record<string, { label: string; icon: typeof CheckCircle2; cor: string; corBg: string }> = {
   VERDE: {
     label: 'Melhor Época!',
     icon: CheckCircle2,
-    border: 'border-l-sazonal-verde-600 dark:border-l-sazonal-verde-400',
-    bg: 'bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20',
-    text: 'text-sazonal-verde-600 dark:text-sazonal-verde-400',
+    cor: '#16a34a',
+    corBg: 'rgba(22,163,74,0.08)',
   },
   AMARELO: {
     label: 'Preço Normal',
     icon: MinusCircle,
-    border: 'border-l-sazonal-amarelo-600 dark:border-l-sazonal-amarelo-dark',
-    bg: 'bg-sazonal-amarelo-50 dark:bg-sazonal-amarelo-dark/20',
-    text: 'text-sazonal-amarelo-600 dark:text-sazonal-amarelo-dark',
+    cor: '#ca8a04',
+    corBg: 'rgba(202,138,4,0.08)',
   },
   VERMELHO: {
     label: 'Péssima Época',
     icon: XCircle,
-    border: 'border-l-sazonal-vermelho-600 dark:border-l-sazonal-vermelho-dark',
-    bg: 'bg-sazonal-vermelho-50 dark:bg-sazonal-vermelho-dark/20',
-    text: 'text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400',
+    cor: '#dc2626',
+    corBg: 'rgba(220,38,38,0.08)',
   },
 }
 
@@ -53,75 +51,90 @@ export function ProductCard({ product, isSelected, onToggle }: ProductCardProps)
   const config = STATUS_CONFIG[product.status_cor] ?? {
     label: 'Dados Insuficientes',
     icon: MinusCircle,
-    border: 'border-l-gray-400',
-    bg: 'bg-gray-50 dark:bg-gray-800',
-    text: 'text-gray-500 dark:text-gray-400',
-  }
+    cor: '#9ca3af',
+    corBg: 'rgba(156,163,175,0.08)' as const,
+  } as (typeof STATUS_CONFIG)[string]
   const emoji = getEmoji(product.nome_produto)
   const Icon = config.icon
 
   return (
-    <Card
-      className={cn(
-        'border-l-4 min-w-[140px] cursor-pointer transition-all duration-200',
-        config.border,
-        config.bg,
-        isSelected && 'ring-2 ring-sazonal-verde-500 dark:ring-sazonal-verde-400 shadow-md',
-        onToggle && 'hover:shadow-lg hover:-translate-y-0.5',
-      )}
+    <motion.div
       onClick={onToggle}
+      whileHover={{ y: -4, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
     >
-      <CardContent className="flex flex-col items-center gap-1 p-3">
-        {isSelected && onToggle && (
-          <div className="absolute top-2 right-2">
-            <Check className="w-5 h-5 text-sazonal-verde-600 dark:text-sazonal-verde-400" />
-          </div>
+      <SpotlightCard
+        spotlightColor={config.corBg as `rgba(${number}, ${number}, ${number}, ${number})`}
+        className={cn(
+          'border rounded-xl cursor-pointer transition-shadow duration-200 overflow-hidden',
+          isSelected
+            ? 'border-gray-300 dark:border-gray-600 shadow-xl'
+            : 'border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg',
+          onToggle ? 'cursor-pointer' : 'cursor-default',
         )}
-        <span className="text-[28px]" role="img" aria-label={product.nome_produto}>
-          {emoji}
-        </span>
-        <p className="text-sm font-bold text-center leading-tight text-gray-900 dark:text-gray-100">
-          {product.nome_produto}
-        </p>
-        <div className="flex items-center gap-1 flex-wrap justify-center">
-          <div className={cn('flex items-center gap-1 text-xs', config.text)}>
+      >
+        <div className="relative p-3 flex flex-col items-center gap-1">
+          {isSelected && onToggle && (
+            <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-sazonal-verde-600 flex items-center justify-center shadow-md">
+              <Check className="w-3.5 h-3.5 text-white" />
+            </div>
+          )}
+
+          <span
+            className="text-[28px] leading-none"
+            role="img"
+            aria-label={product.nome_produto}
+          >
+            {emoji}
+          </span>
+
+          <p className="text-sm font-bold text-center leading-tight text-gray-900 dark:text-gray-100 mt-0.5">
+            {product.nome_produto}
+          </p>
+
+          <div className="flex items-center gap-1 text-xs mt-0.5" style={{ color: config.cor }}>
             <Icon size={14} />
             <span>{config.label}</span>
           </div>
-          {product.is_forecast && (
-            <div className="relative group">
-              <Badge variant="outline" className="text-[10px] cursor-default">
-                📊 Estimativa
-              </Badge>
-              <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-50">
-                <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
-                  Dado estimado com base no histórico de 2024–2025.
-                  Confiança: {product.confianca_baseline ?? '?'}%
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
+
+          <div className="flex flex-wrap items-center justify-center gap-1 mt-1">
+            {product.is_forecast && (
+              <div className="relative group">
+                <Badge variant="outline" className="text-[10px] cursor-default shadow-sm">
+                  📊 Estimativa
+                </Badge>
+                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-50">
+                  <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
+                    Dado estimado com base no histórico de 2024–2025.
+                    Confiança: {product.confianca_baseline ?? '?'}%
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-          {product.preco_estimado && (
-            <div className="relative group">
-              <Badge variant="outline" className="text-[10px] cursor-default text-amber-600 border-amber-300 dark:text-amber-400 dark:border-amber-700">
-                🪄 Estimado
-              </Badge>
-              <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-50">
-                <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
-                  Preço estimado por inteligência artificial com base no histórico recente.
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
+            )}
+            {product.preco_estimado && (
+              <div className="relative group">
+                <Badge variant="outline" className="text-[10px] cursor-default text-amber-600 border-amber-300 dark:text-amber-400 dark:border-amber-700 shadow-sm">
+                  🪄 Estimado
+                </Badge>
+                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-50">
+                  <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
+                    Preço estimado por inteligência artificial com base no histórico recente.
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+          </div>
+
+          {product.usou_fallback_12m && (
+            <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 mt-0.5">
+              * Média 12 meses
+            </p>
           )}
         </div>
-        {product.usou_fallback_12m && (
-          <p className="text-[10px] text-center text-gray-400 dark:text-gray-500">
-            * Média 12 meses
-          </p>
-        )}
-      </CardContent>
-    </Card>
+      </SpotlightCard>
+    </motion.div>
   )
 }

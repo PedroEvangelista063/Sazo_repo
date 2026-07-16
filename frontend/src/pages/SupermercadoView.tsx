@@ -11,6 +11,7 @@ import { useRegioes } from '@/hooks/useRegioes'
 import { useRegiaoResumo } from '@/hooks/useRegiaoResumo'
 import { useHortifruti } from '@/hooks/useHortifruti'
 import { useUfs } from '@/hooks/useUfs'
+import { useFluxos } from '@/hooks/useFluxos'
 import { ProductCard } from '@/components/ProductCard'
 import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
@@ -52,6 +53,7 @@ export function SupermercadoView() {
 
   const { products: produtos, allProducts, brSazonalidade, totalBR, isLoading, isError } = useHortifruti(selectedUF, selectedYear, selectedMonth)
   const { data: ufsDisponiveis } = useUfs()
+  const { data: fluxos } = useFluxos()
 
   const ufOptions = useMemo(() => {
     const ufs = ufsDisponiveis ?? ['SP', 'RS', 'PR', 'SC', 'MG', 'RJ', 'ES']
@@ -81,6 +83,24 @@ export function SupermercadoView() {
     () => availableYears.map((y) => ({ value: String(y), label: String(y) })),
     [availableYears],
   )
+
+  const origemPorProduto = useMemo(() => {
+    const map = new Map<string, string>()
+    if (!fluxos) return map
+    for (const f of fluxos) {
+      if (!map.has(f.item)) {
+        const nome = f.item.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase()
+        map.set(nome, f.origem_uf)
+      }
+    }
+    return map
+  }, [fluxos])
+
+  const fluxosRegiao = useMemo(() => {
+    if (!fluxos || !selectedRegion) return []
+    const ufs = regioes?.find((r) => r.id === selectedRegion)?.ufs ?? []
+    return fluxos.filter((f) => ufs.includes(f.destino_uf) || ufs.some((u) => u === f.origem_uf))
+  }, [fluxos, selectedRegion, regioes])
 
   const activePills = useMemo(() => {
     const pills: { key: string; label: string; onRemove: () => void }[] = [
@@ -400,6 +420,7 @@ export function SupermercadoView() {
                             onRegionClick={(id) =>
                               setSelectedRegion(selectedRegion === id ? null : id)
                             }
+                            fluxos={fluxos}
                           />
                         </motion.div>
                         <motion.div
@@ -411,6 +432,7 @@ export function SupermercadoView() {
                           <RegiaoPanel
                             regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
                             produtos={regiaoResumo?.data ?? []}
+                            fluxos={fluxosRegiao}
                             isLoading={regiaoLoading}
                             isError={regiaoError}
                             onClose={() => setSelectedRegion(null)}
@@ -483,6 +505,9 @@ export function SupermercadoView() {
                                         : [...prev, p.nome_produto],
                                     )
                                   }
+                                  origemUf={origemPorProduto.get(
+                                    p.nome_produto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase(),
+                                  )}
                                 />
                               </motion.div>
                             ))}

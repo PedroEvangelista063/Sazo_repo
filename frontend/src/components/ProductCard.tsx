@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
-import { CheckCircle2, MinusCircle, XCircle, Check } from 'lucide-react'
+import { CheckCircle2, MinusCircle, XCircle, Check, Truck } from 'lucide-react'
 import type { ProdutoVarejo } from '../types/domain'
 
 const PRODUTO_EMOJI: Record<string, string> = {
@@ -45,9 +45,10 @@ interface ProductCardProps {
   product: ProdutoVarejo
   isSelected?: boolean
   onToggle?: () => void
+  origemUf?: string | null
 }
 
-export function ProductCard({ product, isSelected, onToggle }: ProductCardProps) {
+export function ProductCard({ product, isSelected, onToggle, origemUf }: ProductCardProps) {
   const config = STATUS_CONFIG[product.status_cor] ?? {
     label: 'Dados Insuficientes',
     icon: MinusCircle,
@@ -132,6 +133,13 @@ export function ProductCard({ product, isSelected, onToggle }: ProductCardProps)
             <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 mt-0.5">
               * Média 12 meses
             </p>
+          )}
+
+          {origemUf && (
+            <div className="flex items-center gap-1 mt-1 text-[9px] text-gray-400 dark:text-gray-500">
+              <Truck size={9} />
+              <span>Origem: {origemUf}</span>
+            </div>
           )}
         </div>
       </SpotlightCard>

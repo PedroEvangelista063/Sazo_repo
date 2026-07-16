@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import type { FlowItem } from '@/types/domain'
 
 interface BrasilMapProps {
   selectedRegion: string | null
   onRegionClick: (regionId: string) => void
+  fluxos?: FlowItem[]
   className?: string
 }
 
@@ -99,7 +102,23 @@ function formatLabel(regiaoId: string): string {
   return regiaoId.charAt(0).toUpperCase() + regiaoId.slice(1)
 }
 
-export function BrasilMap({ selectedRegion, onRegionClick, className }: BrasilMapProps) {
+export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: BrasilMapProps) {
+  const [showFluxos, setShowFluxos] = useState(false)
+  const hasFluxos = fluxos && fluxos.length > 0
+
+  const ufMap = new Map(UFS.map((u) => [u.uf, u]))
+
+  const arcs = showFluxos && fluxos
+    ? fluxos
+        .map((f) => {
+          const from = ufMap.get(f.origem_uf)
+          const to = ufMap.get(f.destino_uf)
+          if (!from || !to || from.uf === to.uf) return null
+          return { from, to, flow: f }
+        })
+        .filter(Boolean)
+    : []
+
   return (
     <div className={cn('relative w-full max-w-[420px] mx-auto', className)}>
       <svg
@@ -177,6 +196,43 @@ export function BrasilMap({ selectedRegion, onRegionClick, className }: BrasilMa
             />
           )
         })}
+
+        {/* Arcos de fluxo de abastecimento */}
+        {arcs.length > 0 && (
+          <g className="pointer-events-none">
+            {arcs.map((arc, idx) => {
+              if (!arc) return null
+              const { from, to, flow } = arc
+              const mx = (from.cx + to.cx) / 2
+              const my = (from.cy + to.cy) / 2 - 30
+              const d = `M ${from.cx} ${from.cy} Q ${mx} ${my} ${to.cx} ${to.cy}`
+              return (
+                <g key={`arc-${flow.id}-${idx}`}>
+                  {/* Sombra do arco */}
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke="rgba(0,0,0,0.15)"
+                    strokeWidth={2.5}
+                    transform="translate(0, 2)"
+                  />
+                  {/* Arco principal animado */}
+                  <motion.path
+                    d={d}
+                    fill="none"
+                    stroke={flow.cor_indicadora}
+                    strokeWidth={2}
+                    strokeOpacity={0.7}
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1, delay: idx * 0.1, ease: 'easeInOut' }}
+                  />
+                </g>
+              )
+            })}
+          </g>
+        )}
 
         {/* Dots individuais por UF */}
         {UFS.map((uf) => {
@@ -262,8 +318,30 @@ export function BrasilMap({ selectedRegion, onRegionClick, className }: BrasilMa
         })}
       </svg>
 
+      {/* Controles do mapa */}
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+        {hasFluxos && (
+          <motion.button
+            onClick={() => setShowFluxos((v) => !v)}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium border transition-colors',
+              showFluxos
+                ? 'bg-indigo-600 border-indigo-600 text-white'
+                : 'border-indigo-400 text-indigo-500',
+            )}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            {showFluxos ? 'Ocultar Fluxos' : `Fluxos (${fluxos!.length})`}
+          </motion.button>
+        )}
+      </div>
+
       {/* Legenda interativa abaixo do mapa */}
-      <div className="flex flex-wrap justify-center gap-2 mt-4">
+      <div className="flex flex-wrap justify-center gap-2 mt-2">
         {REGIOES.map((reg) => {
           const isActive = selectedRegion === reg.id
           return (

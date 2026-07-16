@@ -17,6 +17,7 @@ from backend.app.api.v1.endpoints.stream import router as stream_router
 from backend.app.api.v1.endpoints.admin import router as admin_router
 from backend.app.core.cache import cache
 from backend.app.api.v1.endpoints.regioes import router as regioes_router
+from backend.app.api.v1.endpoints.fluxos import router as fluxos_router
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +85,7 @@ app.include_router(ufs_router, prefix=settings.api_v1_prefix)
 app.include_router(stream_router, prefix=settings.api_v1_prefix)
 app.include_router(admin_router, prefix=settings.api_v1_prefix)
 app.include_router(regioes_router, prefix=settings.api_v1_prefix)
+app.include_router(fluxos_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/health")

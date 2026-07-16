@@ -3,54 +3,69 @@
     {
       "id": "norte",
       "nome": "Norte",
+      "papel": "transicao",
       "ufs": ["AC", "AM", "AP", "PA", "RO", "RR", "TO"],
       "polos": [
-        { "nome": "Manaus", "uf": "AM", "municipio": "Manaus", "fonte_id": null },
-        { "nome": "Belém", "uf": "PA", "municipio": "Belém", "fonte_id": null }
+        { "nome": "Gurupi", "uf": "TO", "municipio": "Gurupi", "fonte_id": null, "papel": "distribuidor_local" },
+        { "nome": "Palmas", "uf": "TO", "municipio": "Palmas", "fonte_id": null, "papel": "consumidor" },
+        { "nome": "Araguaína", "uf": "TO", "municipio": "Araguaína", "fonte_id": null, "papel": "produtor_pecuaria" },
+        { "nome": "Lagoa da Confusão", "uf": "TO", "municipio": "Lagoa da Confusão", "fonte_id": null, "papel": "produtor_graos" },
+        { "nome": "Porto Nacional", "uf": "TO", "municipio": "Porto Nacional", "fonte_id": null, "papel": "produtor_pesca" },
+        { "nome": "Manaus", "uf": "AM", "municipio": "Manaus", "fonte_id": null, "papel": "consumidor" },
+        { "nome": "Belém", "uf": "PA", "municipio": "Belém", "fonte_id": null, "papel": "consumidor" }
       ],
       "total_ufs": 7
     },
     {
       "id": "nordeste",
       "nome": "Nordeste",
+      "papel": "exportador_frutas",
       "ufs": ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"],
       "polos": [
-        { "nome": "CEASA-PE", "uf": "PE", "municipio": "Recife", "fonte_id": "ceasa_pe" },
-        { "nome": "CEASA-BA", "uf": "BA", "municipio": "Salvador", "fonte_id": "ceasa_ba" },
-        { "nome": "CEASA-RN", "uf": "RN", "municipio": "Natal", "fonte_id": "ceasa_rn" }
+        { "nome": "Petrolina/Juazeiro", "uf": "PE", "municipio": "Petrolina", "fonte_id": null, "papel": "exportador_nacional" },
+        { "nome": "CEASA-PE", "uf": "PE", "municipio": "Recife", "fonte_id": "ceasa_pe", "papel": "distribuidor" },
+        { "nome": "CEASA-BA", "uf": "BA", "municipio": "Salvador", "fonte_id": "ceasa_ba", "papel": "distribuidor" },
+        { "nome": "CEASA-RN", "uf": "RN", "municipio": "Natal", "fonte_id": "ceasa_rn", "papel": "distribuidor" }
       ],
       "total_ufs": 9
     },
     {
       "id": "centro-oeste",
       "nome": "Centro-Oeste",
+      "papel": "hub_central",
       "ufs": ["DF", "GO", "MS", "MT"],
       "polos": [
-        { "nome": "CEASA-DF", "uf": "DF", "municipio": "Brasília", "fonte_id": "ceasa_df" },
-        { "nome": "IMEA-MT", "uf": "MT", "municipio": "Cuiabá", "fonte_id": "imea_mt" },
-        { "nome": "CEASA-MS", "uf": "MS", "municipio": "Campo Grande", "fonte_id": "ceasa_ms" }
+        { "nome": "CEASA-GO", "uf": "GO", "municipio": "Goiânia", "fonte_id": "ceasa_go", "papel": "hub_nacional" },
+        { "nome": "Anápolis", "uf": "GO", "municipio": "Anápolis", "fonte_id": null, "papel": "polo_agroindustrial" },
+        { "nome": "CEASA-DF", "uf": "DF", "municipio": "Brasília", "fonte_id": "ceasa_df", "papel": "consumidor" },
+        { "nome": "IMEA-MT", "uf": "MT", "municipio": "Cuiabá", "fonte_id": "imea_mt", "papel": "produtor_graos" },
+        { "nome": "CEASA-MS", "uf": "MS", "municipio": "Campo Grande", "fonte_id": "ceasa_ms", "papel": "distribuidor" },
+        { "nome": "Unaí", "uf": "MG", "municipio": "Unaí", "fonte_id": null, "papel": "produtor_graos" }
       ],
       "total_ufs": 4
     },
     {
       "id": "sudeste",
       "nome": "Sudeste",
+      "papel": "hub_consolidador",
       "ufs": ["ES", "MG", "RJ", "SP"],
       "polos": [
-        { "nome": "CEAGESP", "uf": "SP", "municipio": "São Paulo", "fonte_id": "ceagesp" },
-        { "nome": "CEASA-MG", "uf": "MG", "municipio": "Contagem", "fonte_id": "ceasa_mg" },
-        { "nome": "CEASA-ES", "uf": "ES", "municipio": "Cariacica", "fonte_id": "ceasa_es" },
-        { "nome": "CEASA-RJ", "uf": "RJ", "municipio": "Rio de Janeiro", "fonte_id": null }
+        { "nome": "CEAGESP", "uf": "SP", "municipio": "São Paulo", "fonte_id": "ceagesp", "papel": "hub_consolidador" },
+        { "nome": "CEASA-MG", "uf": "MG", "municipio": "Contagem", "fonte_id": "ceasa_mg", "papel": "distribuidor" },
+        { "nome": "CEASA-ES", "uf": "ES", "municipio": "Cariacica", "fonte_id": "ceasa_es", "papel": "distribuidor" },
+        { "nome": "CEASA-RJ", "uf": "RJ", "municipio": "Rio de Janeiro", "fonte_id": null, "papel": "consumidor" }
       ],
       "total_ufs": 4
     },
     {
       "id": "sul",
       "nome": "Sul",
+      "papel": "exportador_clima_frio",
       "ufs": ["PR", "RS", "SC"],
       "polos": [
-        { "nome": "CEASA-PR", "uf": "PR", "municipio": "Curitiba", "fonte_id": "ceasa_pr" },
-        { "nome": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre", "fonte_id": "ceasa_rs" }
+        { "nome": "CEASA-PR", "uf": "PR", "municipio": "Curitiba", "fonte_id": "ceasa_pr", "papel": "distribuidor" },
+        { "nome": "Vacaria", "uf": "RS", "municipio": "Vacaria", "fonte_id": null, "papel": "produtor_frutas_frio" },
+        { "nome": "CEASA-RS", "uf": "RS", "municipio": "Porto Alegre", "fonte_id": "ceasa_rs", "papel": "distribuidor" }
       ],
       "total_ufs": 3
     }

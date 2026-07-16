@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +18,8 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { SazonalidadeNacional } from '@/components/SazonalidadeNacional'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import Beams from '@/components/Beams'
+import BlurText from '@/components/BlurText'
 
 const MONTHS_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
@@ -44,6 +46,7 @@ export function SupermercadoView() {
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
   const { data: regioes } = useRegioes()
   const { data: regiaoResumo, isLoading: regiaoLoading, isError: regiaoError } = useRegiaoResumo(selectedRegion, selectedYear)
 
@@ -116,16 +119,35 @@ export function SupermercadoView() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-body)]">
+    <div className="relative min-h-screen bg-[var(--bg-body)] overflow-hidden">
+      {/* Beams background decorativo */}
+      <div className="fixed inset-0 z-0 opacity-[0.08] dark:opacity-[0.04] pointer-events-none">
+        <Beams
+          beamWidth={1.5}
+          beamHeight={12}
+          beamNumber={8}
+          lightColor="#16a34a"
+          speed={1.5}
+          noiseIntensity={1.2}
+          scale={0.15}
+          rotation={25}
+        />
+      </div>
+
       {/* Header fixo */}
-      <header className="sticky top-0 z-40 h-14 border-b border-gray-200 dark:border-gray-700 bg-[var(--bg-header)] backdrop-blur-md">
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-40 h-14 border-b border-gray-200/80 dark:border-gray-700/80 bg-[var(--bg-header)] backdrop-blur-xl shadow-sm"
+      >
         <div className="flex h-full items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sazonal-verde-600 text-white" aria-label="Sazonalidade">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sazonal-verde-600 text-white shadow-md" aria-label="Sazonalidade">
               <TrendingUp size={20} />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">Sazonalidade</h1>
+              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                Sazonalidade
+              </h1>
               <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">Preços de Alimentos — CONAB</p>
             </div>
           </div>
@@ -136,6 +158,7 @@ export function SupermercadoView() {
               variant="green"
               size="icon-lg"
               aria-label="Categorias"
+              className="shadow-sm"
             >
               <Layers size={18} />
             </Button>
@@ -144,7 +167,7 @@ export function SupermercadoView() {
       </header>
 
       {/* Conteúdo principal */}
-      <main className="mx-auto max-w-5xl px-4 py-4">
+      <main className="relative z-10 mx-auto max-w-5xl px-4 py-4">
         {/* Active pills */}
         {activePills.length > 0 && (
           <motion.div
@@ -161,7 +184,7 @@ export function SupermercadoView() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="inline-flex items-center gap-1 rounded-full bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 px-2.5 py-1 text-xs font-medium text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30 transition-colors"
+                className="inline-flex items-center gap-1 rounded-full bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 px-2.5 py-1 text-xs font-medium text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30 transition-colors shadow-sm"
               >
                 {pill.label}
                 <X size={12} />
@@ -190,23 +213,33 @@ export function SupermercadoView() {
 
         {/* Error state */}
         {isError && !isLoading && (
-          <div className="mt-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 shadow-sm"
+          >
             <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
               <RefreshCw size={16} />
-              <p className="text-sm font-medium">Erro</p>
+              <p className="text-sm font-medium">Erro ao carregar dados</p>
             </div>
             <p className="text-sm text-red-600 dark:text-red-300 mt-1">
               Não foi possível carregar os dados. Tente novamente mais tarde.
             </p>
-          </div>
+          </motion.div>
         )}
 
         {/* Empty state */}
         {!isLoading && !isError && allProducts.length === 0 && !brSazonalidade && (
           <div className="flex flex-col items-center justify-center mt-16">
             <Salad size={48} className="text-gray-300 dark:text-gray-600" />
-            <h2 className="text-lg font-bold mt-4 text-gray-900 dark:text-gray-100">Nenhum dado disponível</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <BlurText
+              text="Nenhum dado disponível"
+              className="text-lg font-bold mt-4 text-gray-900 dark:text-gray-100"
+              delay={80}
+              direction="top"
+              animateBy="words"
+            />
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               Ainda não existem dados de sazonalidade registrados pela CONAB.
             </p>
           </div>
@@ -220,7 +253,7 @@ export function SupermercadoView() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm"
+              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-4 shadow-lg"
             >
               <div className="flex flex-col gap-3">
                 {/* UF + Ano + contagem */}
@@ -229,7 +262,7 @@ export function SupermercadoView() {
                     <select
                       value={selectedUF}
                       onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
-                      className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
+                      className="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24 shadow-sm"
                       aria-label="Selecionar UF"
                     >
                       {ufOptions.map((opt) => (
@@ -239,7 +272,7 @@ export function SupermercadoView() {
                     <select
                       value={selectedYear}
                       onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null) }}
-                      className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
+                      className="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24 shadow-sm"
                       aria-label="Selecionar ano"
                     >
                       {yearOptions.map((opt) => (
@@ -247,7 +280,7 @@ export function SupermercadoView() {
                       ))}
                     </select>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-xs shadow-sm">
                     {displayProducts.length} item{displayProducts.length !== 1 ? 'ns' : ''}
                   </Badge>
                 </div>
@@ -263,12 +296,15 @@ export function SupermercadoView() {
                         onClick={() => { setSelectedMonth(isActive ? null : monthNum) }}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: idx * 0.02 }}
                         className={cn(
-                          'flex flex-col items-center rounded-md border px-1 py-1.5 text-xs transition-colors min-h-[44px]',
+                          'flex flex-col items-center rounded-lg border px-1 py-1.5 text-xs transition-all duration-150 min-h-[44px]',
                           isActive
-                            ? 'bg-sazonal-verde-600 text-white border-sazonal-verde-600'
-                            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700',
+                            ? 'bg-sazonal-verde-600 text-white border-sazonal-verde-600 shadow-md shadow-sazonal-verde-600/20'
+                            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:shadow-sm',
                         )}
+                        whileHover={!isActive ? { y: -2 } : {}}
+                        whileTap={{ scale: 0.95 }}
                         aria-label={`${name} ${selectedYear}`}
                       >
                         <span className="text-[10px] opacity-70">{String(monthNum).padStart(2, '0')}</span>
@@ -294,7 +330,7 @@ export function SupermercadoView() {
                     onClick={() => setCategoriesOpen(true)}
                     variant="light"
                     size="sm"
-                    className={cn(!selectedMonth && 'ml-auto')}
+                    className={cn(!selectedMonth && 'ml-auto', 'shadow-sm')}
                   >
                     <Layers size={16} className="mr-1" />
                     Categorias
@@ -305,7 +341,7 @@ export function SupermercadoView() {
 
             {/* Abas de visualização */}
             <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-3 shadow-sm">
                 {viewTabs.map((tab) => (
                   <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2">
                     {tab.icon}
@@ -326,7 +362,7 @@ export function SupermercadoView() {
                       {selectedUF === 'BR' && selectedMonth == null && brSazonalidade ? (
                         <div>
                           <div className="flex items-center gap-2 mb-3">
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className="text-xs shadow-sm">
                               {totalBR} produtos
                             </Badge>
                             <span className="text-xs text-gray-400">Grade sazonal {selectedYear}</span>
@@ -353,15 +389,25 @@ export function SupermercadoView() {
                       transition={{ duration: 0.2 }}
                     >
                       <div className="flex flex-col lg:flex-row gap-4">
-                        <div className="flex-1 flex justify-center">
+                        <motion.div
+                          className="flex-1 flex justify-center"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: 0.1 }}
+                        >
                           <BrasilMap
                             selectedRegion={selectedRegion}
                             onRegionClick={(id) =>
                               setSelectedRegion(selectedRegion === id ? null : id)
                             }
                           />
-                        </div>
-                        <div className="w-full lg:w-80 shrink-0">
+                        </motion.div>
+                        <motion.div
+                          className="w-full lg:w-80 shrink-0"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: 0.15 }}
+                        >
                           <RegiaoPanel
                             regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
                             produtos={regiaoResumo?.data ?? []}
@@ -370,7 +416,7 @@ export function SupermercadoView() {
                             onClose={() => setSelectedRegion(null)}
                             onPoloClick={handlePoloClick}
                           />
-                        </div>
+                        </motion.div>
                       </div>
                     </motion.div>
                   </TabsContent>
@@ -393,11 +439,11 @@ export function SupermercadoView() {
                               onClick={() => setSelectedStatus(selectedStatus === f.value ? null : f.value)}
                               initial={{ scale: 0.9 }}
                               animate={{ scale: 1 }}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
                               className={cn(
-                                'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
-                                selectedStatus === f.value ? f.activeClass : f.idleClass,
+                                'rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 shadow-sm',
+                                selectedStatus === f.value ? f.activeClass : f.idleClass + ' hover:shadow-md',
                               )}
                             >
                               {f.label}
@@ -408,7 +454,8 @@ export function SupermercadoView() {
                               initial={{ scale: 0.9 }}
                               animate={{ scale: 1 }}
                               onClick={() => setSelectedStatus(null)}
-                              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
+                              whileHover={{ scale: 1.2 }}
                               aria-label="Limpar filtro"
                             >
                               <X size={14} />
@@ -418,13 +465,13 @@ export function SupermercadoView() {
 
                         {displayProducts.length > 0 ? (
                           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                            {displayProducts.map((p) => (
+                            {displayProducts.map((p, i) => (
                               <motion.div
                                 key={p.id_produto}
                                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ duration: 0.2, delay: 0.02 }}
+                                transition={{ duration: 0.2, delay: i * 0.025 }}
                               >
                                 <ProductCard
                                   product={p}

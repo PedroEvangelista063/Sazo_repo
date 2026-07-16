@@ -178,6 +178,16 @@ class SortingEngine:
     @staticmethod
     def _parsear_payload(payload: Any) -> list[dict[str, Any]] | None:
         if isinstance(payload, dict):
+            # NOVO: payload com lista de linhas (ex: ProhortMensal, Precosiagroweb)
+            linhas = payload.get("linhas") or payload.get("itens") or payload.get("rows")
+            if isinstance(linhas, list) and linhas:
+                resultados = []
+                for item in linhas:
+                    parsed = _extrair_de_dict(item)
+                    if parsed:
+                        resultados.extend(parsed)
+                return resultados or None
+
             body = payload.get("body", "") or payload.get("payload", "")
             if isinstance(body, str):
                 if _is_html(body):

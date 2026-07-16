@@ -39,6 +39,8 @@ import httpx
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, set_key
 
+from database.utils.snapshot_helper import verificar_staleness
+
 load_dotenv()
 
 # ──────────────────────────────────────────────────────────────────────
@@ -924,6 +926,13 @@ class AsyncIOSelfHealer:
                         max_tentativas=row["max_tentativas"],
                     )
                 )
+
+        try:
+            stale = verificar_staleness()
+            if stale:
+                logger.warning("[GHOST] Fontes stale detectadas: %s", stale)
+        except Exception:
+            logger.debug("verificar_staleness nao disponivel (sem checkpoint ainda)")
 
         if not erros:
             logger.debug("Nenhum erro pendente encontrado")

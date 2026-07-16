@@ -169,6 +169,32 @@ class SazonalidadeComPrecoListResponse(BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
+# ── Regional ──
+class PoloInfo(BaseModel):
+    nome: str
+    uf: str
+    municipio: str
+    fonte_id: str | None = None
+
+    model_config = ConfigDict(frozen=True)
+
+
+class RegiaoInfo(BaseModel):
+    id: str
+    nome: str
+    ufs: list[str]
+    polos: list[PoloInfo]
+    total_ufs: int
+
+    model_config = ConfigDict(frozen=True)
+
+
+class RegioesResponse(BaseModel):
+    regioes: list[RegiaoInfo]
+
+    model_config = ConfigDict(frozen=True)
+
+
 class MesSazonalidade(BaseModel):
     """Status de um mês específico na sazonalidade BR Nacional."""
 

@@ -111,6 +111,29 @@ class AutonomousOrchestrator:
                        decisao=f"Coleta excedeu {SCRAPER_TIMEOUT_SEC}s")
             return []
 
+    async def coletar_global(
+        self, competencia: str
+    ) -> list[dict[str, Any]]:
+        """Single dispatch por competência — micro-engines que coletam todas as UFs."""
+        ano_str, mes_str = competencia.split("-")
+        ano, mes = int(ano_str), int(mes_str)
+        acumulado: list[dict[str, Any]] = []
+
+        for fonte_id in ("ceagesp", "conab"):
+            engine = self._resolver_motor(fonte_id)
+            if not engine:
+                continue
+            fonte = self._encontrar_fonte(fonte_id, "ceasas_diretas") or \
+                    self._encontrar_fonte(fonte_id, "core")
+            if not fonte:
+                await engine.close()
+                continue
+            resultado = await self._executar_com_timeout(engine, fonte["url_base"], ano, mes, fonte_id)
+            if resultado:
+                acumulado.append(resultado)
+
+        return acumulado
+
     async def _coletar_interno(
         self, uf: str, ano: int, mes: int
     ) -> list[dict[str, Any]]:

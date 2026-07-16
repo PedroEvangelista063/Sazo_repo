@@ -64,3 +64,19 @@ export interface SazonalidadeNacionalResponse {
   pagina: number
   por_pagina: number
 }
+
+// ── Regional types ──
+export interface PoloInfo {
+  nome: string
+  uf: string
+  municipio: string
+  fonte_id: string | null
+}
+
+export interface RegiaoInfo {
+  id: string
+  nome: string
+  ufs: string[]
+  polos: PoloInfo[]
+  total_ufs: number
+}

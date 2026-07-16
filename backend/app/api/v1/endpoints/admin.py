@@ -39,11 +39,12 @@ async def _rodar_pipeline_background(
 ) -> None:
     """
     Executa o pipeline completo em background:
-    1. Coleta via AutonomousOrchestrator
-    2. Persiste em raw.coleta_bruta
-    3. SortingEngine + ciclo medalhao
-    4. Refresh MV
-    5. Notifica SSE
+    1. Coleta GLOBAL — micro-engines uma vez por competência (não por UF)
+    2. Coleta POR UF — SmartRouter + tiers
+    3. Persiste em raw.coleta_bruta
+    4. SortingEngine + ciclo medalhao
+    5. Refresh MV
+    6. Notifica SSE
     """
     from pipeline.scraper.orchestrator import AutonomousOrchestrator, SCRAPER_TIMEOUT_SEC
     from pipeline.scraper.persistence import persistir_coleta_bruta, executar_ciclo_medalhao
@@ -54,8 +55,25 @@ async def _rodar_pipeline_background(
     total_persistidos = 0
 
     async with AutonomousOrchestrator() as orch:
-        for uf in ufs:
-            for competencia in competencias:
+        for competencia in competencias:
+            try:
+                globais = await asyncio.wait_for(
+                    orch.coletar_global(competencia),
+                    timeout=SCRAPER_TIMEOUT_SEC,
+                )
+                if globais:
+                    inseridos = await persistir_coleta_bruta(pool, globais, competencia)
+                    total_persistidos += inseridos
+                    logger.info(
+                        "[ADMIN JOB=%s] Global %s → %d registros",
+                        job_id, competencia, inseridos,
+                    )
+            except asyncio.TimeoutError:
+                logger.warning("[ADMIN JOB=%s] Global %s TIMEOUT", job_id, competencia)
+            except Exception:
+                logger.exception("[ADMIN JOB=%s] Global %s ERRO", job_id, competencia)
+
+            for uf in ufs:
                 try:
                     resultados = await asyncio.wait_for(
                         orch.coletar(uf, competencia),
@@ -78,9 +96,15 @@ async def _rodar_pipeline_background(
         await broadcaster.publish("PIPELINE_DONE", f"{{\"job_id\":\"{job_id}\",\"total\":0}}")
         return
 
-    logger.info("[ADMIN JOB=%s] Coleta concluída: %d registros. Executando ciclo medalhao...", job_id, total_persistidos)
+    logger.info(
+        "[ADMIN JOB=%s] Coleta concluída: %d registros. Executando ciclo medalhao...",
+        job_id, total_persistidos,
+    )
     await executar_ciclo_medalhao(pool)
-    await broadcaster.publish("PIPELINE_DONE", f"{{\"job_id\":\"{job_id}\",\"total\":{total_persistidos}}}")
+    await broadcaster.publish(
+        "PIPELINE_DONE",
+        f"{{\"job_id\":\"{job_id}\",\"total\":{total_persistidos}}}",
+    )
     logger.info("[ADMIN JOB=%s] Pipeline concluído — MV atualizada.", job_id)
 
 

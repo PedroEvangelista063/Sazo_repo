@@ -4,7 +4,11 @@ import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft, Grid } from 'lucide-react'
+import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft, Grid, MapPin } from 'lucide-react'
+import { BrasilMap } from '@/components/BrasilMap'
+import { RegiaoPanel } from '@/components/RegiaoPanel'
+import { useRegioes } from '@/hooks/useRegioes'
+import { useRegiaoResumo } from '@/hooks/useRegiaoResumo'
 import { useHortifruti } from '@/hooks/useHortifruti'
 import { useUfs } from '@/hooks/useUfs'
 import { ProductCard } from '@/components/ProductCard'
@@ -23,10 +27,11 @@ const STATUS_FILTERS = [
   { value: 'VERMELHO', label: 'Péssima Época', activeClass: 'bg-sazonal-vermelho-600 text-white border-sazonal-vermelho-600', idleClass: 'border-sazonal-vermelho-600 text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400' },
 ]
 
-type ViewMode = 'grade-sazonal' | 'cards'
+type ViewMode = 'grade-sazonal' | 'mapa' | 'cards'
 
 const viewTabs: { value: ViewMode; label: string; icon: React.ReactNode }[] = [
   { value: 'grade-sazonal', label: 'Grade Sazonal', icon: <Grid size={16} /> },
+  { value: 'mapa', label: 'Mapa Regional', icon: <MapPin size={16} /> },
   { value: 'cards', label: 'Cards', icon: <Layers size={16} /> },
 ]
 
@@ -38,6 +43,9 @@ export function SupermercadoView() {
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
+  const { data: regioes } = useRegioes()
+  const { data: regiaoResumo, isLoading: regiaoLoading, isError: regiaoError } = useRegiaoResumo(selectedRegion, selectedYear)
 
   const { products: produtos, allProducts, brSazonalidade, totalBR, isLoading, isError } = useHortifruti(selectedUF, selectedYear, selectedMonth)
   const { data: ufsDisponiveis } = useUfs()
@@ -99,6 +107,13 @@ export function SupermercadoView() {
     }
     return pills
   }, [selectedUF, selectedYear, selectedMonth, selectedProducts, selectedStatus])
+
+  const handlePoloClick = (uf: string) => {
+    setSelectedUF(uf)
+    setSelectedRegion(null)
+    setViewMode('cards')
+    setSelectedMonth(null)
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-body)]">
@@ -290,7 +305,7 @@ export function SupermercadoView() {
 
             {/* Abas de visualização */}
             <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 {viewTabs.map((tab) => (
                   <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2">
                     {tab.icon}
@@ -325,6 +340,38 @@ export function SupermercadoView() {
                           </p>
                         </div>
                       )}
+                    </motion.div>
+                  </TabsContent>
+                )}
+
+                {viewMode === 'mapa' && (
+                  <TabsContent value="mapa" className="mt-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="flex flex-col lg:flex-row gap-4">
+                        <div className="flex-1 flex justify-center">
+                          <BrasilMap
+                            selectedRegion={selectedRegion}
+                            onRegionClick={(id) =>
+                              setSelectedRegion(selectedRegion === id ? null : id)
+                            }
+                          />
+                        </div>
+                        <div className="w-full lg:w-80 shrink-0">
+                          <RegiaoPanel
+                            regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
+                            produtos={regiaoResumo?.data ?? []}
+                            isLoading={regiaoLoading}
+                            isError={regiaoError}
+                            onClose={() => setSelectedRegion(null)}
+                            onPoloClick={handlePoloClick}
+                          />
+                        </div>
+                      </div>
                     </motion.div>
                   </TabsContent>
                 )}

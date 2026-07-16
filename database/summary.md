@@ -77,6 +77,10 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - Filtros: `categoria_b2c = 'ALIMENTO_VAREJO'`, `status_cor IN ('VERDE','AMARELO','VERMELHO')`, exclusão de `INSUMO_AGRICOLA`/`MAQUINARIO_FERRAMENTA`/`FLORES`/`OUTROS`
 - Ordenação: `is_forecast` primeiro (FALSE = real antes de TRUE = projeção)
 
+## Funções Regionais (Fase 32)
+- `fn_regioes_listar()` — retorna as 5 regiões com seus polos CEASA (lê de `config/regions.json` via API, não SP)
+- `fn_resumo_regiao(p_regiao_id TEXT, p_ano INT DEFAULT 2025)` — snapshot agregado por região: produtos com status_cor por UF. Cobertura mínima de 75% dos meses com dado real no ano. Usada por `GET /api/v1/sazonalidade?regiao=...`
+
 ## Forecast — Engine Preditiva (Fase 30)
 
 ### Modelo Atual (100% SQL)
@@ -92,13 +96,14 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 
 ### MV V14 (`vw_api_produtos_sazonalidade`)
 - Expõe `is_forecast`, `baseline_confianca`, `forecast_method`.
-- Índices parcia: `idx_vw_sazonalidade_forecast` (WHERE is_forecast=TRUE), `idx_vw_sazonalidade_confianca` (DESC).
+- Índices parciais: `idx_vw_sazonalidade_forecast` (WHERE is_forecast=TRUE), `idx_vw_sazonalidade_confianca` (DESC).
 
 ### Migrações Chave
 - `27_fix_br_nacional_weighting.sql` — Hotfix: SP chama `sp_calcular_sazonalidade_preditiva()` em vez da legacy.
 - `28_recalibracao_baseline_24_25.sql` — Recalibração do baseline para 2024-2025.
 - `29_focus_2025_2026.sql` — Filtro temporal: apenas >= 2025, exclusão de B2B (INSUMO_AGRICOLA, MAQUINARIO, FLORES).
 - `30_engine_preditiva_forecast_2026.sql` — SP forecast, baseline_24_25, MV V14, permissões.
+- `32_fn_regional_snapshot.sql` — Funções `fn_regioes_listar()` e `fn_resumo_regiao()` para filtro regional.
 
 ## Scripts Python (database/scripts/)
 - `backfill_2024.py` — insere dados de 2024 no mart replicando a lógica de classificação da SP V9
@@ -132,3 +137,4 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `28_recalibracao_baseline_24_25.sql` — Recalibração baseline 24-25
 - `29_focus_2025_2026.sql` — Focus 2025-2026, baseline V12, exclusão B2B
 - `30_engine_preditiva_forecast_2026.sql` — SP forecast, baseline_24_25, MV V14
+- `32_fn_regional_snapshot.sql` — Funções regionais (`fn_resumo_regiao`, `fn_regioes_listar`)

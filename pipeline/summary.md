@@ -68,9 +68,14 @@ mart ──→ REFRESH MV ──→ mart.vw_api_produtos_sazonalidade
 - Filtra apenas `categoria_b2c = 'ALIMENTO_VAREJO'` e `status_cor IN ('VERDE','AMARELO','VERMELHO')`
 - A API é **read-only** — consulta exclusivamente a MV, nunca `raw` ou `staging`
 
+## Orquestrador Global
+- `AutonomousOrchestrator.coletar_global(competencia)` — dispatch único por competência que executa micro-engines (ceagesp, conab) para TODAS as UFs sem filtrar por UF específica
+- Usado pelo endpoint `POST /api/v1/admin/coletar-global` no backend
+- Substitui múltiplas chamadas `_coletar_interno` por UF quando o objetivo é coletar dados nacionais
+
 ## Mapa Rápido
 - `scraper/main_runner.py` — entry point Run and Die (pool asyncpg + timeout 1200s)
-- `scraper/orchestrator.py` — `AutonomousOrchestrator` (cascata 3 passos + auditoria)
+- `scraper/orchestrator.py` — `AutonomousOrchestrator` (cascata 3 passos + auditoria + coletar_global)
 - `scraper/micro_engines/base_engine.py` — ABC + Semaphore(3) + CircuitBreaker
 - `scraper/micro_engines/ConabApiEngine.py` — motor CONAB Pentaho/Portal (exemplo concreto)
 - `scraper/discovery_engine.py` — `SimpleDorkGenerator` + `DiscoveryEngine` (anti-PDF)

@@ -9,7 +9,7 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 
 ## Regras de Ouro
 1. **Sem ORM**: queries raw com asyncpg. Nada de SQLAlchemy, Django ORM ou Tortoise.
-2. **Read-Only para a API**: o backend só lê de `mart.vw_*` e `staging.*`. Escrita é exclusividade do pipeline.
+2. **Read-Only para a API**: o backend só lê de `mart.vw_*` e funções `fn_*` no banco. Escrita é exclusividade do pipeline.
 3. **Event Loop Starvation**: toda rota deve ter timeout (`asyncio.wait_for` ou middleware `TimeoutMiddleware`). Nenhuma rota pode travar o event loop.
 4. **Cache**: usar cache interno (`core/cache.py`) para respostas lentas. TTL definido por endpoint.
 5. **Rate Limit**: `core/ratelimit.py` — proteção contra abuso por IP.
@@ -25,7 +25,7 @@ Scraper → raw.coleta_bruta (15)
 → REFRESH MV → mart.vw_api_produtos_sazonalidade (36.684) ← API lê daqui
 ```
 
-A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V14). Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
+A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V14) e funções `fn_*`. Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
 
 ## Forecast — Transparência
 - `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado), `confianca_baseline: float | None` (% de confiança), `tendencia_futura: str | None` (QUEDA/ALTA/ESTAVEL)
@@ -34,19 +34,28 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 - MV V14 inclui colunas novas: `baseline_confianca`, `forecast_method` para rastreabilidade
 
 ## Rotas que expõem is_forecast
-- `GET /api/v1/sazonalidade` — snapshot (último mês de cada produto)
+- `GET /api/v1/sazonalidade` — snapshot (último mês de cada produto) + filtro regional `?regiao=`
 - `GET /api/v1/sazonalidade/{uf}/{municipio}` — por localidade
 - `GET /api/v1/sazonalidade/historico/{ano}/{mes}` — série temporal
 
+## Filtro Regional
+- `GET /api/v1/regioes` — lista as 5 regiões com UFs e polos CEASA (lê de `config/regions.json`, não do banco)
+- `GET /api/v1/sazonalidade?regiao={id}&ano={ano}` — snapshot agregado por região, chamando `fn_resumo_regiao()` no banco
+- `RegiaoInfo`, `PoloInfo`, `RegioesResponse` em `schemas/responses.py`
+- O admin panel (`admin.py`) orquestra `coletar_global()` que invoca o pipeline para todas as UFs em background
+
 ## Mapa Rápido
 - `app/main.py` — app FastAPI, middlewares, lifespan
-- `app/api/v1/endpoints/` — rotas: produtos, categorias, ufs, municipios, stream, admin, internal
+- `app/api/v1/endpoints/` — rotas: produtos, categorias, ufs, municipios, regioes, stream, admin, internal
+- `app/api/v1/endpoints/regioes.py` — endpoint `GET /api/v1/regioes` (lê `config/regions.json`)
+- `app/api/v1/endpoints/produtos.py` — `GET /api/v1/sazonalidade` com suporte a `?regiao=` e `fn_resumo_regiao()`
+- `app/api/v1/endpoints/admin.py` — `coletar_global()` → pipeline para todas as UFs
 - `app/core/config.py` — settings via Pydantic (DATABASE_URL, etc)
 - `app/core/cache.py` — cache interno LRU/TTL
 - `app/core/ratelimit.py` — rate limiter por IP
 - `app/core/timeout.py` — middleware Starlette (TimeoutMiddleware, retorna 504)
 - `app/core/events.py` — EventBroadcaster (filas SSE para publish/subscribe)
 - `app/db/session.py` — pools asyncpg (api + etl)
-- `app/schemas/responses.py` — Pydantic response models (inclui `is_forecast`, `confianca_baseline`)
+- `app/schemas/responses.py` — Pydantic response models (inclui `is_forecast`, `confianca_baseline`, `RegiaoInfo`, `PoloInfo`)
 - `migrations/` — scripts SQL incrementais (RLS, limpeza diária)
 - `tests/` — testes de resiliência e concorrência

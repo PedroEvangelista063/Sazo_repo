@@ -1,6 +1,10 @@
 import asyncio
+import logging
 import time
 from typing import Any, Optional
+
+
+logger = logging.getLogger(__name__)
 
 
 class _CacheEntry:
@@ -46,3 +50,13 @@ cache = InMemoryCache()
 async def clear_cache() -> bool:
     await cache.clear()
     return True
+
+
+async def safe_set(key: str, value: Any, ttl: float) -> bool:
+    """Cache set com try/except — falhas de cache nunca quebram a request."""
+    try:
+        await cache.set(key, value, ttl)
+        return True
+    except Exception:
+        logger.exception("cache.set failed: key=%s ttl=%s", key, ttl)
+        return False

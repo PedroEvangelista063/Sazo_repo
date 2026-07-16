@@ -264,6 +264,28 @@ npm run dev:all       # FastAPI + Vite (sem scraper — desacoplado)
 
 > **Nota:** O scraper foi desacoplado do `dev:all` para evitar consumo de RAM/CPU e bloqueio de IP (WAF) durante hot-reloads. Use `npm run scrape:manual` em terminal separado quando precisar atualizar dados.
 
+### Pastas com Dependências npm (node_modules)
+
+As seguintes pastas contêm dependências npm que **não são commitadas** (estão no `.gitignore`). Cada nova máquina deve instalar localmente:
+
+| Pasta | Comando | O que instala |
+|---|---|---|
+| `./` (raiz) | `npm install` | Scripts de conveniência (`dev:all`, `dev:backend`, etc.) |
+| `frontend/` | `npm install` | React, Mantine, Vite, TanStack Query, Zustand, TailwindCSS |
+
+**Ordem de instalação:**
+```bash
+# 1. Dependências da raiz (scripts de conveniência)
+npm install
+
+# 2. Dependências do frontend (React + Vite)
+cd frontend && npm install
+# ou
+npm --prefix frontend install
+```
+
+> **⚠️ Importante:** Sempre rode `npm install` em **ambas as pastas**. A pasta `node_modules` não é versionada — cada máquina deve baixar suas próprias dependências.
+
 ---
 
 ## 📊 Pipeline Offline (Sem Banco)

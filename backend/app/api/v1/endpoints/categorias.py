@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from backend.app.schemas.responses import CategoriaResponse, CategoriaListResponse
 from backend.app.db.session import fetch
-from backend.app.core.cache import cache
+from backend.app.core.cache import cache, safe_set
 from backend.app.core.config import get_settings
 import hashlib
 
@@ -54,5 +54,5 @@ async def listar_categorias():
     ]
 
     result = CategoriaListResponse(data=items, total=len(items))
-    await cache.set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
+    await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result

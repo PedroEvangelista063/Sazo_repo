@@ -6,9 +6,11 @@ App React PWA (offline-first, mobile-first). Interface de cores (verde/amarelo/v
 ## Stack
 - React 19, Vite + PWA plugin (vite-plugin-pwa), TailwindCSS 3 + tailwindcss-animate
 - **shadcn/ui**: Card, Button, Dialog, Badge, Skeleton
-- Radix UI primitives (Dialog, Slot)
+- **TanStack Table** (TabelaView), **Recharts** (GraficosView)
+- **Framer Motion** (animações: hover/tap springs, loading, pulse glow, shake, tab transitions)
+- Radix UI primitives (Dialog, Slot, Select, Tabs, Tooltip)
 - Zustand 5 (persist), TanStack Query v5, class-variance-authority, clsx, tailwind-merge
-- Lucide React (ícones)
+- Lucide React (ícones), canvas-confetti (efeitos de celebração)
 - **Testes**: Vitest + React Testing Library
 
 ## Regras de Ouro
@@ -28,24 +30,43 @@ App React PWA (offline-first, mobile-first). Interface de cores (verde/amarelo/v
 - Badge posicionado ao lado do semáforo, não abaixo do card
 - Nenhuma alteração em fetch/staleTime — apenas renderização condicional
 
+## View Modes (3 modos na SupermercadoView)
+A SupermercadoView oferece 3 modos de visualização com tabs Framer Motion:
+- **Cards** (padrão) — grid de `ProductCard`/`GameCard` com semáforo
+- **Tabela** — `TabelaView` com TanStack Table (colunas: produto, UF, município, status, forecast, tendência)
+- **Gráficos** — `GraficosView` com Recharts (gráficos de linha/barras por produto)
+
+## Juicy UI — Game-Inspired Components
+- `GameButton.tsx` — Framer Motion button com hover/tap springs, loading spinner, pulse glow, shake on error
+- `GameCard.tsx` — Card animado com entrada Framer Motion, badge forecast, hover scale, confetti on VERDE
+- `LivingStatus.tsx` — Indicador de status com animação pulsante e transições suaves
+- `useConfetti.ts` — Hook canvas-confetti para efeitos de celebração
+
 ## Mapa Rápido
 - `src/App.tsx` — root, inicializa useTheme + useDataStream
 - `src/main.tsx` — entry point Vite + PWA registration + QueryClientProvider
 - `src/components/ProductCard.tsx` — card de produto (emoji + semáforo + badge forecast com tooltip)
+- `src/components/GameCard.tsx` — card animado com Framer Motion + confetti
+- `src/components/GameButton.tsx` — botão com springs Framer Motion
+- `src/components/LivingStatus.tsx` — indicador pulsante de status
+- `src/components/TabelaView.tsx` — TanStack Table com colunas is_forecast, tendencia_futura
+- `src/components/GraficosView.tsx` — Recharts (gráficos de linha/barras)
 - `src/components/CategoriesModal.tsx` — modal de categorias (shadcn Dialog)
 - `src/components/SkeletonCard.tsx` — loading state (shadcn Skeleton)
 - `src/components/ThemeToggle.tsx` — dark/light toggle
 - `src/components/ui/` — componentes base shadcn (card, button, dialog, badge, skeleton)
 - `src/lib/utils.ts` — função `cn()` (clsx + tailwind-merge)
 - `src/hooks/useHortifruti.ts` — TanStack Query fetch
+- `src/hooks/useSazonalidadeComPreco.ts` — hook para `/sazonalidade/com-preco` (dados com preço)
 - `src/hooks/useDataStream.ts` — SSE stream hook
 - `src/hooks/useCategorias.ts` — categorias via API
 - `src/hooks/useUfs.ts` — UFs disponíveis
 - `src/hooks/useTheme.ts` — tema persistido (dark/light)
+- `src/hooks/useConfetti.ts` — canvas-confetti hook
 - `src/index.css` — TailwindCSS directives + CSS vars (light/dark)
-- `src/pages/SupermercadoView.tsx` — página principal (seletores UF/mês, grid de produtos)
+- `src/pages/SupermercadoView.tsx` — página principal (tabs Cards/Tabela/Gráficos, seletores UF/mês)
 - `src/services/api.ts` — instância axios (baseURL, timeout)
-- `src/types/domain.ts` — tipos `ProdutoVarejo` (is_forecast, confianca_baseline), `StatusCor`, `Categoria`
+- `src/types/domain.ts` — tipos `ProdutoVarejo` (is_forecast, confianca_baseline, tendencia_futura), `StatusCor`, `Categoria`
 - `src/types/index.ts` — barrel exports de tipos
 - `src/store/useUserStore.ts` — Zustand store (preferências do usuário, persist IndexedDB)
 - `src/vite-env.d.ts` — tipos Vite (import.meta.env)

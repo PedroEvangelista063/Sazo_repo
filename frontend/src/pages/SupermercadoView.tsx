@@ -4,15 +4,14 @@ import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft, Grid, Table, BarChart3 } from 'lucide-react'
+import { TrendingUp, Layers, X, Salad, RefreshCw, ChevronLeft, Grid } from 'lucide-react'
 import { useHortifruti } from '@/hooks/useHortifruti'
 import { useUfs } from '@/hooks/useUfs'
 import { ProductCard } from '@/components/ProductCard'
 import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { TabelaView } from '@/components/TabelaView'
-import { GraficosView } from '@/components/GraficosView'
+import { SazonalidadeNacional } from '@/components/SazonalidadeNacional'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
@@ -24,12 +23,11 @@ const STATUS_FILTERS = [
   { value: 'VERMELHO', label: 'Péssima Época', activeClass: 'bg-sazonal-vermelho-600 text-white border-sazonal-vermelho-600', idleClass: 'border-sazonal-vermelho-600 text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400' },
 ]
 
-type ViewMode = 'cards' | 'tabela' | 'graficos'
+type ViewMode = 'grade-sazonal' | 'cards'
 
 const viewTabs: { value: ViewMode; label: string; icon: React.ReactNode }[] = [
-  { value: 'cards', label: 'Cards', icon: <Grid size={16} /> },
-  { value: 'tabela', label: 'Tabela', icon: <Table size={16} /> },
-  { value: 'graficos', label: 'Gráficos', icon: <BarChart3 size={16} /> },
+  { value: 'grade-sazonal', label: 'Grade Sazonal', icon: <Grid size={16} /> },
+  { value: 'cards', label: 'Cards', icon: <Layers size={16} /> },
 ]
 
 export function SupermercadoView() {
@@ -40,9 +38,8 @@ export function SupermercadoView() {
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
-  const [selectedProduto, setSelectedProduto] = useState<{ nome_produto: string; categoria: string | null; uf: string } | null>(null)
 
-  const { products: produtos, allProducts, isLoading, isError } = useHortifruti(selectedUF, selectedYear, selectedMonth)
+  const { products: produtos, allProducts, brSazonalidade, totalBR, isLoading, isError } = useHortifruti(selectedUF, selectedYear, selectedMonth)
   const { data: ufsDisponiveis } = useUfs()
 
   const ufOptions = useMemo(() => {
@@ -190,7 +187,7 @@ export function SupermercadoView() {
         )}
 
         {/* Empty state */}
-        {!isLoading && !isError && allProducts.length === 0 && (
+        {!isLoading && !isError && allProducts.length === 0 && !brSazonalidade && (
           <div className="flex flex-col items-center justify-center mt-16">
             <Salad size={48} className="text-gray-300 dark:text-gray-600" />
             <h2 className="text-lg font-bold mt-4 text-gray-900 dark:text-gray-100">Nenhum dado disponível</h2>
@@ -201,7 +198,7 @@ export function SupermercadoView() {
         )}
 
         {/* Data loaded */}
-        {!isLoading && !isError && allProducts.length > 0 && (
+        {!isLoading && !isError && (allProducts.length > 0 || brSazonalidade != null) && (
           <div className="flex flex-col gap-6 mt-4">
             {/* Período — card de seleção */}
             <motion.div
@@ -216,7 +213,7 @@ export function SupermercadoView() {
                   <div className="flex items-center gap-2">
                     <select
                       value={selectedUF}
-                      onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null); setSelectedProduto(null) }}
+                      onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
                       className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
                       aria-label="Selecionar UF"
                     >
@@ -226,7 +223,7 @@ export function SupermercadoView() {
                     </select>
                     <select
                       value={selectedYear}
-                      onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null); setSelectedProduto(null) }}
+                      onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null) }}
                       className="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24"
                       aria-label="Selecionar ano"
                     >
@@ -248,7 +245,7 @@ export function SupermercadoView() {
                     return (
                       <motion.button
                         key={monthNum}
-                        onClick={() => { setSelectedMonth(isActive ? null : monthNum); setSelectedProduto(null) }}
+                        onClick={() => { setSelectedMonth(isActive ? null : monthNum) }}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className={cn(
@@ -272,7 +269,7 @@ export function SupermercadoView() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => { setSelectedMonth(null); setSelectedProduto(null) }}
+                      onClick={() => { setSelectedMonth(null) }}
                     >
                       <ChevronLeft size={14} className="mr-1" />
                       Visão Completa
@@ -293,7 +290,7 @@ export function SupermercadoView() {
 
             {/* Abas de visualização */}
             <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 {viewTabs.map((tab) => (
                   <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2">
                     {tab.icon}
@@ -303,6 +300,35 @@ export function SupermercadoView() {
               </TabsList>
 
               <AnimatePresence mode="wait">
+                {viewMode === 'grade-sazonal' && (
+                  <TabsContent value="grade-sazonal" className="mt-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {selectedUF === 'BR' && selectedMonth == null && brSazonalidade ? (
+                        <div>
+                          <div className="flex items-center gap-2 mb-3">
+                            <Badge variant="secondary" className="text-xs">
+                              {totalBR} produtos
+                            </Badge>
+                            <span className="text-xs text-gray-400">Grade sazonal {selectedYear}</span>
+                          </div>
+                          <SazonalidadeNacional data={brSazonalidade} />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center py-10">
+                          <p className="text-sm text-gray-400">
+                            Selecione BR (Nacional) sem filtro de mês para ver a grade sazonal.
+                          </p>
+                        </div>
+                      )}
+                    </motion.div>
+                  </TabsContent>
+                )}
+
                 {viewMode === 'cards' && (
                   <TabsContent value="cards" className="mt-2">
                     <motion.div
@@ -343,7 +369,6 @@ export function SupermercadoView() {
                           )}
                         </div>
 
-                        {/* Product grid */}
                         {displayProducts.length > 0 ? (
                           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                             {displayProducts.map((p) => (
@@ -368,53 +393,18 @@ export function SupermercadoView() {
                               </motion.div>
                             ))}
                           </div>
+                        ) : selectedUF === 'BR' && selectedMonth == null ? (
+                          <div className="flex items-center justify-center py-10">
+                            <p className="text-sm text-gray-400">
+                              Use a aba "Grade Sazonal" para visualizar BR Nacional.
+                            </p>
+                          </div>
                         ) : (
                           <div className="flex items-center justify-center py-10">
                             <p className="text-sm text-gray-400">Nenhum produto encontrado para este período.</p>
                           </div>
                         )}
                       </div>
-                    </motion.div>
-                  </TabsContent>
-                )}
-
-                {viewMode === 'tabela' && (
-                  <TabsContent value="tabela" className="mt-2">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <TabelaView
-                        uf={selectedUF}
-                        ano={selectedMonth ? selectedYear : undefined}
-                        mes={selectedMonth ?? undefined}
-                        onSelectProduto={(prod) => setSelectedProduto({
-                          nome_produto: prod.nome_produto,
-                          categoria: prod.categoria,
-                          uf: prod.uf,
-                        })}
-                        selectedProduto={selectedProduto}
-                      />
-                    </motion.div>
-                  </TabsContent>
-                )}
-
-                {viewMode === 'graficos' && (
-                  <TabsContent value="graficos" className="mt-2">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <GraficosView
-                        uf={selectedUF}
-                        ano={selectedMonth ? selectedYear : undefined}
-                        mes={selectedMonth ?? undefined}
-                        selectedProduto={selectedProduto}
-                      />
                     </motion.div>
                   </TabsContent>
                 )}

@@ -42,3 +42,25 @@ export interface MunicipioResponse {
   data: string[]
   total: number
 }
+
+export interface MesSazonalidade {
+  mes: number
+  status_cor: StatusCor
+  is_forecast: boolean
+  baseline_confianca: number | null
+}
+
+export interface SazonalidadeNacionalItem {
+  produto: string
+  classificao_produto: string | null
+  categoria: string | null
+  meses: MesSazonalidade[]
+  total_ufs: number
+}
+
+export interface SazonalidadeNacionalResponse {
+  data: SazonalidadeNacionalItem[]
+  total: number
+  pagina: number
+  por_pagina: number
+}

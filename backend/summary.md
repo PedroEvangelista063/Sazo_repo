@@ -25,12 +25,13 @@ Scraper → raw.coleta_bruta (15)
 → REFRESH MV → mart.vw_api_produtos_sazonalidade (36.684) ← API lê daqui
 ```
 
-A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V13). Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
+A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V14). Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
 
 ## Forecast — Transparência
-- `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado) e `confianca_baseline: float | None` (% de confiança do baseline histórico)
-- A query SQL em `produtos.py` faz `LEFT JOIN mart.sazonalidade_baseline b ON b.id_produto = v.id_produto AND b.id_localidade = v.id_localidade AND b.mes = v.mes` — JOIN por FKs inteiras (mais rápido que nome+UF)
+- `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado), `confianca_baseline: float | None` (% de confiança), `tendencia_futura: str | None` (QUEDA/ALTA/ESTAVEL)
+- A query SQL em `produtos.py` seleciona diretamente da MV V14 (`is_forecast`, `baseline_confianca`, `forecast_method`, `tendencia_futura`)
 - Dados de forecast NUNCA substituem dados reais na resposta — a MV expõe ambos com `is_forecast` distinguindo a origem
+- MV V14 inclui colunas novas: `baseline_confianca`, `forecast_method` para rastreabilidade
 
 ## Rotas que expõem is_forecast
 - `GET /api/v1/sazonalidade` — snapshot (último mês de cada produto)

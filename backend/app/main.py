@@ -1,3 +1,6 @@
+import asyncio
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -14,18 +17,32 @@ from backend.app.api.v1.endpoints.stream import router as stream_router
 from backend.app.api.v1.endpoints.admin import router as admin_router
 from backend.app.core.cache import cache
 
+logger = logging.getLogger(__name__)
+
+_REFRESH_TIMEOUT = 120  # segundos para MV refresh
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await get_api_pool()
     await get_etl_pool()
 
-    try:
-        from backend.app.db.session import fetch_etl
-        await fetch_etl("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade")
-        await cache.clear()
-    except Exception:
-        pass
+    # Refresh MV + limpa cache — não crítico, com retry
+    from backend.app.db.session import fetch_etl
+
+    for attempt in (1, 2):
+        try:
+            await asyncio.wait_for(
+                fetch_etl("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade"),
+                timeout=_REFRESH_TIMEOUT,
+            )
+            break
+        except Exception as exc:
+            logger.warning("MV refresh attempt %d failed: %s", attempt, exc)
+            if attempt == 2:
+                logger.error("MV refresh failed after 2 attempts — serving stale MV")
+
+    await cache.clear()
 
     yield
     await close_pools()

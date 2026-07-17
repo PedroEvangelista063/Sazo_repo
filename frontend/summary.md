@@ -47,13 +47,25 @@ A SupermercadoView oferece 3 modos de visualização com Tabs shadcn + Framer Mo
 - `LivingStatus.tsx` — Indicador de status com animação pulsante e transições suaves
 - `useConfetti.ts` — Hook canvas-confetti para efeitos de celebração
 
-## Mapa Regional — Filtro por Região
+## Mapa Regional — Filtro por Região + Seleção por UF
 A aba "Mapa Regional" implementa:
 - `useRegioes()` — fetch `GET /api/v1/regioes` → lista de 5 regiões com UFs, polos CEASA
 - `useRegiaoResumo(regiaoId, ano)` — fetch `/api/v1/sazonalidade?regiao={id}&ano={ano}` → snapshot de produtos
 - `BrasilMap.tsx` — 27 círculos SVG posicionados por coordenada real de cada UF, coloridos por região
+  - Duas camadas de interação: clique na **legenda da região** (seleciona região) ou clique no **dot do estado** (seleciona UF específica)
+  - Quando UF selecionada: arcos **azuis** (recebe de) e **verdes** (envia para) com animação de path drawing
+  - Dot da UF selecionada fica branco com glow + nome completo + legenda "Recebe / Envia"
 - `RegiaoPanel.tsx` — SpotlightCard com info da região, status counts, lista de polos CEASA clicáveis
+  - Quando **selectedUF** está ativa: mostra painel "Recebe de" (agrupado por UF origem), "Envia para" (agrupado por UF destino) e "Produção local" baseado em `flows.json`
+  - Dados de fluxo vêm de `config/flows.json` (104 fluxos reais CEASA/CONAB, todas as 27 UFs como origem e destino)
 - Clicar num polo navega para a UF correspondente na aba Cards
+
+## BRNationalIcon — Ícone BR Animado
+- `BRNationalIcon.tsx` — substitui o dropdown de UF nos modos **Grade Sazonal** e **Mapa Regional**
+- Exibe bandeira do Brasil (SVG) com pulse animation + 5 frutas orbitando (Framer Motion + CSS keyframes `fruit-orbit-{0-4}`)
+- Modo **Cards** mantém o dropdown de UF normal (comportamento condicional em `SupermercadoView.tsx`)
+- Ano: texto estático em todos os modos (não dropdown) — `selectedYear` exibido como label
+- `BRNationalIcon.test.tsx` — 5 testes unitários (render, pulse, orbit count, fallback emoji, UF toggle)
 
 ## Mapa Rápido
 - `src/App.tsx` — root, inicializa useTheme + useDataStream

@@ -10,7 +10,7 @@
 --     4. UPSERT orgânico: quando scraper traz dado real, substitui projeção e is_forecast = FALSE
 --
 -- ARQUITETURA (4 CTEs + 1 UPSERT):
---   1. baseline_24_25       — Moda do status_cor por (produto, localidade, mes) em 2024-2025
+--   1. baseline_ponderado   — FULL JOIN das baselines 25_26 (primária) e 24_25 (fallback*0.5)
 --   2. dados_reais_2026     — Linhas reais vindas do scraper (is_interpolado = FALSE)
 --   3. projecao_faltantes   — Gera linhas para meses 2026 sem dado real, usando baseline
 --   4. uniao_final          — UNION ALL dados_reais + projecao_faltantes
@@ -46,7 +46,7 @@ COMMENT ON COLUMN mart.sazonalidade_produto.baseline_confianca IS
 ALTER TABLE mart.sazonalidade_produto
     ADD COLUMN IF NOT EXISTS forecast_method TEXT
         CHECK (forecast_method IS NULL 
-               OR forecast_method IN ('gamma_forecast_baseline', 'alpha_baseline_25_26', 'beta_media_disponivel'));
+               OR forecast_method IN ('gamma_forecast_baseline', 'alpha_baseline_25_26', 'beta_media_disponivel', 'beta_weighted_25_24'));
 
 COMMENT ON COLUMN mart.sazonalidade_produto.forecast_method IS
     'Método de geração: NULL=dado real; gamma_forecast_baseline=projetado via baseline histórico.';
@@ -106,6 +106,55 @@ CREATE INDEX IF NOT EXISTS idx_baseline_24_25_mes
     ON mart.sazonalidade_baseline_24_25 (mes);
 
 -- ============================================================================
+-- SEÇÃO 2b: Baseline 2025-2026 — Moda do status_cor por mês (real data only)
+-- ============================================================================
+-- Cria/Atualiza mart.sazonalidade_baseline_25_26 (tabela permanente)
+-- Base: TODOS os dados reais de 2025 e 2026 da mart.sazonalidade_produto
+
+DROP TABLE IF EXISTS mart.sazonalidade_baseline_25_26;
+
+CREATE TABLE mart.sazonalidade_baseline_25_26 AS
+WITH dados_reais AS (
+    SELECT
+        s.id_produto,
+        s.id_localidade,
+        CAST(SPLIT_PART(s.data_referencia_atual, '-', 2) AS INTEGER) AS mes,
+        s.status_cor,
+        COUNT(*) AS freq
+    FROM mart.sazonalidade_produto s
+    WHERE CAST(SPLIT_PART(s.data_referencia_atual, '-', 1) AS INTEGER) IN (2025, 2026)
+      AND s.is_forecast = FALSE
+    GROUP BY s.id_produto, s.id_localidade, mes, s.status_cor
+),
+moda_por_mes AS (
+    SELECT DISTINCT ON (id_produto, id_localidade, mes)
+        id_produto,
+        id_localidade,
+        mes,
+        status_cor AS status_cor_mode,
+        freq,
+        SUM(freq) OVER (PARTITION BY id_produto, id_localidade, mes) AS total_meses
+    FROM dados_reais
+    ORDER BY id_produto, id_localidade, mes, freq DESC
+)
+SELECT
+    id_produto,
+    id_localidade,
+    mes,
+    status_cor_mode,
+    ROUND((freq::NUMERIC / total_meses) * 100, 2) AS confianca,
+    'BASELINE_25_26' AS fonte,
+    NOW() AS atualizado_em
+FROM moda_por_mes;
+
+COMMENT ON TABLE mart.sazonalidade_baseline_25_26 IS
+    'Moda do status_cor por (produto, localidade, mes) calculada sobre 2025-2026 reais. '
+    'Usado como baseline primário para projetar 2026.';
+
+CREATE INDEX IF NOT EXISTS idx_baseline_25_26_mes
+    ON mart.sazonalidade_baseline_25_26 (mes);
+
+-- ============================================================================
 -- SEÇÃO 3: Stored Procedure — Motor de Forecast 2026
 -- ============================================================================
 
@@ -116,23 +165,32 @@ DECLARE
     v_inicio  TIMESTAMPTZ;
     v_fim     TIMESTAMPTZ;
     v_total   INTEGER;
-    v_reais   INTEGER;
-    v_proj    INTEGER;
 BEGIN
     v_inicio := clock_timestamp();
     RAISE NOTICE '[sp_calcular_forecast_2026] Iniciando Forecast 2026...';
 
     -- --------------------------------------------------------------------
-    -- CTE 1: baseline_24_25 — Moda do status_cor por (produto, localidade, mes)
+    -- CTE 1: baseline_ponderado — FULL JOIN 25_26 (primária) + 24_25 (fallback*0.5)
     -- --------------------------------------------------------------------
-    WITH baseline_24_25 AS (
+    WITH baseline_ponderado AS (
         SELECT
-            id_produto,
-            id_localidade,
-            mes,
-            status_cor_mode,
-            confianca
-        FROM mart.sazonalidade_baseline_24_25
+            COALESCE(bl_25_26.id_produto, bl_24_25.id_produto) AS id_produto,
+            COALESCE(bl_25_26.id_localidade, bl_24_25.id_localidade) AS id_localidade,
+            COALESCE(bl_25_26.mes, bl_24_25.mes) AS mes,
+            COALESCE(bl_25_26.status_cor_mode, bl_24_25.status_cor_mode) AS status_cor_mode,
+            CASE
+                WHEN bl_25_26.status_cor_mode IS NOT NULL AND bl_25_26.confianca >= 30
+                    THEN bl_25_26.confianca
+                WHEN bl_24_25.status_cor_mode IS NOT NULL
+                    THEN bl_24_25.confianca * 0.5
+                ELSE 0
+            END AS confianca,
+            'beta_weighted_25_24' AS forecast_method
+        FROM mart.sazonalidade_baseline_25_26 bl_25_26
+        FULL JOIN mart.sazonalidade_baseline_24_25 bl_24_25
+            ON bl_25_26.id_produto = bl_24_25.id_produto
+           AND bl_25_26.id_localidade = bl_24_25.id_localidade
+           AND bl_25_26.mes = bl_24_25.mes
     ),
     -- --------------------------------------------------------------------
     -- CTE 2: dados_reais_2026 — O que o scraper trouxe de real (não interpolado)
@@ -169,7 +227,7 @@ BEGIN
     ),
     produtos_com_baseline AS (
         SELECT DISTINCT id_produto, id_localidade
-        FROM baseline_24_25
+        FROM baseline_ponderado
     ),
     grade_completa AS (
         SELECT
@@ -201,7 +259,7 @@ BEGIN
             -- Preço projetado = NULL (desconhecido) — frontend usa status_cor_mode
             b.status_cor_mode       AS status_cor,
             b.confianca             AS baseline_confianca,
-            'gamma_forecast_baseline' AS metodo_calculo,
+            'beta_weighted_25_24' AS metodo_calculo,
             TRUE                    AS is_forecast,
             'BASELINE_HISTORICO'::TEXT AS fonte,
             NOW()                   AS calculado_em,
@@ -233,13 +291,12 @@ BEGIN
             0::NUMERIC(8,4)         AS variacao_mom_pct,
             FALSE                   AS preco_estimado,
             FALSE                   AS usou_fallback_12m,
-            'gamma_forecast_baseline' AS forecast_method
+            'beta_weighted_25_24' AS forecast_method
         FROM meses_faltantes mf
-        JOIN baseline_24_25 b
+        JOIN baseline_ponderado b
             ON b.id_produto = mf.id_produto
            AND b.id_localidade = mf.id_localidade
            AND b.mes = mf.mes
-        WHERE b.confianca >= 25  -- Só projeta se confiança >= 25% (pelo menos 6 meses de 24)
     ),
     -- --------------------------------------------------------------------
     -- CTE 4: uniao_final — Real + Projetado
@@ -331,15 +388,10 @@ BEGIN
         forecast_method       = EXCLUDED.forecast_method;
 
     GET DIAGNOSTICS v_total = ROW_COUNT;
-
-    -- Contagem separada para log
-    SELECT COUNT(*) INTO v_reais FROM dados_reais_2026;
-    SELECT COUNT(*) INTO v_proj FROM projecao_faltantes;
-
     v_fim := clock_timestamp();
 
-    RAISE NOTICE '[sp_calcular_forecast_2026] Concluído: % linhas (% reais + % projetadas) em % seg',
-        v_total, v_reais, v_proj, ROUND(EXTRACT(EPOCH FROM v_fim - v_inicio)::NUMERIC, 2);
+    RAISE NOTICE '[sp_calcular_forecast_2026] Concluído: % linhas em % seg',
+        v_total, ROUND(EXTRACT(EPOCH FROM v_fim - v_inicio)::NUMERIC, 2);
 
     -- Refresh da MV
     REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade;
@@ -348,9 +400,8 @@ END;
 $$;
 
 COMMENT ON PROCEDURE staging.sp_calcular_forecast_2026 IS
-    'Engine Preditiva 2026 — Projeta meses sem dado real usando Moda do Baseline 2024-2025. '
-    'is_forecast=TRUE para projeções; dado real (scraper) substitui e seta is_forecast=FALSE. '
-    'Confiança mínima 25% (6 meses de histórico).';
+    'Engine Preditiva 2026 — Projeta meses sem dado real usando baseline ponderado (25_26 primária + 24_25 fallback*0.5). '
+    'is_forecast=TRUE para projeções; dado real (scraper) substitui e seta is_forecast=FALSE.';
 
 -- ============================================================================
 -- SEÇÃO 4: Materialized View V14 — com is_forecast + baseline_confianca + forecast_method

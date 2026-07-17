@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -17,6 +17,7 @@ import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { SazonalidadeNacional } from '@/components/SazonalidadeNacional'
+import { BRNationalIcon } from '@/components/BRNationalIcon'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import Beams from '@/components/Beams'
@@ -47,7 +48,15 @@ export function SupermercadoView() {
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
+  const [selectedMapUF, setSelectedMapUF] = useState<string | null>(null)
   const headerRef = useRef<HTMLDivElement>(null)
+
+  // Auto-seleciona BR quando entra na Grade Sazonal
+  useEffect(() => {
+    if (viewMode === 'grade-sazonal') {
+      setSelectedUF('BR')
+    }
+  }, [viewMode])
   const { data: regioes } = useRegioes()
   const { data: regiaoResumo, isLoading: regiaoLoading, isError: regiaoError } = useRegiaoResumo(selectedRegion, selectedYear)
 
@@ -60,14 +69,6 @@ export function SupermercadoView() {
     return ufs.map((u: string) => ({ value: u, label: u === 'BR' ? 'BR (Nacional)' : u }))
   }, [ufsDisponiveis])
 
-  const availableYears = useMemo(() => {
-    const years = new Set<number>()
-    for (const p of allProducts) {
-      if (p.ano) years.add(p.ano)
-    }
-    return Array.from(years).sort((a, b) => b - a)
-  }, [allProducts])
-
   const displayProducts = useMemo(() => {
     let filtered = produtos
     if (selectedProducts.length > 0) {
@@ -78,11 +79,6 @@ export function SupermercadoView() {
     }
     return filtered
   }, [produtos, selectedProducts, selectedStatus])
-
-  const yearOptions = useMemo(
-    () => availableYears.map((y) => ({ value: String(y), label: String(y) })),
-    [availableYears],
-  )
 
   const origemPorProduto = useMemo(() => {
     const map = new Map<string, string>()
@@ -97,10 +93,17 @@ export function SupermercadoView() {
   }, [fluxos])
 
   const fluxosRegiao = useMemo(() => {
-    if (!fluxos || !selectedRegion) return []
+    if (!fluxos) return []
+    // Se uma UF específica está selecionada no mapa, filtra por ela
+    if (selectedMapUF) {
+      return fluxos.filter(
+        (f) => f.origem_uf === selectedMapUF || f.destino_uf === selectedMapUF,
+      )
+    }
+    if (!selectedRegion) return []
     const ufs = regioes?.find((r) => r.id === selectedRegion)?.ufs ?? []
     return fluxos.filter((f) => ufs.includes(f.destino_uf) || ufs.some((u) => u === f.origem_uf))
-  }, [fluxos, selectedRegion, regioes])
+  }, [fluxos, selectedRegion, selectedMapUF, regioes])
 
   const activePills = useMemo(() => {
     const pills: { key: string; label: string; onRemove: () => void }[] = [
@@ -136,6 +139,11 @@ export function SupermercadoView() {
     setSelectedRegion(null)
     setViewMode('cards')
     setSelectedMonth(null)
+  }
+
+  const handleUfClick = (uf: string) => {
+    setSelectedMapUF(selectedMapUF === uf ? null : uf)
+    setSelectedRegion(null)
   }
 
   return (
@@ -279,26 +287,26 @@ export function SupermercadoView() {
                 {/* UF + Ano + contagem */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <select
-                      value={selectedUF}
-                      onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
-                      className="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24 shadow-sm"
-                      aria-label="Selecionar UF"
-                    >
-                      {ufOptions.map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                    <select
-                      value={selectedYear}
-                      onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedMonth(null); setSelectedStatus(null) }}
-                      className="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24 shadow-sm"
-                      aria-label="Selecionar ano"
-                    >
-                      {yearOptions.map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
+                    {viewMode === 'cards' ? (
+                      <select
+                        value={selectedUF}
+                        onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
+                        className="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24 shadow-sm"
+                        aria-label="Selecionar UF"
+                      >
+                        {ufOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <BRNationalIcon
+                        onClick={() => setSelectedUF('BR')}
+                        isActive={selectedUF === 'BR'}
+                      />
+                    )}
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {selectedYear}
+                    </span>
                   </div>
                   <Badge variant="secondary" className="text-xs shadow-sm">
                     {displayProducts.length} item{displayProducts.length !== 1 ? 'ns' : ''}
@@ -420,6 +428,8 @@ export function SupermercadoView() {
                             onRegionClick={(id) =>
                               setSelectedRegion(selectedRegion === id ? null : id)
                             }
+                            selectedUF={selectedMapUF}
+                            onUfClick={handleUfClick}
                             fluxos={fluxos}
                           />
                         </motion.div>
@@ -431,11 +441,12 @@ export function SupermercadoView() {
                         >
                           <RegiaoPanel
                             regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
+                            selectedUF={selectedMapUF}
                             produtos={regiaoResumo?.data ?? []}
                             fluxos={fluxosRegiao}
                             isLoading={regiaoLoading}
                             isError={regiaoError}
-                            onClose={() => setSelectedRegion(null)}
+                            onClose={() => { setSelectedRegion(null); setSelectedMapUF(null) }}
                             onPoloClick={handlePoloClick}
                           />
                         </motion.div>

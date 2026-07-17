@@ -5,8 +5,21 @@ import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
 import type { RegiaoInfo, ProdutoVarejo, FlowItem } from '@/types/domain'
 
+function groupBy<T>(arr: T[], keyFn: (item: T) => string): Record<string, T[]> {
+  return arr.reduce(
+    (acc, item) => {
+      const k = keyFn(item)
+      if (!acc[k]) acc[k] = []
+      acc[k].push(item)
+      return acc
+    },
+    {} as Record<string, T[]>,
+  )
+}
+
 interface RegiaoPanelProps {
   regiao: RegiaoInfo | null
+  selectedUF?: string | null
   produtos: ProdutoVarejo[]
   fluxos?: FlowItem[]
   isLoading: boolean
@@ -24,6 +37,7 @@ const STATUS_CONFIG = {
 
 export function RegiaoPanel({
   regiao,
+  selectedUF,
   produtos,
   fluxos,
   isLoading,
@@ -192,6 +206,129 @@ export function RegiaoPanel({
             )}
           </motion.div>
         </SpotlightCard>
+      ) : selectedUF ? (
+        <SpotlightCard
+          spotlightColor="rgba(22, 163, 74, 0.08)"
+          className={cn(
+            'border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800',
+            'rounded-xl shadow-sm',
+            className,
+          )}
+        >
+          <motion.div
+            key={`uf-${selectedUF}`}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                  {selectedUF}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Fluxos de abastecimento
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 transition-colors"
+                aria-label="Fechar painel"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {fluxos && fluxos.length > 0 ? (
+              <div className="space-y-4">
+                {/* Recebe de */}
+                {(() => {
+                  const incoming = fluxos.filter((f) => f.destino_uf === selectedUF && f.origem_uf !== selectedUF)
+                  if (incoming.length === 0) return null
+                  const porOrigem = groupBy(incoming, (f) => f.origem_uf)
+                  return (
+                    <div>
+                      <p className="text-[11px] font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1.5 flex items-center gap-1">
+                        <Truck size={12} />
+                        Recebe de
+                      </p>
+                      <div className="space-y-1">
+                        {Object.entries(porOrigem).map(([origemUf, flows]) => (
+                          <div key={origemUf} className="flex items-start gap-2 px-2.5 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                            <span className="text-xs font-bold text-blue-700 dark:text-blue-300 mt-0.5 shrink-0 w-6">{origemUf}</span>
+                            <div className="flex flex-wrap gap-1">
+                              {flows.map((f) => (
+                                <span key={f.id} className="text-[10px] bg-white dark:bg-gray-700 rounded px-1.5 py-0.5 text-gray-700 dark:text-gray-300 shadow-sm">
+                                  {f.item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Envia para */}
+                {(() => {
+                  const outgoing = fluxos.filter((f) => f.origem_uf === selectedUF && f.destino_uf !== selectedUF)
+                  if (outgoing.length === 0) return null
+                  const porDestino = groupBy(outgoing, (f) => f.destino_uf)
+                  return (
+                    <div>
+                      <p className="text-[11px] font-medium text-green-600 dark:text-green-400 uppercase tracking-wide mb-1.5 flex items-center gap-1">
+                        <Truck size={12} />
+                        Envia para
+                      </p>
+                      <div className="space-y-1">
+                        {Object.entries(porDestino).map(([destinoUf, flows]) => (
+                          <div key={destinoUf} className="flex items-start gap-2 px-2.5 py-1.5 rounded-lg bg-green-50 dark:bg-green-900/20">
+                            <span className="text-xs font-bold text-green-700 dark:text-green-300 mt-0.5 shrink-0 w-6">{destinoUf}</span>
+                            <div className="flex flex-wrap gap-1">
+                              {flows.map((f) => (
+                                <span key={f.id} className="text-[10px] bg-white dark:bg-gray-700 rounded px-1.5 py-0.5 text-gray-700 dark:text-gray-300 shadow-sm">
+                                  {f.item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Produção local */}
+                {(() => {
+                  const local = fluxos.filter((f) => f.origem_uf === selectedUF && f.destino_uf === selectedUF)
+                  if (local.length === 0) return null
+                  return (
+                    <div>
+                      <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5 flex items-center gap-1">
+                        <Package size={12} />
+                        Produção local
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {local.map((f) => (
+                          <span key={f.id} className="text-[10px] bg-gray-100 dark:bg-gray-700 rounded px-1.5 py-0.5 text-gray-600 dark:text-gray-300 shadow-sm">
+                            {f.item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-6">
+                <p className="text-xs text-gray-400">
+                  Nenhum fluxo registrado para {selectedUF}.
+                </p>
+              </div>
+            )}
+          </motion.div>
+        </SpotlightCard>
       ) : (
         <motion.div
           key="empty"
@@ -206,7 +343,7 @@ export function RegiaoPanel({
         >
           <MapPin size={32} className="mx-auto mb-2 text-gray-300 dark:text-gray-600" />
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Clique em uma região no mapa
+            Clique em uma região ou estado no mapa
           </p>
         </motion.div>
       )}

@@ -6,6 +6,8 @@ import type { FlowItem } from '@/types/domain'
 interface BrasilMapProps {
   selectedRegion: string | null
   onRegionClick: (regionId: string) => void
+  selectedUF: string | null
+  onUfClick: (uf: string) => void
   fluxos?: FlowItem[]
   className?: string
 }
@@ -102,19 +104,29 @@ function formatLabel(regiaoId: string): string {
   return regiaoId.charAt(0).toUpperCase() + regiaoId.slice(1)
 }
 
-export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: BrasilMapProps) {
+export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick, fluxos, className }: BrasilMapProps) {
   const [showFluxos, setShowFluxos] = useState(false)
   const hasFluxos = fluxos && fluxos.length > 0
 
   const ufMap = new Map(UFS.map((u) => [u.uf, u]))
 
-  const arcs = showFluxos && fluxos
+  const hasUfSelection = selectedUF !== null && selectedUF !== undefined
+
+  const arcs = (hasUfSelection || showFluxos) && fluxos
     ? fluxos
+        .filter((f) => {
+          if (hasUfSelection) {
+            // Mostra só fluxos que envolvem a UF selecionada
+            return f.origem_uf === selectedUF || f.destino_uf === selectedUF
+          }
+          return true
+        })
         .map((f) => {
           const from = ufMap.get(f.origem_uf)
           const to = ufMap.get(f.destino_uf)
           if (!from || !to || from.uf === to.uf) return null
-          return { from, to, flow: f }
+          const isIncoming = hasUfSelection && f.destino_uf === selectedUF
+          return { from, to, flow: f, isIncoming }
         })
         .filter(Boolean)
     : []
@@ -202,10 +214,14 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
           <g className="pointer-events-none">
             {arcs.map((arc, idx) => {
               if (!arc) return null
-              const { from, to, flow } = arc
+              const { from, to, flow, isIncoming } = arc
               const mx = (from.cx + to.cx) / 2
               const my = (from.cy + to.cy) / 2 - 30
               const d = `M ${from.cx} ${from.cy} Q ${mx} ${my} ${to.cx} ${to.cy}`
+              const cor = isIncoming ?? false
+                ? '#3B82F6'   // azul — recebe
+                : '#10B981'   // verde — envia
+              const strokeWidth = hasUfSelection ? 3 : 2
               return (
                 <g key={`arc-${flow.id}-${idx}`}>
                   {/* Sombra do arco */}
@@ -213,20 +229,21 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
                     d={d}
                     fill="none"
                     stroke="rgba(0,0,0,0.15)"
-                    strokeWidth={2.5}
+                    strokeWidth={strokeWidth + 0.5}
                     transform="translate(0, 2)"
                   />
                   {/* Arco principal animado */}
                   <motion.path
                     d={d}
                     fill="none"
-                    stroke={flow.cor_indicadora}
-                    strokeWidth={2}
-                    strokeOpacity={0.7}
+                    stroke={cor}
+                    strokeWidth={strokeWidth}
+                    strokeOpacity={hasUfSelection ? 0.9 : 0.7}
                     strokeLinecap="round"
+                    strokeDasharray={hasUfSelection ? 'none' : '4 3'}
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 1, delay: idx * 0.1, ease: 'easeInOut' }}
+                    transition={{ duration: 0.8, delay: idx * 0.08, ease: 'easeInOut' }}
                   />
                 </g>
               )
@@ -237,22 +254,38 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
         {/* Dots individuais por UF */}
         {UFS.map((uf) => {
           const reg = REGIOES_META[uf.regiao]
-          const isSelected = selectedRegion === uf.regiao
-          const isDimmed = selectedRegion !== null && !isSelected
-          const dotRadius = isSelected ? 13 : 9
-          const labelRadius = isSelected ? 20 : 14
+          const isInRegion = selectedRegion === uf.regiao
+          const isDimmed = selectedRegion !== null && !isInRegion
+          const isUfActive = selectedUF === uf.uf
+          const dotRadius = isUfActive ? 15 : isInRegion ? 13 : 9
+          const labelRadius = isUfActive ? 22 : isInRegion ? 20 : 14
+          const outerGlow = isUfActive ? 22 : isInRegion ? 18 : 0
 
           return (
             <motion.g
               key={uf.uf}
               className="cursor-pointer"
-              onClick={() => onRegionClick(uf.regiao)}
+              onClick={() => onUfClick(uf.uf)}
               initial={false}
               animate={{
                 opacity: isDimmed ? 0.35 : 1,
               }}
               transition={{ duration: 0.3 }}
             >
+              {/* Glow externo para UF selecionada */}
+              {isUfActive && (
+                <motion.circle
+                  cx={uf.cx}
+                  cy={uf.cy}
+                  r={outerGlow}
+                  fill={reg.cor}
+                  fillOpacity={0.15}
+                  initial={{ r: 15, fillOpacity: 0.3 }}
+                  animate={{ r: outerGlow, fillOpacity: 0.15 }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
+
               {/* Sombra */}
               <circle
                 cx={uf.cx + 1}
@@ -267,16 +300,16 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
                 cx={uf.cx}
                 cy={uf.cy}
                 r={dotRadius}
-                fill={reg.cor}
-                fillOpacity={isSelected ? 1 : 0.75}
-                stroke={isSelected ? '#fff' : 'none'}
-                strokeWidth={isSelected ? 2 : 0}
+                fill={isUfActive ? '#fff' : reg.cor}
+                fillOpacity={isUfActive ? 1 : isInRegion ? 1 : 0.75}
+                stroke={isUfActive ? reg.cor : isInRegion ? '#fff' : 'none'}
+                strokeWidth={isUfActive ? 3 : isInRegion ? 2 : 0}
                 animate={{
-                  r: isSelected ? 13 : 9,
-                  fillOpacity: isSelected ? 1 : 0.75,
+                  r: dotRadius,
+                  fillOpacity: isUfActive ? 1 : isInRegion ? 1 : 0.75,
                 }}
                 transition={{ duration: 0.2 }}
-                whileHover={{ r: 14 }}
+                whileHover={{ r: dotRadius + 2 }}
               />
 
               {/* Label UF */}
@@ -285,18 +318,18 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
                 y={uf.cy}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fill="#fff"
-                fontSize={isSelected ? 7 : 6}
+                fill={isUfActive ? reg.cor : '#fff'}
+                fontSize={isUfActive ? 8 : isInRegion ? 7 : 6}
                 fontWeight={700}
                 className="pointer-events-none select-none"
-                animate={{ fontSize: isSelected ? 7 : 6 }}
+                animate={{ fontSize: isUfActive ? 8 : isInRegion ? 7 : 6 }}
                 transition={{ duration: 0.2 }}
               >
                 {uf.uf}
               </motion.text>
 
-              {/* Nome do estado — aparece só no hover/selected */}
-              {(isSelected || selectedRegion === null) && (
+              {/* Nome do estado */}
+              {(isUfActive || isInRegion || selectedRegion === null) && (
                 <motion.text
                   x={uf.cx}
                   y={uf.cy + labelRadius + 9}
@@ -304,13 +337,13 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
                   dominantBaseline="central"
                   fill={reg.cor}
                   className="pointer-events-none select-none"
-                  fontSize={8}
-                  fontWeight={500}
+                  fontSize={isUfActive ? 9 : 8}
+                  fontWeight={isUfActive ? 700 : 500}
                   initial={{ opacity: 0, y: uf.cy + labelRadius + 5 }}
                   animate={{ opacity: 1, y: uf.cy + labelRadius + 9 }}
                   transition={{ duration: 0.15 }}
                 >
-                  {uf.uf === 'DF' ? 'DF' : uf.nome.substring(0, 6)}
+                  {uf.uf === 'DF' ? 'DF' : isUfActive ? uf.nome : uf.nome.substring(0, 6)}
                 </motion.text>
               )}
             </motion.g>
@@ -318,9 +351,21 @@ export function BrasilMap({ selectedRegion, onRegionClick, fluxos, className }: 
         })}
       </svg>
 
-      {/* Controles do mapa */}
+      {/* Controles do mapa / info */}
       <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-        {hasFluxos && (
+        {hasUfSelection && (
+          <span className="inline-flex items-center gap-2 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-[11px] font-medium text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              Recebe
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              Envia
+            </span>
+          </span>
+        )}
+        {hasFluxos && !hasUfSelection && (
           <motion.button
             onClick={() => setShowFluxos((v) => !v)}
             className={cn(

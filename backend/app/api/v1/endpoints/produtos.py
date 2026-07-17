@@ -469,12 +469,12 @@ async def _query_regional_snapshot(
 ) -> SazonalidadeListResponse:
     if categoria:
         rows = await fetch(
-            "SELECT * FROM mart.fn_regional_snapshot($1, $2, $3)",
+            "SELECT * FROM mart.fn_regional_snapshot($1::text[], $2::int, $3)",
             ufs, min_ufs, categoria.upper(),
         )
     else:
         rows = await fetch(
-            "SELECT * FROM mart.fn_regional_snapshot($1, $2, NULL)",
+            "SELECT * FROM mart.fn_regional_snapshot($1::text[], $2::int, NULL::text)",
             ufs, min_ufs,
         )
 

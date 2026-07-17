@@ -16,6 +16,7 @@ JSON puro, sem schema validation runtime (consumido via `json.load()` no pipelin
 - `sources.json` — legado (fase anterior), manter para compatibilidade
 - `sources_map.json` — mapeamento produto → fontes regionais (CONAB + CEASAs)
 - `regions.json` — definição das 5 regiões brasileiras: Norte, Nordeste, Centro-Oeste, Sudeste, Sul. Cada região lista suas UFs e polos CEASA com nome, UF, fonte_id e prioridade. Consumido por `GET /api/v1/regioes` e usado no mapa interativo do frontend.
+- `flows.json` — 104 fluxos de abastecimento entre UFs (v2.0). Todas as 27 UFs aparecem como origem E destino com dados reais de CEASA/CONAB. Estrutura: `{id, item, categoria, origem_uf, origem_polo, destino_uf, destino_regiao_id, meses, sazonalidade, preco_referencial, cor_indicadora, tipo("exportado"/"importado"), ano_referencia}`. Consumido por `BrasilMap.tsx` para desenhar arcos de recebimento (azul) e envio (verde) por UF.
 
 ## Conexões com o Forecast
 - O baseline histórico (2024-2025) agora é calculado 100% em PostgreSQL via `sp_calcular_forecast_2026()` — não mais em Python.

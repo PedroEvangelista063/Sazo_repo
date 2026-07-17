@@ -47,7 +47,7 @@ class SazonalidadeResponse(BaseModel):
     id_produto: int = Field(..., description="Identificador único do produto")
     nome_produto: str = Field(..., description="Nome do produto")
     icone_url: str | None = Field(None, description="URL do ícone do produto")
-    uf: str = Field(..., min_length=2, max_length=2)
+    uf: str = Field(..., min_length=2, max_length=12)
     municipio: str | None = Field(None, description="Nome do município")
     municipio_id: str | None = Field(None, description="Código IBGE do município")
     ano: int = Field(
@@ -71,7 +71,7 @@ class SazonalidadeResponse(BaseModel):
         ...,
         description="Semáforo: VERDE (safra), AMARELO (estável), VERMELHO (entressafra) - Trindade Estrita",
     )
-    fonte: str | None = Field(None, pattern=r"^(municipio|uf|BASELINE_HISTORICO)$")
+    fonte: str | None = Field(None, pattern=r"^(municipio|uf|BASELINE_HISTORICO|regiao)$")
     categoria: str | None = Field(
         None, description="Nome da categoria do produto (FRUTAS, LEGUMES, etc.)"
     )

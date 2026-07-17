@@ -68,9 +68,10 @@ database/processed_data/
 | STAGING | `staging.fact_precos_mensais` | 27.545 (dados limpos e tipados) |
 | STAGING | `staging.dim_produto` | 831 (produtos únicos) |
 | STAGING | `staging.dim_localidade` | 850 (localidades únicas) |
-| MART | `mart.sazonalidade_produto` | 37.013 (25.403 real + 11.610 forecast) |
-| MART | `mart.sazonalidade_baseline` | 17.300 (moda do status_cor) |
-| MV | `mart.vw_api_produtos_sazonalidade` | 36.684 (exposta à API) |
+| MART | `mart.sazonalidade_produto` | 65.830 (30.964 real + 34.866 forecast) |
+| MART | `mart.sazonalidade_baseline_24_25` | 23.449 (moda 2024-2025, fallback) |
+| MART | `mart.sazonalidade_baseline_25_26` | 32.581 (moda 2025-2026, primária) |
+| MV | `mart.vw_api_produtos_sazonalidade` | 54.479 (exposta à API) |
 
 A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. Definição em `26_forecast_baseline.sql:63`:
 - JOIN: `sazonalidade_produto` + `dim_produto` + `dim_localidade` + `dim_categoria`
@@ -83,16 +84,24 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 
 ## Forecast — Engine Preditiva (Fase 30)
 
-### Modelo Atual (100% SQL)
-- `sp_calcular_forecast_2026()` — Stored Procedure que projeta meses de 2026 sem dado real usando a **Moda** do `status_cor` do baseline 2024-2025.
-- `mart.sazonalidade_baseline_24_25` — tabela permanente com a moda por `(id_produto, id_localidade, mes)`. Substituiu a tabela antiga `mart.sazonalidade_baseline`.
-- Colunas novas na `mart.sazonalidade_produto`:
+### Modelo Atual v2 (100% SQL, Jul/2026)
+- `sp_calcular_forecast_2026()` — Stored Procedure que projeta meses de 2026 sem dado real usando a **Moda** ponderada do `status_cor` de duas baselines.
+- **Duas baselines permanentes**:
+  - `mart.sazonalidade_baseline_25_26` — **primária**: moda sobre dados reais 2025-2026 (~19 meses). 32.581 linhas. Substitui baseline flat anterior.
+  - `mart.sazonalidade_baseline_24_25` — **fallback**: moda sobre 2024-2025, com confiança reduzida à metade. 23.449 linhas.
+- **CTE `baseline_ponderado`**: FULL JOIN entre ambas com CASE weighting:
+  - `primary` (25_26) vence quando `confianca >= 30`
+  - `fallback` (24_25 \* 0.5) usado quando primary não existe ou confiança < 30
+  - Produtos sem baseline em nenhuma tabela são excluídos do grid de forecast
+- **Método de forecast**: `beta_weighted_25_24` para TODAS as projeções (independente de qual baseline serviu de fonte)
+- Colunas de rastreabilidade na `mart.sazonalidade_produto`:
   - `is_forecast BOOLEAN` — TRUE = projeção, FALSE = dado real
-  - `baseline_confianca NUMERIC(5,2)` — % de meses com dado real no baseline (0-100)
-  - `forecast_method TEXT` — rastreabilidade (`gamma_forecast_baseline`, `alpha_baseline_25_26`, `beta_media_disponivel`)
+  - `baseline_confianca NUMERIC(5,2)` — confiança efetiva (0-100)
+  - `forecast_method TEXT` — valores permitidos: `gamma_forecast_baseline`, `alpha_baseline_25_26`, `beta_media_disponivel`, `beta_weighted_25_24`
 - UPSERT com regra de ouro: dado real (scraper) sempre vence projeção. `ON CONFLICT DO UPDATE` com lógica `is_forecast = FALSE` quando EXCLUDED é real.
-- Threshold mínimo: confiança >= 25% (pelo menos 6 meses de 24 com dado real).
+- Sem threshold explícito de confiança — weighting embutido no CASE do `baseline_ponderado`.
 - `REFRESH MATERIALIZED VIEW CONCURRENTLY` executado no final da SP.
+- **Resultado**: 19.933 projeções para Ago-Dez 2026 em 1.02s, 12.884 registros reais Jan-Jul intactos.
 
 ### MV V14 (`vw_api_produtos_sazonalidade`)
 - Expõe `is_forecast`, `baseline_confianca`, `forecast_method`.
@@ -102,7 +111,7 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `27_fix_br_nacional_weighting.sql` — Hotfix: SP chama `sp_calcular_sazonalidade_preditiva()` em vez da legacy.
 - `28_recalibracao_baseline_24_25.sql` — Recalibração do baseline para 2024-2025.
 - `29_focus_2025_2026.sql` — Filtro temporal: apenas >= 2025, exclusão de B2B (INSUMO_AGRICOLA, MAQUINARIO, FLORES).
-- `30_engine_preditiva_forecast_2026.sql` — SP forecast, baseline_24_25, MV V14, permissões.
+- `30_engine_preditiva_forecast_2026.sql` (v1) → (v2 ponderado) — **538 linhas**: baseline_25_26 DDL, CTE baseline_ponderado (FULL JOIN + CASE), CHECK 4 valores, remoção guarda confiança >= 25. Execução em 1.02s.
 - `32_fn_regional_snapshot.sql` — Funções `fn_regioes_listar()` e `fn_resumo_regiao()` para filtro regional.
 
 ## Scripts Python (database/scripts/)
@@ -136,5 +145,5 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `27_fix_br_nacional_weighting.sql` — Hotfix: SP V3 chama `sp_calcular_sazonalidade_preditiva()`
 - `28_recalibracao_baseline_24_25.sql` — Recalibração baseline 24-25
 - `29_focus_2025_2026.sql` — Focus 2025-2026, baseline V12, exclusão B2B
-- `30_engine_preditiva_forecast_2026.sql` — SP forecast, baseline_24_25, MV V14
+- `30_engine_preditiva_forecast_2026.sql` — SP forecast v2 ponderado + baselines + MV V14
 - `32_fn_regional_snapshot.sql` — Funções regionais (`fn_resumo_regiao`, `fn_regioes_listar`)

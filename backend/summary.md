@@ -59,3 +59,29 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 - `app/schemas/responses.py` — Pydantic response models (inclui `is_forecast`, `confianca_baseline`, `RegiaoInfo`, `PoloInfo`)
 - `migrations/` — scripts SQL incrementais (RLS, limpeza diária)
 - `tests/` — testes de resiliência e concorrência
+
+## Conexão Supabase (2026-07-17)
+
+### Configuração no .env
+```env
+# Direct Connection (5432) — para ETL e migrações
+DATABASE_URL=postgresql://postgres:SENHA@db.kxsqrcccaaxplpktmutl.supabase.co:5432/postgres
+
+# Transaction Pooler (6543) — para FastAPI
+DATABASE_URL_API=postgresql://postgres.kxsqrcccaaxplpktmutl:SENHA@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+```
+
+### asyncpg Pool (session.py)
+```python
+pool = await asyncpg.create_pool(
+    dsn=settings.DATABASE_URL_API,
+    statement_cache_size=0,  # OBRIGATÓRIO para pooler
+    min_size=2,
+    max_size=10,
+)
+```
+
+### Notas
+- Usar Direct (5432) para operações que precisam de acesso completo (COPY, VACUUM, REFRESH MV)
+- Usar Transaction Pooler (6543) apenas para queries simples do FastAPI
+- `statement_cache_size=0` é obrigatório quando usando pooler

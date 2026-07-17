@@ -147,3 +147,50 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `29_focus_2025_2026.sql` — Focus 2025-2026, baseline V12, exclusão B2B
 - `30_engine_preditiva_forecast_2026.sql` — SP forecast v2 ponderado + baselines + MV V14
 - `32_fn_regional_snapshot.sql` — Funções regionais (`fn_resumo_regiao`, `fn_regioes_listar`)
+
+## Migração Supabase (2026-07-17)
+
+### Projeto
+- **Nome:** Quero_Comprar_ext
+- **Ref:** kxsqrcccaaxplpktmutl
+- **Host:** db.kxsqrcccaaxplpktmutl.supabase.co
+- **PostgreSQL:** 17.6.1.127
+- **Região:** us-east-1
+
+### Status
+- Fase 0 (Backup): ✅ `backup_quero_comprar_pre_migracao.dump` (2.48 MB)
+- Fase 1 (Projeto): ✅ Projeto criado e linkado
+- Fase 2 (Schema): ✅ 12 migrações aplicadas via `supabase db push --linked`
+- Fase 3 (Data): ⏳ Em andamento — dim_produto, dim_localidade, dim_categoria, fact_precos_mensais restaurados
+
+### Comandos Úteis
+```bash
+# Listar projetos
+npx supabase projects list
+
+# Linkar ao projeto
+npx supabase link --project-ref kxsqrcccaaxplpktmutl
+
+# Push de migrações
+npx supabase db push --linked
+
+# Executar SQL no banco remoto
+npx supabase db query --linked "SELECT 1;"
+
+# Dump do schema remoto
+npx supabase db dump --linked --schema public
+
+# Dump de dados
+npx supabase db dump --linked --data-only
+```
+
+### Connection Options
+- **Direct (5432):** `postgresql://postgres:SENHA@db.kxsqrcccaaxplpktmutl.supabase.co:5432/postgres`
+- **Transaction Pooler (6543):** `postgresql://postgres.kxsqrcccaaxplpktmutl:SENHA@aws-0-us-east-1.pooler.supabase.com:6543/postgres`
+- **User pooler:** `postgres.{project_ref}`
+
+### Notas
+- DNS `db.kxsqrcccaaxplpktmutl.supabase.co` não resolve nesta máquina Windows
+- Usar `supabase db query --linked` que usa tunnel interno da CLI
+- Não combinar `--linked` com `--db-url` (conflito de flags)
+- Para asyncpg com pooler: `statement_cache_size=0`

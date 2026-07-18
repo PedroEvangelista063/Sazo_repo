@@ -8,7 +8,7 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 
 ## Regras de Ouro
 1. **Fonte Única**: qualquer decisão arquitetural relevante DEVE estar documentada aqui. Se não está em /docs, não aconteceu.
-2. **Prompts Mestres**: `PROMPT_AUDITORIA_ENRIQUECIMENTO.md` contém o prompt de engenharia reversa. `plano_micro_motores.md` contém o plano dos micro-motores.
+2. **Prompts Mestres**: `PROMPT_AUDITORIA_ENRIQUECIMENTO.md` contém o prompt de engenharia reversa.
 3. **Histórico**: `HISTORICO_MELHORIAS_BACKFILL.md` rastreia todas as mudanças no pipeline de backfill.
 4. **Agentes AI**: `AGENTS.md` contém as regras da casa injetadas no contexto dos agentes (OpenCode, GGA, etc).
 5. **scripts/** — utilitários de diagnóstico, exportação e teste. Isolados, sem dependência entre si.
@@ -16,8 +16,6 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 ## Conteúdo
 - `AGENTS.md` — regras da casa para agentes AI (stack, classificação, medalhão, frontend)
 - `PROMPT_AUDITORIA_ENRIQUECIMENTO.md` — prompt mestre de auditoria
-- `plano_micro_motores.md` — plano original dos micro-motores
-- `fase2_arquitetura_autocura.md` — arquitetura de auto-cura e fallback
 - `HISTORICO_MELHORIAS_BACKFILL.md` — changelog de backfill (inclui diagnóstico gap 2024, proposta target-list e snapshot de validação CONAB)
 - `quero_comprar_plano_tecnico.md` — plano técnico geral
 - `AUDITORIA_BANCO_FRONTEND.md` — auditoria banco + frontend
@@ -27,6 +25,10 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
   - `start_ecosystem.py` — levanta ecossistema local
   - `verify_api.py` — valida endpoints da API
   - `load_test.py` — teste de carga
+- `archive/` — documentos arquivados (planos obsoletos)
+  - `plano_micro_motores.md` — plano original dos micro-motores
+  - `fase2_arquitetura_autocura.md` — arquitetura de auto-cura e fallback
+  - `migracao-supabase-plano.md` — plano de migração Supabase
 
 ## Forecast — Engine Preditiva (Fase 30, 100% SQL)
 - `database/26_forecast_baseline.sql` — migration original: baseline + is_forecast + MV V13
@@ -71,12 +73,15 @@ quero_comprar_vg/
 │   │
 │   ├── Fluxo RAW → STAGING → MART → MV
 │   │   - raw.coleta_bruta: 15 registros
-│   │   - staging.fact_precos_mensais: 27.545
-│   │   - staging.dim_produto: 831
+│   │   - staging.fact_precos_mensais: 42.358
+│   │   - staging.dim_produto: 857
 │   │   - staging.dim_localidade: 850
-│   │   - mart.sazonalidade_produto: 37.013 (25.403 real + 11.610 forecast)
-│   │   - mart.sazonalidade_baseline: 17.300
-│   │   - mart.vw_api_produtos_sazonalidade: 36.684
+│   │   - staging.precos_rejeitados: 87
+│   │   - staging.confianca_baseline
+│   │   - staging.baseline_2025_interpolado
+│   │   - mart.sazonalidade_produto: 62.291
+│   │   - mart.sazonalidade_baseline: 24_25=23.449 + 25_26=32.581 (unsplit)
+│   │   - mart.vw_api_produtos_sazonalidade: 62.291
 │   │
 │   └── Mapa Rápido:
 │       ├── scraper/main_runner.py          — entry point Run and Die
@@ -252,7 +257,7 @@ quero_comprar_vg/
     │
     ├── Regras de Ouro:
     │   1. Fonte Única — se não está em /docs, não aconteceu
-    │   2. Prompts Mestres (PROMPT_AUDITORIA_ENRIQUECIMENTO, plano_micro_motores)
+    │   2. Prompts Mestres (PROMPT_AUDITORIA_ENRIQUECIMENTO)
     │   3. Histórico de backfill (HISTORICO_MELHORIAS_BACKFILL)
     │   4. AGENTS.md com regras para AI
     │   5. scripts/ utilitários isolados
@@ -260,15 +265,17 @@ quero_comprar_vg/
     └── Conteúdo:
         ├── AGENTS.md                       — regras da casa para AI
         ├── PROMPT_AUDITORIA_ENRIQUECIMENTO.md
-        ├── plano_micro_motores.md
-        ├── fase2_arquitetura_autocura.md
         ├── HISTORICO_MELHORIAS_BACKFILL.md  — (inclui diagnóstico gap 2024 + proposta target-list)
         ├── quero_comprar_plano_tecnico.md
         ├── AUDITORIA_BANCO_FRONTEND.md
         ├── README.md                       — visão geral do projeto
-        └── scripts/                        — utilitários de diagnóstico
-            ├── get_data_summary.py
-            ├── start_ecosystem.py
-            ├── verify_api.py
-            └── load_test.py
+        ├── scripts/                        — utilitários de diagnóstico
+        │   ├── get_data_summary.py
+        │   ├── start_ecosystem.py
+        │   ├── verify_api.py
+        │   └── load_test.py
+        └── archive/                        — documentos arquivados
+            ├── plano_micro_motores.md
+            ├── fase2_arquitetura_autocura.md
+            └── migracao-supabase-plano.md
 ```

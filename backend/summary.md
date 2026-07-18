@@ -20,12 +20,14 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 ## Fluxo dos Dados — Raw → API
 ```
 Scraper → raw.coleta_bruta (15)
-→ SortingEngine → staging.fact_precos_mensais (27.545)
-→ sp_executar_carga_completa → mart.sazonalidade_produto (37.013)
-→ REFRESH MV → mart.vw_api_produtos_sazonalidade (36.684) ← API lê daqui
+→ SortingEngine → staging.fact_precos_mensais (42.358)
+→ sp_executar_carga_completa → mart.sazonalidade_produto (62.291)
+→ REFRESH MV → mart.vw_api_produtos_sazonalidade (62.291) ← API lê daqui (local: 54.715 — aguardando refresh)
 ```
 
 A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V14) e funções `fn_*`. Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
+
+**Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
 
 ## Forecast — Transparência
 - `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado), `confianca_baseline: float | None` (% de confiança), `tendencia_futura: str | None` (QUEDA/ALTA/ESTAVEL)

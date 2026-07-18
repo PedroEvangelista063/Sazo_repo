@@ -1,0 +1,3 @@
+import type { SVGProps } from "react";
+const TO = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" fill="gold" viewBox="0 0 20 14" width="1em" height="1em" {...props}><path fill="#fff" d="M0 0h20v14H0" /><path fill="#1946b4" d="M13 0H0v9" /><path d="M7 14h13V5" /><g id="d"><g id="b"><path id="a" d="m9.08 5.69-.19-.71.5.54-.03-.73.36.63L10 3l.28 2.42L10 7.04" /><use xlinkHref="#a" transform="rotate(45 10 7)" /></g><use xlinkHref="#b" transform="rotate(90 10 7)" /></g><use xlinkHref="#d" transform="rotate(180 10 7)" /></svg>;
+export default TO;

@@ -86,6 +86,12 @@ class SazonalidadeResponse(BaseModel):
         None,
         description="Percentual de confiança do baseline histórico (ex: 100 se 2024 e 2025 têm dados para este mês)",
     )
+    regiao: str | None = Field(
+        None,
+        min_length=4,
+        max_length=20,
+        description="Nome da região quando o dado é agregado regional (ex: SUDESTE). None quando é município/UF.",
+    )
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
 

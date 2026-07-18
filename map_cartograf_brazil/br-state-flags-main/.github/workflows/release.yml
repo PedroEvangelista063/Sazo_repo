@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Display version info
+        run: |
+          echo "Release Tag: ${{ github.ref }}"
+          echo "Version: ${GITHUB_REF#refs/tags/}"
+          node -v
+          npm -v
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Display package info
+        run: |
+          echo "Publishing package info:"
+          cat package.json | grep -E '"name"|"version"|"description"'
+      
+      - name: Verify npm auth (debug)
+        run: |
+          echo "npm versions:" && npm --version
+          echo "npm registry:" && npm config get registry
+          echo "npm ping:" && npm ping || true
+          echo "npm whoami (may fail if unauthenticated):" && npm whoami || true
+          echo "npm config (sanitized):"
+          npm config list --json | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{const j=JSON.parse(d);delete j['//registry.npmjs.org/:_authToken'];console.log(JSON.stringify(j,null,2));}catch(e){console.error(e);}})"
+      
+      - name: Publish to npm
+        run: npm publish --provenance --loglevel verbose
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

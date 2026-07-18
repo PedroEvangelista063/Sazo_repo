@@ -17,6 +17,8 @@ export interface ProdutoVarejo {
   categoria: string | null
   is_forecast: boolean
   confianca_baseline: number | null
+  tendencia_futura: 'QUEDA' | 'ALTA' | 'ESTAVEL' | null
+  regiao: string | null
 }
 
 export interface Categoria {

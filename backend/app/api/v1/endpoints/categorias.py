@@ -18,15 +18,8 @@ async def listar_categorias():
         return CategoriaListResponse(**cached)
 
     rows = await fetch("""
-        SELECT
-            c.nome_categoria,
-            c.descricao,
-            COUNT(DISTINCT p.id_produto) AS total_produtos
-        FROM staging.dim_categoria c
-        LEFT JOIN staging.dim_produto p ON p.id_categoria = c.id_categoria
-          AND p.categoria_b2c = 'ALIMENTO_VAREJO'
-        GROUP BY c.id_categoria, c.nome_categoria, c.descricao
-        ORDER BY c.nome_categoria
+        SELECT nome_categoria, descricao, total_produtos
+        FROM mart.vw_categorias
     """)
 
     CATEGORIA_ICONES = {

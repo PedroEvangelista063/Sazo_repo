@@ -18,6 +18,10 @@ const QUERIES_TO_INVALIDATE: { queryKey: readonly unknown[] }[] = [
   { queryKey: ['hortifruti-meta'] },
   { queryKey: ['hortifruti-filter'] },
   { queryKey: ['categorias'] },
+  { queryKey: ['sazonalidade-com-preco'] },
+  { queryKey: ['br-sazonalidade'] },
+  { queryKey: ['regiao-resumo'] },
+  { queryKey: ['regioes'] },
 ]
 
 export function useDataStream() {

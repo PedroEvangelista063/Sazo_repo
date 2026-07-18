@@ -15,7 +15,7 @@ from backend.app.api.v1.endpoints.municipios import router as municipios_router
 from backend.app.api.v1.endpoints.ufs import router as ufs_router
 from backend.app.api.v1.endpoints.stream import router as stream_router
 from backend.app.api.v1.endpoints.admin import router as admin_router
-from backend.app.core.cache import cache
+from backend.app.core.cache import cache, init_cache
 from backend.app.api.v1.endpoints.regioes import router as regioes_router
 from backend.app.api.v1.endpoints.fluxos import router as fluxos_router
 
@@ -28,6 +28,9 @@ _REFRESH_TIMEOUT = 120  # segundos para MV refresh
 async def lifespan(app: FastAPI):
     await get_api_pool()
     await get_etl_pool()
+
+    # Tenta cache Redis; se sem redis_url, mantém InMemoryCache
+    init_cache(get_settings().redis_url)
 
     # Refresh MV + limpa cache — não crítico, com retry
     from backend.app.db.session import fetch_etl

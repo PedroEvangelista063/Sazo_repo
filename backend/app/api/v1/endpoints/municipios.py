@@ -10,14 +10,7 @@ async def listar_municipios(
     uf: str = Query(min_length=2, max_length=2, description="UF (BR-2)"),
 ):
     rows = await fetch(
-        """
-        SELECT DISTINCT l.municipio_nome AS municipio
-        FROM staging.dim_localidade l
-        WHERE l.uf = $1
-          AND l.municipio_nome IS NOT NULL
-          AND l.municipio_nome != ''
-        ORDER BY l.municipio_nome
-        """,
+        "SELECT municipio FROM mart.vw_municipios WHERE uf = $1 ORDER BY municipio",
         uf.upper(),
     )
 

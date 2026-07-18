@@ -21,6 +21,7 @@ RUN uv pip install --no-cache-dir --system -r /app/backend/requirements.txt
 
 COPY backend/ /app/backend/
 COPY pipeline/ /app/pipeline/
+COPY config/ /app/config/
 
 COPY backend/start.sh /app/start.sh
 RUN chmod +x /app/start.sh

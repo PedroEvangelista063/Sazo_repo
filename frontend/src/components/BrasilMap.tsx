@@ -155,6 +155,18 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
           ))}
         </defs>
 
+        {/* Background - mapa geográfico do Brasil */}
+        <image
+          href="/br-map.svg"
+          x="0"
+          y="0"
+          width="500"
+          height="450"
+          preserveAspectRatio="xMidYMid meet"
+          opacity={0.12}
+          className="pointer-events-none"
+        />
+
         {/* Legendas das regiões */}
         {REGIOES.map((reg) => {
           const ufs = UFS.filter((u) => u.regiao === reg.id)

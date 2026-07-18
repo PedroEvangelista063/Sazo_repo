@@ -1,5 +1,0 @@
-# Ignore all files
-*/*
-
-# Only lint this specific patterns
-!src/*

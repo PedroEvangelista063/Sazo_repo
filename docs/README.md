@@ -20,9 +20,9 @@ Zero reais na tela. Apenas a cor que o bolso precisa.
 ```
 quero_comprar_vg/
 ├── pipeline/     🚗 Garagem  — ETL Worker (Polars, Python 3.11+)
-├── database/     🗄️ Despensa — PostgreSQL 16+ (Medalhão raw→staging→mart)
+├── database/     🗄️ Despensa — PostgreSQL 16+ via Supabase (Medalhão raw→staging→mart)
 ├── backend/      🍳 Cozinha  — FastAPI + asyncpg (raw SQL, cache 24h)
-├── frontend/     🛋️ Sala de Estar — PWA React 18.3 + Vite 6
+├── frontend/     🛋️ Sala de Estar — PWA React 19 + Vite 6
 └── docs/         📐 Plantas da Casa
 ```
 
@@ -36,15 +36,14 @@ Motor ETL que transforma **LISTA*.txt** da CONAB + cotações CEASA em dados pro
 
 | Motor | O que faz |
 |---|---|
-| `ingestao_conab.py` | Pipeline medalhão: extract → transform → load |
-| `ingestao_conab_inteligente.py` | Leitura lazy Polars paralela + engine semântico regex |
-| `seasonality.py` | Cálculo do IS (Índice de Sazonalidade) baseline 2025 + fallback 12m |
-| `process_to_files.py` | ETL offline — salva em JSON/Parquet/SQL, sem PostgreSQL |
+| `scraper/` | Ecossistema de scrapers CONAB + CEASA: micro-motores, AutonomousOrchestrator, CircuitBreaker, adaptadores, fuzzy matcher |
+| `scraper/main_runner.py` | Entry point Run and Die — executa ciclo completo de coleta |
+| `scraper/persistence.py` | Ciclo medalhão via `executar_ciclo_medalhao` (SortingEngine + `sp_executar_carga_completa`) |
+| `processor/` | Esteira de triagem pós-coleta (SortingEngine, classificação) |
+| `ingestao_conab.py` | Pipeline medalhão CONAB: extract → transform → load |
+| `seasonality.py` | Cálculo do IS (Índice de Sazonalidade) baseline + fallback |
 | `ghost_dba_agent.py` | Agente de autocura com LLM (polling 300s, self-heal, notificação) |
-| `db_maintenance.py` | "Gari" do banco: upsert scraper raw → staging + GC 30 dias |
-| `audit_local_db.py` | Auditoria de integridade: TXT locais × banco |
-| `run_scraper_historico.py` | Runner de coleta CEASA multi-UF (asyncio, 4 em paralelo) |
-| `scraper/` | Ecossistema de scrapers: engine, spider, adaptadores (HFBrasil, CEAGESP, Agrolink), fuzzy matcher, buscador de fontes |
+| `db_maintenance.py` | "Gari" do banco: upsert scraper raw → staging + GC |
 
 **Regras de Ouro:**
 - 🚫 **Nunca pandas** — Polars ou nada.
@@ -98,7 +97,7 @@ API RESTful enxuta que só serve o que o app precisa — nada mais.
 
 ---
 
-## 🛋️ Sala de Estar — PWA React Mobile-First (Mantine UI)
+## 🛋️ Sala de Estar — PWA React Mobile-First
 
 Um app que funciona **na feira, no ônibus, no sinal 3G**.
 
@@ -108,7 +107,7 @@ Um app que funciona **na feira, no ônibus, no sinal 3G**.
 👤 Entra → [SP ▼] [2026 ▼] → 🗓️ Clica num mês → 🛒 Filtra produtos → 🚦 Grid colorido
 ```
 
-**1. Header Fixo** (`AppShell.Header`)
+**1. Header Fixo**
 ```
 ┌──────────────────────────────────────────────┐
 │ [📈] Sazonalidade                     [🌙] [📂] │
@@ -116,7 +115,7 @@ Um app que funciona **na feira, no ônibus, no sinal 3G**.
 └──────────────────────────────────────────────┘
 ```
 - Logo + título + subtítulo com UF
-- 🌙/☀️ — alterna dark/light (Mantine `useMantineColorScheme` sincronizado com classe `.dark` do Tailwind)
+- 🌙/☀️ — alterna dark/light (hook `useTheme` com classe dark no `<html>` Tailwind)
 - 📂 Categorias — texto em desktop, só ícone em mobile
 
 **2. Seletor de Período**
@@ -130,25 +129,25 @@ Um app que funciona **na feira, no ônibus, no sinal 3G**.
 │ Jul│ Ago│ Set│ Out│ Nov│ Dez│
 └────┴────┴────┴────┴────┴────┘
 ```
-- **Select UF** + **Select Ano** (Mantine) — resetam mês e status ao trocar
+- **Select UF** + **Select Ano** (shadcn/ui Select + Radix) — resetam mês e status ao trocar
 - Grid de **12 botões** com `minHeight: 44px` (touch target): verde = com dados, cinza = sem, preenchido = selecionado
 - Clique no mesmo mês **destoggle** → volta visão completa
-- **Badge** verde com contagem de itens visíveis
+- **Badge** verde (shadcn/ui badge) com contagem de itens visíveis
 
-**3. Filtro por Produto** (`Chip.Group` Mantine)
+**3. Filtro por Produto**
 ```
 [Abacate Avocado] [Abacate Breda] [Banana] [Batata] [+]
 ```
 - Multi-select chips — toque alterna seleção
 - Filtro AND com o mês selecionado
 
-**4. Filtro por Status** (`Chip` exclusivo Mantine)
+**4. Filtro por Status**
 ```
 [Melhor Época] [Preço Normal] [Péssima Época] [✕]
 ```
 - Apenas 1 ativo por vez. ✕ aparece para limpar
 
-**5. Grid de Produtos** (`SimpleGrid` + `ProductCard`)
+**5. Grid de Produtos** (Tailwind grid + shadcn/ui Card)
 ```
 ┌──────────┐  ┌──────────┐  ┌──────────┐
 │    🥑    │  │    🍌    │  │    🥔    │
@@ -159,9 +158,10 @@ Um app que funciona **na feira, no ônibus, no sinal 3G**.
 ```
 - 2 colunas mobile, 3 tablet, 4 desktop
 - Ordenação: VERDE → AMARELO → VERMELHO
-- Cada `Card` Mantine: emoji 28px + nome + ícone status + borda colorida por status + nota de rodapé
+- Cada shadcn/ui Card: emoji 28px + nome + ícone status + borda colorida por status + nota de rodapé
+- SpotlightCard com animação Framer Motion no hover
 
-**6. Modal de Categorias** (`Modal` + `ScrollArea.Autosize`)
+**6. Modal de Categorias** (shadcn/ui Dialog + Radix)
 ```
 Nível 1:          Nível 2:
 ┌──────────────┐  ┌──────────────┐
@@ -179,22 +179,25 @@ Nível 1:          Nível 2:
 | Tecnologia | Versão | Pra quê |
 |---|---|---|
 | React | 19 | Core UI |
-| Mantine | 9 | Component library — AppShell, Select, SimpleGrid, Card, Chip, Modal, Badge, ActionIcon |
 | Vite | 6 | Bundler + PWA plugin |
-| TailwindCSS | 3.4 | Utility classes (co-existe com Mantine via `darkMode: 'class'`) |
+| shadcn/ui | — | Radix primitives + CVA + tailwind-merge `cn()` |
+| TailwindCSS | 3.4 | Utility classes + dark mode via `class` |
 | TanStack Query | 5 | Cache offline-first, stale-while-revalidate |
 | Zustand | 5 | Estado persistente do usuário |
+| Framer Motion | 12 | Animações (AnimatePresence, motion components) |
 | Lucide React | — | Ícones (TrendingUp, Layers, Sun, Moon, X, Salad) |
+| Three.js / @react-three/fiber | — | Visualizações 3D (Beams, BrasilMap) |
+| Recharts | — | Gráficos |
 | Axios | — | HTTP client |
 
 ### Regras de Ouro do Frontend
 
 - 🚫 **Nunca exibe R$** — só o semáforo. Zero preços na tela.
 - 🚫 **Sem imagens** — emoji unicode exclusivamente.
-- ⚡ Skeletons (`Skeleton` Mantine) no lugar de spinners.
+- ⚡ Skeletons (shadcn/ui skeleton) no lugar de spinners.
 - 📱 Mobile-first 100%. Touch targets ≥ 44×44px.
-- 🌗 Dark mode via Mantine `useMantineColorScheme` + `.dark` class Tailwind.
-- 🧩 `manualChunks` no Vite: vendor-react, vendor-mantine, vendor-icons, vendor-store, vendor-http.
+- 🌗 Dark mode via hook `useTheme` + classe `.dark` no `<html>` (Tailwind).
+- 🧩 `manualChunks` no Vite: vendor-react, vendor-ui, vendor-icons, vendor-store, vendor-http.
 
 **Offline:** Service Worker com CacheFirst para assets (30d), StaleWhileRevalidate para API de sazonalidade (7d), CacheFirst para municípios (24h). IndexedDB como cache persistente.
 
@@ -232,11 +235,11 @@ O `ghost_dba_agent.py` é um worker autônomo que:
 
 | Camada | Plataforma | Região |
 |---|---|---|
-| Banco | Render (PostgreSQL free) | Ohio |
+| Banco | Supabase (PostgreSQL 17) | us-east-1 |
 | API | Render (Web Service, Python) | Ohio |
 | Frontend | Vercel (SPA, PWA) | Edge |
 
-Ambiente: Python 3.11, PostgreSQL 16+, Node 20+.
+Ambiente: Python 3.13+, PostgreSQL 16+ via Supabase, Node 20+.
 
 ---
 
@@ -255,6 +258,11 @@ npm install && npm --prefix frontend install
 # 3. .env
 cp .env.example .env  # configure DATABASE_URL
 
+# 3b. Conexão Supabase (alternativa quando DNS não resolve)
+supabase db query --linked
+
+# 3c. Publique schemas raw/staging/mart/ops no dashboard do Supabase
+
 # 4. Rodar
 npm run dev:backend   # FastAPI :8000
 npm run dev:frontend  # Vite :5173
@@ -271,7 +279,7 @@ As seguintes pastas contêm dependências npm que **não são commitadas** (est�
 | Pasta | Comando | O que instala |
 |---|---|---|
 | `./` (raiz) | `npm install` | Scripts de conveniência (`dev:all`, `dev:backend`, etc.) |
-| `frontend/` | `npm install` | React, Mantine, Vite, TanStack Query, Zustand, TailwindCSS |
+| `frontend/` | `npm install` | React, shadcn/ui, Vite, TanStack Query, Zustand, TailwindCSS, Framer Motion, Three.js |
 
 **Ordem de instalação:**
 ```bash

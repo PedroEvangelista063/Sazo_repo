@@ -64,14 +64,21 @@ database/processed_data/
 ## Volumes Atuais por Tabela
 | Camada | Tabela | Registros |
 |--------|--------|-----------|
-| RAW | `raw.coleta_bruta` | 15 (payloads brutos, todos processados) |
-| STAGING | `staging.fact_precos_mensais` | 27.545 (dados limpos e tipados) |
-| STAGING | `staging.dim_produto` | 831 (produtos únicos) |
+| RAW | `raw.coleta_bruta` | 15 (payloads brutos, UUID PK) |
+| STAGING | `staging.fact_precos_mensais` | 42.358 (dados limpos e tipados) |
+| STAGING | `staging.dim_produto` | 857 (produtos únicos) |
 | STAGING | `staging.dim_localidade` | 850 (localidades únicas) |
-| MART | `mart.sazonalidade_produto` | 65.830 (30.964 real + 34.866 forecast) |
+| STAGING | `staging.dim_categoria` | 11 (categorias B2C) |
+| STAGING | `staging.confianca_baseline` | 2.802 (confiança por produto/localidade) |
+| STAGING | `staging.baseline_2025_interpolado` | 2.802 (baseline interpolada) |
+| STAGING | `staging.dim_conab_produto_mapping` | 20 (mapping CONAB ↔ produto) |
+| STAGING | `staging.precos_rejeitados` | 87 (anomalias detectadas por trigger) |
+| MART | `mart.sazonalidade_produto` | 62.291 (dados reais + forecast) |
 | MART | `mart.sazonalidade_baseline_24_25` | 23.449 (moda 2024-2025, fallback) |
 | MART | `mart.sazonalidade_baseline_25_26` | 32.581 (moda 2025-2026, primária) |
-| MV | `mart.vw_api_produtos_sazonalidade` | 54.479 (exposta à API) |
+| MV | `mart.vw_api_produtos_sazonalidade` | 62.291 (exposta à API) |
+| OPS | `ops.quarentena_coleta` | 9 (rejeições com motivo + raw_id UUID) |
+| OPS | `ops.config_agente` | 8 (configuração dos micro-motores) |
 
 A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. Definição em `26_forecast_baseline.sql:63`:
 - JOIN: `sazonalidade_produto` + `dim_produto` + `dim_localidade` + `dim_categoria`
@@ -161,7 +168,21 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - Fase 0 (Backup): ✅ `backup_quero_comprar_pre_migracao.dump` (2.48 MB)
 - Fase 1 (Projeto): ✅ Projeto criado e linkado
 - Fase 2 (Schema): ✅ 12 migrações aplicadas via `supabase db push --linked`
-- Fase 3 (Data): ⏳ Em andamento — dim_produto, dim_localidade, dim_categoria, fact_precos_mensais restaurados
+- Fase 3 (Data): ✅ **Completo** — 14 tabelas, 174.240 linhas, 100% idênticas local vs Supabase
+
+### Fase 3 — Desafios Resolvidos
+1. **Schema drift**: `raw.coleta_bruta` e `ops.quarentena_coleta` usam UUID PK (não SERIAL) — schema original via migração usava tipos incorretos, recriado via DROP/CREATE.
+2. **Colunas faltantes**: `staging.fact_precos_mensais` não tinha `preco_curado`, `is_interpolado`, `fonte` — migração incompleta. Corrigido com `ALTER TABLE ADD COLUMN`.
+3. **Trigger bloqueante**: `trg_valida_anomalia_preco` barrava inserts com preço >500% da média histórica. Trigger desativada, dados importados, reativada.
+4. **Sequences dessincronizadas**: Restore com `id` explícito não atualizou `SERIAL` sequences — `precos_rejeitados_id_rejeitado_seq` em 1 quando max era 89. Corrigido com `setval()` para todas as tabelas.
+5. **413 do Supabase API**: Arquivos SQL >~2.5MB via `supabase db query --file` retornam `413 request entity too large`. Solução: chunks de ~2MB.
+
+### Scripts de Restore
+- `restore_supabase_final.py` — restore v1 (row_to_json + INSERT em lote)
+- `restore_remaining_v2.py` — restore v2 (apenas tabelas faltantes)
+- `restore_final_v3.py` — restore v3 (200 rows/chunk, ON CONFLICT DO NOTHING)
+- `restore_chunks/fix_schema_v3.sql` — recriação raw.coleta_bruta e ops.quarentena_coleta com UUID PK
+- `fix_sequences.sql` — correção de sequences dessincronizadas
 
 ### Comandos Úteis
 ```bash

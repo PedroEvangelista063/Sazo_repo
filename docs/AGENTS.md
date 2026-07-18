@@ -4,13 +4,13 @@ Contexto para OpenCode, GGA e agentes AI
 
 Tech Stack
 
-Backend: Python 3.11+ (FastAPI, Polars, psycopg2, asyncpg, rapidfuzz)
+Backend: Python 3.13+, FastAPI[standard]==0.115.6, Pydantic v2, asyncpg==0.30.0, httpx==0.28.1, Uvicorn[standard]==0.34.0, Polars==1.31.0, rapidfuzz
 
-Frontend: React 18.3+ com Vite 6 (PWA, TailwindCSS 3.4, Zustand 5, TanStack Query v5)
+Frontend: React 19.2+, Vite 6 PWA, TailwindCSS 3.4, shadcn/ui (Radix + CVA + tailwind-merge), Framer Motion 12, Zustand 5, TanStack Query v5, TanStack Table v8, Recharts, Lucide React, Three.js / @react-three/fiber, canvas-confetti
 
-Database: PostgreSQL 16+
+Database: PostgreSQL 16+ (via Supabase — projeto Quero_Comprar_ext, ref `kxsqrcccaaxplpktmutl`)
 
-Infra: Docker, GitHub Actions, WSL2
+Infra: Supabase (hospedagem banco + API), conexão via `supabase db query --linked` ou direct pool (5432). Render (back-end API). Nada de Docker, GitHub Actions ou WSL2.
 
 Engenharia Geral
 
@@ -30,6 +30,8 @@ Prefira PL/pgSQL sobre Python para lógica pesada de agregação.
 
 Backend FastAPI: Evite ORM para leitura B2C em massa. Use Raw SQL (asyncpg) e faça cache com expiração.
 
+Pipeline de ingestão (pipeline/) usa psycopg2-binary para conexão com banco (não asyncpg — são scripts síncronos ETL pesados).
+
 Classificação de Produtos (Categoria B2C)
 
 A separação entre ALIMENTO_VAREJO e as demais categorias (MAQUINARIO_FERRAMENTA, INSUMO_AGRICOLA, SERVICO_LOGISTICA, MATERIA_PRIMA_B2B) é feita por motor de regex no pipeline Python — tanto em ingestao_conab.py quanto em process_to_files.py.
@@ -41,7 +43,7 @@ Regras de classificação:
   - SERVICO_LOGISTICA: transporte, passagem, pátio, tratamento (regex: TRANSPORTE|PASSAGEM|PATIO|TRATAMENTO).
   - MATERIA_PRIMA_B2B: categoria residual — tudo que não casa com as regras acima.
 
-As REGRAS_CATEGORIAS estão definidas em ingestao_conab.py (linhas 457-475) e replicadas em process_to_files.py (linhas 65-74).
+As REGRAS_CATEGORIAS estão definidas em pipeline/ingestao_conab.py e replicadas em pipeline/process_to_files.py.
 
 Banco de Dados (Arquitetura Medalhão & Observability)
 
@@ -54,6 +56,8 @@ mart → sazonalidade materializada para API (Acesso via vw_api_produtos_sazonal
 ops → schema de observabilidade monitorado pelo Ghost DBA.
 
 role_etl_writer para pipeline, role_api_reader para API (SELECT only).
+
+Publicado no Supabase (ref `kxsqrcccaaxplpktmutl`). Schemas raw/staging/mart/ops pendentes de publicação no dashboard do Supabase.
 
 Sazonalidade — Baseline Híbrido 2025 + Fallback Condicional (Fase 6)
 ⚠ ATENÇÃO: A MÉDIA MÓVEL CONTÍNUA (rolling window) FOI ABANDONADA.
@@ -90,18 +94,17 @@ Proibido exibir preços: O Frontend B2C nunca mostra R$. Apenas status visual (V
 
 Estado e Cache: Zustand 5 estritamente para estado persistente do usuário (UF/Cidade, persist via IndexedDB com idb-keyval). TanStack Query v5 estritamente para cache de API (Offline-first, stale-while-revalidate).
 
-UI: Mobile-first, uso de Skeletons (sem spinners bloqueantes). Produtos usam emoji unicode exclusivamente — sem imagens (jpg, png, webp, svg, avif).
+UI: Mobile-first, uso de Skeleton (componente `ui/skeleton`, sem spinners bloqueantes). Produtos usam emoji unicode exclusivamente — sem imagens (jpg, png, webp, svg, avif). Tema claro/escuro via `useTheme` hook com classe na `<html>`.
 
-Componentes:
-- LocationSelector: input de cidade com `<datalist>` populado via `useMunicipios(uf)` hook.
-- ProductCard: NUNCA exibe preços. Usa emoji unicode via `PRODUTO_EMOJI` map. Mapeia `status_cor` → classes Tailwind (bg/border/text).
-- Dashboard: seções colapsáveis para "Monte sua Lista" e grid de produtos (ChevronDown com rotação). Ordenação `STATUS_ORDER[status_cor]` (VERDE=0 no topo, VERMELHO=2 no fim). Skeleton cards enquanto `isLoading`.
+Componentização: shadcn/ui (Radix primitives + CVA + tailwind-merge `cn()`). Componentes em `components/ui/`: button, badge, card, skeleton, dialog, select, tabs, table. Componentes de negócio em `components/`: ProductCard, GameCard, GameButton, CategoriesModal, SpotlightCard, TiltedCard, BlurText, Beams (Three.js), BrasilMap, SazonalidadeNacional, RegiaoPanel, BRNationalIcon, GraficosView, TabelaView, SkeletonCard, ThemeToggle, LivingStatus. Animações via Framer Motion (motion components, AnimatePresence).
 
-API queries: `useHortifruti(ano?, mes?)` executa duas queries TanStack Query: `hortifruti-meta` (snapshot sem filtro, para metadados) e `hortifruti-filter` (ativada apenas com ano+mes, para cards). `staleTime: 12h` para sazonalidade, `24h` para lista de municípios.
+App single-page: SupermercadoView (única view principal, em `pages/`). React Router configurado em App.tsx. Seleção de UF/cidade via hooks `useUfs()` + `useFluxos()` combinados com estado persistente do usuário — sem LocationSelector ou useMunicipios dedicados.
+
+API queries: `useHortifruti(ano?, mes?)` executa duas queries TanStack Query: `hortifruti-meta` (snapshot sem filtro, para metadados) e `hortifruti-filter` (ativada apenas com ano+mes, para cards). `staleTime: 12h` para sazonalidade, `24h` para lista de municípios/UF.
 
 Cache do backend: os dados mensais históricos usam cache imutável de 24h com chave apenas de dimensões (ano, mês, UF, município, categoria). Requisições com diferentes filtros de produto/semáforo/páginação são servidas de memória.
 
 Ações:
-- O usuário seleciona UF e cidade → salvo em `useUserStore` com persist → `useHortifruti` dispara automaticamente (enabled: !!uf && !!municipio).
-- Botão "Alterar" no header do Dashboard → `clearLocation()` → volta ao LocationSelector.
-- `handleDismiss` no LocationSelector (modo edição) → limpa store e fecha.
+- O usuário seleciona UF e cidade via `useUfs()` + `useFluxos()` → salvo em `useUserStore` com persist → `useHortifruti` dispara automaticamente (enabled: !!uf && !!municipio).
+- Botão "Alterar" no header → `clearLocation()` → volta ao seletor de localidade.
+- Mantine NÃO é utilizado (embora conste em package.json, zero imports nos .tsx/.ts fonte). Todo UI é shadcn/ui + Radix.

@@ -60,41 +60,41 @@ const REGIOES_META: Record<string, { id: string; label: string; cor: string; cor
 
 const UFS: UFDot[] = [
   // Norte
-  { uf: 'AC', nome: 'Acre', regiao: 'norte', cx: 50, cy: 130 },
-  { uf: 'AP', nome: 'Amapá', regiao: 'norte', cx: 300, cy: 30 },
-  { uf: 'AM', nome: 'Amazonas', regiao: 'norte', cx: 155, cy: 75 },
-  { uf: 'PA', nome: 'Pará', regiao: 'norte', cx: 265, cy: 60 },
-  { uf: 'RO', nome: 'Rondônia', regiao: 'norte', cx: 90, cy: 150 },
-  { uf: 'RR', nome: 'Roraima', regiao: 'norte', cx: 190, cy: 20 },
-  { uf: 'TO', nome: 'Tocantins', regiao: 'norte', cx: 235, cy: 135 },
+  { uf: 'AC', nome: 'Acre', regiao: 'norte', cx: 109.2, cy: 343.0 },
+  { uf: 'AP', nome: 'Amapá', regiao: 'norte', cx: 480.0, cy: 119.4 },
+  { uf: 'AM', nome: 'Amazonas', regiao: 'norte', cx: 235.3, cy: 208.4 },
+  { uf: 'PA', nome: 'Pará', regiao: 'norte', cx: 511.3, cy: 175.6 },
+  { uf: 'RO', nome: 'Rondônia', regiao: 'norte', cx: 258.3, cy: 363.3 },
+  { uf: 'RR', nome: 'Roraima', regiao: 'norte', cx: 291.4, cy: 95.7 },
+  { uf: 'TO', nome: 'Tocantins', regiao: 'norte', cx: 566.3, cy: 349.9 },
 
   // Nordeste
-  { uf: 'AL', nome: 'Alagoas', regiao: 'nordeste', cx: 385, cy: 175 },
-  { uf: 'BA', nome: 'Bahia', regiao: 'nordeste', cx: 370, cy: 200 },
-  { uf: 'CE', nome: 'Ceará', regiao: 'nordeste', cx: 380, cy: 105 },
-  { uf: 'MA', nome: 'Maranhão', regiao: 'nordeste', cx: 320, cy: 85 },
-  { uf: 'PB', nome: 'Paraíba', regiao: 'nordeste', cx: 405, cy: 145 },
-  { uf: 'PE', nome: 'Pernambuco', regiao: 'nordeste', cx: 395, cy: 160 },
-  { uf: 'PI', nome: 'Piauí', regiao: 'nordeste', cx: 340, cy: 125 },
-  { uf: 'RN', nome: 'Rio Grande do Norte', regiao: 'nordeste', cx: 415, cy: 125 },
-  { uf: 'SE', nome: 'Sergipe', regiao: 'nordeste', cx: 385, cy: 190 },
+  { uf: 'AL', nome: 'Alagoas', regiao: 'nordeste', cx: 797.9, cy: 339.3 },
+  { uf: 'BA', nome: 'Bahia', regiao: 'nordeste', cx: 698.6, cy: 403.4 },
+  { uf: 'CE', nome: 'Ceará', regiao: 'nordeste', cx: 739.3, cy: 256.8 },
+  { uf: 'MA', nome: 'Maranhão', regiao: 'nordeste', cx: 628.3, cy: 230.7 },
+  { uf: 'PB', nome: 'Paraíba', regiao: 'nordeste', cx: 791.1, cy: 294.7 },
+  { uf: 'PE', nome: 'Pernambuco', regiao: 'nordeste', cx: 772.1, cy: 313.4 },
+  { uf: 'PI', nome: 'Piauí', regiao: 'nordeste', cx: 671.2, cy: 297.6 },
+  { uf: 'RN', nome: 'Rio Grande do Norte', regiao: 'nordeste', cx: 800.9, cy: 266.5 },
+  { uf: 'SE', nome: 'Sergipe', regiao: 'nordeste', cx: 781.1, cy: 364.8 },
 
   // Centro-Oeste
-  { uf: 'DF', nome: 'Distrito Federal', regiao: 'centro-oeste', cx: 230, cy: 208 },
-  { uf: 'GO', nome: 'Goiás', regiao: 'centro-oeste', cx: 220, cy: 195 },
-  { uf: 'MS', nome: 'Mato Grosso do Sul', regiao: 'centro-oeste', cx: 175, cy: 275 },
-  { uf: 'MT', nome: 'Mato Grosso', regiao: 'centro-oeste', cx: 150, cy: 190 },
+  { uf: 'DF', nome: 'Distrito Federal', regiao: 'centro-oeste', cx: 573.9, cy: 469.6 },
+  { uf: 'GO', nome: 'Goiás', regiao: 'centro-oeste', cx: 548.6, cy: 467.6 },
+  { uf: 'MS', nome: 'Mato Grosso do Sul', regiao: 'centro-oeste', cx: 420.2, cy: 563.0 },
+  { uf: 'MT', nome: 'Mato Grosso', regiao: 'centro-oeste', cx: 419.3, cy: 422.8 },
 
   // Sudeste
-  { uf: 'ES', nome: 'Espírito Santo', regiao: 'sudeste', cx: 365, cy: 265 },
-  { uf: 'MG', nome: 'Minas Gerais', regiao: 'sudeste', cx: 315, cy: 240 },
-  { uf: 'RJ', nome: 'Rio de Janeiro', regiao: 'sudeste', cx: 345, cy: 288 },
-  { uf: 'SP', nome: 'São Paulo', regiao: 'sudeste', cx: 275, cy: 308 },
+  { uf: 'ES', nome: 'Espírito Santo', regiao: 'sudeste', cx: 716.5, cy: 550.2 },
+  { uf: 'MG', nome: 'Minas Gerais', regiao: 'sudeste', cx: 636.9, cy: 530.6 },
+  { uf: 'RJ', nome: 'Rio de Janeiro', regiao: 'sudeste', cx: 663.4, cy: 610.3 },
+  { uf: 'SP', nome: 'São Paulo', regiao: 'sudeste', cx: 576.6, cy: 620.0 },
 
   // Sul
-  { uf: 'PR', nome: 'Paraná', regiao: 'sul', cx: 255, cy: 340 },
-  { uf: 'RS', nome: 'Rio Grande do Sul', regiao: 'sul', cx: 230, cy: 395 },
-  { uf: 'SC', nome: 'Santa Catarina', regiao: 'sul', cx: 265, cy: 368 },
+  { uf: 'PR', nome: 'Paraná', regiao: 'sul', cx: 518.4, cy: 669.8 },
+  { uf: 'RS', nome: 'Rio Grande do Sul', regiao: 'sul', cx: 473.0, cy: 770.4 },
+  { uf: 'SC', nome: 'Santa Catarina', regiao: 'sul', cx: 517.7, cy: 718.5 },
 ]
 
 const REGIOES = Object.values(REGIOES_META)
@@ -134,7 +134,7 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
   return (
     <div className={cn('relative w-full max-w-[420px] mx-auto', className)}>
       <svg
-        viewBox="0 0 500 450"
+        viewBox="0 0 1000 912"
         className="w-full h-auto"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
@@ -160,8 +160,8 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
           href="/br-map.svg"
           x="0"
           y="0"
-          width="500"
-          height="450"
+          width="1000"
+          height="912"
           preserveAspectRatio="xMidYMid meet"
           opacity={0.12}
           className="pointer-events-none"
@@ -189,7 +189,7 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
                 <circle
                   cx={midX}
                   cy={midY}
-                  r={110}
+                  r={220}
                   fill={`url(#glow-${reg.id})`}
                   className="pointer-events-none"
                 />
@@ -210,9 +210,9 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
               d={buildRegionPath(ufs)}
               fill="none"
               stroke={reg.cor}
-              strokeWidth={isSelected ? 1 : 0.5}
+              strokeWidth={isSelected ? 2 : 1}
               strokeOpacity={isSelected ? 0.3 : 0.1}
-              strokeDasharray="4 3"
+              strokeDasharray="8 6"
               className="pointer-events-none"
               initial={false}
               animate={{ strokeOpacity: isSelected ? 0.3 : 0.1 }}
@@ -228,12 +228,12 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
               if (!arc) return null
               const { from, to, flow, isIncoming } = arc
               const mx = (from.cx + to.cx) / 2
-              const my = (from.cy + to.cy) / 2 - 30
+              const my = (from.cy + to.cy) / 2 - 60
               const d = `M ${from.cx} ${from.cy} Q ${mx} ${my} ${to.cx} ${to.cy}`
               const cor = isIncoming ?? false
                 ? '#3B82F6'   // azul — recebe
                 : '#10B981'   // verde — envia
-              const strokeWidth = hasUfSelection ? 3 : 2
+              const strokeWidth = hasUfSelection ? 6 : 4
               return (
                 <g key={`arc-${flow.id}-${idx}`}>
                   {/* Sombra do arco */}
@@ -241,8 +241,8 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
                     d={d}
                     fill="none"
                     stroke="rgba(0,0,0,0.15)"
-                    strokeWidth={strokeWidth + 0.5}
-                    transform="translate(0, 2)"
+                    strokeWidth={strokeWidth + 1}
+                    transform="translate(0, 4)"
                   />
                   {/* Arco principal animado */}
                   <motion.path
@@ -252,7 +252,7 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
                     strokeWidth={strokeWidth}
                     strokeOpacity={hasUfSelection ? 0.9 : 0.7}
                     strokeLinecap="round"
-                    strokeDasharray={hasUfSelection ? 'none' : '4 3'}
+                    strokeDasharray={hasUfSelection ? 'none' : '8 6'}
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
                     transition={{ duration: 0.8, delay: idx * 0.08, ease: 'easeInOut' }}
@@ -269,9 +269,9 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
           const isInRegion = selectedRegion === uf.regiao
           const isDimmed = selectedRegion !== null && !isInRegion
           const isUfActive = selectedUF === uf.uf
-          const dotRadius = isUfActive ? 15 : isInRegion ? 13 : 9
-          const labelRadius = isUfActive ? 22 : isInRegion ? 20 : 14
-          const outerGlow = isUfActive ? 22 : isInRegion ? 18 : 0
+          const dotRadius = isUfActive ? 22 : isInRegion ? 18 : 12
+          const labelRadius = isUfActive ? 30 : isInRegion ? 26 : 18
+          const outerGlow = isUfActive ? 35 : isInRegion ? 28 : 0
 
           return (
             <motion.g
@@ -292,7 +292,7 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
                   r={outerGlow}
                   fill={reg.cor}
                   fillOpacity={0.15}
-                  initial={{ r: 15, fillOpacity: 0.3 }}
+                  initial={{ r: 30, fillOpacity: 0.3 }}
                   animate={{ r: outerGlow, fillOpacity: 0.15 }}
                   transition={{ duration: 0.3 }}
                 />
@@ -300,8 +300,8 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
 
               {/* Sombra */}
               <circle
-                cx={uf.cx + 1}
-                cy={uf.cy + 1.5}
+                cx={uf.cx + 2}
+                cy={uf.cy + 3}
                 r={dotRadius}
                 fill="rgba(0,0,0,0.15)"
                 className="pointer-events-none"
@@ -315,13 +315,13 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
                 fill={isUfActive ? '#fff' : reg.cor}
                 fillOpacity={isUfActive ? 1 : isInRegion ? 1 : 0.75}
                 stroke={isUfActive ? reg.cor : isInRegion ? '#fff' : 'none'}
-                strokeWidth={isUfActive ? 3 : isInRegion ? 2 : 0}
+                strokeWidth={isUfActive ? 6 : isInRegion ? 4 : 0}
                 animate={{
                   r: dotRadius,
                   fillOpacity: isUfActive ? 1 : isInRegion ? 1 : 0.75,
                 }}
                 transition={{ duration: 0.2 }}
-                whileHover={{ r: dotRadius + 2 }}
+                whileHover={{ r: dotRadius + 4 }}
               />
 
               {/* Label UF */}
@@ -331,10 +331,10 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill={isUfActive ? reg.cor : '#fff'}
-                fontSize={isUfActive ? 8 : isInRegion ? 7 : 6}
+                fontSize={isUfActive ? 12 : isInRegion ? 10 : 8}
                 fontWeight={700}
                 className="pointer-events-none select-none"
-                animate={{ fontSize: isUfActive ? 8 : isInRegion ? 7 : 6 }}
+                animate={{ fontSize: isUfActive ? 12 : isInRegion ? 10 : 8 }}
                 transition={{ duration: 0.2 }}
               >
                 {uf.uf}
@@ -344,15 +344,15 @@ export function BrasilMap({ selectedRegion, onRegionClick, selectedUF, onUfClick
               {(isUfActive || isInRegion || selectedRegion === null) && (
                 <motion.text
                   x={uf.cx}
-                  y={uf.cy + labelRadius + 9}
+                  y={uf.cy + labelRadius + 14}
                   textAnchor="middle"
                   dominantBaseline="central"
                   fill={reg.cor}
                   className="pointer-events-none select-none"
-                  fontSize={isUfActive ? 9 : 8}
+                  fontSize={isUfActive ? 14 : 12}
                   fontWeight={isUfActive ? 700 : 500}
-                  initial={{ opacity: 0, y: uf.cy + labelRadius + 5 }}
-                  animate={{ opacity: 1, y: uf.cy + labelRadius + 9 }}
+                  initial={{ opacity: 0, y: uf.cy + labelRadius + 10 }}
+                  animate={{ opacity: 1, y: uf.cy + labelRadius + 14 }}
                   transition={{ duration: 0.15 }}
                 >
                   {uf.uf === 'DF' ? 'DF' : isUfActive ? uf.nome : uf.nome.substring(0, 6)}

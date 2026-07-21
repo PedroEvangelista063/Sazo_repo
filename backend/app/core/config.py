@@ -15,8 +15,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
     ]
-    pool_min_size: int = 10
-    pool_max_size: int = 50
+    pool_min_size: int = 2
+    pool_max_size: int = 10
     api_v1_prefix: str = "/api/v1"
     rate_limit_per_minute: int = 60
     request_timeout_seconds: float = 29.0

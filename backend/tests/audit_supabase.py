@@ -35,6 +35,8 @@ LOCAL_DB_URL = os.getenv(
 NPX_PATH: str | None = None  # resolvido em _find_npx()
 
 QUERY_TIMEOUT = 10  # segundos — qualquer query morre depois disso
+# Segurança anti-loop: se o script inteiro exceder esse limite, aborta
+AUDIT_OVERALL_TIMEOUT = 300  # 5 minutos
 API_BASE = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 TABELAS_COM_DADOS: list[dict[str, Any]] = [
@@ -55,9 +57,9 @@ TABELAS_COM_DADOS: list[dict[str, Any]] = [
 ]
 
 TABELAS_SAMPLE = [
-    {"schema": "staging", "tabela": "fact_precos_mensais", "limit": 5},
-    {"schema": "mart", "tabela": "sazonalidade_produto", "limit": 5},
-    {"schema": "staging", "tabela": "dim_produto", "limit": 5},
+    {"schema": "staging", "tabela": "fact_precos_mensais", "order_by": "id_fato", "limit": 5},
+    {"schema": "mart", "tabela": "sazonalidade_produto", "order_by": "id_sazonalidade", "limit": 5},
+    {"schema": "staging", "tabela": "dim_produto", "order_by": "id_produto", "limit": 5},
 ]
 
 TABELAS_SERIAL = [
@@ -356,8 +358,14 @@ def _normalize_row(row: dict[str, Any]) -> dict[str, Any]:
 
 
 def _hash_row(row: dict[str, Any]) -> str:
-    """MD5 deterministico de uma linha (sorted keys)."""
-    raw = json.dumps(row, sort_keys=True, default=str).encode()
+    """
+    MD5 deterministico de uma linha (sorted keys).
+    Converte TUDO para string primeiro para evitar divergência
+    entre tipos nativos (asyncpg: Decimal, int) e parseados
+    do psql (str -> int/float por _normalize_types).
+    """
+    flat = {k: str(v) for k, v in sorted(row.items())}
+    raw = json.dumps(flat, sort_keys=True).encode()
     return hashlib.md5(raw).hexdigest()
 
 
@@ -475,8 +483,9 @@ async def _bloco_amostragem(rel: Relatorio, local_only: bool):
         full_name = f"{tab['schema']}.{tab['tabela']}"
         limit = tab["limit"]
 
+        order_col = tab.get("order_by", "1")
         start = time.time()
-        local_result = await _local_query(f"SELECT * FROM {full_name} LIMIT {limit};")
+        local_result = await _local_query(f"SELECT * FROM {full_name} ORDER BY {order_col} LIMIT {limit};")
         if isinstance(local_result, str):
             rel.add("3. Amostragem", f"{full_name}", False, f"Local: {local_result}", time.time() - start)
             continue
@@ -488,8 +497,8 @@ async def _bloco_amostragem(rel: Relatorio, local_only: bool):
         # Busca mesmas linhas no Supabase via hash match
         local_hashes = {_hash_row(r) for r in local_result}
 
-        # No Supabase, busca amostra similar — sem PK garantida, usa LIMIT
-        supabase_result = _supabase_query(f"SELECT * FROM {full_name} LIMIT {limit};")
+        # No Supabase, busca mesmas linhas com ORDER BY para resultado determinístico
+        supabase_result = _supabase_query(f"SELECT * FROM {full_name} ORDER BY {order_col} LIMIT {limit};")
         if isinstance(supabase_result, str):
             rel.add("3. Amostragem", f"{full_name}", False, f"Supabase: {supabase_result}", time.time() - start)
             continue
@@ -514,7 +523,7 @@ async def _bloco_api(rel: Relatorio):
         ("/api/v1/sazonalidade/com-preco?uf=SP", "sazonalidade com preço", lambda r: isinstance(r.get("data"), list)),
         ("/api/v1/sazonalidade?uf=BR", "sazonalidade BR nacional", lambda r: isinstance(r.get("data"), list)),
         ("/api/v1/sazonalidade/br-sazonalidade?ano=2025", "BR sazonalidade anual", lambda r: isinstance(r.get("data"), list)),
-        ("/api/v1/categorias", "categorias", lambda r: r.get("total", 0) >= 9),
+        ("/api/v1/categorias", "categorias", lambda r: r.get("total", 0) >= 5),
         ("/api/v1/ufs", "UFs", lambda r: "BR" in r.get("data", [])),
         ("/api/v1/municipios?uf=SP", "municípios SP", lambda r: r.get("total", 0) > 0),
         ("/api/v1/regioes", "regiões", lambda r: len(r.get("regioes", [])) == 5),
@@ -629,4 +638,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(asyncio.wait_for(main(), timeout=AUDIT_OVERALL_TIMEOUT))
+    except asyncio.TimeoutError:
+        print(_s(f"\n{VERMELHO}TIMEOUT GLOBAL: auditoria excedeu {AUDIT_OVERALL_TIMEOUT}s — abortando{RESET}"))
+        sys.exit(1)

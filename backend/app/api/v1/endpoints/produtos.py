@@ -384,26 +384,24 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
     return result
 
 
-async def _count_br(categoria) -> int:
+async def _fetch_all_br_snapshot(categoria) -> list:
+    """Fetch ALL rows from snapshot (paginação em memória — overload 3-arg foi removida pq estava quebrada)."""
     if categoria:
-        row = await fetchrow("SELECT COUNT(*) FROM mart.fn_br_nacional_snapshot($1)", categoria.upper())
-    else:
-        row = await fetchrow("SELECT COUNT(*) FROM mart.fn_br_nacional_snapshot(NULL)")
-    return row[0] if row else 0
+        return await fetch("SELECT * FROM mart.fn_br_nacional_snapshot($1::TEXT)", categoria.upper())
+    return await fetch("SELECT * FROM mart.fn_br_nacional_snapshot(NULL::TEXT)")
 
 
-async def _count_br_por_mes(ano, mes, categoria) -> int:
+async def _fetch_all_br_por_mes(ano, mes, categoria) -> list:
+    """Fetch ALL rows from por_mes (paginação em memória — overload 5-arg removida)."""
     if categoria:
-        row = await fetchrow(
-            "SELECT COUNT(*) FROM mart.fn_br_nacional_por_mes($1, $2, $3)",
+        return await fetch(
+            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, $3::TEXT)",
             ano, mes, categoria.upper(),
         )
-    else:
-        row = await fetchrow(
-            "SELECT COUNT(*) FROM mart.fn_br_nacional_por_mes($1, $2, NULL)",
-            ano, mes,
-        )
-    return row[0] if row else 0
+    return await fetch(
+        "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, NULL::TEXT)",
+        ano, mes,
+    )
 
 
 async def _query_br_snapshot(
@@ -414,17 +412,9 @@ async def _query_br_snapshot(
     cache_key,
     settings,
 ) -> SazonalidadeListResponse:
-    total = await _count_br(categoria)
-    if categoria:
-        rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_snapshot($1, $2, $3)",
-            categoria.upper(), por_pagina, offset_val,
-        )
-    else:
-        rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_snapshot(NULL, $1, $2)",
-            por_pagina, offset_val,
-        )
+    all_rows = await _fetch_all_br_snapshot(categoria)
+    total = len(all_rows)
+    rows = all_rows[offset_val:offset_val + por_pagina]
     return await _build_br_response(rows, pagina, por_pagina, total, cache_key, settings)
 
 
@@ -438,17 +428,9 @@ async def _query_br_por_mes(
     cache_key,
     settings,
 ) -> SazonalidadeListResponse:
-    total = await _count_br_por_mes(ano, mes, categoria)
-    if categoria:
-        rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, $3, $4, $5)",
-            ano, mes, categoria.upper(), por_pagina, offset_val,
-        )
-    else:
-        rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, NULL, $3, $4)",
-            ano, mes, por_pagina, offset_val,
-        )
+    all_rows = await _fetch_all_br_por_mes(ano, mes, categoria)
+    total = len(all_rows)
+    rows = all_rows[offset_val:offset_val + por_pagina]
     return await _build_br_response(rows, pagina, por_pagina, total, cache_key, settings)
 
 
@@ -473,7 +455,7 @@ async def _build_br_response(rows, pagina, por_pagina, total, cache_key, setting
             is_forecast=r.get("is_forecast", False),
             confianca_baseline=None,
         )
-        for r in page
+        for r in rows
     ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
@@ -536,7 +518,7 @@ async def _query_regional_snapshot(
             confianca_baseline=None,
             regiao=regiao_id.upper(),
         )
-        for r in page
+        for r in rows
     ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
@@ -598,7 +580,7 @@ async def _query_regional_por_mes(
             confianca_baseline=None,
             regiao=regiao_id.upper(),
         )
-        for r in page
+        for r in rows
     ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)

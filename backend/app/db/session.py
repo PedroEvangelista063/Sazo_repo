@@ -20,6 +20,7 @@ async def _init_pool(url: str, max_conn: int, min_conn: int, command_timeout: in
         min_size=min_conn,
         max_size=max_conn,
         command_timeout=command_timeout,
+        statement_cache_size=0,  # required for Supabase PgBouncer (transaction mode)
     )
 
 
@@ -32,7 +33,7 @@ async def get_api_pool() -> asyncpg.Pool:
                 url = _resolve_url("database_url_api", settings.database_url)
                 max_c = min(settings.pool_max_size, 50)
                 min_c = min(settings.pool_min_size, max_c // 2)
-                _pool_api = await _init_pool(url, max_c, min_c, 30)
+                _pool_api = await _init_pool(url, max_c, min_c, 120)
     return _pool_api
 
 

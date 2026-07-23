@@ -56,3 +56,22 @@ Thumbs.db
 
 # Hound cache
 .hound_cache/
+
+# OpenCode auto-generated infra
+.config/opencode/skills/
+.config/opencode/.gentle-ai-*
+.config/opencode/plugins/
+.config/opencode/commands/skill-*
+
+# OpenSpec (snapshots + changes WIP)
+openspec/summary-snapshot-*
+openspec/changes/hound-master-fetch-integration/
+
+# Pipeline WIP (hound module, site maps)
+pipeline/scraper/site_maps/
+pipeline/scraper/config_fontes_descobertas.json
+pipeline/scraper/hound/
+pipeline/scraper/hunt_adapter.py
+
+# Testes avulsos (ainda nao integrados)
+tests/

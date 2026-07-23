@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "ref-tools": {
+      "command": "npx",
+      "args": ["-y", "ref-tools-mcp"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://postgres:postgres@localhost:5432/quero_comprar"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "eslint": {
+      "command": "npx",
+      "args": ["-y", "@eslint/mcp"]
+    },
+    "engram": {
+      "command": "/home/pedroeduardo/.local/bin/engram",
+      "args": ["mcp", "--tools=agent"]
+    },
+    "supabase": {
+      "url": "https://mcp.supabase.com/mcp"
+    }
+  }
+}

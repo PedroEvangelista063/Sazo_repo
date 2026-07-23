@@ -47,3 +47,12 @@ Thumbs.db
 *.png
 *.jpg
 *.jpeg
+
+# Claude (duplicata do .agents)
+.claude/
+
+# Caches de teste
+.test_cache_*
+
+# Hound cache
+.hound_cache/

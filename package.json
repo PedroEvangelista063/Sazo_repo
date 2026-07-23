@@ -1,4 +1,7 @@
 {
+  "name": "quero-comprar-vg",
+  "version": "0.1.0",
+  "private": true,
   "devDependencies": {
     "@opencode-ai/plugin": "^1.17.13",
     "@types/node": "^26.1.0",
@@ -24,7 +27,7 @@
     "install:all": "npm install && npm --prefix frontend install && pip install -r backend/requirements.txt",
     "scraper": "python -m pipeline.run_scraper_historico --concorrencia 4",
     "scrape:manual": "python -m pipeline.run_scraper_historico",
-    "dev:backend": "python -m uvicorn backend.app.main:app --reload --port 8000",
+    "dev:backend": "python -m uvicorn backend.app.main:app --reload --reload-exclude '_dream_tmp*' --port 8000",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:all": "concurrently -n BE,FE -c cyan,green \"npm run dev:backend\" \"npm run dev:frontend\"",
     "start": "./backend/start.sh",

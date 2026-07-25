@@ -1,0 +1,20 @@
+persistence: hybrid
+strict_tdd: true
+test_command: python -m pytest
+test_paths:
+  - utilities/teste_apication/pipeline
+  - pipeline/tests
+lint_command: ruff check
+format_command: ruff format
+project_stack:
+  - Python 3.11+
+  - FastAPI
+  - Polars
+  - PostgreSQL 16+
+  - React 18+ (Vite)
+  - TailwindCSS 3.4
+  - Zustand 5
+  - TanStack Query v5
+delivery:
+  strategy: auto-forecast
+  review_budget_lines: 800

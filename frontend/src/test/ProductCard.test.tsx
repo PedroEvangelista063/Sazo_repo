@@ -20,6 +20,8 @@ const baseProduct: ProdutoVarejo = {
   categoria: 'ALIMENTO_VAREJO',
   is_forecast: false,
   confianca_baseline: null,
+  tendencia_futura: null,
+  regiao: null,
 }
 
 function makeProduct(overrides: Partial<ProdutoVarejo>): ProdutoVarejo {

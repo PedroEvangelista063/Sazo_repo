@@ -14,7 +14,7 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 4. **Cache**: usar cache interno (`core/cache.py`) para respostas lentas. TTL definido por endpoint.
 5. **Rate Limit**: `core/ratelimit.py` — proteção contra abuso por IP.
 6. **Pydantic v2**: schemas de resposta em `schemas/responses.py`. Validação na borda, não no banco.
-7. **CORS e Segurança**: configurado no `main.py`. RLS ativado via migration `012_security_rls_readonly.sql`.
+7. **CORS e Segurança**: configurado no `main.py`. RLS ativado via migration `000015_rls_security_layer.sql` (tabelas: `mart.sazonalidade_produto`, `staging.dim_produto`, `staging.fact_precos_mensais`, `ops.audit_logs`). `role_etl_writer` tem bypass total (`USING(true)`), `role_api_reader` tem SELECT apenas, `service_role` e `postgres` bypass automático.
 8. **Janela Temporal**: endpoints de série temporal sempre aceitam `?ano_inicio=2024`.
 
 ## Fluxo dos Dados — Raw → API
@@ -62,28 +62,70 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 - `migrations/` — scripts SQL incrementais (RLS, limpeza diária)
 - `tests/` — testes de resiliência e concorrência
 
-## Conexão Supabase (2026-07-17)
+## Conexão Supabase (2026-07-25) — Arquitetura Híbrida
 
-### Configuração no .env
+### Filosofia: Remoto é o Primário, Local é o Backup
+
+```
+REMOTO (PRIMARY — Active)           LOCAL (STANDBY — Backup/Sandbox)
+─────────────────────────────       ─────────────────────────────────
+Supabase remoto                     PostgreSQL 18 nativo Linux Mint
+(kxsqrcccaaxplpktmutl)              localhost:5432/quero_comprar
+                                    postgres / postgres_dev_local
+
+npm run dev → REMOTO (padrão)       npm run db:backup → Remote ➔ Local
+                                    NUNCA Local ➔ Remote automático
+```
+
+### Configuração no `backend/.env` (centralizado)
+
 ```env
-# Direct Connection (5432) — para ETL e migrações
-DATABASE_URL=postgresql://postgres:SENHA@db.kxsqrcccaaxplpktmutl.supabase.co:5432/postgres
+# ── REMOTO (PRIMARY) ──────────────────────────────────
+DATABASE_URL          → Session Pooler :5432   (DDL, ETL)
+DATABASE_URL_API      → Transaction Pooler :6543 (API reads)
+DATABASE_URL_ETL      → Session Pooler :5432   (cargas)
 
-# Transaction Pooler (6543) — para FastAPI
-DATABASE_URL_API=postgresql://postgres.kxsqrcccaaxplpktmutl:SENHA@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+# ── LOCAL (STANDBY) ────────────────────────────────────
+DATABASE_URL_LOCAL_BACKUP → localhost:5432/quero_comprar
 ```
 
 ### asyncpg Pool (session.py)
+
 ```python
 pool = await asyncpg.create_pool(
-    dsn=settings.DATABASE_URL_API,
-    statement_cache_size=0,  # OBRIGATÓRIO para pooler
+    dsn=settings.DATABASE_URL_API,  # sempre aponta para Supabase remoto
+    statement_cache_size=0,          # OBRIGATÓRIO para pooler
     min_size=2,
     max_size=10,
 )
 ```
 
+### RLS — Tabelas com Row Level Security
+
+| Tabela | role_etl_writer | role_api_reader | postgres/service_role |
+|--------|----------------|-----------------|----------------------|
+| `mart.sazonalidade_produto` | ALL (bypass) | SELECT | bypass automático |
+| `staging.dim_produto` | ALL (bypass) | ❌ sem acesso | bypass automático |
+| `staging.fact_precos_mensais` | ALL (bypass) | ❌ sem acesso | bypass automático |
+| `ops.audit_logs` | INSERT+SELECT | ❌ sem acesso | bypass automático |
+
+### Workflow Seguro
+
+```bash
+# Desenvolvimento diário → REMOTO (padrão)
+npm run dev
+
+# Antes de migration arriscada → snapshot local
+npm run db:backup:restore
+
+# Testar query pesada → LOCAL
+DB_ENV=local psql $DATABASE_URL_LOCAL_BACKUP -f minha_query.sql
+```
+
 ### Notas
-- Usar Direct (5432) para operações que precisam de acesso completo (COPY, VACUUM, REFRESH MV)
-- Usar Transaction Pooler (6543) apenas para queries simples do FastAPI
 - `statement_cache_size=0` é obrigatório quando usando pooler
+- `.env` (raiz) NÃO contém URLs de banco — só configs globais (CORS, cache, LLM)
+- `DATABASE_URL_API` usa Transaction Pooler (6543) para queries simples do FastAPI
+- `DATABASE_URL_ETL` usa Session Pooler (5432) para COPY, VACUUM, REFRESH MV, DDL
+- O script `scripts/sync_db_remote_to_local.sh` gera backups em `database/backups/` (gitignored)
+- Migrations formais em `supabase/migrations/` são o ÚNICO caminho Local ➔ Remote

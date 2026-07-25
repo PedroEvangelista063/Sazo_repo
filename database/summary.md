@@ -114,12 +114,20 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - Expõe `is_forecast`, `baseline_confianca`, `forecast_method`.
 - Índices parciais: `idx_vw_sazonalidade_forecast` (WHERE is_forecast=TRUE), `idx_vw_sazonalidade_confianca` (DESC).
 
-### Migrações Chave
+### Migrações Chave (database/*.sql — scripts históricos)
 - `27_fix_br_nacional_weighting.sql` — Hotfix: SP chama `sp_calcular_sazonalidade_preditiva()` em vez da legacy.
 - `28_recalibracao_baseline_24_25.sql` — Recalibração do baseline para 2024-2025.
 - `29_focus_2025_2026.sql` — Filtro temporal: apenas >= 2025, exclusão de B2B (INSUMO_AGRICOLA, MAQUINARIO, FLORES).
 - `30_engine_preditiva_forecast_2026.sql` (v1) → (v2 ponderado) — **538 linhas**: baseline_25_26 DDL, CTE baseline_ponderado (FULL JOIN + CASE), CHECK 4 valores, remoção guarda confiança >= 25. Execução em 1.02s.
 - `32_fn_regional_snapshot.sql` — Funções `fn_regioes_listar()` e `fn_resumo_regiao()` para filtro regional.
+
+### Migrações Formais (supabase/migrations/*.sql — reconciliadas no remoto)
+
+| Migration | Data | O que fez |
+|-----------|------|-----------|
+| `000013_reconciliacao_drift_fase4.sql` | 2026-07-25 | Reconciliou 18 objetos do delta database/*.sql no Supabase remoto: 8 tabelas (dim_categoria, dim_conab_produto_mapping, fato_cotacao_regional, baseline_2025_interpolado, confianca_baseline, sazonalidade_baseline_24_25, sazonalidade_baseline_25_26, status_fonte_produto), 2 views (vw_categorias, vw_municipios), 1 MV (vw_api_produtos_sazonalidade V15 + 7 índices), 5 funções de agregação, 2 procedures, grants para roles |
+| `000014_triggers_anomalia_audit.sql` | 2026-07-25 | Trigger UF-based: `staging.trg_valida_anomalia_preco` atualizada para comparar preço por UF (não município). Infra de auditoria: `ops.audit_logs` + `ops.trg_audit_status_cor` (AFTER UPDATE em sazonalidade_produto) + `ops.vw_ultimas_mudancas_status` + grants |
+| `000015_rls_security_layer.sql` | 2026-07-25 | RLS ativo em 4 tabelas (mart.sazonalidade_produto, staging.dim_produto, staging.fact_precos_mensais, ops.audit_logs) com 5 políticas. Schema USAGE grants. ALTER DEFAULT PRIVILEGES para objetos futuros. Grants faltantes corrigidos (role_api_reader em sazonalidade_baseline e vw_api_produtos_sazonalidade) |
 
 ## Scripts Python (database/scripts/)
 - `backfill_2024.py` — insere dados de 2024 no mart replicando a lógica de classificação da SP V9
@@ -129,16 +137,28 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 
 ## Conexão Externa (DBeaver / psql)
 
+### Banco Local (Standby / Sandbox)
+
 | Parâmetro | Valor |
 |-----------|-------|
 | **Host** | `localhost` |
 | **Porta** | `5432` |
 | **Database** | `quero_comprar` |
 | **Username** | `postgres` |
-| **Password** | `postgres` |
-| **URL** | `postgresql://postgres:postgres@localhost:5432/quero_comprar` |
+| **Password** | `postgres_dev_local` |
+| **URL** | `postgresql://postgres:postgres_dev_local@localhost:5432/quero_comprar` |
 
 > ⚡ No DBeaver, vá em **Driver properties → PostgreSQL** e marque `Show all schemas` para visualizar `raw`, `staging`, `mart`, `ops`.
+
+### Banco Remoto (Primary — Supabase)
+
+| Parâmetro | Pooler Transaction (API) | Pooler Session (ETL/DDL) |
+|-----------|-------------------------|--------------------------|
+| **Host** | `aws-1-us-east-1.pooler.supabase.com` | `aws-1-us-east-1.pooler.supabase.com` |
+| **Porta** | `6543` | `5432` |
+| **Database** | `postgres` | `postgres` |
+| **Username** | `postgres.kxsqrcccaaxplpktmutl` | `postgres.kxsqrcccaaxplpktmutl` |
+| **URL env** | `DATABASE_URL_API` | `DATABASE_URL` / `DATABASE_URL_ETL` |
 
 ## Mapa Rápido
 - `01_ddl_medalhao.sql` — DDL fundacional (schemas, dim, fact, views, triggers, roles)
@@ -215,3 +235,59 @@ npx supabase db dump --linked --data-only
 - Usar `supabase db query --linked` que usa tunnel interno da CLI
 - Não combinar `--linked` com `--db-url` (conflito de flags)
 - Para asyncpg com pooler: `statement_cache_size=0`
+
+## 🏛️ Arquitetura Híbrida (2026-07-25)
+
+```
+REMOTO (PRIMARY — Active)              LOCAL (STANDBY — Backup)
+──────────────────────────────         ─────────────────────────────
+Supabase kxsqrcccaaxplpktmutl          PostgreSQL 18 nativo Linux Mint
+DATABASE_URL (5432) — DDL/ETL          localhost:5432/quero_comprar
+DATABASE_URL_API (6543) — API reads    postgres / postgres_dev_local
+DATABASE_URL_ETL (5432) — cargas       
+                                       
+npm run dev → REMOTO (padrão)          npm run db:backup → Remote ➔ Local
+                                        NUNCA Local ➔ Remote automático
+```
+
+### Comandos do Workflow
+
+```bash
+# Backup de segurança (schema + dados)
+npm run db:backup
+
+# Backup + restaura no banco local
+npm run db:backup:restore
+
+# Apenas schema
+npm run db:backup:schema
+
+# Apenas dados
+npm run db:backup:data
+```
+
+### Artefatos de Backup (gitignored)
+
+```
+database/backups/
+├── backup_schema_latest.sql       → DDL completo (184 objetos)
+├── backup_data_latest.dump        → Dados curados (custom format)
+├── backup_schema_20260725.sql     → Snapshot versionado (30 dias)
+└── backup_data_20260725.dump      → Snapshot versionado (30 dias)
+```
+
+### Pipeline de Backup (scripts/sync_db_remote_to_local.sh)
+
+1. `pg_dump --schema-only` do Supabase remoto (exclui schemas auth/storage/realtime)
+2. `pg_dump --format=custom` dos dados (exclui ops.audit_logs, ops.audit_llm_queries, ops.quarentena_coleta, raw.*)
+3. `--restore`: DROP dos schemas staging/mart/ops locais → `psql` schema → `pg_restore` dados
+4. Limpeza automática de backups >30 dias
+
+### Travas de Segurança
+
+| Direção | Permitido? | Método |
+|---------|-----------|--------|
+| **Remote ➔ Local** | ✅ Sim | Sync script (pg_dump → pg_restore) |
+| **Local ➔ Remote** | ❌ Nunca automático | Apenas via migrations formais em `supabase/migrations/` |
+| **Dev diário** | ✅ Remote | `npm run dev` conecta ao Supabase |
+| **Teste query pesada** | ✅ Local | `psql $DATABASE_URL_LOCAL_BACKUP -f query.sql` |

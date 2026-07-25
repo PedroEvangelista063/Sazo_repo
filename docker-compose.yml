@@ -1,0 +1,61 @@
+# ==============================================================================
+# QUERO COMPRAR — Docker Compose (Híbrido)
+# ==============================================================================
+#
+# USO:
+#   O banco de desenvolvimento PRINCIPAL é o Supabase remoto.
+#   Este compose oferece serviços AUXILIARES para o ambiente local.
+#
+# SERVIÇOS:
+#   postgres-backup — Espelho local (cold-standby) do Supabase remoto.
+#                     Usado para backup seguro e testes de queries pesadas.
+#                     ATENÇÃO: Se você usa PostgreSQL nativo no Linux Mint
+#                     (localhost:5432), este serviço é OPCIONAL.
+#                     Configure DATABASE_URL_LOCAL_BACKUP em backend/.env
+#                     para apontar para o serviço que desejar.
+#
+#   pgadmin        — (Opcional) Interface gráfica para administração do DB.
+#                     Acesse em http://localhost:5050
+#                     Email: admin@quero_comprar.local
+#                     Senha: admin
+#
+# ⚠️  NUNCA use este compose para o banco primário de desenvolvimento.
+#     O remoto (Supabase) é a fonte da verdade operacional.
+# ==============================================================================
+
+version: "3.9"
+
+services:
+  postgres-backup:
+    image: postgres:17-alpine
+    container_name: qcomprar-pg-backup
+    restart: unless-stopped
+    ports:
+      - "5433:5432" # Porta 5433 para não conflitar com PostgreSQL nativo (5432)
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_dev_local
+      POSTGRES_DB: quero_comprar
+      PG_MAX_CONNECTIONS: 50
+    volumes:
+      - ./.docker/pg_data_backup:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── pgAdmin (opcional — descomente se necessário) ──────────────────────────
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   container_name: qcomprar-pgadmin
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5050:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@quero_comprar.local
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   volumes:
+  #     - ./.docker/pgadmin_data:/var/lib/pgadmin
+  #   depends_on:
+  #     - postgres-backup

@@ -22,15 +22,27 @@
       "prettier --write"
     ]
   },
+  "engines": {
+    "node": ">=22.22.1",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "prepare": "husky",
+    "dev": "npm run dev:all",
     "install:all": "npm install && npm --prefix frontend install && pip install -r backend/requirements.txt",
-    "scraper": "python -m pipeline.run_scraper_historico --concorrencia 4",
-    "scrape:manual": "python -m pipeline.run_scraper_historico",
-    "dev:backend": "python -m uvicorn backend.app.main:app --reload --reload-exclude '_dream_tmp*' --port 8000",
+    "dev:backend": "python3 -m uvicorn backend.app.main:app --reload --reload-exclude '_dream_tmp*' --port 8000",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:all": "concurrently -n BE,FE -c cyan,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "scraper": "python -m pipeline.run_scraper_historico --concorrencia 4",
+    "scrape:manual": "python -m pipeline.run_scraper_historico",
     "start": "./backend/start.sh",
-    "build:frontend": "npm --prefix frontend run build"
+    "build:frontend": "npm --prefix frontend run build",
+
+    "db:backup": "bash scripts/sync_db_remote_to_local.sh",
+    "db:backup:restore": "bash scripts/sync_db_remote_to_local.sh --restore",
+    "db:backup:schema": "bash scripts/sync_db_remote_to_local.sh --schema-only",
+    "db:backup:data": "bash scripts/sync_db_remote_to_local.sh --data-only",
+    "db:test:local": "DATABASE_URL=$DATABASE_URL_LOCAL_BACKUP python -m pytest tests/ -v",
+    "db:test:remote": "DATABASE_URL=$DATABASE_URL python -m pytest tests/ -v"
   }
 }

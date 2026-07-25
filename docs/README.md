@@ -1,13 +1,16 @@
-# QUERO COMPRAR
+# QUERO COMPRAR (Documentação Legada)
+
+> ⚠️ **Este documento está desatualizado.** Consulte o [README.md](../README.md) na raiz do projeto para a versão mais recente.  
+> Mantido apenas para referência histórica.
 
 **Sua bússola de sazonalidade para a feira.**  
-App B2C que revela a melhor época para comprar hortigranjeiros usando dados históricos da CONAB e cotações CEASA. Economia real na feira e no supermercado — sem achismo, com dados.
+App B2C que revela a melhor época para comprar hortigranjeiros usando dados CONAB (2024-2026) e cotações CEASA. Economia real na feira e no supermercado — sem achismo, com dados.
 
 ---
 
 ## 🧠 A Ideia
 
-Preço de alimento no Brasil não é loteria — é safra e entressafra. O **QUERO COMPRAR** traduz 10+ anos de dados públicos CONAB em um semáforo visual que qualquer consumidor entende:
+Preço de alimento no Brasil não é loteria — é safra e entressafra. O **QUERO COMPRAR** traduz dados públicos CONAB (janela 2024-2026) em um semáforo visual que qualquer consumidor entende:
 
 🟢 **Barato** (safra) → 🟡 **Normal** → 🔴 **Caro** (entressafra)
 
@@ -20,7 +23,7 @@ Zero reais na tela. Apenas a cor que o bolso precisa.
 ```
 quero_comprar_vg/
 ├── pipeline/     🚗 Garagem  — ETL Worker (Polars, Python 3.11+)
-├── database/     🗄️ Despensa — PostgreSQL 16+ via Supabase (Medalhão raw→staging→mart)
+├── database/     🗄️ Despensa — PostgreSQL 17 (Supabase) (Medalhão raw→staging→mart)
 ├── backend/      🍳 Cozinha  — FastAPI + asyncpg (raw SQL, cache 24h)
 ├── frontend/     🛋️ Sala de Estar — PWA React 19 + Vite 6
 └── docs/         📐 Plantas da Casa
@@ -53,7 +56,7 @@ Motor ETL que transforma **LISTA*.txt** da CONAB + cotações CEASA em dados pro
 
 ---
 
-## 🗄️ Despensa — PostgreSQL 16+ (Arquitetura Medalhão)
+## 🗄️ Despensa — PostgreSQL 17 (Arquitetura Medalhão)
 
 Camadas claras, responsabilidades separadas:
 
@@ -64,15 +67,13 @@ Camadas claras, responsabilidades separadas:
 | `mart` | Sazonalidade materializada para API (`vw_api_produtos_sazonalidade`) |
 | `ops` | Observabilidade — monitorado pelo Ghost DBA |
 
-**Sazonalidade — Baseline Híbrido 2025 + Fallback 12m:**
-- Baseline primário: média do produto em **2025** (ano âncora absoluto)
-- Fallback condicional: para produtos NOVOS (sem dados em 2025), média dos últimos 12 meses
-- Semáforo: compara `preco_atual` contra `preco_referencia` (±15%)
-- `usou_fallback_12m: true` → frontend exibe "*Comparado aos últimos 12 meses"
-- SP principal: `sp_calcular_sazonalidade_baseline()` — 4 CTEs set-based
-- MV `vw_api_produtos_sazonalidade` com UNIQUE INDEX para CONCURRENTLY
+**Sazonalidade — Forecast v2 Ponderado (100% SQL):**
+- Duas baselines permanentes: `sazonalidade_baseline_25_26` (primária, moda 2025-2026) e `sazonalidade_baseline_24_25` (fallback, moda 2024-2025)
+- `baseline_ponderado`: FULL JOIN com CASE weighting — primary vence quando confiança ≥ 30, fallback × 0.5 usado como fallback
+- SP principal: `sp_calcular_forecast_2026()` — ~1s para 19.933 projeções
+- MV `vw_api_produtos_sazonalidade` (V14) com `is_forecast`, `baseline_confianca`, `forecast_method`
 
-**Migrations:** 17 scripts versionados (01→17), do DDL medalhão ao `MOM seasonality`.
+**Migrations:** 15 formais em `supabase/migrations/` (000001→000015), reconciliadas com Supabase remoto.
 
 ---
 
@@ -82,11 +83,15 @@ API RESTful enxuta que só serve o que o app precisa — nada mais.
 
 | Rota | Função |
 |---|---|
-| `GET /api/v1/sazonalidade` | Sazonalidade filtrada por UF, município, mês, produto, status_cor |
+| `GET /api/v1/sazonalidade` | Sazonalidade filtrada por UF, município, mês, produto, status_cor (+ `?regiao=`) |
 | `GET /api/v1/sazonalidade/{uf}/{municipio}` | Atalho por localidade |
-| `GET /api/v1/municipios?uf=SP` | Municípios disponíveis |
+| `GET /api/v1/sazonalidade/historico/{ano}/{mes}` | Série temporal |
+| `GET /api/v1/regioes` | Lista 5 regiões com UFs e polos CEASA |
 | `GET /api/v1/categorias` | Categorias de varejo |
-| `GET /api/v1/_internal/cache-clear` | Limpa cache (API Key) |
+| `GET /api/v1/ufs` | UFs disponíveis |
+| `GET /api/v1/municipios?uf=SP` | Municípios disponíveis |
+| `GET /api/v1/admin/coletar-global` | Coleta para todas as UFs |
+| `GET /api/v1/stream/updates` | SSE para notificações em tempo real |
 | `GET /health` | Health check |
 
 **Estratégia de Cache em Duas Camadas:**
@@ -239,7 +244,7 @@ O `ghost_dba_agent.py` é um worker autônomo que:
 | API | Render (Web Service, Python) | Ohio |
 | Frontend | Vercel (SPA, PWA) | Edge |
 
-Ambiente: Python 3.13+, PostgreSQL 16+ via Supabase, Node 20+.
+Ambiente: Python 3.13+, PostgreSQL 17 via Supabase, Node 22.22.1+.
 
 ---
 
@@ -247,30 +252,25 @@ Ambiente: Python 3.13+, PostgreSQL 16+ via Supabase, Node 20+.
 
 ```bash
 # 1. Ambiente Python
-python -m venv .venv
-.venv\Scripts\activate  # Windows
-pip install -r pipeline/requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate  # Linux/Mac
 pip install -r backend/requirements.txt
 
 # 2. Frontend
 npm install && npm --prefix frontend install
 
 # 3. .env
-cp .env.example .env  # configure DATABASE_URL
-
-# 3b. Conexão Supabase (alternativa quando DNS não resolve)
-supabase db query --linked
-
-# 3c. Publique schemas raw/staging/mart/ops no dashboard do Supabase
+cp .env.example .env
+# Configure backend/.env com as credenciais do Supabase
 
 # 4. Rodar
 npm run dev:backend   # FastAPI :8000
 npm run dev:frontend  # Vite :5173
 # ou:
-npm run dev:all       # FastAPI + Vite (sem scraper — desacoplado)
+npm run dev:all       # FastAPI + Vite
 ```
 
-> **Nota:** O scraper foi desacoplado do `dev:all` para evitar consumo de RAM/CPU e bloqueio de IP (WAF) durante hot-reloads. Use `npm run scrape:manual` em terminal separado quando precisar atualizar dados.
+> **Nota:** O scraper é executado sob demanda via `npm run scrape:manual` em terminal separado. Em desenvolvimento, `npm run dev:all` levanta apenas backend + frontend.
 
 ### Pastas com Dependências npm (node_modules)
 

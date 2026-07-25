@@ -75,3 +75,10 @@ pipeline/scraper/hunt_adapter.py
 
 # Testes avulsos (ainda nao integrados)
 tests/
+
+# Local AI runtime state
+.atl/
+
+# Database backups (FASE 2: sync_db_remote_to_local)
+database/backups/
+.docker/pg_data/

@@ -775,16 +775,16 @@ async def _query_br_sazonalidade(
                 "produto": r["produto"],
                 "classificao_produto": r["classificao_produto"],
                 "categoria": r["categoria"],
-                "total_ufs": r["total_ufs_nac"],
+                "total_ufs": r["total_ufs"],
                 "meses": [],
             }
         prod_map[key]["meses"].append(
             MesSazonalidade(
                 mes=r["mes"],
-                status_cor=r["status_cor_nac"],
-                is_forecast=r["is_forecast_nac"],
-                baseline_confianca=float(r["confianca_nac"])
-                if r["confianca_nac"] is not None
+                status_cor=r["status_cor"],
+                is_forecast=r["is_forecast"],
+                baseline_confianca=float(r["baseline_confianca"])
+                if r["baseline_confianca"] is not None
                 else None,
             )
         )

@@ -100,6 +100,22 @@ A aba "Mapa Regional" implementa:
 - `src/index.css` — TailwindCSS directives + CSS vars (light/dark)
 - `src/pages/SupermercadoView.tsx` — página principal (tabs Cards/Mapa/Grade, seletores UF/mês/ano, Beams background)
 - `src/services/api.ts` — instância axios (baseURL, timeout)
+
+## Conexão com o Banco (via Backend)
+
+O frontend NUNCA se conecta ao banco de dados diretamente. Toda comunicação passa pelo backend FastAPI em `localhost:8000`:
+
+```
+Frontend (Vite) ─── VITE_API_URL ───→ Backend FastAPI ─── asyncpg ───→ Supabase Remoto
+     :5173              :8000                             (DATABASE_URL_API)
+```
+
+### Arquitetura Híbrida (referência)
+
+- **Desenvolvimento diário**: frontend → backend → Supabase remoto (PRIMARY)
+- **Backup/Standby**: PostgreSQL 18 local (`localhost:5432`) — transparente para o frontend
+- **RLS**: ativo no banco mas não afeta o frontend — o backend usa `role_etl_writer` com bypass total
+- Variável de ambiente: `VITE_API_URL=http://localhost:8000/api/v1` (em `frontend/.env`)
 - `src/types/domain.ts` — tipos `ProdutoVarejo`, `RegiaoInfo`, `PoloInfo`, `StatusCor`, `Categoria`
 - `src/types/index.ts` — barrel exports de tipos
 - `src/store/useUserStore.ts` — Zustand store (preferências do usuário, persist IndexedDB)

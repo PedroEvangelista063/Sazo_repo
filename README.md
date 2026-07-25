@@ -1,6 +1,6 @@
 # QUERO COMPRAR — Sua Bússola de Sazonalidade para a Feira
 
-**App B2C que revela a melhor época para comprar hortigranjeiros usando dados históricos da CONAB e cotações CEASA.**  
+**App B2C que revela a melhor época para comprar hortigranjeiros usando dados CONAB (2024-2026) e cotações CEASA.**  
 Economia real na feira e no supermercado — sem achismo, com dados. Apenas cores, nunca valores monetários na tela.
 
 > 🟢 **Barato** (safra) → 🟡 **Normal** → 🔴 **Caro** (entressafra)

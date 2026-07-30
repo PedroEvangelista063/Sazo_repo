@@ -256,19 +256,8 @@ def _executar_ciclo_medalhao(conn) -> None:
 
 def _notificar_backend_etl_fim() -> None:
     """Notifica o backend via POST interno que o ETL terminou."""
-    import httpx
-
-    api_url = os.environ.get("INTERNAL_API_URL", "http://127.0.0.1:8000")
-    api_key = os.environ.get("INTERNAL_API_KEY", "")
-    url = f"{api_url.rstrip('/')}/api/v1/_internal/etl-done"
-    headers = {}
-    if api_key:
-        headers["x-api-key"] = api_key
-    try:
-        resp = httpx.post(url, headers=headers, timeout=5.0)
-        logger.info("Notificacao backend ETL_FINISHED: %s %s", resp.status_code, resp.text)
-    except Exception:
-        logger.warning("Nao foi possivel notificar backend (ETL rodando standalone?)", exc_info=True)
+    from pipeline.cache_purge import purge_cache_sync
+    purge_cache_sync()
 
 
 # ── Scraper ─────────────────────────────────────────────────────────

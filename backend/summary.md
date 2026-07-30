@@ -21,13 +21,42 @@ API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views m
 ```
 Scraper → raw.coleta_bruta (15)
 → SortingEngine → staging.fact_precos_mensais (42.358)
-→ sp_executar_carga_completa → mart.sazonalidade_produto (62.291)
-→ REFRESH MV → mart.vw_api_produtos_sazonalidade (62.291) ← API lê daqui (local: 54.715 — aguardando refresh)
+→ sp_executar_carga_completa + LOCF + sintéticos + forecast → mart.sazonalidade_produto (145.740)
+→ REFRESH MV → mart.vw_api_produtos_sazonalidade (139.255) ← API lê daqui
 ```
 
 A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materialized View V14) e funções `fn_*`. Nunca acessa `raw.*` ou `staging.*`. O pipeline (pasta `/pipeline`) é o único que escreve nessas camadas.
 
 **Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
+
+## Mudanças Recentes (2026-07-30)
+
+### Cache TTL Reduzido: 24h → 1h
+- `app/core/config.py`: `cache_ttl_seconds` alterado de `86400` (24h) para `3600` (1h)
+- Garante que dados obsoletos não fiquem servidos por mais de 1 hora após atualização do banco
+
+### MV Refresh em Background (main.py)
+- `app/main.py`: MV refresh movido de `await asyncio.wait_for` bloqueante para `asyncio.create_task` em background
+- O servidor agora inicia INSTANTANEAMENTE, sem esperar 2 minutos pelo MV refresh
+- Cache é limpo automaticamente após cada MV refresh bem-sucedido
+- Duas tentativas com timeout de 120s cada; se ambas falharem, logs de erro sem travar o servidor
+
+### Endpoint de Cache Limpo (`POST /admin/cache/clear`)
+- `app/api/v1/endpoints/admin.py` — novo endpoint protegido por API key
+- Chama `clear_cache()` do `core/cache.py` e retorna status
+- Permite forçar limpeza de cache sem reiniciar o servidor
+
+### Paginação Otimizada: COUNT + OFFSET (produtos.py)
+- `app/api/v1/endpoints/produtos.py` — substituiu paginação em memória (fetch ALL + slice Python) por COUNT + LIMIT/OFFSET SQL
+- Novas funções `_fetch_count_br_snapshot()`, `_fetch_count_br_por_mes()`, `_fetch_page_br_snapshot()`, `_fetch_page_br_por_mes()`
+- As funções `fn_br_nacional_snapshot` e `fn_br_nacional_por_mes` agora aceitam parâmetros `limit` e `offset`
+- Ganho de performance significativo para grades com 500+ produtos
+
+### confianca_baseline Real (não mais hardcoded None)
+- `_build_br_response()`, `_query_regional_snapshot()`, `_query_regional_por_mes()`:
+  - Antes: `confianca_baseline=None` hardcoded
+  - Agora: lê `r["confianca_baseline"]` do banco e converte para `float`
+- A API agora retorna a confiança real do baseline em vez de None
 
 ## Forecast — Transparência
 - `SazonalidadeResponse` inclui `is_forecast: bool` (false = dado real coletado), `confianca_baseline: float | None` (% de confiança), `tendencia_futura: str | None` (QUEDA/ALTA/ESTAVEL)
@@ -52,8 +81,8 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 - `app/api/v1/endpoints/regioes.py` — endpoint `GET /api/v1/regioes` (lê `config/regions.json`)
 - `app/api/v1/endpoints/produtos.py` — `GET /api/v1/sazonalidade` com suporte a `?regiao=` e `fn_resumo_regiao()`
 - `app/api/v1/endpoints/admin.py` — `coletar_global()` → pipeline para todas as UFs
-- `app/core/config.py` — settings via Pydantic (DATABASE_URL, etc)
-- `app/core/cache.py` — cache interno LRU/TTL
+- `app/core/config.py` — settings via Pydantic (DATABASE_URL, cache TTL, etc)
+- `app/core/cache.py` — cache interno LRU/TTL (com `clear_cache()`)
 - `app/core/ratelimit.py` — rate limiter por IP
 - `app/core/timeout.py` — middleware Starlette (TimeoutMiddleware, retorna 504)
 - `app/core/events.py` — EventBroadcaster (filas SSE para publish/subscribe)

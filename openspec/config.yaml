@@ -1,0 +1,58 @@
+# ── SDD Configuration — quero_comprar_ext ──────────────────────────────────
+# Mode: hybrid (Engram + openspec files)
+
+project: quero_comprar_ext
+stack:
+  frontend: React 19 + TypeScript 5.6 + Vite 6 + Tailwind 3.4 + Mantine 9
+  backend: FastAPI 0.115 + Python 3.11+ + asyncpg + Pydantic 2
+  pipeline: Python + Polars + BeautifulSoup4 + httpx (ETL CONAB)
+  database: PostgreSQL 16 (Supabase)
+  pwa: vite-plugin-pwa
+  ci: GitHub Actions
+
+strict_tdd: true
+inferida_por: test_runner_exists
+
+testing:
+  runner:
+    python: pytest
+    typescript: vitest
+  layers:
+    unit: true
+    integration: true
+    e2e: true
+  coverage:
+    python: pytest-cov
+    typescript: vitest --coverage
+  quality:
+    linter: ruff (Python), tsc --noEmit (TypeScript)
+    formatter: ruff format (Python), prettier (TS/JSON/MD/YAML)
+    type_checker: TypeScript tsc (frontend only)
+
+phase_rules:
+  proposal:
+    agent: sdd-propose
+    required: true
+  spec:
+    agent: sdd-spec
+    required: true
+  design:
+    agent: sdd-design
+    required: true
+  tasks:
+    agent: sdd-tasks
+    required: true
+  apply:
+    agent: sdd-apply
+    review_threshold_lines: 400
+  verify:
+    agent: sdd-verify
+    required: true
+    strict_pass: true
+  archive:
+    agent: sdd-archive
+    required: true
+
+review_threshold: 400
+pr_chain: true
+ritmo: interativo

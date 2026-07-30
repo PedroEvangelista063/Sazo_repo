@@ -412,10 +412,17 @@ class CarregadorMedalhao:
         return total
 
     def _executar_ciclo_medalhao(self, conn) -> None:
-        """Aciona SP de sazonalidade + refresh da Materialized View."""
+        """Aciona SP de sazonalidade + refresh da Materialized View + purge cache."""
         with conn.cursor() as cur:
             cur.execute("CALL staging.sp_executar_carga_completa()")
         conn.commit()
+
+        # Notifica backend para limpar cache
+        try:
+            from pipeline.cache_purge import purge_cache_sync
+            purge_cache_sync()
+        except Exception:
+            logger.warning("Cache purge falhou (backend offline?) — continuando.")
 
     def _atualizar_categorias(self, conn, categorias: dict[str, str]) -> None:
         """Atualiza ``categoria_b2c`` na ``dim_produto`` para auditoria."""

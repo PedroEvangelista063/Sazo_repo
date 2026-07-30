@@ -113,4 +113,11 @@ async def executar_ciclo_medalhao(pool: asyncpg.Pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade")
 
+    # Passo 6: Purge cache do backend
+    try:
+        from pipeline.cache_purge import purge_cache_sync
+        purge_cache_sync()
+    except Exception:
+        logger.warning("[CICLO] Cache purge falhou (backend offline?) — continuando.")
+
     logger.info("[CICLO] Ciclo medalhao COMPLETO — dados prontos para a API.")

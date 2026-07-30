@@ -20,6 +20,14 @@ Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focad
 9. **Orquestrador**: cascata CEASA direta → Agregadores → Discovery. Log `[AUDIT]` a cada pivotagem.
 10. **Fontes**: centralizadas em `config/sources_matrix.json` — configuration over code.
 
+## Mudanças Recentes (2026-07-30)
+
+### Ingestão CONAB Aprimorada (ingestao_conab.py)
+- `pipeline/ingestao_conab.py` — Expansão de +351 linhas
+- Melhorias no parsing dos dados CONAB (cotação semanais)
+- Normalização de produtos e variedades para o schema staging
+- Tratamento de dados duplicados e consistência temporal
+
 ## Pós-Coleta — Ciclo Medalhão (executar_ciclo_medalhao)
 O ciclo completo em `persistence.py` executa **2 passos** (simplificado — forecast agora é 100% SQL):
 1. **SortingEngine** — raw.coleta_bruta → staging.fact_precos_mensais
@@ -45,8 +53,8 @@ Scraper → raw.coleta_bruta
 ```
 raw.coleta_bruta ──→ SortingEngine ──→ staging.fact_precos_mensais
 ```
-- `staging.fact_precos_mensais`: 27.545 registros (dados tipados, UPSERT por `ON CONFLICT`)
-- `staging.dim_produto`: 831 produtos únicos
+- `staging.fact_precos_mensais`: **45.114** registros (dados tipados, UPSERT por `ON CONFLICT`)
+- `staging.dim_produto`: **865** produtos únicos
 - `staging.dim_localidade`: 850 localidades únicas
 - Rejeitados vão para `ops.quarentena_coleta`
 
@@ -54,16 +62,17 @@ raw.coleta_bruta ──→ SortingEngine ──→ staging.fact_precos_mensais
 ```
 staging ──→ sp_executar_carga_completa() ──→ mart.sazonalidade_produto
 ```
-- `mart.sazonalidade_produto`: 37.013 registros totais
-  - 25.403 reais (`is_forecast=FALSE`)
-  - 11.610 forecast (`is_forecast=TRUE`)
-- `mart.sazonalidade_baseline`: 17.300 combinações (moda do status_cor)
+- `mart.sazonalidade_produto`: **145.740** registros totais (pós LOCF + sintéticos + forecast)
+  - **79.980** reais (`is_forecast=FALSE`)
+  - **65.760** forecast (`is_forecast=TRUE`)
+  - **0** INSUFICIENTE
+- `mart.sazonalidade_baseline`: **23.449** (24_25) + **32.581** (25_26) combinações (moda do status_cor)
 
 ### 4. MV — View Materializada
 ```
 mart ──→ REFRESH MV ──→ mart.vw_api_produtos_sazonalidade
 ```
-- 36.684 linhas disponíveis para a API
+- **139.255** linhas disponíveis para a API (filtro ALIMENTO_VAREJO + status_cor válido)
 - JOIN entre `sazonalidade_produto`, `dim_produto`, `dim_localidade`, `dim_categoria`
 - Filtra apenas `categoria_b2c = 'ALIMENTO_VAREJO'` e `status_cor IN ('VERDE','AMARELO','VERMELHO')`
 - A API é **read-only** — consulta exclusivamente a MV, nunca `raw` ou `staging`

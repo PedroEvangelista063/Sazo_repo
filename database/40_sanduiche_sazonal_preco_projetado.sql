@@ -38,6 +38,10 @@ BEGIN;
 ALTER TABLE mart.sazonalidade_produto
     DROP CONSTRAINT IF EXISTS chk_forecast_method;
 
+-- FIX: Supabase pode ter constraint com nome auto-gerado
+ALTER TABLE mart.sazonalidade_produto
+    DROP CONSTRAINT IF EXISTS sazonalidade_produto_forecast_method_check;
+
 ALTER TABLE mart.sazonalidade_produto
     ADD CONSTRAINT chk_forecast_method
     CHECK (forecast_method IS NULL
@@ -242,7 +246,7 @@ BEGIN
             h.confianca
         FROM mart.sazonalidade_produto s
         CROSS JOIN LATERAL staging.fn_sandwich_historical_price(
-            s.id_produto, s.id_localidade, s.mes, 2026
+            s.id_produto, s.id_localidade, s.mes
         ) h
         WHERE s.ano = 2026
           AND s.mes <= v_mes_atual               -- meses já ocorridos
@@ -256,12 +260,13 @@ BEGIN
         preco_referencia   = ROUND(p.preco_medio_historico, 4),
         baseline_confianca = GREATEST(s.baseline_confianca, p.confianca),
         forecast_method    = 'SANDUICHE_MEDIA_24_25',
+        usou_fallback_12m  = COALESCE(s.usou_fallback_12m, FALSE),
         calculado_em       = NOW()
     FROM precos_patch p
     WHERE s.id_sazonalidade = p.id_sazonalidade;
 
     GET DIAGNOSTICS v_total = ROW_COUNT;
-    RAISE NOTICE '[sp_project_sandwich_prices_2026] Patch retroativo (Jan-%d): %d linhas preenchidas.', v_mes_atual, v_total;
+    RAISE NOTICE '[sp_project_sandwich_prices_2026] Patch retroativo (Jan-%): % linhas preenchidas.', v_mes_atual, v_total;
 
     -- --------------------------------------------------------------------
     -- STEP 2: PRE-FILL FUTURO (mês atual+1 até Dezembro)
@@ -304,7 +309,8 @@ BEGIN
         preco_atual, preco_referencia,
         data_referencia_atual,
         status_cor, fonte, calculado_em,
-        is_forecast, baseline_confianca, forecast_method
+        is_forecast, baseline_confianca, forecast_method,
+        usou_fallback_12m
     )
     SELECT
         msr.id_produto,
@@ -320,14 +326,15 @@ BEGIN
             b.status_cor_mode,
             'AMARELO'
         ) AS status_cor,
-        'SANDUICHE_HISTORICO',
+        'BASELINE_HISTORICO',
         NOW(),
         TRUE,                                   -- is_forecast = TRUE (projeção)
         GREATEST(h.confianca, COALESCE(b.confianca, 0)),
-        'SANDUICHE_MEDIA_24_25'
+        'SANDUICHE_MEDIA_24_25',
+        FALSE                                    -- usou_fallback_12m: falso (dado sintético, não LOCF)
     FROM meses_sem_real msr
     CROSS JOIN LATERAL staging.fn_sandwich_historical_price(
-        msr.id_produto, msr.id_localidade, msr.mes, 2026
+        msr.id_produto, msr.id_localidade, msr.mes::SMALLINT
     ) h
     LEFT JOIN mart.sazonalidade_baseline_24_25 b
         ON b.id_produto    = msr.id_produto
@@ -367,10 +374,12 @@ BEGIN
                                 THEN mart.sazonalidade_produto.forecast_method
                                 ELSE 'SANDUICHE_MEDIA_24_25'
                              END,
+        -- Garante que o trigger trg_audit_status_cor não receba NULL
+        usou_fallback_12m  = COALESCE(mart.sazonalidade_produto.usou_fallback_12m, FALSE),
         calculado_em       = NOW();
 
     GET DIAGNOSTICS v_total = ROW_COUNT;
-    RAISE NOTICE '[sp_project_sandwich_prices_2026] Pre-fill futuro (Ago-Dez): %d linhas inseridas/atualizadas.', v_total;
+    RAISE NOTICE '[sp_project_sandwich_prices_2026] Pre-fill futuro (Ago-Dez): % linhas inseridas/atualizadas.', v_total;
 
     -- --------------------------------------------------------------------
     -- Refresh da MV

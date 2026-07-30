@@ -1,5 +1,5 @@
 """
-admin.py — Rotas administrativas para acionar o pipeline ETL.
+admin.py — Rotas administrativas: cache, pipeline ETL, manutenção.
 Uso exclusivo interno / operadores do sistema.
 """
 
@@ -13,6 +13,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException
 from typing import Optional
 
 from backend.app.core.events import broadcaster
+from backend.app.core.cache import clear_cache
 from backend.app.db.session import get_etl_pool
 
 logger = logging.getLogger(__name__)
@@ -144,4 +145,18 @@ async def trigger_pipeline(background_tasks: BackgroundTasks):
         "status": "accepted",
         "job_id": job_id,
         "message": f"Pipeline disparado em background: {len(ufs)} UFs x {len(competencias)} competências",
+    }
+
+
+@router.post(
+    "/cache/clear",
+    dependencies=[Depends(_verify_api_key)],
+)
+async def admin_clear_cache():
+    """Limpa todo o cache da aplicação (InMemory ou Redis)."""
+    await clear_cache()
+    logger.info("Cache limpo via endpoint /admin/cache/clear")
+    return {
+        "status": "ok",
+        "message": "Cache limpo com sucesso.",
     }

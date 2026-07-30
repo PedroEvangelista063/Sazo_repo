@@ -60,6 +60,12 @@ A aba "Mapa Regional" implementa:
   - Dados de fluxo vêm de `config/flows.json` (104 fluxos reais CEASA/CONAB, todas as 27 UFs como origem e destino)
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-07-30)
+
+### Ajustes na SupermercadoView
+- `src/pages/SupermercadoView.tsx` — Ajustes menores no layout da página principal
+- Melhor alinhamento dos seletores (UF, mês, ano) e responsividade
+
 ## BRNationalIcon — Ícone BR Animado
 - `BRNationalIcon.tsx` — substitui o dropdown de UF nos modos **Grade Sazonal** e **Mapa Regional**
 - Exibe bandeira do Brasil (SVG) com pulse animation + 5 frutas orbitando (Framer Motion + CSS keyframes `fruit-orbit-{0-4}`)

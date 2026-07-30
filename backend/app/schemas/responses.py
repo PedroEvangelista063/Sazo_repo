@@ -86,6 +86,10 @@ class SazonalidadeResponse(BaseModel):
         None,
         description="Percentual de confiança do baseline histórico (ex: 100 se 2024 e 2025 têm dados para este mês)",
     )
+    forecast_method: str | None = Field(
+        None,
+        description="Método de geração da projeção: NULL para dado real, SANDUICHE_MEDIA_24_25 para média histórica, beta_weighted_25_24 para baseline ponderado, etc.",
+    )
     regiao: str | None = Field(
         None,
         min_length=4,
@@ -159,6 +163,10 @@ class SazonalidadeComPrecoResponse(BaseModel):
     tendencia_futura: Literal["QUEDA", "ALTA", "ESTAVEL"] | None = None
     is_forecast: bool = False
     confianca_baseline: float | None = None
+    forecast_method: str | None = Field(
+        None,
+        description="Método de geração da projeção: NULL para dado real, SANDUICHE_MEDIA_24_25 para sanduíche sazonal, etc.",
+    )
     preco_mes_anterior: float | None = None
 
     model_config = ConfigDict(from_attributes=True, frozen=True)

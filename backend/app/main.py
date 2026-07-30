@@ -32,22 +32,26 @@ async def lifespan(app: FastAPI):
     # Tenta cache Redis; se sem redis_url, mantém InMemoryCache
     init_cache(get_settings().redis_url)
 
-    # Refresh MV + limpa cache — não crítico, com retry
+    # Refresh MV em background — não bloqueia o startup do servidor
+    # O servidor já responde health checks imediatamente
     from backend.app.db.session import fetch_etl
 
-    for attempt in (1, 2):
-        try:
-            await asyncio.wait_for(
-                fetch_etl("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade"),
-                timeout=_REFRESH_TIMEOUT,
-            )
-            break
-        except Exception as exc:
-            logger.warning("MV refresh attempt %d failed: %s", attempt, exc)
-            if attempt == 2:
-                logger.error("MV refresh failed after 2 attempts — serving stale MV")
+    async def _background_mv_refresh():
+        """Refresca a MV e limpa o cache em background."""
+        for attempt in (1, 2):
+            try:
+                await asyncio.wait_for(
+                    fetch_etl("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade"),
+                    timeout=_REFRESH_TIMEOUT,
+                )
+                await cache.clear()
+                logger.info("Cache limpo após MV refresh em background.")
+                return
+            except Exception as exc:
+                logger.warning("MV refresh background attempt %d failed: %s", attempt, exc)
+        logger.error("MV refresh background failed after 2 attempts — serving stale MV")
 
-    await cache.clear()
+    asyncio.create_task(_background_mv_refresh())
 
     yield
     await close_pools()

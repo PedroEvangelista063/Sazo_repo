@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     database_url_api: str = ""
     database_url_etl: str = ""
     redis_url: str = ""
-    cache_ttl_seconds: int = 86400
+    cache_ttl_seconds: int = 3600
     cors_origins: list[str] = [
         "http://localhost:3000",
         "http://localhost:5173",

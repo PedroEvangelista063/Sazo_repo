@@ -182,7 +182,7 @@ async def _query_sazonalidade_snapshot(
         v.uf, v.municipio, v.municipio_id, v.ano, v.mes,
         v.preco_referencia, v.preco_atual, v.data_referencia_atual,
         v.usou_fallback_12m, v.preco_estimado, v.status_cor, v.fonte,
-        v.tendencia_futura, v.is_forecast,
+        v.tendencia_futura, v.is_forecast, v.forecast_method,
         b.confianca AS confianca_baseline
     """
 
@@ -274,7 +274,7 @@ async def _query_sazonalidade_por_mes(
                 mes=mes,
                 data_referencia_atual=r["data_referencia_atual"],
                 usou_fallback_12m=r.get("usou_fallback_12m", False),
-                preco_estimado=r.get("preco_estimado", False),
+                preco_estimado=r.get("preco_estimado") or False,
                 status_cor=r["status_cor"],
                 fonte=r["fonte"],
                 categoria=r.get("categoria"),
@@ -283,6 +283,7 @@ async def _query_sazonalidade_por_mes(
                 confianca_baseline=float(r["confianca_baseline"])
                 if r["confianca_baseline"] is not None
                 else None,
+                forecast_method=r.get("forecast_method"),
             )
         )
 
@@ -339,7 +340,7 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
             $2::INTEGER AS mes_pesquisa,
             v.data_referencia_atual, v.preco_referencia, v.preco_atual,
             v.usou_fallback_12m, v.preco_estimado, v.status_cor,
-            v.fonte, v.tendencia_futura, v.is_forecast,
+            v.fonte, v.tendencia_futura, v.is_forecast, v.forecast_method,
             b.confianca AS confianca_baseline
         FROM mart.vw_api_produtos_sazonalidade v
         LEFT JOIN mart.sazonalidade_baseline b
@@ -366,7 +367,7 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
             mes=r["mes"],
             data_referencia_atual=r["data_referencia_atual"],
             usou_fallback_12m=r.get("usou_fallback_12m", False),
-            preco_estimado=r.get("preco_estimado", False),
+            preco_estimado=r.get("preco_estimado") or False,
             status_cor=r["status_cor"],
             fonte=r["fonte"],
             categoria=r.get("categoria"),
@@ -375,6 +376,7 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
             confianca_baseline=float(r["confianca_baseline"])
             if r["confianca_baseline"] is not None
             else None,
+            forecast_method=r.get("forecast_method"),
         )
         for r in rows
     ]
@@ -384,23 +386,54 @@ async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
     return result
 
 
-async def _fetch_all_br_snapshot(categoria) -> list:
-    """Fetch ALL rows from snapshot (paginação em memória — overload 3-arg foi removida pq estava quebrada)."""
+async def _fetch_count_br_snapshot(categoria) -> int:
     if categoria:
-        return await fetch("SELECT * FROM mart.fn_br_nacional_snapshot($1::TEXT)", categoria.upper())
-    return await fetch("SELECT * FROM mart.fn_br_nacional_snapshot(NULL::TEXT)")
+        row = await fetchrow(
+            "SELECT COUNT(*) FROM mart.fn_br_nacional_snapshot($1::TEXT)",
+            categoria.upper(),
+        )
+    else:
+        row = await fetchrow(
+            "SELECT COUNT(*) FROM mart.fn_br_nacional_snapshot(NULL::TEXT)"
+        )
+    return row[0] if row else 0
 
 
-async def _fetch_all_br_por_mes(ano, mes, categoria) -> list:
-    """Fetch ALL rows from por_mes (paginação em memória — overload 5-arg removida)."""
+async def _fetch_count_br_por_mes(ano, mes, categoria) -> int:
     if categoria:
-        return await fetch(
-            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, $3::TEXT)",
+        row = await fetchrow(
+            "SELECT COUNT(*) FROM mart.fn_br_nacional_por_mes($1, $2, $3::TEXT)",
             ano, mes, categoria.upper(),
         )
+    else:
+        row = await fetchrow(
+            "SELECT COUNT(*) FROM mart.fn_br_nacional_por_mes($1, $2, NULL::TEXT)",
+            ano, mes,
+        )
+    return row[0] if row else 0
+
+
+async def _fetch_page_br_snapshot(categoria, limit, offset) -> list:
+    if categoria:
+        return await fetch(
+            "SELECT * FROM mart.fn_br_nacional_snapshot($1::TEXT, $2, $3)",
+            categoria.upper(), limit, offset,
+        )
     return await fetch(
-        "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, NULL::TEXT)",
-        ano, mes,
+        "SELECT * FROM mart.fn_br_nacional_snapshot(NULL::TEXT, $1, $2)",
+        limit, offset,
+    )
+
+
+async def _fetch_page_br_por_mes(ano, mes, categoria, limit, offset) -> list:
+    if categoria:
+        return await fetch(
+            "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, $3::TEXT, $4, $5)",
+            ano, mes, categoria.upper(), limit, offset,
+        )
+    return await fetch(
+        "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, NULL::TEXT, $3, $4)",
+        ano, mes, limit, offset,
     )
 
 
@@ -412,9 +445,8 @@ async def _query_br_snapshot(
     cache_key,
     settings,
 ) -> SazonalidadeListResponse:
-    all_rows = await _fetch_all_br_snapshot(categoria)
-    total = len(all_rows)
-    rows = all_rows[offset_val:offset_val + por_pagina]
+    total = await _fetch_count_br_snapshot(categoria)
+    rows = await _fetch_page_br_snapshot(categoria, por_pagina, offset_val)
     return await _build_br_response(rows, pagina, por_pagina, total, cache_key, settings)
 
 
@@ -428,9 +460,8 @@ async def _query_br_por_mes(
     cache_key,
     settings,
 ) -> SazonalidadeListResponse:
-    all_rows = await _fetch_all_br_por_mes(ano, mes, categoria)
-    total = len(all_rows)
-    rows = all_rows[offset_val:offset_val + por_pagina]
+    total = await _fetch_count_br_por_mes(ano, mes, categoria)
+    rows = await _fetch_page_br_por_mes(ano, mes, categoria, por_pagina, offset_val)
     return await _build_br_response(rows, pagina, por_pagina, total, cache_key, settings)
 
 
@@ -447,13 +478,16 @@ async def _build_br_response(rows, pagina, por_pagina, total, cache_key, setting
             mes=r["mes"],
             data_referencia_atual=r["data_referencia_atual"],
             usou_fallback_12m=r.get("usou_fallback_12m", False),
-            preco_estimado=r.get("preco_estimado", False),
+            preco_estimado=r.get("preco_estimado") or False,
             status_cor=r["status_cor"],
             fonte=r.get("fonte", "municipio"),
             categoria=r.get("categoria"),
             tendencia_futura=None,
             is_forecast=r.get("is_forecast", False),
-            confianca_baseline=None,
+            confianca_baseline=float(r["confianca_baseline"])
+            if r.get("confianca_baseline") is not None
+            else None,
+            forecast_method=r.get("forecast_method"),
         )
         for r in rows
     ]
@@ -515,7 +549,10 @@ async def _query_regional_snapshot(
             categoria=r.get("categoria"),
             tendencia_futura=None,
             is_forecast=r.get("is_forecast", False),
-            confianca_baseline=None,
+            confianca_baseline=float(r["confianca_baseline"])
+            if r.get("confianca_baseline") is not None
+            else None,
+            forecast_method=r.get("forecast_method"),
             regiao=regiao_id.upper(),
         )
         for r in rows
@@ -577,7 +614,10 @@ async def _query_regional_por_mes(
             categoria=r.get("categoria"),
             tendencia_futura=None,
             is_forecast=r.get("is_forecast", False),
-            confianca_baseline=None,
+            confianca_baseline=float(r["confianca_baseline"])
+            if r.get("confianca_baseline") is not None
+            else None,
+            forecast_method=r.get("forecast_method"),
             regiao=regiao_id.upper(),
         )
         for r in rows
@@ -674,7 +714,7 @@ async def listar_sazonalidade_com_preco(
                v.preco_referencia, v.preco_atual,
                v.variacao_pct, v.preco_estimado,
                v.usou_fallback_12m, v.status_cor,
-               v.fonte, v.tendencia_futura, v.is_forecast,
+               v.fonte, v.tendencia_futura, v.is_forecast, v.forecast_method,
                b.confianca AS confianca_baseline,
                pm.preco_atual AS preco_mes_anterior
         FROM mart.vw_api_produtos_sazonalidade v
@@ -723,8 +763,8 @@ async def listar_sazonalidade_com_preco(
                 else None,
                 preco_atual=float(r["preco_atual"]) if r.get("preco_atual") else None,
                 variacao_pct=float(r["variacao_pct"]) if r["variacao_pct"] is not None else None,
-                preco_estimado=r.get("preco_estimado", False),
-                usou_fallback_12m=r.get("usou_fallback_12m", False),
+                preco_estimado=r.get("preco_estimado") or False,
+                usou_fallback_12m=r.get("usou_fallback_12m") or False,
                 status_cor=r["status_cor"],
                 fonte=r.get("fonte"),
                 tendencia_futura=r.get("tendencia_futura"),
@@ -732,6 +772,7 @@ async def listar_sazonalidade_com_preco(
                 confianca_baseline=float(r["confianca_baseline"])
                 if r["confianca_baseline"] is not None
                 else None,
+                forecast_method=r.get("forecast_method"),
                 preco_mes_anterior=float(r["preco_mes_anterior"])
                 if r["preco_mes_anterior"] is not None
                 else None,

@@ -23,7 +23,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("projetar_2026")
 
-DSN = "postgresql://postgres:postgres@localhost:5432/quero_comprar"
+DSN = "postgresql://postgres:postgres_dev_local@localhost:5432/quero_comprar"
 
 MESES_2026 = list(range(1, 13))
 
@@ -52,9 +52,10 @@ async def projetar_2026(conn: asyncpg.Connection) -> dict[int, int]:
         """, data_alvo)
         existentes_set = {(r["id_produto"], r["id_localidade"]) for r in existentes}
 
-        # Baseline disponível
+        # Baseline disponível (inclui fonte para data lineage)
         baseline = await conn.fetch("""
-            SELECT b.id_produto, b.id_localidade, b.status_cor_mode, b.confianca
+            SELECT b.id_produto, b.id_localidade, b.status_cor_mode,
+                   b.confianca, b.fonte
             FROM mart.sazonalidade_baseline b
             WHERE b.mes = $1
         """, mes)
@@ -80,6 +81,18 @@ async def projetar_2026(conn: asyncpg.Connection) -> dict[int, int]:
         for r in ultimos_precos:
             preco_map[(r["id_produto"], r["id_localidade"])] = float(r["preco_atual"])
 
+        # Último preco conhecido por PRODUTO (fallback para proxy)
+        ultimos_precos_produto = await conn.fetch("""
+            SELECT DISTINCT ON (s.id_produto)
+                s.id_produto, s.preco_atual
+            FROM mart.sazonalidade_produto s
+            WHERE s.preco_atual IS NOT NULL
+            ORDER BY s.id_produto, s.data_referencia_atual DESC
+        """)
+        preco_produto_map: dict[int, float] = {}
+        for r in ultimos_precos_produto:
+            preco_produto_map[r["id_produto"]] = float(r["preco_atual"])
+
         inserted = 0
         batch = []
         for b in baseline:
@@ -89,12 +102,17 @@ async def projetar_2026(conn: asyncpg.Connection) -> dict[int, int]:
 
             preco_ref = preco_map.get(key)
             if preco_ref is None:
-                continue  # sem referência de preço, não projeta
+                # Cold-start fallback: usar preço do produto pai como referência
+                preco_ref = preco_produto_map.get(b["id_produto"])
+            if preco_ref is None:
+                continue  # sem referência alguma — não projeta
 
             batch.append((
                 b["id_produto"], b["id_localidade"],
                 preco_ref, data_alvo,
                 b["status_cor_mode"],
+                b.get("fonte", "BASELINE_HISTORICO"),
+                float(b["confianca"]) if b["confianca"] is not None else None,
             ))
 
             if len(batch) >= 500:
@@ -116,20 +134,28 @@ async def _insert_batch(conn: asyncpg.Connection, batch: list[tuple]) -> None:
     values = []
     params = []
     idx = 1
-    for id_prod, id_loc, preco_ref, data_alvo, status_cor in batch:
+    for id_prod, id_loc, preco_ref, data_alvo, status_cor, fonte, confianca in batch:
+        ano = int(data_alvo[:4])
+        mes = int(data_alvo[5:7])
+        conf_val = f"{confianca}::NUMERIC(5,2)" if confianca is not None else "NULL::NUMERIC(5,2)"
         values.append(
             f"(${idx}, ${idx+1}, ${idx+2}::NUMERIC(14,4), ${idx+3}::NUMERIC(14,4), "
-            f"${idx+4}, ${idx+5}::TEXT, true)"
+            f"${idx+4}, ${idx+5}::SMALLINT, ${idx+6}::SMALLINT, "
+            f"${idx+7}::TEXT, true, ${idx+8}::TEXT, {conf_val})"
         )
-        params.extend([id_prod, id_loc, preco_ref, preco_ref, data_alvo, status_cor])
-        idx += 6
+        params.extend([
+            id_prod, id_loc, preco_ref, preco_ref,
+            data_alvo, ano, mes, status_cor, fonte,
+        ])
+        idx += 9
 
     sql = f"""
         INSERT INTO mart.sazonalidade_produto
             (id_produto, id_localidade, preco_referencia, preco_atual,
-             data_referencia_atual, status_cor, is_forecast)
+             data_referencia_atual, ano, mes, status_cor, is_forecast,
+             fonte, baseline_confianca)
         VALUES {','.join(values)}
-        ON CONFLICT (id_produto, id_localidade, data_referencia_atual)
+        ON CONFLICT (id_produto, id_localidade, ano, mes)
         DO NOTHING
     """
     await conn.execute(sql, *params)

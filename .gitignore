@@ -82,3 +82,8 @@ tests/
 # Database backups (FASE 2: sync_db_remote_to_local)
 database/backups/
 .docker/pg_data/
+.aider*
+
+# Terminal artifacts (pipe redirection leftovers)
+ion |*
+backend/ion |*

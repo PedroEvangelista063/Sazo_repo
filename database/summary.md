@@ -61,22 +61,22 @@ database/processed_data/
 | **Dev** | `raw.coleta_bruta` (via asyncpg) | `pipeline/scraper/persistence.py` |
 | **Dev** | `database/processed_data/01_raw/*.parquet` | `polars.read_parquet()` |
 
-## Volumes Atuais por Tabela
+## Volumes Atuais por Tabela (2026-07-30 — pós LOCF + sintéticos + forecast)
 | Camada | Tabela | Registros |
 |--------|--------|-----------|
 | RAW | `raw.coleta_bruta` | 15 (payloads brutos, UUID PK) |
-| STAGING | `staging.fact_precos_mensais` | 42.358 (dados limpos e tipados) |
-| STAGING | `staging.dim_produto` | 857 (produtos únicos) |
+| STAGING | `staging.fact_precos_mensais` | 45.114 (dados limpos e tipados) |
+| STAGING | `staging.dim_produto` | 865 (produtos únicos) |
 | STAGING | `staging.dim_localidade` | 850 (localidades únicas) |
 | STAGING | `staging.dim_categoria` | 11 (categorias B2C) |
 | STAGING | `staging.confianca_baseline` | 2.802 (confiança por produto/localidade) |
 | STAGING | `staging.baseline_2025_interpolado` | 2.802 (baseline interpolada) |
 | STAGING | `staging.dim_conab_produto_mapping` | 20 (mapping CONAB ↔ produto) |
 | STAGING | `staging.precos_rejeitados` | 87 (anomalias detectadas por trigger) |
-| MART | `mart.sazonalidade_produto` | 62.291 (dados reais + forecast) |
+| MART | `mart.sazonalidade_produto` | **145.740** (65.760 forecast, 0 INSUFICIENTE) |
 | MART | `mart.sazonalidade_baseline_24_25` | 23.449 (moda 2024-2025, fallback) |
 | MART | `mart.sazonalidade_baseline_25_26` | 32.581 (moda 2025-2026, primária) |
-| MV | `mart.vw_api_produtos_sazonalidade` | 62.291 (exposta à API) |
+| MV | `mart.vw_api_produtos_sazonalidade` | **139.255** (exposta à API, filtro ALIMENTO_VAREJO) |
 | OPS | `ops.quarentena_coleta` | 9 (rejeições com motivo + raw_id UUID) |
 | OPS | `ops.config_agente` | 8 (configuração dos micro-motores) |
 
@@ -88,6 +88,46 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 ## Funções Regionais (Fase 32)
 - `fn_regioes_listar()` — retorna as 5 regiões com seus polos CEASA (lê de `config/regions.json` via API, não SP)
 - `fn_resumo_regiao(p_regiao_id TEXT, p_ano INT DEFAULT 2025)` — snapshot agregado por região: produtos com status_cor por UF. Cobertura mínima de 75% dos meses com dado real no ano. Usada por `GET /api/v1/sazonalidade?regiao=...`
+
+## Mudanças Recentes (2026-07-30)
+
+### Fix Crítico: Forecast 2026 (ON CONFLICT, DISTINCT ON, ano+mes)
+- `database/30_engine_preditiva_forecast_2026.sql` — Correções na `sp_calcular_forecast_2026()`:
+  - **ON CONFLICT corrigido**: antes usava `(id_produto, id_localidade, data_referencia_atual)`, agora usa `(id_produto, id_localidade, ano, mes)` — alinhado com a constraint real `uq_sazonalidade`
+  - **Colunas `ano` + `mes` adicionadas**: extraídas de `data_referencia_atual` via `SPLIT_PART` em todas as CTEs
+  - **DISTINCT ON**: `SELECT DISTINCT ON (id_produto, id_localidade, ano, mes)` com `ORDER BY is_forecast ASC` — dado real (FALSE) sempre vence projeção (TRUE)
+  - Executada em ambos os ambientes (local: 33.578 linhas, remoto: 34.557 linhas)
+
+### LOCF Real — Preenchimento de Gaps (39_locf_real_gaps_sazonalidade.sql)
+- **Novo arquivo**: `database/39_locf_real_gaps_sazonalidade.sql`
+- Algoritmo **group-and-max**: para cada produto+localidade, preenche gaps de preço carregando para frente o último valor não-nulo (LOCF — Last Observation Carried Forward)
+- Fallback triplo: preço real → LOCF (grupo) → NOCB (próximo valor disponível) → média do produto
+- `ON CONFLICT (id_produto, id_localidade, ano, mes) DO UPDATE` — idempotente
+- Proteção: `status_cor = 'AMARELO'` não sobrescreve VERDE/VERMELHO existentes; `fonte = 'municipio'` preservado
+- Resultado local: 65.724 linhas inseridas/atualizadas
+- Resultado remoto: 15.021 gaps preenchidos (56.925→41.904 preços NULL)
+
+### Injeção Sintética Cold-Start
+- **Novo arquivo**: `database/scripts/injetar_sintetico_coldstart.py`
+- Gera preços sintéticos com variação Gaussiana (30%) para produtos com histórico insuficiente
+- Produtos-alvo: Abobrinha Brasileira, Abobrinha Italiana, Coco Seco, Coco Verde, MILHO
+- Fallback para produtos sem preços reais: preço default R$5,00 (em vez de pular)
+- Resultado: 4.000 registros sintéticos no remoto, 3.776 no local
+- MILHO saltou de 5→10 meses, Abobrinhas de 7→10 meses, Coco Verde de 7→10 meses
+
+### Cold-Start Proxy Hierárquico (calcular_baseline.py)
+- `database/scripts/calcular_baseline.py` — Adicionado **Fase 2d: Cold-Start Proxy Hierárquico**
+- Se produtos têm baseline esparso (< 6 meses), recebem baseline derivado do "Produto Pai" (raiz do nome)
+- Ex: 'Alface Crespa Hidropônica' → raiz 'ALFACE' → herda sazonalidade do pai com confiança reduzida (penalidade 0.7)
+- Fonte marcada como `BASELINE_HIERARQUICO` para rastreabilidade
+- DSN corrigido: `postgres:postgres_dev_local`
+
+### Cold-Start Fallback (projetar_2026.py)
+- `database/scripts/projetar_2026.py` — Adicionado fallback de preço por produto:
+  - Antes: pulava produtos sem preço na combinação produto+localidade
+  - Agora: busca último preço conhecido do PRODUTO (independente da localidade) como fallback
+- Colunas adicionadas: `fonte` (para data lineage) e `baseline_confianca` na projeção
+- DSN corrigido: `postgres:postgres_dev_local`
 
 ## Forecast — Engine Preditiva (Fase 30)
 
@@ -160,6 +200,10 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 | **Username** | `postgres.kxsqrcccaaxplpktmutl` | `postgres.kxsqrcccaaxplpktmutl` |
 | **URL env** | `DATABASE_URL_API` | `DATABASE_URL` / `DATABASE_URL_ETL` |
 
+## Novos Arquivos (database/)
+- `39_locf_real_gaps_sazonalidade.sql` — LOCF multi-fallback para preencher gaps de preço
+- `scripts/injetar_sintetico_coldstart.py` — Geração de preços sintéticos para cold-start
+
 ## Mapa Rápido
 - `01_ddl_medalhao.sql` — DDL fundacional (schemas, dim, fact, views, triggers, roles)
 - `01_elt_landing_zone.sql` — Landing Zone ELT: `raw.coleta_bruta` + `ops.quarentena_coleta`
@@ -172,8 +216,12 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `27_fix_br_nacional_weighting.sql` — Hotfix: SP V3 chama `sp_calcular_sazonalidade_preditiva()`
 - `28_recalibracao_baseline_24_25.sql` — Recalibração baseline 24-25
 - `29_focus_2025_2026.sql` — Focus 2025-2026, baseline V12, exclusão B2B
-- `30_engine_preditiva_forecast_2026.sql` — SP forecast v2 ponderado + baselines + MV V14
+- `30_engine_preditiva_forecast_2026.sql` — SP forecast v2 ponderado + baselines + MV V14 (FIX: ON CONFLICT, DISTINCT ON, ano+mes)
 - `32_fn_regional_snapshot.sql` — Funções regionais (`fn_resumo_regiao`, `fn_regioes_listar`)
+- `36_fix_dedup_dim_localidade.sql` — Dedup de localidades duplicadas
+- `37_fix_br_regional_functions.sql` — Fix funções BR regionais
+- `38_add_qualidade_column.sql` — Coluna de qualidade para produtos
+- `39_locf_real_gaps_sazonalidade.sql` — LOCF real para gaps de preço
 
 ## Migração Supabase (2026-07-17)
 

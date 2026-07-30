@@ -14,12 +14,29 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 5. **scripts/** — utilitários de diagnóstico, exportação e teste. Isolados, sem dependência entre si.
 
 ## Conteúdo
+
+### Removidos (limpeza 2026-07-30)
+- ~~`AUDITORIA_SUPABASE_2026-07-18.md`~~ — obsoleto (dados já reconciliados)
+- ~~`MELHORIAS_SISTEMA_AGENTES.md`~~ — obsoleto (arquitetura híbrida implementada)
+- ~~`PROMPT_AUDITORIA_ENRIQUECIMENTO.md`~~ — obsoleto (prompts migrados)
+- ~~`plano_sync_supabase.md`~~ — obsoleto (sync completo)
+- ~~`sync_supabase_fase4_concluida.md`~~ — obsoleto (fase 4 concluída)
+
+### Novos
+- `CHECK_CONEXAO_SUPABASE.md` — script de verificação de conexão com Supabase (local e remoto)
+- `QUERY_CONSULTA_BANCO.md` — queries de consulta e diagnóstico do banco
+
+### Ativos
 - `AGENTS.md` — regras da casa para agentes AI (stack, classificação, medalhão, frontend)
-- `PROMPT_AUDITORIA_ENRIQUECIMENTO.md` — prompt mestre de auditoria
 - `HISTORICO_MELHORIAS_BACKFILL.md` — changelog de backfill (inclui diagnóstico gap 2024, proposta target-list e snapshot de validação CONAB)
 - `quero_comprar_plano_tecnico.md` — plano técnico geral
 - `AUDITORIA_BANCO_FRONTEND.md` — auditoria banco + frontend
 - `README.md` — visão geral do projeto (micro-monorepo, setup, deploy)
+- `PROJECT_RULES.md` — regras para desenvolvimento
+- `DATABASE_ARCHITECTURE.md` — arquitetura do banco de dados
+- `PROXIMOS_PASSOS.md` — roadmap futuro
+- `CONVENTIONS.md` — convenções de código
+- `PLANO_GRADE_SAZONAL_ICONE.md` — plano da grade sazonal
 - `scripts/` — scripts de diagnóstico e utilidades
   - `get_data_summary.py` — health check do banco
   - `start_ecosystem.py` — levanta ecossistema local
@@ -29,6 +46,10 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
   - `plano_micro_motores.md` — plano original dos micro-motores
   - `fase2_arquitetura_autocura.md` — arquitetura de auto-cura e fallback
   - `migracao-supabase-plano.md` — plano de migração Supabase
+
+### Auditoria
+- `reports/auditoria_b2c_completa_2026-07-06.csv` — relatório de auditoria B2C
+- `reports/auditoria_padrao_ouro_b2c.csv` — padrão ouro B2C
 
 ## Forecast — Engine Preditiva (Fase 30, 100% SQL)
 - `database/26_forecast_baseline.sql` — migration original: baseline + is_forecast + MV V13
@@ -73,15 +94,15 @@ quero_comprar_vg/
 │   │
 │   ├── Fluxo RAW → STAGING → MART → MV
 │   │   - raw.coleta_bruta: 15 registros
-│   │   - staging.fact_precos_mensais: 42.358
-│   │   - staging.dim_produto: 857
+│   │   - staging.fact_precos_mensais: 45.114
+│   │   - staging.dim_produto: 865
 │   │   - staging.dim_localidade: 850
 │   │   - staging.precos_rejeitados: 87
-│   │   - staging.confianca_baseline
-│   │   - staging.baseline_2025_interpolado
-│   │   - mart.sazonalidade_produto: 62.291
-│   │   - mart.sazonalidade_baseline: 24_25=23.449 + 25_26=32.581 (unsplit)
-│   │   - mart.vw_api_produtos_sazonalidade: 62.291
+│   │   - staging.confianca_baseline: 2.802
+│   │   - staging.baseline_2025_interpolado: 2.802
+│   │   - mart.sazonalidade_produto: 145.740 (65.760 forecast, 0 INSUFICIENTE)
+│   │   - mart.sazonalidade_baseline: 24_25=23.449 + 25_26=32.581
+│   │   - mart.vw_api_produtos_sazonalidade: 139.255
 │   │
 │   └── Mapa Rápido:
 │       ├── scraper/main_runner.py          — entry point Run and Die

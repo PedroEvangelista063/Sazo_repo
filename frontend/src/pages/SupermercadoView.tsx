@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -40,7 +40,7 @@ const viewTabs: { value: ViewMode; label: string; icon: React.ReactNode }[] = [
 ]
 
 export function SupermercadoView() {
-  const [selectedUF, setSelectedUF] = useState<string>('SP')
+  const [selectedUF, setSelectedUF] = useState<string>('BR')
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
@@ -51,12 +51,6 @@ export function SupermercadoView() {
   const [selectedMapUF, setSelectedMapUF] = useState<string | null>(null)
   const headerRef = useRef<HTMLDivElement>(null)
 
-  // Auto-seleciona BR quando entra na Grade Sazonal
-  useEffect(() => {
-    if (viewMode === 'grade-sazonal') {
-      setSelectedUF('BR')
-    }
-  }, [viewMode])
   const { data: regioes } = useRegioes()
   const { data: regiaoResumo, isLoading: regiaoLoading, isError: regiaoError } = useRegiaoResumo(selectedRegion, selectedYear)
 
@@ -107,7 +101,7 @@ export function SupermercadoView() {
 
   const activePills = useMemo(() => {
     const pills: { key: string; label: string; onRemove: () => void }[] = [
-      { key: 'uf', label: selectedUF, onRemove: () => setSelectedUF('SP') },
+      { key: 'uf', label: selectedUF, onRemove: () => setSelectedUF('BR') },
       { key: 'ano', label: String(selectedYear), onRemove: () => setSelectedYear(new Date().getFullYear()) },
     ]
     if (selectedMonth != null) {

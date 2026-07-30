@@ -19,6 +19,7 @@ from __future__ import annotations
 import io
 import logging
 import os
+import re
 import sys
 import time
 from dataclasses import dataclass
@@ -117,6 +118,136 @@ class CargaResult:
     duracao_seg: float = 0.0
 
 
+@dataclass
+class ContextoCarga:
+    """Metadados de extração para fallback contextual de dados ausentes.
+
+    Carregado na fase de extract() e passado para transform() para que
+    colunas inferíveis (mes, ano) possam ser preenchidas quando o CSV
+    da CONAB vier com valores implícitos em branco.
+
+    Attributes:
+        arquivo: Nome do arquivo de origem (p/ex: ``boletim_maio_2026.csv``).
+        mes: Mês inferido do contexto (1-12).
+        ano: Ano inferido do contexto.
+    """
+    arquivo: str = ""
+    mes: int | None = None
+    ano: int | None = None
+
+
+# ── Inferência de metadados a partir do nome do arquivo ─────────────
+
+MESES_BR: dict[str, int] = {
+    "janeiro": 1, "fevereiro": 2, "marco": 3, "abril": 4,
+    "maio": 5, "junho": 6, "julho": 7, "agosto": 8,
+    "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12,
+}
+
+QUALIDADE_COL: str = "_qualidade"
+QUALIDADE_NORMAL: str = "NORMAL"
+
+
+def _inferir_mes_do_contexto(arquivo: str) -> int | None:
+    """Extrai o mês do nome do arquivo quando a coluna ``mes`` vier em branco.
+
+    Formatos suportados:
+      - ``boletim_05_2024.csv`` → 5
+      - ``LISTA_05_2024.txt``  → 5
+      - ``dados_05.txt``        → 5
+      - ``boletim_maio_2024.csv`` → 5
+
+    Returns:
+        Mês (1-12) ou ``None`` se não foi possível inferir.
+    """
+    nome = Path(arquivo).stem.lower()
+    m = re.search(r'(?:^|[_\s])(\d{2})(?:_\d{4}|$)', nome)
+    if m:
+        mes = int(m.group(1))
+        if 1 <= mes <= 12:
+            return mes
+    for nome_mes, num in MESES_BR.items():
+        if nome_mes in nome:
+            return num
+    return None
+
+
+def _build_contexto(
+    arquivo: str,
+    mes: int | None = None,
+    ano: int | None = None,
+) -> ContextoCarga:
+    """Constrói contexto de carga tentando inferir metadados do nome do arquivo."""
+    return ContextoCarga(
+        arquivo=arquivo,
+        mes=mes if mes is not None else _inferir_mes_do_contexto(arquivo),
+        ano=ano,
+    )
+
+
+def _apply_fallback_context(
+    df: pl.DataFrame,
+    contexto: ContextoCarga | None,
+) -> pl.DataFrame:
+    """Aplica fallback contextual pós-forward-fill com flag de qualidade por-linha.
+
+    Materializa o estado de nulidade de mes/ano em colunas temporárias
+    ANTES do fill_null, para computar a flag ``_qualidade`` individualmente
+    por linha.
+
+    Args:
+        df: DataFrame já com ``_forward_fill_keys()`` aplicado.
+        contexto: Metadados de extração (arquivo, mes, ano).
+
+    Returns:
+        DataFrame com coluna ``_qualidade`` (NORMAL | MES_INFERIDO |
+        ANO_INFERIDO | ANO_INFERIDO+MES_INFERIDO).
+    """
+    # Materializar flags de nulidade ANTES de qualquer fill
+    colunas_originais = set(df.columns)
+    if contexto is not None and contexto.mes is not None and "mes" in colunas_originais:
+        qtd = df.filter(pl.col("mes").is_null()).height
+        if qtd:
+            df = df.with_columns(pl.col("mes").is_null().alias("_mes_nulo"))
+            df = df.with_columns(pl.col("mes").fill_null(contexto.mes))
+
+    if contexto is not None and contexto.ano is not None and "ano" in colunas_originais:
+        qtd = df.filter(pl.col("ano").is_null()).height
+        if qtd:
+            df = df.with_columns(pl.col("ano").is_null().alias("_ano_nulo"))
+            df = df.with_columns(pl.col("ano").fill_null(contexto.ano))
+
+    # Computar flag por-linha a partir das colunas temporárias
+    flag_expr: pl.Expr = pl.lit(QUALIDADE_NORMAL)
+
+    if "_mes_nulo" in df.columns and "_ano_nulo" in df.columns:
+        flag_expr = (
+            pl.when(pl.col("_mes_nulo") & pl.col("_ano_nulo"))
+            .then(pl.lit("ANO_INFERIDO+MES_INFERIDO"))
+            .when(pl.col("_mes_nulo"))
+            .then(pl.lit("MES_INFERIDO"))
+            .when(pl.col("_ano_nulo"))
+            .then(pl.lit("ANO_INFERIDO"))
+            .otherwise(pl.lit(QUALIDADE_NORMAL))
+        )
+    elif "_mes_nulo" in df.columns:
+        flag_expr = (
+            pl.when(pl.col("_mes_nulo"))
+            .then(pl.lit("MES_INFERIDO"))
+            .otherwise(pl.lit(QUALIDADE_NORMAL))
+        )
+    elif "_ano_nulo" in df.columns:
+        flag_expr = (
+            pl.when(pl.col("_ano_nulo"))
+            .then(pl.lit("ANO_INFERIDO"))
+            .otherwise(pl.lit(QUALIDADE_NORMAL))
+        )
+
+    df = df.with_columns(flag_expr.alias(QUALIDADE_COL))
+    # Remover colunas temporárias
+    return df.drop([c for c in ("_mes_nulo", "_ano_nulo") if c in df.columns])
+
+
 # ────────────────────────────────────────────────────────────────────
 # EXTRACT — Download com streaming e retry exponencial
 # ────────────────────────────────────────────────────────────────────
@@ -211,15 +342,79 @@ def _sanitize_text(series: pl.Series) -> pl.Series:
     return series.str.strip_chars().str.to_uppercase()
 
 
-def transform_uf(raw_bytes: bytes) -> pl.DataFrame:
+# ── Forward-Fill: Memória de Estado para Dados Implícitos CONAB ──────
+# A CONAB estrutura arquivos CSV com valores implícitos em bloco:
+#   PRODUTO_A;SP;2024;5;2.50
+#   ;;;5;2.55         ← produto, uf, ano herdados do bloco
+#   ;;;5;2.60
+#   PRODUTO_B;SP;2024;6;3.00  ← mês muda explicitamente
+#
+# O forward_fill preenche os nulls com o último valor válido visto.
+
+KEY_COLS_FFILL: list[str] = ["produto", "uf", "ano", "mes"]
+
+
+def _forward_fill_keys(df: pl.DataFrame) -> pl.DataFrame:
+    """Aplica forward-fill nas colunas de agrupamento temporal/espacial.
+    
+    Deve ser chamado ANTES do filtro de nulls, para que as linhas
+    com campos implícitos sejam preenchidas antes da validação.
+    """
+    cols = [c for c in KEY_COLS_FFILL if c in df.columns]
+    return df.with_columns(pl.col(c).forward_fill() for c in cols)
+
+
+# ── Mapeamento IBGE → UF para fallback de Municípios Órfãos ──────────
+# Os primeiros 2 dígitos do código IBGE de 7 dígitos identificam a UF.
+IBGE_UF: dict[str, str] = {
+    "11": "RO", "12": "AC", "13": "AM", "14": "RR", "15": "PA",
+    "16": "AP", "17": "TO", "21": "MA", "22": "PI", "23": "CE",
+    "24": "RN", "25": "PB", "26": "PE", "27": "AL", "28": "SE",
+    "29": "BA", "31": "MG", "32": "ES", "33": "RJ", "35": "SP",
+    "41": "PR", "42": "SC", "43": "RS", "50": "MS", "51": "MT",
+    "52": "GO", "53": "DF",
+}
+
+
+def _infer_uf_fallback(
+    municipio_id: str | None,
+    municipio_nome: str | None,
+) -> str | None:
+    """Infere UF a partir do código IBGE ou sufixo do nome do município.
+    
+    Ex: municipio_id='3550308' → prefixo '35' → SP
+        municipio_nome='SÃO PAULO-SP' → sufixo '-SP' → SP
+    """
+    if municipio_id and len(municipio_id) >= 2:
+        uf = IBGE_UF.get(municipio_id[:2])
+        if uf:
+            return uf
+    if municipio_nome:
+        import re as _re
+        m = _re.search(r"-([A-Z]{2})$", municipio_nome.upper().strip())
+        if m:
+            return m.group(1)
+    return None
+
+
+def transform_uf(
+    raw_bytes: bytes,
+    contexto: ContextoCarga | None = None,
+) -> pl.DataFrame:
     """Lê CSV bruto CONAB de UF, limpa e normaliza.
 
     Regras:
         - Encoding LATIN-1 (ISO-8859-1)
         - Separador ;
         - Preço com vírgula → Float64 americano
-        - Filtrar linhas com preço nulo, zero, ou mês inválido
+        - Forward-fill em produto/uf/ano/mes (valores implícitos em bloco)
+        - Fallback contextual: se ``mes`` continuar nulo, injeta do contexto
+        - Filtrar linhas com preço nulo, zero, ou mês inválido (após fallback)
         - Remover linhas duplicadas de cabeçalho no meio do arquivo
+
+    Args:
+        raw_bytes: Conteúdo bruto do CSV CONAB.
+        contexto: Metadados de extração para fallback (mês/ano do arquivo).
     """
     raw_text = raw_bytes.decode("latin-1")
     df = pl.read_csv(
@@ -253,7 +448,16 @@ def transform_uf(raw_bytes: bytes) -> pl.DataFrame:
         _sanitize_text(pl.col("uf")),
     )
 
-    # Filtrar inválidos
+    # Forward-fill: propaga último valor válido nas colunas de grupo
+    # (produto, uf, ano, mes ficam em branco nas linhas de continuação do bloco)
+    df = _forward_fill_keys(df)
+
+    # Fallback contextual: injeta mês/ano do contexto onde forward_fill
+    # não conseguiu preencher (ex: primeira linha de um bloco veio sem mes)
+    df = _apply_fallback_context(df, contexto)
+
+    # Filtrar inválidos (após fallback, linhas que ainda estão nulas
+    # são genuinamente inválidas — sem produto, preço, UF, ou mês)
     df = df.filter(
         pl.col("preco_medio").is_not_null()
         & (pl.col("preco_medio") > 0)
@@ -272,12 +476,23 @@ def transform_uf(raw_bytes: bytes) -> pl.DataFrame:
     if df.height == 0:
         raise ValueError("Zero linhas após limpeza — estrutura do arquivo mudou?")
 
-    logger.info("UF: %d -> %d linhas (%d removidas)", before, df.height, after)
-    return df.select(UF_COLUMNS)
+    logger.info("UF: %d -> %d linhas (%d removidas) | qualidade=%s",
+        before, df.height, after,
+        df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
+    )
+    return df.select([*UF_COLUMNS, QUALIDADE_COL])
 
 
-def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
-    """Lê CSV bruto CONAB de Município, limpa e normaliza."""
+def transform_municipio(
+    raw_bytes: bytes,
+    contexto: ContextoCarga | None = None,
+) -> pl.DataFrame:
+    """Lê CSV bruto CONAB de Município, limpa e normaliza.
+
+    Args:
+        raw_bytes: Conteúdo bruto do CSV CONAB.
+        contexto: Metadados de extração para fallback (mês/ano do arquivo).
+    """
     raw_text = raw_bytes.decode("latin-1")
     df = pl.read_csv(
         io.StringIO(raw_text),
@@ -323,6 +538,29 @@ def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
     if "municipio_nome" in df.columns:
         df = df.with_columns(pl.col("municipio_nome").str.strip_chars().str.to_titlecase())
 
+    # Forward-fill: propaga último valor válido nas colunas de grupo
+    df = _forward_fill_keys(df)
+
+    # Fallback contextual: injeta mês/ano do contexto onde forward_fill
+    # não conseguiu preencher
+    df = _apply_fallback_context(df, contexto)
+
+    # Fallback UF: municípios órfãos sem UF mesmo após forward-fill
+    # Usa os 2 primeiros dígitos do código IBGE como identificador da UF
+    if "municipio_id" in df.columns:
+        uf_from_ibge = (
+            pl.when(pl.col("uf").is_null() & pl.col("municipio_id").is_not_null())
+            .then(pl.col("municipio_id").str.slice(0, 2))
+            .otherwise(pl.col("uf"))
+        )
+        for prefix, uf_name in IBGE_UF.items():
+            uf_from_ibge = (
+                pl.when(uf_from_ibge == prefix)
+                .then(pl.lit(uf_name))
+                .otherwise(uf_from_ibge)
+            )
+        df = df.with_columns(uf_from_ibge.alias("uf"))
+
     df = df.filter(
         pl.col("preco_medio").is_not_null()
         & (pl.col("preco_medio") > 0)
@@ -341,11 +579,17 @@ def transform_municipio(raw_bytes: bytes) -> pl.DataFrame:
         df = df.with_columns(pl.lit(None).cast(pl.Utf8).alias("municipio_nome"))
 
     after = before - df.height
-    logger.info("Municipio: %d -> %d linhas (%d removidas)", before, df.height, after)
-    return df.select(MUN_COLUMNS)
+    logger.info("Municipio: %d -> %d linhas (%d removidas) | qualidade=%s",
+        before, df.height, after,
+        df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
+    )
+    return df.select([*MUN_COLUMNS, QUALIDADE_COL])
 
 
-def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
+def transform_prohort(
+    raw_bytes: bytes,
+    contexto: ContextoCarga | None = None,
+) -> pl.DataFrame:
     """Lê CSV bruto CONAB ProhortMensal e deriva preço médio por kg por CEASA.
 
     O arquivo ProhortMensal.txt contém fluxo comercial nas CEASAs:
@@ -360,7 +604,13 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
         - Separador ;
         - qtd_comercializada_kg > 0 (evita divisão por zero)
         - uf_ceasa com 2 caracteres
+        - Forward-fill em produto/uf/ano/mes
+        - Fallback contextual: se ``mes`` continuar nulo, injeta do contexto
         - Remover outliers extremos (Z-score > 5)
+
+    Args:
+        raw_bytes: Conteúdo bruto do CSV CONAB.
+        contexto: Metadados de extração para fallback (mês/ano do arquivo).
     """
     raw_text = raw_bytes.decode("latin-1")
     df = pl.read_csv(
@@ -426,6 +676,13 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
             .str.to_titlecase()
         )
 
+    # Forward-fill: propaga último valor válido nas colunas de grupo
+    df = _forward_fill_keys(df)
+
+    # Fallback contextual: injeta mês/ano do contexto onde forward_fill
+    # não conseguiu preencher
+    df = _apply_fallback_context(df, contexto)
+
     # Filtrar inválidos
     df = df.filter(
         pl.col("preco_medio").is_not_null()
@@ -456,8 +713,11 @@ def transform_prohort(raw_bytes: bytes) -> pl.DataFrame:
     if df.height == 0:
         raise ValueError("Zero linhas após limpeza do Prohort — estrutura mudou?")
 
-    logger.info("Prohort: %d -> %d linhas (%d removidas)", before, df.height, after)
-    return df.select(PROHORT_COLUMNS)
+    logger.info("Prohort: %d -> %d linhas (%d removidas) | qualidade=%s",
+        before, df.height, after,
+        df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
+    )
+    return df.select([*PROHORT_COLUMNS, QUALIDADE_COL])
 
 
 # ────────────────────────────────────────────────────────────────────
@@ -514,16 +774,23 @@ def categorizar_produtos(df: pl.DataFrame) -> pl.DataFrame:
     return df.with_columns(expr.alias("categoria_b2c"))
 
 
-def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
+def load_local_file(
+    filepath: str,
+    contexto: ContextoCarga | None = None,
+) -> tuple[pl.DataFrame, dict[str, str]]:
     """Lê arquivo local LISTA*.txt, categoriza e mapeia para UF_COLUMNS.
 
     Layout real (separador ``;``):
       produto;classificao_produto;id_produto;uf;regiao;ano;mes;
       dsc_nivel_comercializacao;valor_produto_kg
 
+    Args:
+        filepath: Caminho do arquivo local.
+        contexto: Metadados de extração para fallback (mês/ano inferido do nome).
+
     Returns:
         Tupla ``(df_uf, categorias)`` onde:
-        - ``df_uf``: DataFrame com ``UF_COLUMNS`` + ``categoria_b2c``
+        - ``df_uf``: DataFrame com ``UF_COLUMNS`` + ``categoria_b2c`` + ``_qualidade``
         - ``categorias``: dict ``{nome_produto_combinado: categoria}``
     """
     raw_text = Path(filepath).read_bytes().decode("latin-1")
@@ -569,6 +836,10 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
         pl.col("mes").cast(pl.Int32, strict=False),
     )
 
+    # Fallback contextual: injeta mês/ano do contexto onde arquivos locais
+    # podem ter a coluna de mês vazia (ex: LISTA_05_2024.txt → mês=5)
+    df = _apply_fallback_context(df, contexto)
+
     # Filtrar inválidos
     # ATENÇÃO: parênteses obrigatórios — Python dá precedence maior a & que ==
     df = df.filter(
@@ -589,14 +860,15 @@ def load_local_file(filepath: str) -> tuple[pl.DataFrame, dict[str, str]]:
         raise ValueError(f"Zero linhas após limpeza do arquivo local: {filepath}")
 
     logger.info(
-        "LocalFile: %s — %d -> %d linhas (%d removidas) | categorias=%s",
+        "LocalFile: %s — %d -> %d linhas (%d removidas) | categorias=%s | qualidade=%s",
         Path(filepath).name,
         before,
         df.height,
         after,
         set(categorias.values()),
+        df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
     )
-    df_out = df.select([*UF_COLUMNS, "categoria_b2c"])
+    df_out = df.select([*UF_COLUMNS, "categoria_b2c", QUALIDADE_COL])
     return df_out, categorias
 
 
@@ -642,7 +914,7 @@ def _ensure_dimensions(
         # Localidades (UF + Municipio)
         localidades = set()
         for uf in df_uf["uf"].unique().to_list():
-            localidades.add((uf, "", ""))
+            localidades.add((uf, None, None))
         for row in df_mun.select(["uf", "municipio_id", "municipio_nome"]).unique().iter_rows():
             localidades.add((row[0], row[1] if row[1] else None, row[2] if row[2] else None))
         if df_prohort is not None:
@@ -687,6 +959,7 @@ def _copy_to_fact(
     prod_map = mapping["produtos"]
     loc_map = mapping["localidades"]
 
+    tem_qualidade = QUALIDADE_COL in df.columns
     rows: list[tuple] = []
     seen = set()
     for row in df.iter_rows():
@@ -710,20 +983,22 @@ def _copy_to_fact(
         if key in seen:
             continue
         seen.add(key)
-        rows.append((id_prod, id_loc, ano, mes, preco, batch_id))
+        qualidade = row[-1] if tem_qualidade else QUALIDADE_NORMAL
+        rows.append((id_prod, id_loc, ano, mes, preco, batch_id, qualidade))
 
     if not rows:
         return 0
 
     COPY_SQL = """
     INSERT INTO staging.fact_precos_mensais
-        (id_produto, id_localidade, ano, mes, preco_medio, batch_id)
+        (id_produto, id_localidade, ano, mes, preco_medio, batch_id, _qualidade)
     VALUES %s
     ON CONFLICT (id_produto, id_localidade, ano, mes)
     DO UPDATE SET
         preco_medio = EXCLUDED.preco_medio,
         batch_id    = EXCLUDED.batch_id,
-        loaded_at   = NOW()
+        loaded_at   = NOW(),
+        _qualidade  = EXCLUDED._qualidade
     """
 
     total = 0
@@ -830,6 +1105,19 @@ def load(
 
     batch_id = str(uuid.uuid4())
     inicio = time.perf_counter()
+
+    # ── Log da qualidade dos dados (fallback audit) ────────────────
+    for nome_fonte, df in [("UF", df_uf), ("Prohort", df_prohort)]:
+        if df is not None and QUALIDADE_COL in df.columns:
+            counts = df[QUALIDADE_COL].value_counts()
+            logger.info(
+                "Qualidade [%s]: %s",
+                nome_fonte,
+                {row[0]: row[1] for row in counts.iter_rows()},
+            )
+
+    # _qualidade mantida — migração 38 já adicionou a coluna no banco
+    # A flag é propagada para fact_precos_mensais via _copy_to_fact()
 
     conn = _get_pg_conn()
     try:
@@ -944,10 +1232,18 @@ def run() -> None:
         len(raw_pro) / 1_048_576,
     )
 
+    # Construir contexto de extração para fallback
+    # Nota: URLs CONAB atuais (PrecosMensalUF.txt, ProhortMensal.txt) não
+    # codificam mês/ano no nome — a inferência por filename retornará None.
+    # Quando houver download por mês (ex: boletim_maio_2026.csv), o mês
+    # será automaticamente extraído via _inferir_mes_do_contexto().
+    ctx_uf = ContextoCarga(arquivo=CONAB_URLS["uf"].rsplit("/", 1)[-1])
+    ctx_pro = ContextoCarga(arquivo=CONAB_URLS["prohort"].rsplit("/", 1)[-1])
+
     # Transform
     logger.info("[2/4] Limpeza e normalização...")
-    df_uf = transform_uf(raw_uf)
-    df_pro = transform_prohort(raw_pro)
+    df_uf = transform_uf(raw_uf, contexto=ctx_uf)
+    df_pro = transform_prohort(raw_pro, contexto=ctx_pro)
     # df_mun mantido vazio para compatibilidade com a assinatura de load()
     df_mun = pl.DataFrame(
         schema={
@@ -1025,8 +1321,12 @@ def run_local(filepath: str | None = None) -> None:
         logger.info("Processando: %s", f.name)
         t0 = time.perf_counter()
 
+        # Construir contexto com inferência de mês/ano a partir do nome
+        # Ex: LISTA_05_2024.txt → mes=5, ano=2024
+        contexto = _build_contexto(str(f))
+
         # Ler, limpar e categorizar
-        df, categorias = load_local_file(str(f))
+        df, categorias = load_local_file(str(f), contexto=contexto)
         all_categorias.update(categorias)
         if df.height == 0:
             continue
@@ -1053,9 +1353,8 @@ def run_local(filepath: str | None = None) -> None:
             }
         )
 
-        # Load B2C no medalhão
-        df_b2c_uf = df_b2c.select(UF_COLUMNS)
-        resultados = load(df_b2c_uf, df_mun, None)
+        # Load B2C no medalhão (inclui _qualidade para auditoria em load())
+        resultados = load(df_b2c, df_mun, None)
         uf_result = resultados.get("uf", CargaResult(arquivo=f.name))
         total_b2c_inseridas += uf_result.linhas_inseridas
         total_b2c_lidas += df_b2c.height

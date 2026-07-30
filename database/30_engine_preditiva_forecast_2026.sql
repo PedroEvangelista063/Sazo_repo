@@ -194,11 +194,13 @@ BEGIN
     ),
     -- --------------------------------------------------------------------
     -- CTE 2: dados_reais_2026 — O que o scraper trouxe de real (não interpolado)
+    -- FIX: extrai ano e mes de data_referencia_atual para alinhar com uq_sazonalidade
     -- --------------------------------------------------------------------
     dados_reais_2026 AS (
         SELECT DISTINCT
             s.id_produto,
             s.id_localidade,
+            CAST(SPLIT_PART(s.data_referencia_atual, '-', 1) AS INTEGER) AS ano,
             CAST(SPLIT_PART(s.data_referencia_atual, '-', 2) AS INTEGER) AS mes,
             s.preco_atual,
             s.preco_referencia,
@@ -254,16 +256,14 @@ BEGIN
         SELECT
             mf.id_produto,
             mf.id_localidade,
-            mf.mes,
             2026 AS ano,
-            -- Preço projetado = NULL (desconhecido) — frontend usa status_cor_mode
+            mf.mes,
             b.status_cor_mode       AS status_cor,
             b.confianca             AS baseline_confianca,
             'beta_weighted_25_24' AS metodo_calculo,
             TRUE                    AS is_forecast,
             'BASELINE_HISTORICO'::TEXT AS fonte,
             NOW()                   AS calculado_em,
-            -- Tendência futura baseada na comparação com mês anterior no baseline
             CASE
                 WHEN LAG(b.status_cor_mode) OVER (PARTITION BY b.id_produto, b.id_localidade ORDER BY b.mes) IS NULL
                     THEN 'ESTAVEL'
@@ -300,10 +300,11 @@ BEGIN
     ),
     -- --------------------------------------------------------------------
     -- CTE 4: uniao_final — Real + Projetado
+    -- FIX: adicionado ano, mes nas duas branches (UNION ALL por posição)
     -- --------------------------------------------------------------------
     uniao_final AS (
         SELECT
-            id_produto, id_localidade, mes,
+            id_produto, id_localidade, ano, mes,
             preco_atual, preco_referencia,
             data_referencia_atual,
             usou_fallback_12m,
@@ -318,7 +319,7 @@ BEGIN
         FROM dados_reais_2026
         UNION ALL
         SELECT
-            id_produto, id_localidade, mes,
+            id_produto, id_localidade, ano, mes,
             preco_atual, preco_referencia,
             data_referencia_atual,
             usou_fallback_12m,
@@ -334,9 +335,12 @@ BEGIN
     )
     -- --------------------------------------------------------------------
     -- UPSERT em mart.sazonalidade_produto
+    -- FIX: adicionado ano, mes no INSERT e SELECT
+    -- FIX: ON CONFLICT alterado para (id_produto, id_localidade, ano, mes)
+    -- FIX: DISTINCT ON com ORDER BY u.is_forecast ASC (dado real > projeção)
     -- --------------------------------------------------------------------
     INSERT INTO mart.sazonalidade_produto (
-        id_produto, id_localidade,
+        id_produto, id_localidade, ano, mes,
         preco_referencia, preco_atual,
         data_referencia_atual, usou_fallback_12m,
         preco_estimado, status_cor, fonte, calculado_em,
@@ -344,9 +348,11 @@ BEGIN
         tendencia_futura, is_forecast,
         baseline_confianca, forecast_method
     )
-    SELECT
+    SELECT DISTINCT ON (u.id_produto, u.id_localidade, u.ano, u.mes)
         u.id_produto,
         u.id_localidade,
+        u.ano,
+        u.mes,
         ROUND(u.preco_referencia, 4),
         u.preco_atual,
         u.data_referencia_atual,
@@ -363,7 +369,8 @@ BEGIN
         u.baseline_confianca,
         u.forecast_method
     FROM uniao_final u
-    ON CONFLICT (id_produto, id_localidade, data_referencia_atual)
+    ORDER BY u.id_produto, u.id_localidade, u.ano, u.mes, u.is_forecast ASC
+    ON CONFLICT (id_produto, id_localidade, ano, mes)
     DO UPDATE SET
         preco_referencia      = EXCLUDED.preco_referencia,
         preco_atual           = EXCLUDED.preco_atual,
@@ -375,7 +382,6 @@ BEGIN
         metodo_calculo        = EXCLUDED.metodo_calculo,
         variacao_mom_pct      = EXCLUDED.variacao_mom_pct,
         preco_mes_anterior    = EXCLUDED.preco_mes_anterior,
-        -- Regra de Ouro: dado REAL sempre vence projeção
         is_forecast           = CASE
                                     WHEN EXCLUDED.is_forecast = FALSE THEN FALSE
                                     WHEN mart.sazonalidade_produto.is_forecast = TRUE

@@ -1,9 +1,33 @@
-import asyncio, sys, os
-sys.path.insert(0, '.')
-os.environ['PYTHONIOENCODING'] = 'utf-8'
+import asyncio
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, ".")
+os.environ["PYTHONIOENCODING"] = "utf-8"
+
+# Carrega backend/.env se existir (não sobrescreve variáveis já definidas)
+try:
+    from dotenv import load_dotenv
+
+    for env_path in (
+        Path(__file__).resolve().parents[1] / "backend" / ".env",
+        Path(__file__).resolve().parents[1] / ".env",
+    ):
+        if env_path.exists():
+            load_dotenv(env_path)
+except ImportError:
+    pass
+
 import asyncpg
 
-DB_URL = 'postgresql://postgres:postgres@localhost:5432/quero_comprar'
+DB_URL = (
+    os.environ.get("DATABASE_URL")
+    or os.environ.get("DATABASE_URL_ETL")
+    or os.environ.get("DATABASE_URL_API")
+    or "postgresql://postgres:postgres@localhost:5432/quero_comprar"
+)
+
 
 async def run():
     conn = await asyncpg.connect(DB_URL)
@@ -22,23 +46,29 @@ async def run():
         LIMIT 30
     """)
     for r in rows:
-        print("  %04d/%02d: %5d registros | %3d produtos | %3d locais" % (r['ano'], r['mes'], r['total'], r['produtos'], r['localidades']))
+        print(
+            f"  {r['ano']:04d}/{r['mes']:02d}: {r['total']:5d} registros | {r['produtos']:3d} produtos | {r['localidades']:3d} locais"
+        )
 
     # CHECK 1: Produtos B2B na MV
     print("\n[1.1] PRODUTOS B2B NA MV (deve ser 0)")
     try:
-        r = await conn.fetchval("SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade WHERE categoria_b2c != 'ALIMENTO_VAREJO'")
-        print("  B2B vazados: %d %s" % (r, 'OK' if r == 0 else 'CRITICO'))
-    except Exception as e:
-        print("  MV nao existe: %s" % e)
+        r = await conn.fetchval(
+            "SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade WHERE categoria_b2c != 'ALIMENTO_VAREJO'"
+        )
+        print(f"  B2B vazados: {r} {'OK' if r == 0 else 'CRITICO'}")
+    except asyncpg.UndefinedTableError as e:
+        print(f"  MV nao existe: {e}")
 
     # CHECK 2: INSUFICIENTE na MV
     print("\n[1.2] INSUFICIENTE NA MV (deve ser 0)")
     try:
-        r = await conn.fetchval("SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade WHERE status_cor = 'INSUFICIENTE'")
-        print("  INSUFICIENTE vazados: %d %s" % (r, 'OK' if r == 0 else 'CRITICO'))
-    except Exception as e:
-        print("  (tabela nao existe: %s)" % e)
+        r = await conn.fetchval(
+            "SELECT COUNT(*) FROM mart.vw_api_produtos_sazonalidade WHERE status_cor = 'INSUFICIENTE'"
+        )
+        print(f"  INSUFICIENTE vazados: {r} {'OK' if r == 0 else 'CRITICO'}")
+    except asyncpg.UndefinedTableError as e:
+        print(f"  (tabela nao existe: {e})")
 
     # CHECK 3: Distribuicao do semaforo
     print("\n[1.3] DISTRIBUICAO DO SEMAFORO")
@@ -50,11 +80,11 @@ async def run():
             GROUP BY status_cor ORDER BY status_cor
         """)
         for r in rows:
-            print("  %s: %d (%.1f%%)" % (r['status_cor'], r['total'], r['pct']))
-        total = sum(r['total'] for r in rows)
-        print("  Total na MV: %d" % total)
-    except Exception as e:
-        print("  (tabela nao existe: %s)" % e)
+            print(f"  {r['status_cor']}: {r['total']} ({r['pct']:.1f}%)")
+        total = sum(r["total"] for r in rows)
+        print(f"  Total na MV: {total}")
+    except asyncpg.UndefinedTableError as e:
+        print(f"  (tabela nao existe: {e})")
 
     # CHECK 4: Campos obrigatorios
     print("\n[1.4] CAMPOS OBRIGATORIOS (todos devem ser 0)")
@@ -69,14 +99,16 @@ async def run():
             FROM mart.vw_api_produtos_sazonalidade
         """)
         for k, v in r.items():
-            print("  %s: %d %s" % (k, v, 'OK' if v == 0 else 'PROBLEMA'))
-    except Exception as e:
-        print("  (tabela nao existe: %s)" % e)
+            print(f"  {k}: {v} {'OK' if v == 0 else 'PROBLEMA'}")
+    except asyncpg.UndefinedTableError as e:
+        print(f"  (tabela nao existe: {e})")
 
     # CHECK 5: Precos invalidos na fact
     print("\n[1.5] PRECO_INVALIDOS (deve ser 0)")
-    r = await conn.fetchval("SELECT COUNT(*) FROM staging.fact_precos_mensais WHERE preco_medio <= 0 OR preco_medio IS NULL")
-    print("  Precos <= 0: %d %s" % (r, 'OK' if r == 0 else 'PROBLEMA'))
+    r = await conn.fetchval(
+        "SELECT COUNT(*) FROM staging.fact_precos_mensais WHERE preco_medio <= 0 OR preco_medio IS NULL"
+    )
+    print(f"  Precos <= 0: {r} {'OK' if r == 0 else 'PROBLEMA'}")
 
     # CHECK 6: Precos rejeitados
     print("\n[1.6] PRECOS REJEITADOS (anomalias > 500%)")
@@ -89,10 +121,10 @@ async def run():
             ORDER BY pr.rejeitado_em DESC LIMIT 5
         """)
         for r in rows:
-            nome = r['nome_produto'].encode('ascii', 'replace').decode('ascii')
-            print("  %-25s %-3s razao=%s %s" % (nome[:25], r['uf'], r['razao'], r['rejeitado_em']))
+            nome = r["nome_produto"].encode("ascii", "replace").decode("ascii")
+            print(f"  {nome[:25]:<25} {r['uf']:<3} razao={r['razao']} {r['rejeitado_em']}")
     except UnicodeEncodeError as e:
-        print("  (encoding error no nome do produto: %s)" % e)
+        print(f"  (encoding error no nome do produto: {e})")
 
     # CHECK 7: Freshness
     print("\n[1.7] FRESHNESS DOS DADOS")
@@ -105,12 +137,12 @@ async def run():
                 COUNT(*) AS total_registros
             FROM mart.vw_api_produtos_sazonalidade
         """)
-        print("  Mais recente: %s" % r['data_mais_recente'])
-        print("  Mais antiga:  %s" % r['data_mais_antiga'])
-        print("  Periodos:     %d" % r['periodos_distintos'])
-        print("  Total:        %d" % r['total_registros'])
-    except Exception as e:
-        print("  (tabela nao existe: %s)" % e)
+        print(f"  Mais recente: {r['data_mais_recente']}")
+        print(f"  Mais antiga:  {r['data_mais_antiga']}")
+        print(f"  Periodos:     {r['periodos_distintos']}")
+        print(f"  Total:        {r['total_registros']}")
+    except asyncpg.UndefinedTableError as e:
+        print(f"  (tabela nao existe: {e})")
 
     # CHECK 8: Fallback proportion
     print("\n[1.8] PROPORCAO DE FALLBACK")
@@ -122,18 +154,24 @@ async def run():
             GROUP BY usou_fallback_12m
         """)
         for r in rows:
-            print("  usou_fallback_12m=%s: %d (%.1f%%)" % (r['usou_fallback_12m'], r['total'], r['pct']))
-    except Exception as e:
-        print("  (tabela nao existe: %s)" % e)
+            print(f"  usou_fallback_12m={r['usou_fallback_12m']}: {r['total']} ({r['pct']:.1f}%)")
+    except asyncpg.UndefinedTableError as e:
+        print(f"  (tabela nao existe: {e})")
 
-    # CHECK 9: Baseline 2025 coverage
-    print("\n[1.9] Cobertura BASELINE 2025 vs NOVOS PRODUTOS")
-    rows = await conn.fetch("""
-        SELECT ano, COUNT(*) as total FROM staging.baseline_2025_interpolado
-        GROUP BY ano ORDER BY ano
-    """)
-    for r in rows:
-        print("  %s: %d registros" % (r['ano'], r['total']))
+    # CHECK 9: Baseline 2025 coverage (tabela por produto/localidade, sem coluna ano)
+    print("\n[1.9] COBERTURA BASELINE 2025 (baseline_2025_interpolado)")
+    try:
+        r = await conn.fetchrow("""
+            SELECT COUNT(*) as total,
+                   COUNT(DISTINCT id_produto) as produtos,
+                   COUNT(DISTINCT id_localidade) as localidades
+            FROM staging.baseline_2025_interpolado
+        """)
+        print(
+            f"  total: {r['total']} | produtos: {r['produtos']} | localidades: {r['localidades']}"
+        )
+    except asyncpg.UndefinedTableError as e:
+        print(f"  (tabela nao existe: {e})")
 
     # CHECK 10: Controle de carga
     print("\n[1.10] ULTIMOS BATCHES DE CARGA")
@@ -143,8 +181,10 @@ async def run():
             FROM raw.controle_carga ORDER BY iniciado_em DESC LIMIT 5
         """)
         for r in rows:
-            print("  %-30s %-10s lidas=%d inseridas=%d %s" % (r['arquivo'][:30], r['status'], r['linhas_lidas'], r['linhas_inseridas'], r['iniciado_em']))
-    except:
+            print(
+                f"  {r['arquivo'][:30]:<30} {r['status']:<10} lidas={r['linhas_lidas']} inseridas={r['linhas_inseridas']} {r['iniciado_em']}"
+            )
+    except asyncpg.UndefinedTableError:
         print("  (raw.controle_carga vazia ou nao existe)")
 
     # CHECK 11: Ultimos registros carregados
@@ -157,11 +197,14 @@ async def run():
         ORDER BY fp.loaded_at DESC LIMIT 5
     """)
     for r in rows:
-        print("  %-25s %-3s %04d/%02d R$ %.2f batch=%s" % (r['nome_produto'][:25], r['uf'], r['ano'], r['mes'], r['preco_medio'], str(r['batch_id'])[:8]))
+        print(
+            f"  {r['nome_produto'][:25]:<25} {r['uf']:<3} {r['ano']:04d}/{r['mes']:02d} R$ {r['preco_medio']:.2f} batch={str(r['batch_id'])[:8]}"
+        )
 
     await conn.close()
     print("\n" + "=" * 65)
     print("AUDITORIA CONCLUIDA")
     print("=" * 65)
+
 
 asyncio.run(run())

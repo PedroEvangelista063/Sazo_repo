@@ -122,7 +122,7 @@ BEGIN
             NEW.status_cor,
             NEW.preco_referencia,
             NEW.preco_atual,
-            NEW.usou_fallback_12m,
+            COALESCE(NEW.usou_fallback_12m, FALSE),
             NOW(),
             NULL              -- batch_id: pode ser enriquecido pela aplicação
         );

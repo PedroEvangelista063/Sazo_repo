@@ -50,8 +50,10 @@ ALTER TABLE mart.sazonalidade_produto
                'alpha_baseline_25_26',
                'beta_media_disponivel',
                'beta_weighted_25_24',
-               'SANDUICHE_MEDIA_24_25'   -- ← NOVO: sanduíche histórico
-           ));
+                'SANDUICHE_MEDIA_24_25',  -- ← NOVO: sanduíche histórico
+                'SANDUICHE_FATOR_SAZONAL',-- ← Fase 51: índice de sazonalidade
+                'PROXY_HIERARQUICO'
+            ));
 
 COMMENT ON COLUMN mart.sazonalidade_produto.forecast_method IS
     'Método de geração: NULL=dado real; SANDUICHE_MEDIA_24_25=média histórica 24-25 projetada; demais=baselines ponderados.';

@@ -1,100 +1,107 @@
 -- ============================================================================
--- QUERO COMPRAR — Fase 42: Status Cor por Preço Histórico
+-- QUERO COMPRAR — Fase 50: Padronização do Semáforo ±15% nos Dados Projetados
 -- PostgreSQL 16+
 --
--- OBJETIVO:
---   Substituir o fallback fixo 'AMARELO' por um semáforo calculado a partir
---   dos preços reais de 2024-2025. Antes, quando um produto não tinha
---   registro na tabela sazonalidade_baseline_24_25, o sistema usava
---   'AMARELO' como padrão — resultando em 87% da grade amarela.
+-- PROBLEMA (diagnosticado):
+--   O Sanduíche Sazonal (40) e a Engine Preditiva (30) injetam preco_atual
+--   sintético mas mantêm um status_cor HERDADO (moda da baseline 24-25/25-26),
+--   que não reflete a regra matemática oficial do projeto (±15%):
+--     - variações de 0% classificadas como VERDE/VERMELHO
+--     - variações de +40% classificadas como VERDE (ex.: Repolho Roxo Nov/26)
+--   A Fase 42 criou fn_calcular_status_cor_por_preco com threshold ±10% e
+--   ainda prioriza b.status_cor_mode — regra divergente da oficial.
 --
---   Agora, calculamos o status_cor comparando o preço do mês alvo contra
---   a média anual do (produto, localidade):
---     < 90% da média anual → 🟢 VERDE (safra/melhor época)
---     ±10% da média anual  → 🟡 AMARELO (preço normal)
---     > 110% da média anual→ 🔴 VERMELHO (entressafra)
+-- CORREÇÃO (regra oficial — PROJECT_RULES.md Fase 6):
+--   status_cor deriva EXCLUSIVAMENTE de preco_atual vs preco_referencia:
+--     preco_atual <  ref * 0.85  → 'VERDE'
+--     preco_atual >  ref * 1.15  → 'VERMELHO'
+--     senão (incl. preco_atual = ref) → 'AMARELO'
+--   Âncora da referência: COALESCE(preco_referencia, preco_atual) — se não
+--   houver referência, variação = 0 → AMARELO (regra Gamma).
 --
---   Threshold de 10% calibrado com base em 31.884 registros reais:
---     21% VERDE | 62% AMARELO | 17% VERMELHO
---
--- MUDANÇAS:
---   1. Cria fn_calcular_status_cor_por_preco()
---   2. Atualiza Step 2 da procedure: COALESCE(b.status_cor_mode, fn(...), 'AMARELO')
---   3. Atualiza Step 3 da procedure: COALESCE(fn(filho), pai_status_cor, 'AMARELO')
+-- FASES:
+--   1. fn_status_cor_regra_15() — única fonte de verdade do semáforo.
+--   2. Correção retroativa: UPDATE em TODAS as linhas computáveis com cor
+--      inconsistente (is_forecast TRUE e real; metodo_calculo NULL incluído).
+--   3. Correção na raiz: sp_project_sandwich_prices_2026 recalcula status_cor
+--      matematicamente nos Steps 1/2/3 + varredura final em 2026 forecast.
 -- ============================================================================
 
 BEGIN;
 
 -- ============================================================================
--- SEÇÃO 1: Função — Calcular status_cor a partir de preços históricos
+-- SEÇÃO 1: Função canônica — Semáforo pela Regra ±15%
 -- ============================================================================
--- Compara o preço médio de um mês específico contra a média anual do
--- (produto, localidade). Retorna VERDE/AMARELO/VERMELHO ou NULL se não
--- houver dados suficientes.
---
--- Threshold de 10% (calibrado empiricamente):
---   - VERDE:   preço do mês < 90% da média anual
---   - VERMELHO: preço do mês > 110% da média anual
---   - AMARELO: dentro da faixa ±10%
+-- Única fonte de verdade. Retorna NULL se o preço atual não existir/for <= 0
+-- (o chamador decide o fallback, normalmente AMARELO).
+-- ============================================================================
 
-CREATE OR REPLACE FUNCTION staging.fn_calcular_status_cor_por_preco(
-    p_id_produto    INTEGER,
-    p_id_localidade INTEGER,
-    p_mes           SMALLINT
+CREATE OR REPLACE FUNCTION staging.fn_status_cor_regra_15(
+    p_preco_atual      NUMERIC,
+    p_preco_referencia NUMERIC
 )
-RETURNS TEXT  -- 'VERDE', 'AMARELO', 'VERMELHO', ou NULL
-LANGUAGE plpgsql STABLE
+RETURNS TEXT
+LANGUAGE sql
+STABLE
 AS $$
-DECLARE
-    v_preco_mes     NUMERIC(14,4);
-    v_media_anual   NUMERIC(14,4);
-    v_threshold     CONSTANT NUMERIC(4,2) := 0.10;  -- 10%
-BEGIN
-    -- Preço médio do mês específico (2024-2025)
-    SELECT AVG(f.preco_medio) INTO v_preco_mes
-    FROM staging.fact_precos_mensais f
-    WHERE f.id_produto    = p_id_produto
-      AND f.id_localidade = p_id_localidade
-      AND f.mes           = p_mes
-      AND f.ano IN (2024, 2025)
-      AND f.preco_medio IS NOT NULL
-      AND f.preco_medio > 0;
-
-    IF v_preco_mes IS NULL THEN
-        RETURN NULL;  -- sem dados para este mês
-    END IF;
-
-    -- Média anual do (produto, localidade) em 2024-2025
-    SELECT AVG(f.preco_medio) INTO v_media_anual
-    FROM staging.fact_precos_mensais f
-    WHERE f.id_produto    = p_id_produto
-      AND f.id_localidade = p_id_localidade
-      AND f.ano IN (2024, 2025)
-      AND f.preco_medio IS NOT NULL
-      AND f.preco_medio > 0;
-
-    IF v_media_anual IS NULL OR v_media_anual = 0 THEN
-        RETURN NULL;
-    END IF;
-
-    -- Classificação por threshold
-    IF v_preco_mes < v_media_anual * (1.0 - v_threshold) THEN
-        RETURN 'VERDE';     -- abaixo da média → safra/melhor época
-    ELSIF v_preco_mes > v_media_anual * (1.0 + v_threshold) THEN
-        RETURN 'VERMELHO';  -- acima da média → entressafra
-    ELSE
-        RETURN 'AMARELO';   -- dentro da faixa normal
-    END IF;
-END;
+    SELECT CASE
+        WHEN p_preco_atual IS NULL OR p_preco_atual <= 0 THEN NULL
+        WHEN p_preco_atual < COALESCE(p_preco_referencia, p_preco_atual) * 0.85 THEN 'VERDE'
+        WHEN p_preco_atual > COALESCE(p_preco_referencia, p_preco_atual) * 1.15 THEN 'VERMELHO'
+        ELSE 'AMARELO'
+    END
 $$;
 
-COMMENT ON FUNCTION staging.fn_calcular_status_cor_por_preco IS
-    'Calcula status_cor (VERDE/AMARELO/VERMELHO) comparando o preço do mês '
-    'contra a média anual do (produto, localidade) em 2024-2025. '
-    'Threshold: ±10%. Retorna NULL se não houver dados suficientes.';
+COMMENT ON FUNCTION staging.fn_status_cor_regra_15 IS
+    'Semáforo oficial ±15%: preco_atual < ref*0.85 → VERDE; > ref*1.15 → VERMELHO; '
+    'senão AMARELO. ref = COALESCE(preco_referencia, preco_atual). '
+    'Retorna NULL se preco_atual IS NULL ou <= 0. '
+    'Substitui a regra ±10% da Fase 42 para dados projetados.';
 
 -- ============================================================================
--- SEÇÃO 2: Atualizar sp_project_sandwich_prices_2026
+-- SEÇÃO 2: FASE 1 — Correção retroativa dos dados existentes
+-- ============================================================================
+-- Recalcula status_cor pela regra oficial em TODAS as linhas computáveis cuja
+-- cor atual está inconsistente (cobre is_forecast TRUE e FALSE, metodo_calculo
+-- NULL incluído). Linhas sem preço computável permanecem inalteradas.
+-- ============================================================================
+
+DO $$
+DECLARE
+    v_corrigidos INTEGER;
+BEGIN
+    WITH recalc AS (
+        SELECT
+            s.id_sazonalidade,
+            CASE
+                -- Projeção SEM preço → semáforo neutro (a regra ±15% exige preço)
+                WHEN (s.preco_atual IS NULL OR s.preco_atual <= 0)
+                     AND s.is_forecast = TRUE
+                    THEN 'AMARELO'::TEXT
+                ELSE COALESCE(
+                    staging.fn_status_cor_regra_15(s.preco_atual, s.preco_referencia),
+                    s.status_cor
+                )
+            END AS novo_status_cor
+        FROM mart.sazonalidade_produto s
+    )
+    UPDATE mart.sazonalidade_produto s
+    SET status_cor   = r.novo_status_cor,
+        calculado_em = NOW()
+    FROM recalc r
+    WHERE s.id_sazonalidade = r.id_sazonalidade
+      AND r.novo_status_cor IS DISTINCT FROM s.status_cor;
+
+    GET DIAGNOSTICS v_corrigidos = ROW_COUNT;
+    RAISE NOTICE '[50] Linhas com status_cor corrigido pela regra ±15%%: %', v_corrigidos;
+END $$;
+
+-- ============================================================================
+-- SEÇÃO 3: FASE 2 — Correção na raiz (sp_project_sandwich_prices_2026)
+-- ============================================================================
+-- Steps 1/2/3 passam a derivar status_cor da regra ±15% sobre os preços
+-- PROJETADOS (nunca mais moda da baseline). Step 4 varre 2026 forecast
+-- garantindo consistência mesmo para linhas criadas pela Engine 30.
 -- ============================================================================
 
 CREATE OR REPLACE PROCEDURE staging.sp_project_sandwich_prices_2026()
@@ -138,6 +145,14 @@ BEGIN
     SET
         preco_atual        = ROUND(p.preco_medio_historico * (1 + p.tendencia_pct / 100), 4),
         preco_referencia   = ROUND(p.preco_medio_historico, 4),
+        -- FIX 50: semáforo recalculado pela regra ±15% sobre o preço projetado
+        status_cor         = COALESCE(
+            staging.fn_status_cor_regra_15(
+                ROUND(p.preco_medio_historico * (1 + p.tendencia_pct / 100), 4),
+                ROUND(p.preco_medio_historico, 4)
+            ),
+            s.status_cor
+        ),
         baseline_confianca = GREATEST(s.baseline_confianca, p.confianca),
         forecast_method    = 'SANDUICHE_MEDIA_24_25',
         usou_fallback_12m  = COALESCE(s.usou_fallback_12m, FALSE),
@@ -193,11 +208,11 @@ BEGIN
         ROUND(h.preco_medio_historico * (1 + h.tendencia_pct / 100), 4),
         ROUND(h.preco_medio_historico, 4),
         2026::TEXT || '-' || LPAD(msr.mes::TEXT, 2, '0'),
-        -- FIX 42: Não usa mais 'AMARELO' fixo — calcula dos preços históricos
+        -- FIX 50: NÃO usa mais moda da baseline — regra ±15% sobre preço projetado
         COALESCE(
-            b.status_cor_mode,
-            staging.fn_calcular_status_cor_por_preco(
-                msr.id_produto, msr.id_localidade, msr.mes::SMALLINT
+            staging.fn_status_cor_regra_15(
+                ROUND(h.preco_medio_historico * (1 + h.tendencia_pct / 100), 4),
+                ROUND(h.preco_medio_historico, 4)
             ),
             'AMARELO'
         ) AS status_cor,
@@ -330,12 +345,9 @@ BEGIN
             pf.id_filho, pf.id_localidade, 2026, pf.mes,
             pf.preco_projetado, pf.preco_referencia,
             2026::TEXT || '-' || LPAD(pf.mes::TEXT, 2, '0'),
-            -- FIX 42: Tenta calcular do filho, depois do pai, depois AMARELO
+            -- FIX 50: regra ±15% sobre o preço projetado do FILHO
             COALESCE(
-                staging.fn_calcular_status_cor_por_preco(
-                    pf.id_filho, pf.id_localidade, pf.mes::SMALLINT
-                ),
-                pf.pai_status_cor,
+                staging.fn_status_cor_regra_15(pf.preco_projetado, pf.preco_referencia),
                 'AMARELO'
             ) AS status_cor,
             'BASELINE_HISTORICO',
@@ -374,6 +386,36 @@ BEGIN
     DROP TABLE IF EXISTS tmp_orphans_proxy;
 
     -- ====================================================================
+    -- STEP 4 (FIX 50): VARREDURA FINAL — recalcula ±15% em 2026 forecast
+    -- Garante consistência mesmo para linhas criadas pela Engine 30
+    -- (que inserem status_cor da moda da baseline antes do preço existir).
+    -- ====================================================================
+    WITH recalc_forecast AS (
+        SELECT
+            id_sazonalidade,
+            CASE
+                -- Projeção SEM preço → semáforo neutro (a regra ±15% exige preço)
+                WHEN preco_atual IS NULL OR preco_atual <= 0 THEN 'AMARELO'
+                ELSE COALESCE(
+                    staging.fn_status_cor_regra_15(preco_atual, preco_referencia),
+                    status_cor
+                )
+            END AS novo_status_cor
+        FROM mart.sazonalidade_produto
+        WHERE ano = 2026
+          AND is_forecast = TRUE
+    )
+    UPDATE mart.sazonalidade_produto s
+    SET status_cor   = r.novo_status_cor,
+        calculado_em = NOW()
+    FROM recalc_forecast r
+    WHERE s.id_sazonalidade = r.id_sazonalidade
+      AND r.novo_status_cor IS DISTINCT FROM s.status_cor;
+
+    GET DIAGNOSTICS v_total = ROW_COUNT;
+    RAISE NOTICE '[sp_project_sandwich_prices_2026] Step 4 — Recalc ±15%%: % linhas.', v_total;
+
+    -- ====================================================================
     -- Refresh da MV
     -- ====================================================================
     REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade;
@@ -384,10 +426,19 @@ BEGIN
 END;
 $$;
 
+COMMENT ON PROCEDURE staging.sp_project_sandwich_prices_2026 IS
+    'Sanduíche Sazonal — Projeta preços numéricos para 2026. '
+    'FIX 50: status_cor derivado SEMPRE da regra ±15%% (fn_status_cor_regra_15) '
+    'sobre os preços projetados — nunca mais moda da baseline. '
+    'Step 4 varre 2026 forecast para consistência total. '
+    'ON CONFLICT preserva dado real (is_forecast=FALSE).';
+
 -- ============================================================================
--- SEÇÃO 3: Permissões
+-- SEÇÃO 4: Permissões
 -- ============================================================================
-GRANT EXECUTE ON FUNCTION staging.fn_calcular_status_cor_por_preco TO role_etl_writer;
-GRANT ALL ON PROCEDURE staging.sp_project_sandwich_prices_2026 TO role_etl_writer;
+GRANT EXECUTE ON FUNCTION staging.fn_status_cor_regra_15(NUMERIC, NUMERIC)
+    TO role_etl_writer;
+GRANT ALL ON PROCEDURE staging.sp_project_sandwich_prices_2026
+    TO role_etl_writer;
 
 COMMIT;

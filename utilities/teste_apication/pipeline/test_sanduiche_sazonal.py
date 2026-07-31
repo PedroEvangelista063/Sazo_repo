@@ -2,7 +2,7 @@
 """
 test_sanduiche_sazonal.py — Sanduíche Sazonal: Teste Local da Projeção de Preços
 =================================================================================
-Implementa em Python (Polars) a mesma lógica da Migration 40 (sp_project_sandwich_prices_2026),
+Implementa em Python (Polars) a mesma lógica das Migrations 40+51 (sp_project_sandwich_prices_2026),
 mas rodando 100% local com DataFrames sintéticos — sem tocar no banco de produção.
 
 FLUXO:
@@ -10,7 +10,9 @@ FLUXO:
      - média_historica_por_mes() → preço médio de (prod, loc, mês) em 2024-2025
      - tendencia_produto() → variação % 2024→2025 para o mesmo (prod, loc, mês)
      - fallback_uf() → fallback respeitando mesma UF (FIX do Ponto 3)
-     - projetar_meses_futuros() → gera projeções para Ago-Dez 2026
+     - preco_base_2026() → Preço Base de 2026 (média real; fallback média 2024-25)
+     - fator_sazonal_mensal() → (Média do Mês / Média Global) - 1 (UPGRADE Migração 51)
+     - projetar_meses_futuros() → preco_base * (1 + fator_sazonal) p/ Ago-Dez 2026
      - simular_upsert() → insere/atualiza com proteção is_forecast
 
   2. Testes com pytest (ou asserts nativos):
@@ -274,6 +276,94 @@ class SanduicheSazonalEngine:
         self._tendencia_cache[cache_key] = tendencia
         return tendencia
 
+    # ── Preço Base 2026 + Fator Sazonal (UPGRADE Migração 51) ─────────────
+
+    def preco_base_2026(
+        self, id_produto: int, id_localidade: int
+    ) -> float | None:
+        """Preço Base de 2026 para o (prod, loc).
+
+        Prioridade:
+          1. Média real de 2026 (dados observados, is_forecast=FALSE)
+          2. Média global 2024-2025 (fallback do histórico)
+        """
+        real = self._fact.filter(
+            (pl.col("id_produto") == id_produto)
+            & (pl.col("id_localidade") == id_localidade)
+            & (pl.col("ano") == self._ano_alvo)
+            & pl.col("preco_medio").is_not_null()
+            & (pl.col("preco_medio") > 0)
+        )
+        if real.height > 0:
+            return round(real.select(pl.col("preco_medio").mean()).item(), 4)
+
+        hist = self._fact.filter(
+            (pl.col("id_produto") == id_produto)
+            & (pl.col("id_localidade") == id_localidade)
+            & pl.col("ano").is_in([2024, 2025])
+            & pl.col("preco_medio").is_not_null()
+            & (pl.col("preco_medio") > 0)
+        )
+        if hist.height > 0:
+            return round(hist.select(pl.col("preco_medio").mean()).item(), 4)
+        return None
+
+    def fator_sazonal_mensal(
+        self, id_produto: int, id_localidade: int, mes: int
+    ) -> float | None:
+        """Fator Sazonal Mensal = (Média do Mês / Média Global 2024-25) - 1.
+
+        Sanitização de outliers (paridade Migração 51): a média do mês precisa
+        estar entre 0,5x e 2,0x da mediana do par; senão retorna None (neutro).
+        Exige série global com >= 6 meses distintos.
+        """
+        serie = self._fact.filter(
+            (pl.col("id_produto") == id_produto)
+            & (pl.col("id_localidade") == id_localidade)
+            & pl.col("ano").is_in([2024, 2025])
+            & pl.col("preco_medio").is_not_null()
+            & (pl.col("preco_medio") > 0)
+        )
+        if serie.height < 6:
+            return None
+        meses_distintos = serie.select(pl.col("mes").n_unique()).item()
+        if meses_distintos < 6:
+            return None
+
+        media_global = serie.select(pl.col("preco_medio").mean()).item()
+        if media_global is None or media_global <= 0:
+            return None
+
+        media_mes = serie.filter(pl.col("mes") == mes).select(
+            pl.col("preco_medio").mean()
+        ).item()
+        if media_mes is None:
+            return None
+
+        mediana = serie.select(pl.col("preco_medio").median()).item()
+        if mediana is not None and mediana > 0:
+            if media_mes < 0.5 * mediana or media_mes > 2.0 * mediana:
+                return None
+
+        return round((media_mes / media_global) - 1, 4)
+
+    def status_cor_regra_15(
+        self, preco_atual: float | None, preco_referencia: float | None
+    ) -> str:
+        """Semáforo ±15% (paridade Migration 50/51).
+
+        < 0.85x → VERDE | > 1.15x → VERMELHO | senão (ou igual) → AMARELO.
+        Sem preço computável → AMARELO (neutro).
+        """
+        if preco_atual is None or preco_atual <= 0:
+            return "AMARELO"
+        ref = preco_referencia if preco_referencia and preco_referencia > 0 else preco_atual
+        if preco_atual < ref * 0.85:
+            return "VERDE"
+        if preco_atual > ref * 1.15:
+            return "VERMELHO"
+        return "AMARELO"
+
     # ── Projeção dos meses futuros ───────────────────────────────────────
 
     def projetar_meses_futuros(self) -> pl.DataFrame:
@@ -282,8 +372,8 @@ class SanduicheSazonalEngine:
         Retorna DataFrame com colunas:
           id_produto, id_localidade, ano, mes,
           preco_projetado, preco_referencia,
-          tendencia_pct, confianca, nivel_fallback,
-          is_forecast (sempre True)
+          fator_sazonal, tendencia_pct, confianca, nivel_fallback,
+          status_cor, is_forecast (sempre True)
         """
         meses_futuros = list(range(self._mes_atual + 1, 13))
 
@@ -305,18 +395,24 @@ class SanduicheSazonalEngine:
                 id_prod = row["id_produto"]
                 id_loc = row["id_localidade"]
 
-                # Média histórica
-                hist = self.media_historica_por_mes(id_prod, id_loc, mes)
-                if hist["preco_medio"] is None:
+                # Preço Base de 2026 (média real; fallback 2024-25)
+                preco_base = self.preco_base_2026(id_prod, id_loc)
+                if preco_base is None:
                     continue
 
-                # Tendência específica do produto
-                tend = self.tendencia_produto(id_prod, id_loc, mes)
+                # Fator Sazonal do mês (UPGRADE Migração 51)
+                fator = self.fator_sazonal_mensal(id_prod, id_loc, mes)
 
-                # Preço projetado = média histórica + tendência
+                # Preço projetado = Preço Base * (1 + Fator Sazonal)
                 preco_proj = round(
-                    hist["preco_medio"] * (1 + tend / 100), 4
+                    preco_base * (1 + (fator if fator is not None else 0)), 4
                 )
+
+                # Semáforo ±15%
+                status_cor = self.status_cor_regra_15(preco_proj, preco_base)
+
+                # Tendência específica do produto (mantida para telemetria)
+                tend = self.tendencia_produto(id_prod, id_loc, mes)
 
                 rows.append({
                     "id_produto": id_prod,
@@ -324,10 +420,12 @@ class SanduicheSazonalEngine:
                     "ano": self._ano_alvo,
                     "mes": mes,
                     "preco_projetado": preco_proj,
-                    "preco_referencia": hist["preco_medio"],
+                    "preco_referencia": preco_base,
+                    "fator_sazonal": fator,
                     "tendencia_pct": tend,
-                    "confianca": hist["confianca"],
-                    "nivel_fallback": hist.get("nivel", 0),
+                    "confianca": 100.0,
+                    "nivel_fallback": 1,
+                    "status_cor": status_cor,
                     "is_forecast": True,
                 })
 
@@ -340,9 +438,11 @@ class SanduicheSazonalEngine:
                     "mes": pl.Int32,
                     "preco_projetado": pl.Float64,
                     "preco_referencia": pl.Float64,
+                    "fator_sazonal": pl.Float64,
                     "tendencia_pct": pl.Float64,
                     "confianca": pl.Float64,
                     "nivel_fallback": pl.Int32,
+                    "status_cor": pl.String,
                     "is_forecast": pl.Boolean,
                 }
             )
@@ -418,6 +518,8 @@ class SanduicheSazonalEngine:
             "confianca",
             "tendencia_pct",
             "nivel_fallback",
+            "fator_sazonal",
+            "status_cor",
         )
 
         return resultado
@@ -758,8 +860,14 @@ class TestProjecaoMesesFuturos:
             f"Meses projetados deveriam ser Ago-Dez, mas foram {meses}"
         )
 
-    def test_preco_projetado_agosto_milho_sp_com_tendencia(self):
-        """Milho SP Agosto: preço base R$ 2.10 + tendência +10% = R$ 2.31."""
+    def test_preco_projetado_agosto_milho_sp_com_fator_sazonal(self):
+        """Milho SP Agosto/26 (UPGRADE Migração 51).
+
+        Preço Base 2026 = média real Jan-Jul = (3.50+3.40+3.10+2.90+2.70+2.50)/6
+                        = 3.0167
+        Fator Sazonal Ago = (2.10 / 2.5375) - 1 = -0.1724 (2024-25)
+        preco = 3.0167 * (1 - 0.1724) = 2.4966 → variação -17% → VERDE
+        """
         engine = _criar_engine(mes_atual=7)
         proj = engine.projetar_meses_futuros()
 
@@ -770,9 +878,15 @@ class TestProjecaoMesesFuturos:
         )
         assert agosto.height == 1
         preco = agosto["preco_projetado"][0]
-        # 2.10 * (1 + 10/100) = 2.31
-        assert preco == 2.31, (
-            f"Preço projetado para Milho SP Ago deveria ser 2.31, mas foi {preco}"
+        # 3.0167 * (1 - 0.1724) ≈ 2.4966
+        assert abs(preco - 2.4966) < 0.001, (
+            f"Preço projetado Milho SP Ago deveria ser ~2.4966, mas foi {preco}"
+        )
+        assert agosto["status_cor"][0] == "VERDE", (
+            f"Variação -17% deveria ser VERDE, mas foi {agosto['status_cor'][0]}"
+        )
+        assert agosto["fator_sazonal"][0] is not None, (
+            "Fator sazonal de Agosto deveria existir"
         )
 
     def test_pitaia_exotica_nao_projetada(self):
@@ -808,12 +922,11 @@ class TestProjecaoMesesFuturos:
 # ── TESTE 5: Bloqueio de Sobrescrita (FIX do Ponto 5) ───────────────────
 
 class TestBloqueioSobrescrita:
-
     def test_dado_real_bloqueia_projecao_no_upsert(self):
         """Se existe dado real para (prod, loc, ano, mes), a projeção não vence.
 
         Simula: Milho SP tem dado REAL em Agosto/2026 de R$ 2.60.
-        A projeção é R$ 2.31. Após o UPSERT, deve ficar R$ 2.60 (real).
+        A projeção (fator sazonal) é ~R$ 2.4966. Após o UPSERT, deve ficar R$ 2.60 (real).
         """
         engine = _criar_engine(mes_atual=7)
         proj = engine.projetar_meses_futuros()
@@ -908,6 +1021,67 @@ class TestBloqueioSobrescrita:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# TESTE 6: Fator Sazonal Mensal (UPGRADE Migração 51)
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestFatorSazonal:
+
+    def test_fator_sazonal_milho_sp_agosto(self):
+        """Milho SP Ago: média Ago 2.10, média global 2.5375 → fator -0.1724.
+
+        2024-Ago: 2.00 | 2025-Ago: 2.20 → média do mês 2.10
+        Média global 2024-25 (24 meses): 2.5375
+        Fator = 2.10/2.5375 - 1 = -0.1724
+        """
+        engine = _criar_engine()
+        fator = engine.fator_sazonal_mensal(101, 1, 8)
+        assert fator is not None, "Fator de Agosto deveria existir"
+        assert abs(fator - (-0.1724)) < 0.001, (
+            f"Fator Ago deveria ser -0.1724, mas foi {fator}"
+        )
+
+    def test_preco_base_2026_milho_sp_usa_dados_reais(self):
+        """Milho SP: Preço Base 2026 = média real Jan-Jul = 3.0167.
+
+        (3.50+3.40+3.10+2.90+2.70+2.50)/6 = 3.0167 (Março é gap, ignorado)
+        """
+        engine = _criar_engine()
+        base = engine.preco_base_2026(101, 1)
+        assert base is not None
+        assert abs(base - 3.0167) < 0.001, (
+            f"Preço Base 2026 Milho SP deveria ser 3.0167, mas foi {base}"
+        )
+
+    def test_preco_base_2026_sem_dado_real_fallback_historico(self):
+        """BATATA SP não tem real 2026 → Preço Base = média 2024-25.
+
+        (56.50 + 68.50)/24 = 5.2083
+        """
+        engine = _criar_engine()
+        base = engine.preco_base_2026(102, 1)
+        assert base is not None
+        assert abs(base - 5.2083) < 0.001, (
+            f"Preço Base BATATA SP deveria ser 5.2083, mas foi {base}"
+        )
+
+    def test_status_cor_regra_15(self):
+        """Semáforo ±15%: <0.85 VERDE, >1.15 VERMELHO, senão AMARELO."""
+        engine = _criar_engine()
+        assert engine.status_cor_regra_15(1.50, 2.00) == "VERDE"
+        assert engine.status_cor_regra_15(2.60, 2.00) == "VERMELHO"
+        assert engine.status_cor_regra_15(2.10, 2.00) == "AMARELO"
+        assert engine.status_cor_regra_15(None, 2.00) == "AMARELO"
+
+    def test_fator_sazonal_zero_para_sem_historico(self):
+        """Sem dados suficientes → fator None (neutro)."""
+        engine = _criar_engine()
+        fator = engine.fator_sazonal_mensal(201, 1, 8)  # PITAIA_EXOTICA
+        assert fator is None, (
+            "Produto sem histórico não deve ter fator sazonal"
+        )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # MAIN — Execução standalone (sem pytest)
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -926,12 +1100,17 @@ def _executar_todos_testes():
         ("Fallback SP usa SP", TestFallbackUF().test_fallback_milho_sp_para_localidade_sem_dados),
         ("Fallback CE usa CE", TestFallbackUF().test_fallback_ce_nao_usa_preco_sp),
         ("Projeta 5 meses Ago-Dez", TestProjecaoMesesFuturos().test_projeta_ago_a_dez_para_milho_sp),
-        ("Preço Agosto com tendência", TestProjecaoMesesFuturos().test_preco_projetado_agosto_milho_sp_com_tendencia),
+        ("Preço Agosto com fator sazonal", TestProjecaoMesesFuturos().test_preco_projetado_agosto_milho_sp_com_fator_sazonal),
         ("Pitaia não projetada", TestProjecaoMesesFuturos().test_pitaia_exotica_nao_projetada),
         ("MG ≠ SP na projeção", TestProjecaoMesesFuturos().test_milho_mg_projecao_independente_de_sp),
         ("Real bloqueia projeção", TestBloqueioSobrescrita().test_dado_real_bloqueia_projecao_no_upsert),
         ("Sem real mantém projeção", TestBloqueioSobrescrita().test_projecao_mantida_quando_sem_dado_real),
         ("Gap Março preenchido", TestBloqueioSobrescrita().test_gap_marco_preenchido_no_upsert),
+        ("Fator Sazonal Milho SP Ago", TestFatorSazonal().test_fator_sazonal_milho_sp_agosto),
+        ("Preço Base 2026 dados reais", TestFatorSazonal().test_preco_base_2026_milho_sp_usa_dados_reais),
+        ("Preço Base 2026 fallback", TestFatorSazonal().test_preco_base_2026_sem_dado_real_fallback_historico),
+        ("Semáforo regra ±15%", TestFatorSazonal().test_status_cor_regra_15),
+        ("Fator None sem histórico", TestFatorSazonal().test_fator_sazonal_zero_para_sem_historico),
     ]
 
     print("=" * 70)

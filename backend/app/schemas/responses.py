@@ -245,21 +245,36 @@ class SazonalidadeNacionalListResponse(BaseModel):
 
 # ── Fluxos de Abastecimento ──
 class FlowItem(BaseModel):
-    """Um fluxo de abastecimento logístico entre origem e destino."""
+    """Um fluxo de abastecimento logístico entre origem e destino.
 
-    id: int
-    item: str
-    categoria: str
-    origem_uf: str
-    origem_polo: str
-    destino_regiao_id: str
-    destino_uf: str
-    meses: list[int]
-    sazonalidade: str
-    preco_referencial: str
-    cor_indicadora: str
-    tipo: str
-    ano_referencia: int
+    Lido da view ``staging.vw_fluxos_regionais``, que faz JOIN entre
+    ``dim_fluxo_abastecimento`` e ``dim_produto`` para trazer o nome
+    canônico do produto.
+    """
+
+    id: int = Field(..., description="ID do fluxo (id_fluxo)")
+    item: str = Field(..., description="Nome do produto (canônico)")
+    origem_uf: str = Field(..., min_length=2, max_length=2)
+    origem_polo: str = Field(..., description="Polo/CEASA de origem")
+    destino_regiao_id: str = Field(..., description="ID da região destino (ex: norte, nordeste)")
+    destino_uf: str = Field(..., min_length=2, max_length=2)
+    meses: list[int] = Field(..., description="Meses de ocorrência do fluxo")
+    sazonalidade: str = Field(..., description="Descrição da sazonalidade")
+    preco_referencial: str = Field(..., description="Preço referencial (string)")
+    tipo: str = Field(..., description="exportado / importado / autossuficiente")
+    descricao_tipo: str | None = Field(
+        None, description="🟢 Envia para fora / 🔴 Recebe de fora / 🟡 Produção local"
+    )
+    periodicidade: str | None = Field(
+        None, description="'Ano inteiro' ou 'N meses'"
+    )
+    regiao_destino_nome: str | None = Field(
+        None, description="Nome da região destino (ex: Norte, Nordeste)"
+    )
+    # Campos de compatibilidade com o frontend (padrões seguros)
+    categoria: str = "HORTIFRUTI"
+    cor_indicadora: str = "#6366F1"
+    ano_referencia: int = 2024
 
     model_config = ConfigDict(frozen=True)
 

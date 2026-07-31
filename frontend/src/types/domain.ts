@@ -89,7 +89,6 @@ export interface RegiaoInfo {
 export interface FlowItem {
   id: number
   item: string
-  categoria: string
   origem_uf: string
   origem_polo: string
   destino_regiao_id: string
@@ -97,9 +96,14 @@ export interface FlowItem {
   meses: number[]
   sazonalidade: string
   preco_referencial: string
-  cor_indicadora: string
   tipo: string
-  ano_referencia: number
+  descricao_tipo?: string | null
+  periodicidade?: string | null
+  regiao_destino_nome?: string | null
+  // Compatibilidade com componentes existentes (valores padrao)
+  categoria?: string
+  cor_indicadora?: string
+  ano_referencia?: number
 }
 
 export interface FlowListResponse {

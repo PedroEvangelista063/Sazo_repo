@@ -18,10 +18,14 @@ from pipeline.scraper.adapters.smart_router import (
 from pipeline.scraper.micro_engines.base_engine import BaseMicroEngine
 from pipeline.scraper.micro_engines.ConabApiEngine import ConabApiEngine
 from pipeline.scraper.micro_engines.CeagespEngine import CeagespEngine
+from pipeline.scraper.micro_engines.precosiagroweb_engine import PrecosiagrowebEngine
+from pipeline.scraper.micro_engines.prohort_mensal_engine import ProhortMensalEngine
 
 logger = logging.getLogger(__name__)
 
 _AUDIT_FMT = "[AUDIT] UF: {uf} | Mes/Ano: {competencia} | Alvo: {alvo} | Status: {status} | Decisao: {decisao}"
+
+_UFS_CONTINGENCIA = frozenset({"AC", "AM", "AP", "MS", "PI", "RO", "RR", "SE"})
 
 _UF_SMARTROUTER_ALVOS: dict[str, list[str]] = {
     uf: alvos for uf, alvos in UF_ALVOS_DEDICADOS.items()
@@ -60,6 +64,8 @@ _FONTE_ID_PARA_ALVO: dict[str, str] = {
     "cepea": "cepea",
     "conab": "conab",
     "conab-pentaho": "conab_pentaho",
+    "conab-prohort-mensal": "conab_prohort_mensal",
+    "precosiagroweb": "precosiagroweb",
     "agrolink": "agrolink",
     "calc-rural": "calculadorarural",
 }
@@ -148,6 +154,17 @@ class AutonomousOrchestrator:
         smart = await self._passo_smartrouter(uf, ano, mes)
         if smart:
             acumulado.extend(smart)
+
+        # R1: Contingência para UFs sem CEASA direta
+        contingencia = await self._passo_contingencia(uf, ano, mes)
+        if contingencia:
+            acumulado.extend(contingencia)
+
+        # R2: ProHort Mensal — 1x por competência (não por UF)
+        if uf == "SP":
+            prohort = await self._passo_prohort(ano, mes)
+            if prohort:
+                acumulado.extend(prohort)
 
         # Tier 3-5: categorias da sources_matrix — tenta cada fonte
         for categoria in self._TIERS:
@@ -343,6 +360,26 @@ class AutonomousOrchestrator:
         return brutos
 
     # ──────────────────────────────────────────────
+    # Passo — Contingência para UFs sem CEASA direta
+    # ──────────────────────────────────────────────
+    async def _passo_contingencia(self, uf: str, ano: int, mes: int) -> list[dict[str, Any]] | None:
+        if uf.upper() not in _UFS_CONTINGENCIA:
+            return None
+        engine = PrecosiagrowebEngine()
+        url = "https://sisdep.conab.gov.br/precosiagroweb/"
+        resultado = await self._executar_com_timeout(engine, url, ano, mes, "precosiagroweb")
+        return [resultado] if resultado else None
+
+    # ──────────────────────────────────────────────
+    # Passo — ProHort Mensal (1x por competência)
+    # ──────────────────────────────────────────────
+    async def _passo_prohort(self, ano: int, mes: int) -> list[dict[str, Any]] | None:
+        engine = ProhortMensalEngine()
+        url = "https://portaldeinformacoes.conab.gov.br/downloads/arquivos/ProhortMensal.txt"
+        resultado = await self._executar_com_timeout(engine, url, ano, mes, "conab-prohort-mensal")
+        return [resultado] if resultado else None
+
+    # ──────────────────────────────────────────────
     # Passo final — Discovery (web search)
     # ──────────────────────────────────────────────
     async def _passo_discovery(
@@ -411,6 +448,10 @@ class AutonomousOrchestrator:
         fid = fonte_id.lower()
         if "ceagesp" in fid:
             return CeagespEngine()
+        if "prohort-mensal" in fid or "conab-prohort" in fid:
+            return ProhortMensalEngine()
+        if "precosiagroweb" in fid:
+            return PrecosiagrowebEngine()
         if "conab" in fid:
             return ConabApiEngine()
         return None

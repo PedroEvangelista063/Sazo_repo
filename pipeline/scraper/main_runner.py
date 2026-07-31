@@ -13,13 +13,14 @@ import asyncio
 import logging
 import sys
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, NoReturn
 
 import asyncpg
 
-from pipeline.scraper.orchestrator import AutonomousOrchestrator, SCRAPER_TIMEOUT_SEC
-from pipeline.scraper.persistence import persistir_coleta_bruta, executar_ciclo_medalhao
+from database.utils.snapshot_helper import atualizar_checkpoint, export_snapshot
+from pipeline.scraper.orchestrator import SCRAPER_TIMEOUT_SEC, AutonomousOrchestrator
+from pipeline.scraper.persistence import executar_ciclo_medalhao, persistir_coleta_bruta
 
 logging.basicConfig(
     level=logging.INFO,
@@ -128,6 +129,22 @@ async def _run_job(pool: asyncpg.Pool) -> None:
         return
 
     await executar_ciclo_medalhao(pool)
+
+    try:
+        async with pool.acquire() as conn:
+            await export_snapshot(
+                conexao=conn,
+                schema="staging",
+                tabela="fact_precos_mensais",
+                diretorio="database/processed_data/01_raw",
+            )
+        atualizar_checkpoint({
+            "conab-precos-uf": datetime.now(UTC).strftime("%Y-%m"),
+            "conab-prohort-mensal": datetime.now(UTC).strftime("%Y-%m"),
+        })
+    except Exception:
+        logger.warning("R3 — Snapshot/checkpoint nao concluido", exc_info=True)
+
     await _notificar_backend_etl_fim()
     logger.info("Job finalizado.")
 

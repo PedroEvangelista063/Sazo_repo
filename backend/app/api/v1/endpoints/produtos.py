@@ -1,7 +1,6 @@
 import hashlib
 import json
 from pathlib import Path
-from collections import defaultdict
 
 from fastapi import APIRouter, Query
 
@@ -9,13 +8,13 @@ from backend.app.core.cache import cache, safe_set
 from backend.app.core.config import get_settings
 from backend.app.db.session import fetch, fetchrow
 from backend.app.schemas.responses import (
-    SazonalidadeListResponse,
-    SazonalidadeResponse,
+    MesSazonalidade,
     SazonalidadeComPrecoListResponse,
     SazonalidadeComPrecoResponse,
-    SazonalidadeNacionalResponse,
+    SazonalidadeListResponse,
     SazonalidadeNacionalListResponse,
-    MesSazonalidade,
+    SazonalidadeNacionalResponse,
+    SazonalidadeResponse,
 )
 
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
@@ -25,7 +24,7 @@ async def _carregar_regiao(regiao_id: str) -> tuple[list[str], int] | None:
     path = Path("config/regions.json")
     if not path.exists():
         return None
-    with open(path, encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:  # noqa: ASYNC230 - leitura local de config
         data = json.load(f)
     for r in data["regioes"]:
         if r["id"] == regiao_id.lower():
@@ -81,12 +80,28 @@ async def _query_sazonalidade(
 
         if ano is not None and mes is not None:
             return await _query_regional_por_mes(
-                ufs_regiao, min_ufs, regiao, ano, mes, categoria,
-                pagina, por_pagina, offset_val, cache_key, settings,
+                ufs_regiao,
+                min_ufs,
+                regiao,
+                ano,
+                mes,
+                categoria,
+                pagina,
+                por_pagina,
+                offset_val,
+                cache_key,
+                settings,
             )
         return await _query_regional_snapshot(
-            ufs_regiao, min_ufs, regiao, categoria,
-            pagina, por_pagina, offset_val, cache_key, settings,
+            ufs_regiao,
+            min_ufs,
+            regiao,
+            categoria,
+            pagina,
+            por_pagina,
+            offset_val,
+            cache_key,
+            settings,
         )
 
     if uf and uf.upper() == "BR":
@@ -410,9 +425,7 @@ async def _fetch_count_br_snapshot(categoria) -> int:
             categoria.upper(),
         )
     else:
-        row = await fetchrow(
-            "SELECT COUNT(*) FROM mart.fn_br_nacional_snapshot(NULL::TEXT)"
-        )
+        row = await fetchrow("SELECT COUNT(*) FROM mart.fn_br_nacional_snapshot(NULL::TEXT)")
     return row[0] if row else 0
 
 
@@ -420,12 +433,15 @@ async def _fetch_count_br_por_mes(ano, mes, categoria) -> int:
     if categoria:
         row = await fetchrow(
             "SELECT COUNT(*) FROM mart.fn_br_nacional_por_mes($1, $2, $3::TEXT)",
-            ano, mes, categoria.upper(),
+            ano,
+            mes,
+            categoria.upper(),
         )
     else:
         row = await fetchrow(
             "SELECT COUNT(*) FROM mart.fn_br_nacional_por_mes($1, $2, NULL::TEXT)",
-            ano, mes,
+            ano,
+            mes,
         )
     return row[0] if row else 0
 
@@ -434,11 +450,14 @@ async def _fetch_page_br_snapshot(categoria, limit, offset) -> list:
     if categoria:
         return await fetch(
             "SELECT * FROM mart.fn_br_nacional_snapshot($1::TEXT, $2, $3)",
-            categoria.upper(), limit, offset,
+            categoria.upper(),
+            limit,
+            offset,
         )
     return await fetch(
         "SELECT * FROM mart.fn_br_nacional_snapshot(NULL::TEXT, $1, $2)",
-        limit, offset,
+        limit,
+        offset,
     )
 
 
@@ -446,11 +465,18 @@ async def _fetch_page_br_por_mes(ano, mes, categoria, limit, offset) -> list:
     if categoria:
         return await fetch(
             "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, $3::TEXT, $4, $5)",
-            ano, mes, categoria.upper(), limit, offset,
+            ano,
+            mes,
+            categoria.upper(),
+            limit,
+            offset,
         )
     return await fetch(
         "SELECT * FROM mart.fn_br_nacional_por_mes($1, $2, NULL::TEXT, $3, $4)",
-        ano, mes, limit, offset,
+        ano,
+        mes,
+        limit,
+        offset,
     )
 
 
@@ -527,24 +553,34 @@ async def _query_regional_snapshot(
     if categoria:
         row = await fetchrow(
             "SELECT COUNT(*) FROM mart.fn_regional_snapshot($1::text[], $2::int, $3)",
-            ufs, min_ufs, categoria.upper(),
+            ufs,
+            min_ufs,
+            categoria.upper(),
         )
     else:
         row = await fetchrow(
             "SELECT COUNT(*) FROM mart.fn_regional_snapshot($1::text[], $2::int, NULL::text)",
-            ufs, min_ufs,
+            ufs,
+            min_ufs,
         )
     total = row[0] if row else 0
 
     if categoria:
         rows = await fetch(
             "SELECT * FROM mart.fn_regional_snapshot($1::text[], $2::int, $3, $4, $5)",
-            ufs, min_ufs, categoria.upper(), por_pagina, offset_val,
+            ufs,
+            min_ufs,
+            categoria.upper(),
+            por_pagina,
+            offset_val,
         )
     else:
         rows = await fetch(
             "SELECT * FROM mart.fn_regional_snapshot($1::text[], $2::int, NULL::text, $3, $4)",
-            ufs, min_ufs, por_pagina, offset_val,
+            ufs,
+            min_ufs,
+            por_pagina,
+            offset_val,
         )
 
     items = [
@@ -558,7 +594,7 @@ async def _query_regional_snapshot(
             ano=r["ano"],
             mes=r["mes"],
             data_referencia_atual=r.get("data_referencia_atual")
-                or f"{r['ano']:04d}-{r['mes']:02d}",
+            or f"{r['ano']:04d}-{r['mes']:02d}",
             usou_fallback_12m=False,
             preco_estimado=False,
             status_cor=r["status_cor"],
@@ -595,20 +631,38 @@ async def _query_regional_por_mes(
     if categoria:
         row = await fetchrow(
             "SELECT COUNT(*) FROM mart.fn_regional_por_mes($1, $2, $3, $4, $5)",
-            ufs, min_ufs, ano, mes, categoria.upper(),
+            ufs,
+            min_ufs,
+            ano,
+            mes,
+            categoria.upper(),
         )
         rows = await fetch(
             "SELECT * FROM mart.fn_regional_por_mes($1, $2, $3, $4, $5, $6, $7)",
-            ufs, min_ufs, ano, mes, categoria.upper(), por_pagina, offset_val,
+            ufs,
+            min_ufs,
+            ano,
+            mes,
+            categoria.upper(),
+            por_pagina,
+            offset_val,
         )
     else:
         row = await fetchrow(
             "SELECT COUNT(*) FROM mart.fn_regional_por_mes($1, $2, $3, $4, NULL)",
-            ufs, min_ufs, ano, mes,
+            ufs,
+            min_ufs,
+            ano,
+            mes,
         )
         rows = await fetch(
             "SELECT * FROM mart.fn_regional_por_mes($1, $2, $3, $4, NULL, $5, $6)",
-            ufs, min_ufs, ano, mes, por_pagina, offset_val,
+            ufs,
+            min_ufs,
+            ano,
+            mes,
+            por_pagina,
+            offset_val,
         )
 
     total = row[0] if row else 0
@@ -623,7 +677,7 @@ async def _query_regional_por_mes(
             ano=r["ano"],
             mes=r["mes"],
             data_referencia_atual=r.get("data_referencia_atual")
-                or f"{r['ano']:04d}-{r['mes']:02d}",
+            or f"{r['ano']:04d}-{r['mes']:02d}",
             usou_fallback_12m=False,
             preco_estimado=False,
             status_cor=r["status_cor"],
@@ -646,7 +700,9 @@ async def _query_regional_por_mes(
 
 @router.get("", response_model=SazonalidadeListResponse)
 async def listar_sazonalidade(
-    regiao: str | None = Query(None, description="ID da região (norte, nordeste, centro-oeste, sudeste, sul)"),
+    regiao: str | None = Query(
+        None, description="ID da região (norte, nordeste, centro-oeste, sudeste, sul)"
+    ),
     uf: str | None = Query(None, min_length=2, max_length=2, description="UF (BR-2)"),
     municipio: str | None = Query(None, description="Nome do municipio"),
     produto: str | None = Query(None, description="Nome do produto"),
@@ -807,6 +863,7 @@ async def listar_sazonalidade_com_preco(
 async def _query_br_sazonalidade(
     ano: int,
     categoria: str | None,
+    min_ufs: int,
     pagina: int,
     por_pagina: int,
     offset_val: int,
@@ -815,14 +872,16 @@ async def _query_br_sazonalidade(
 ) -> SazonalidadeNacionalListResponse:
     if categoria:
         rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, $2)",
+            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, $2, $3)",
             ano,
             categoria.upper(),
+            min_ufs,
         )
     else:
         rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1)",
+            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, NULL, $2)",
             ano,
+            min_ufs,
         )
 
     prod_map: dict[str, dict] = {}
@@ -863,13 +922,21 @@ async def _query_br_sazonalidade(
 async def listar_br_sazonalidade(
     ano: int = Query(..., ge=2024, le=2030, description="Ano da sazonalidade"),
     categoria: str | None = Query(None, description="Filtro por categoria"),
+    min_ufs: int = Query(1, ge=1, le=27, description="Mínimo de UFs por produto/mês"),
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),
 ):
     settings = get_settings()
     cache_key = hashlib.md5(
         json.dumps(
-            {"route": "br_sazonalidade", "ano": ano, "categoria": categoria, "pagina": pagina, "por_pagina": por_pagina},
+            {
+                "route": "br_sazonalidade",
+                "ano": ano,
+                "categoria": categoria,
+                "min_ufs": min_ufs,
+                "pagina": pagina,
+                "por_pagina": por_pagina,
+            },
             sort_keys=True,
             default=str,
         ).encode()
@@ -880,7 +947,9 @@ async def listar_br_sazonalidade(
         return SazonalidadeNacionalListResponse(**cached)
 
     offset_val = (pagina - 1) * por_pagina
-    return await _query_br_sazonalidade(ano, categoria, pagina, por_pagina, offset_val, cache_key, settings)
+    return await _query_br_sazonalidade(
+        ano, categoria, min_ufs, pagina, por_pagina, offset_val, cache_key, settings
+    )
 
 
 @router.get("/{uf}/{municipio}", response_model=SazonalidadeListResponse)

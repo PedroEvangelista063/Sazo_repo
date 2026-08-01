@@ -348,7 +348,7 @@ Arquivos JSON em `config/` — configuration over code:
 |---------|----------|
 | `sources_matrix.json` | 24+ fontes em 4 categorias (core, agregadores, CEASAs diretas, periféricos) |
 | `regions.json` | 5 regiões brasileiras com UFs e polos CEASA |
-| `flows.json` | 104 fluxos de abastecimento CEASA/CONAB entre UFs |
+| `flows.json` | 166 fluxos de abastecimento CEASA/CONAB entre UFs |
 | `sources_map.json` | Mapeamento produto → fontes regionais |
 
 ---

@@ -57,7 +57,8 @@ A aba "Mapa Regional" implementa:
   - Dot da UF selecionada fica branco com glow + nome completo + legenda "Recebe / Envia"
 - `RegiaoPanel.tsx` — SpotlightCard com info da região, status counts, lista de polos CEASA clicáveis
   - Quando **selectedUF** está ativa: mostra painel "Recebe de" (agrupado por UF origem), "Envia para" (agrupado por UF destino) e "Produção local" baseado em `flows.json`
-  - Dados de fluxo vêm de `config/flows.json` (104 fluxos reais CEASA/CONAB, todas as 27 UFs como origem e destino)
+  - Dados de fluxo vêm de `config/flows.json` (166 fluxos reais CEASA/CONAB, todas as 27 UFs como origem e destino)
+  - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
 ## Mudanças Recentes (2026-07-30)

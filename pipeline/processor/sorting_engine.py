@@ -6,10 +6,16 @@ import logging
 import re
 import unicodedata
 import uuid
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import asyncpg
 from pydantic import BaseModel, Field, field_validator
+
+# Anotações de tipo para o LSP: o import de runtime é local em _extrair_de_html
+# (para manter a dependência de bs4 leve). TYPE_CHECKING resolve BeautifulSoup/Tag
+# apenas em tempo de análise, sem custo de runtime.
+if TYPE_CHECKING:
+    from bs4 import BeautifulSoup, Tag
 
 logger = logging.getLogger(__name__)
 
@@ -230,7 +236,7 @@ class SortingEngine:
             """
             INSERT INTO staging.dim_localidade (uf, municipio_id, municipio_nome)
             VALUES ($1, NULL, NULL)
-            ON CONFLICT (uf, municipio_id) WHERE municipio_id IS NULL
+            ON CONFLICT (uf) WHERE municipio_id IS NULL
             DO UPDATE SET uf = EXCLUDED.uf
             RETURNING id_localidade
             """,
@@ -337,7 +343,7 @@ def _extrair_de_html_tabela(soup: "BeautifulSoup") -> list[dict[str, Any]] | Non
     resultados: list[dict[str, Any]] = []
 
     for table in soup.find_all("table"):
-        classes = table.get("class", [])
+        classes = table.get_attribute_list("class")
         if any("cookie" in (c or "").lower() for c in classes):
             continue
 

@@ -16,7 +16,8 @@ JSON puro, sem schema validation runtime (consumido via `json.load()` no pipelin
 - `sources.json` — legado (fase anterior), manter para compatibilidade
 - `sources_map.json` — mapeamento produto → fontes regionais (CONAB + CEASAs)
 - `regions.json` — definição das 5 regiões brasileiras: Norte, Nordeste, Centro-Oeste, Sudeste, Sul. Cada região lista suas UFs e polos CEASA com nome, UF, fonte_id e prioridade. Consumido por `GET /api/v1/regioes` e usado no mapa interativo do frontend.
-- `flows.json` — 104 fluxos de abastecimento entre UFs (v2.0). Todas as 27 UFs aparecem como origem E destino com dados reais de CEASA/CONAB. Estrutura: `{id, item, categoria, origem_uf, origem_polo, destino_uf, destino_regiao_id, meses, sazonalidade, preco_referencial, cor_indicadora, tipo("exportado"/"importado"), ano_referencia}`. Consumido por `BrasilMap.tsx` para desenhar arcos de recebimento (azul) e envio (verde) por UF.
+- `flows.json` — 166 fluxos de abastecimento entre UFs (v2.0). Todas as 27 UFs aparecem como origem E destino com dados reais de CEASA/CONAB. Estrutura: `{id, item, categoria, origem_uf, origem_polo, destino_uf, destino_regiao_id, meses, sazonalidade, preco_referencial, cor_indicadora, tipo("exportado"/"importado"/"autossuficiente"), ano_referencia}`. Consumido por `BrasilMap.tsx` para desenhar arcos de recebimento (azul) e envio (verde) por UF.
+- `flows.json` — o tipo `autossuficiente` representa produção local (origem_uf == destino_uf, ex.: Carne Bovina TO→TO). Na UI, aparece como painel "Produção local" no `RegiaoPanel`, sem arco de Recebe/Envia.
 
 ## Root Config — `.gitignore`
 

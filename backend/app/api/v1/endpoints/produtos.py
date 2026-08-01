@@ -332,23 +332,40 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
 
     where = " AND ".join(c[0] for c in conds)
 
+    # Deduplica por produto+UF (mesma semântica do snapshot): a view contém uma
+    # linha por município além da linha agregada "UF (UF)", o que gerava o mesmo
+    # id_produto repetido na resposta por-mês. Quando há filtro de município,
+    # mantém todas as linhas do município (já únicas por produto+UF).
+    dedupe_order = (
+        "ORDER BY sub.status_cor, sub.produto"
+        if municipio
+        else "ORDER BY (sub.municipio_id IS NULL) DESC, sub.municipio, sub.id_sazonalidade"
+    )
+
     sql = f"""
-        SELECT
-            v.id_sazonalidade, v.id_produto, v.produto, v.categoria,
-            v.uf, v.municipio, v.municipio_id,
-            $1::INTEGER AS ano_pesquisa,
-            $2::INTEGER AS mes_pesquisa,
-            v.data_referencia_atual, v.preco_referencia, v.preco_atual,
-            v.usou_fallback_12m, v.preco_estimado, v.status_cor,
-            v.fonte, v.tendencia_futura, v.is_forecast, v.forecast_method,
-            b.confianca AS confianca_baseline
-        FROM mart.vw_api_produtos_sazonalidade v
-        LEFT JOIN mart.sazonalidade_baseline b
-            ON b.id_produto = v.id_produto
-           AND b.id_localidade = v.id_localidade
-           AND b.mes = v.mes
-        WHERE {where}
-        ORDER BY v.status_cor, v.produto
+        SELECT * FROM (
+            SELECT
+                v.id_sazonalidade, v.id_produto, v.produto, v.categoria,
+                v.uf, v.municipio, v.municipio_id,
+                $1::INTEGER AS ano_pesquisa,
+                $2::INTEGER AS mes_pesquisa,
+                v.data_referencia_atual, v.preco_referencia, v.preco_atual,
+                v.usou_fallback_12m, v.preco_estimado, v.status_cor,
+                v.fonte, v.tendencia_futura, v.is_forecast, v.forecast_method,
+                b.confianca AS confianca_baseline,
+                ROW_NUMBER() OVER (
+                    PARTITION BY v.id_produto, v.uf
+                    ORDER BY (v.municipio_id IS NULL) DESC, v.municipio, v.id_sazonalidade
+                ) AS rn
+            FROM mart.vw_api_produtos_sazonalidade v
+            LEFT JOIN mart.sazonalidade_baseline b
+                ON b.id_produto = v.id_produto
+               AND b.id_localidade = v.id_localidade
+               AND b.mes = v.mes
+            WHERE {where}
+        ) sub
+        WHERE sub.rn = 1
+        {dedupe_order}
     """
 
     return await fetch(sql, *params)

@@ -13,11 +13,11 @@ build:
 	npm run build:frontend
 
 test:
-	cd backend && python -m pytest -xvs
+	python3 -m pytest -xvs
 	cd frontend && npx vitest run
 
 test:backend:
-	cd backend && python -m pytest -xvs
+	python3 -m pytest -xvs backend/tests
 
 test:frontend:
 	cd frontend && npx vitest run

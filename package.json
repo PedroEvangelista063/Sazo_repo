@@ -8,6 +8,8 @@
     "concurrently": "^9.2.3",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^6.0.3"
   },
   "lint-staged": {
@@ -37,7 +39,6 @@
     "scrape:manual": "python -m pipeline.run_scraper_historico",
     "start": "./backend/start.sh",
     "build:frontend": "npm --prefix frontend run build",
-
     "db:backup": "bash scripts/sync_db_remote_to_local.sh",
     "db:backup:restore": "bash scripts/sync_db_remote_to_local.sh --restore",
     "db:backup:schema": "bash scripts/sync_db_remote_to_local.sh --schema-only",

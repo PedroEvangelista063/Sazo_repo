@@ -7,10 +7,11 @@
 -- revertido. Refaz exatamente o estado pré-refatoração:
 --   SEÇÃO 1 — Restaura sp_executar_carga_completa com engines sintéticas ATIVAS
 --             (steps 5-6 reativados — corpo original de database/62).
---   SEÇÃO 2 — Remove as 5 colunas de transparência + CHECK + comentários.
+--   SEÇÃO 2 — Remove a MV V17 (depende das colunas) + as 5 colunas de
+--             transparência + CHECK + comentários (nesta ordem).
 --   SEÇÃO 3 — Remove a view auxiliar mart.vw_anchor_sazonalidade.
---   SEÇÃO 4 — Recria a MV vw_api_produtos_sazonalidade V16 (definition de
---             database/31 + 7 índices + GRANT) e faz refresh.
+--   SEÇÃO 4 — Recria a MV vw_api_produtos_sazonalidade V16 (padrão da Fase 36:
+--             7 índices + GRANT) e faz refresh.
 --   SEÇÃO 5 — Restaura fn_br_nacional_sazonalidade (sem ano_referencia/tipo_dado).
 --
 -- REAPLICAR database/63 após rollback reaplica a refatoração (idempotente).
@@ -105,11 +106,15 @@ COMMENT ON PROCEDURE staging.sp_executar_carga_completa IS
 GRANT ALL ON PROCEDURE staging.sp_executar_carga_completa TO role_etl_writer;
 
 -- ============================================================================
--- SEÇÃO 2 — Remove colunas de transparência + CHECK + comentários
+-- SEÇÃO 2 — Remove a MV V17 + colunas de transparência + CHECK + comentários
 -- ============================================================================
--- Refaz o estado pré-63: remove o CHECK e as 5 colunas (em ordem inversa à
--- criação, evitando dependências). Os dados de preco_exibido/ano_referencia
--- são descartados — a MV volta a usar preco_atual/preco_estimado das engines.
+-- ORDEM OBRIGATÓRIA: a MV V17 referencia as colunas de transparência — o
+-- DROP COLUMN falharia com "outros objetos dependem dele" (falha real
+-- observada no teste RED/GREEN). Portanto a MV é removida ANTES das colunas.
+-- Os dados de preco_exibido/ano_referencia são descartados — a MV volta a
+-- usar preco_atual/preco_estimado das engines (reconstruída na SEÇÃO 4).
+
+DROP MATERIALIZED VIEW IF EXISTS mart.vw_api_produtos_sazonalidade CASCADE;
 
 ALTER TABLE mart.sazonalidade_produto
     DROP CONSTRAINT IF EXISTS chk_sazonalidade_tipo_dado;
@@ -136,9 +141,9 @@ DROP VIEW IF EXISTS mart.vw_anchor_sazonalidade CASCADE;
 -- ============================================================================
 -- SEÇÃO 4 — Recria a MV vw_api_produtos_sazonalidade V16 (pré-refatoração)
 -- ============================================================================
--- Definition de database/31 (V15+) que era a vigente no banco vivo:
+-- Definition da V16 pré-refatoração (padrão da Fase 36 — 36:150-214):
 -- 3-branch NÃO existe — a MV expõe o que as engines (V13/sanduíche) gravam.
--- DROP + CREATE seguem o padrão de 31/36; 7 índices + GRANT idênticos.
+-- DROP + CREATE seguem o padrão de 36; 7 índices + GRANT idênticos.
 
 DROP MATERIALIZED VIEW IF EXISTS mart.vw_api_produtos_sazonalidade CASCADE;
 
@@ -153,7 +158,7 @@ SELECT
     p.status_fonte,
     COALESCE(c.nome_categoria, 'ALIMENTO_VAREJO') AS categoria,
     l.uf,
-    l.municipio_nome            AS municipio,
+    COALESCE(l.municipio_nome, l.uf || ' (UF)') AS municipio,
     l.municipio_id,
     CAST(SPLIT_PART(s.data_referencia_atual, '-', 1) AS INTEGER) AS ano,
     CAST(SPLIT_PART(s.data_referencia_atual, '-', 2) AS INTEGER) AS mes,
@@ -310,4 +315,9 @@ COMMIT;
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade;
 
-RAISE NOTICE '[64] Rollback concluído — engines reativadas, colunas removidas, MV V16 restaurada';
+-- (RAISE NOTICE em bloco DO: inválido em SQL top-level no psql — mesmo padrão
+--  de database/63; o notice registra o fim do rollback no log.)
+DO $$
+BEGIN
+    RAISE NOTICE '[64] Rollback concluído — engines reativadas, colunas removidas, MV V16 restaurada';
+END $$;

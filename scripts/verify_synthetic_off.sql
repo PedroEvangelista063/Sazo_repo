@@ -30,15 +30,16 @@
 --       branches A/B/C); colunas de transparência presentes (R-ADD-05).
 --
 -- ASSERTIONS DE ARQUIVO (grep — rodar fora do psql; documentadas para o
--- verify/deploy phase):
---   1.  grep -c "CALL staging.sp_calcular_forecast_2026_v13" \
+-- verify/deploy phase). O padrão é ANCORADO (^ + whitespace): a linha de
+-- audit trail "-- CALL ... (desativado)" NÃO casa (começa com "--"),
+-- portanto o count esperado é 0 em ambos os arquivos:
+--   1.  grep -cE '^\s*CALL staging\.sp_calcular_forecast_2026_v13' \
 --         database/63_dado_historico_real_transparencia.sql  → 0
---      (comentado "-- CALL ..." NÃO conta)
---   2.  grep -c "CALL staging.sp_calcular_forecast_2026_v13" \
+--   2.  grep -cE '^\s*CALL staging\.sp_calcular_forecast_2026_v13' \
 --         supabase/migrations/000021_desativar_engines_sinteticas.sql  → 0
---   3.  grep -c "CALL staging.sp_project_sandwich_prices_2026" \
+--   3.  grep -cE '^\s*CALL staging\.sp_project_sandwich_prices_2026' \
 --         database/63_dado_historico_real_transparencia.sql  → 0
---   4.  grep -c "CALL staging.sp_project_sandwich_prices_2026" \
+--   4.  grep -cE '^\s*CALL staging\.sp_project_sandwich_prices_2026' \
 --         supabase/migrations/000021_desativar_engines_sinteticas.sql  → 0
 --   5.  grep -c "sp_calcular_sazonalidade_preditiva" \
 --         pipeline/run_bulk_historical_fill.py  → 0
@@ -130,35 +131,42 @@ DECLARE
     v_bad_b     BIGINT;
     v_neg_nao_atual BIGINT;
 BEGIN
-    -- (c1) colunas de transparência existem na MV
+    -- (c1) colunas de transparência existem na MV.
+    -- ATENÇÃO: information_schema.columns NÃO lista materialized views no PG
+    -- (mesmo id_sazonalidade retorna 0) — usar pg_attribute (catálogo real).
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_schema = 'mart' AND table_name = 'vw_api_produtos_sazonalidade'
-          AND column_name = 'ano_referencia'
+        SELECT 1 FROM pg_attribute a
+        WHERE a.attrelid = 'mart.vw_api_produtos_sazonalidade'::regclass
+          AND a.attnum > 0 AND NOT a.attisdropped
+          AND a.attname = 'ano_referencia'
     ) THEN v_colunas := v_colunas || ' ano_referencia'; END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_schema = 'mart' AND table_name = 'vw_api_produtos_sazonalidade'
-          AND column_name = 'tipo_dado'
+        SELECT 1 FROM pg_attribute a
+        WHERE a.attrelid = 'mart.vw_api_produtos_sazonalidade'::regclass
+          AND a.attnum > 0 AND NOT a.attisdropped
+          AND a.attname = 'tipo_dado'
     ) THEN v_colunas := v_colunas || ' tipo_dado'; END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_schema = 'mart' AND table_name = 'vw_api_produtos_sazonalidade'
-          AND column_name = 'preco_exibido'
+        SELECT 1 FROM pg_attribute a
+        WHERE a.attrelid = 'mart.vw_api_produtos_sazonalidade'::regclass
+          AND a.attnum > 0 AND NOT a.attisdropped
+          AND a.attname = 'preco_exibido'
     ) THEN v_colunas := v_colunas || ' preco_exibido'; END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_schema = 'mart' AND table_name = 'vw_api_produtos_sazonalidade'
-          AND column_name = 'idade_dado_anos'
+        SELECT 1 FROM pg_attribute a
+        WHERE a.attrelid = 'mart.vw_api_produtos_sazonalidade'::regclass
+          AND a.attnum > 0 AND NOT a.attisdropped
+          AND a.attname = 'idade_dado_anos'
     ) THEN v_colunas := v_colunas || ' idade_dado_anos'; END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_schema = 'mart' AND table_name = 'vw_api_produtos_sazonalidade'
-          AND column_name = 'metadado_transparencia'
+        SELECT 1 FROM pg_attribute a
+        WHERE a.attrelid = 'mart.vw_api_produtos_sazonalidade'::regclass
+          AND a.attnum > 0 AND NOT a.attisdropped
+          AND a.attname = 'metadado_transparencia'
     ) THEN v_colunas := v_colunas || ' metadado_transparencia'; END IF;
 
     IF v_colunas <> '' THEN

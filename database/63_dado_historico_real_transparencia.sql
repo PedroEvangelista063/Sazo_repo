@@ -161,10 +161,20 @@ COMMENT ON COLUMN mart.sazonalidade_produto.idade_dado_anos IS
 COMMENT ON COLUMN mart.sazonalidade_produto.preco_exibido IS
     'Preço real exibido (sem multiplicador sintético). NULL p/ linhas não exibíveis.';
 
--- CHECK pós-backfill (R-ADD-01): valores restritos, NULL permitido
-ALTER TABLE mart.sazonalidade_produto
-    ADD CONSTRAINT chk_sazonalidade_tipo_dado
-    CHECK (tipo_dado IS NULL OR tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE','FALLBACK_DIMENSAO'));
+-- CHECK pós-backfill (R-ADD-01): valores restritos, NULL permitido.
+-- DO guard p/ idempotência: ALTER TABLE ADD CONSTRAINT não tem IF NOT EXISTS.
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'chk_sazonalidade_tipo_dado'
+          AND conrelid = 'mart.sazonalidade_produto'::regclass
+    ) THEN
+        ALTER TABLE mart.sazonalidade_produto
+            ADD CONSTRAINT chk_sazonalidade_tipo_dado
+            CHECK (tipo_dado IS NULL OR tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE','FALLBACK_DIMENSAO'));
+    END IF;
+END $$;
 
 -- ============================================================================
 -- SEÇÃO 3 — Backfill único (single pass, sem JOINs, sem CROSS JOIN)
@@ -175,12 +185,12 @@ ALTER TABLE mart.sazonalidade_produto
 -- WHERE ano_referencia IS NULL garante idempotência (re-executável).
 
 UPDATE mart.sazonalidade_produto AS s
-SET ano_referencia = EXTRACT(YEAR FROM s.data_referencia_atual)::INTEGER,
+SET ano_referencia = CAST(SPLIT_PART(s.data_referencia_atual, '-', 1) AS INTEGER),
     idade_dado_anos = EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER
-                      - EXTRACT(YEAR FROM s.data_referencia_atual)::INTEGER,
+                      - CAST(SPLIT_PART(s.data_referencia_atual, '-', 1) AS INTEGER),
     tipo_dado = CASE
         WHEN COALESCE(s.fonte,'') = 'FLUXO_PROXY' OR s.is_forecast THEN 'FALLBACK_DIMENSAO'
-        WHEN EXTRACT(YEAR FROM s.data_referencia_atual)::INTEGER
+        WHEN CAST(SPLIT_PART(s.data_referencia_atual, '-', 1) AS INTEGER)
              = EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER THEN 'REAL_ATUAL'
         ELSE 'HISTORICO_BASE'
     END,
@@ -347,6 +357,11 @@ END $$;
 DROP MATERIALIZED VIEW IF EXISTS mart.vw_api_produtos_sazonalidade CASCADE;
 
 CREATE MATERIALIZED VIEW mart.vw_api_produtos_sazonalidade AS
+-- CTE MATERIALIZED: a view âncora (LATERAL/DISTINCT) é avaliada UMA vez;
+-- sem isso, o NOT EXISTS do branch C reavaliaria a view por linha (lentidão O(N²)).
+WITH anchor AS MATERIALIZED (
+    SELECT * FROM mart.vw_anchor_sazonalidade
+)
 SELECT
     v.id_sazonalidade,
     v.id_localidade,
@@ -420,7 +435,7 @@ FROM (
     JOIN staging.dim_produto p ON p.id_produto = s.id_produto
     JOIN staging.dim_localidade l ON l.id_localidade = s.id_localidade
     LEFT JOIN staging.dim_categoria c ON c.id_categoria = p.id_categoria
-    LEFT JOIN mart.vw_anchor_sazonalidade a
+    LEFT JOIN anchor a
         ON a.id_produto = s.id_produto
        AND a.id_localidade = s.id_localidade
        AND a.mes = s.mes
@@ -471,7 +486,7 @@ FROM (
         a.tipo_dado AS tipo_dado,
         a.idade_dado_anos AS idade_dado_anos,
         a.metadado_transparencia AS metadado_transparencia
-    FROM mart.vw_anchor_sazonalidade a
+    FROM anchor a
     JOIN mart.sazonalidade_produto s ON s.id_sazonalidade = a.id_sazonalidade
     JOIN staging.dim_produto p ON p.id_produto = a.id_produto
     JOIN staging.dim_localidade l ON l.id_localidade = a.id_localidade
@@ -488,6 +503,8 @@ FROM (
     UNION ALL
 
     -- ── BRANCH C — FALLBACK_DIMENSAO (sem histórico real em N..N-2) ──
+    -- Parênteses obrigatórios: o ORDER BY do DISTINCT ON é do branch, não do UNION.
+    (
     SELECT DISTINCT ON (f.id_produto, f.id_localidade, f.mes)
         -(f.id_sazonalidade) - 1000000000 AS id_sazonalidade,
         f.id_localidade,
@@ -532,7 +549,7 @@ FROM (
     JOIN staging.dim_localidade l ON l.id_localidade = f.id_localidade
     LEFT JOIN staging.dim_categoria c ON c.id_categoria = p.id_categoria
     WHERE NOT EXISTS (
-            SELECT 1 FROM mart.vw_anchor_sazonalidade a2
+            SELECT 1 FROM anchor a2
             WHERE a2.id_produto = f.id_produto
               AND a2.id_localidade = f.id_localidade
               AND a2.mes = f.mes
@@ -546,6 +563,7 @@ FROM (
     ORDER BY f.id_produto, f.id_localidade, f.mes,
              CASE WHEN COALESCE(f.fonte,'') = 'FLUXO_PROXY' THEN 1 ELSE 0 END,  -- prefere não-proxy
              f.data_referencia_atual DESC
+    )
 ) v
 ORDER BY v.ano, v.mes, v.is_forecast, v.status_cor, v.produto;
 
@@ -566,7 +584,8 @@ CREATE INDEX idx_vw_sazonalidade_ano_mes ON mart.vw_api_produtos_sazonalidade (a
 CREATE INDEX idx_vw_sazonalidade_tipo_dado ON mart.vw_api_produtos_sazonalidade (tipo_dado) WHERE (tipo_dado IS NOT NULL);
 CREATE INDEX idx_vw_sazonalidade_ano_referencia ON mart.vw_api_produtos_sazonalidade (ano_referencia DESC) WHERE (ano_referencia IS NOT NULL);
 
-RAISE NOTICE '[63] MV V17 criada — índices (7) recriados';
+-- (RAISE NOTICE removido: inválido em SQL top-level — psql não aceita fora de
+--  bloco PL/pgSQL; a criação dos índices é a evidência visível no log.)
 
 GRANT SELECT ON mart.vw_api_produtos_sazonalidade TO role_api_reader;
 
@@ -671,5 +690,3 @@ COMMIT;
 -- arquivo e valida o índice UNIQUE (obrigatório para CONCURRENTLY).
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade;
-RAISE NOTICE '[63] Refresh inicial da MV V17 concluído (%, linhas)',
-    (SELECT count(*) FROM mart.vw_api_produtos_sazonalidade);

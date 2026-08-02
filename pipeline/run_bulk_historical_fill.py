@@ -12,7 +12,8 @@ Preenche 2020-2024 no banco local usando duas estrategias:
      Tenta baixar dados de portais abertos.
      is_interpolado = FALSE, fonte = 'CONAB_BULK_CSV'.
 
-  3. RECALCULO: CALL staging.sp_calcular_sazonalidade_preditiva() ao final.
+  3. RECALCULO: CALL staging.sp_executar_carga_completa() ao final
+     (orchestrator desativado — dado historico real; guard is_forecast).
 
 Uso:
     python pipeline/run_bulk_historical_fill.py
@@ -28,15 +29,14 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import json
 import logging
 import os
 import re
 import sys
 import time
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -65,29 +65,29 @@ SIDRA_BASE = "https://apisidra.ibge.gov.br/values"
 # IDs da Tabela 7060 (classificacao C315, subitens IPCA).
 # Fonte: /t/7060/n1/all/v/63/p/202001/c315/all via apisidra.ibge.gov.br
 PRODUTO_TO_SIDRA: dict[str, dict[str, Any]] = {
-    "ABACATE":         {"sidra_id": "7277", "sidra_nome": "1103026.Abacate", "grupo": "hortalicas"},
-    "ABACAXI":         {"sidra_id": "7256", "sidra_nome": "1106003.Abacaxi", "grupo": "frutas"},
-    "ALFACE":          {"sidra_id": "7242", "sidra_nome": "1105001.Alface", "grupo": "hortalicas"},
-    "BANANA":          {"sidra_id": "7260", "sidra_nome": "1106008.Banana - prata", "grupo": "frutas"},
-    "BATATA":          {"sidra_id": "7202", "sidra_nome": "1103003.Batata-inglesa", "grupo": "hortalicas"},
-    "BATATA-DOCE":     {"sidra_id": "7201", "sidra_nome": "1103002.Batata-doce", "grupo": "hortalicas"},
-    "BETERRABA":       {"sidra_id": "7250", "sidra_nome": "1105015.Beterraba", "grupo": "hortalicas"},
-    "CEBOLA":          {"sidra_id": "7215", "sidra_nome": "1103043.Cebola", "grupo": "hortalicas"},
-    "CENOURA":         {"sidra_id": "7216", "sidra_nome": "1103044.Cenoura", "grupo": "hortalicas"},
-    "GOIABA":          {"sidra_id": "7281", "sidra_nome": "1106084.Goiaba", "grupo": "frutas"},
-    "LARANJA":         {"sidra_id": "7279", "sidra_nome": "1106039.Laranja - pera", "grupo": "frutas"},
-    "LIMAO":           {"sidra_id": "7265", "sidra_nome": "1106015.Limao", "grupo": "frutas"},
-    "MACA":            {"sidra_id": "7266", "sidra_nome": "1106017.Maca", "grupo": "frutas"},
-    "MAMAO":           {"sidra_id": "7267", "sidra_nome": "1106018.Mamao", "grupo": "frutas"},
-    "MANGA":           {"sidra_id": "7268", "sidra_nome": "1106019.Manga", "grupo": "frutas"},
-    "MARACUJA":        {"sidra_id": "7269", "sidra_nome": "1106020.Maracuja", "grupo": "frutas"},
-    "MELANCIA":        {"sidra_id": "7270", "sidra_nome": "1106021.Melancia", "grupo": "frutas"},
-    "MORANGO":         {"sidra_id": "7280", "sidra_nome": "1106051.Morango", "grupo": "frutas"},
-    "PEPINO":          {"sidra_id": "7251", "sidra_nome": "1105016.Pepino", "grupo": "hortalicas"},
-    "PIMENTAO":        {"sidra_id": "7213", "sidra_nome": "1103026.Pimentao", "grupo": "hortalicas"},
-    "REPOLHO":         {"sidra_id": "7248", "sidra_nome": "1105010.Repolho", "grupo": "hortalicas"},
-    "TOMATE":          {"sidra_id": "7212", "sidra_nome": "1103028.Tomate", "grupo": "hortalicas"},
-    "UVA":             {"sidra_id": "7276", "sidra_nome": "1106028.Uva", "grupo": "frutas"},
+    "ABACATE": {"sidra_id": "7277", "sidra_nome": "1103026.Abacate", "grupo": "hortalicas"},
+    "ABACAXI": {"sidra_id": "7256", "sidra_nome": "1106003.Abacaxi", "grupo": "frutas"},
+    "ALFACE": {"sidra_id": "7242", "sidra_nome": "1105001.Alface", "grupo": "hortalicas"},
+    "BANANA": {"sidra_id": "7260", "sidra_nome": "1106008.Banana - prata", "grupo": "frutas"},
+    "BATATA": {"sidra_id": "7202", "sidra_nome": "1103003.Batata-inglesa", "grupo": "hortalicas"},
+    "BATATA-DOCE": {"sidra_id": "7201", "sidra_nome": "1103002.Batata-doce", "grupo": "hortalicas"},
+    "BETERRABA": {"sidra_id": "7250", "sidra_nome": "1105015.Beterraba", "grupo": "hortalicas"},
+    "CEBOLA": {"sidra_id": "7215", "sidra_nome": "1103043.Cebola", "grupo": "hortalicas"},
+    "CENOURA": {"sidra_id": "7216", "sidra_nome": "1103044.Cenoura", "grupo": "hortalicas"},
+    "GOIABA": {"sidra_id": "7281", "sidra_nome": "1106084.Goiaba", "grupo": "frutas"},
+    "LARANJA": {"sidra_id": "7279", "sidra_nome": "1106039.Laranja - pera", "grupo": "frutas"},
+    "LIMAO": {"sidra_id": "7265", "sidra_nome": "1106015.Limao", "grupo": "frutas"},
+    "MACA": {"sidra_id": "7266", "sidra_nome": "1106017.Maca", "grupo": "frutas"},
+    "MAMAO": {"sidra_id": "7267", "sidra_nome": "1106018.Mamao", "grupo": "frutas"},
+    "MANGA": {"sidra_id": "7268", "sidra_nome": "1106019.Manga", "grupo": "frutas"},
+    "MARACUJA": {"sidra_id": "7269", "sidra_nome": "1106020.Maracuja", "grupo": "frutas"},
+    "MELANCIA": {"sidra_id": "7270", "sidra_nome": "1106021.Melancia", "grupo": "frutas"},
+    "MORANGO": {"sidra_id": "7280", "sidra_nome": "1106051.Morango", "grupo": "frutas"},
+    "PEPINO": {"sidra_id": "7251", "sidra_nome": "1105016.Pepino", "grupo": "hortalicas"},
+    "PIMENTAO": {"sidra_id": "7213", "sidra_nome": "1103026.Pimentao", "grupo": "hortalicas"},
+    "REPOLHO": {"sidra_id": "7248", "sidra_nome": "1105010.Repolho", "grupo": "hortalicas"},
+    "TOMATE": {"sidra_id": "7212", "sidra_nome": "1103028.Tomate", "grupo": "hortalicas"},
+    "UVA": {"sidra_id": "7276", "sidra_nome": "1106028.Uva", "grupo": "frutas"},
 }
 
 SIDRA_GRUPO_ALIMENTACAO = "7170"
@@ -129,6 +129,7 @@ class Stats:
 #  PARTE 1: IBGE SIDRA - Busca de Inflacao
 # ==============================================================================
 
+
 def _extrair_chave_produto(nome_produto: str) -> str | None:
     nome = nome_produto.upper().strip()
     if not nome:
@@ -165,7 +166,7 @@ async def fetch_inflacao_subitem(
         data = resp.json()
         if not data or len(data) < 2:
             return None
-    except Exception:
+    except Exception:  # noqa: BLE001 (resiliencia: loga e segue)
         return None
 
     records: list[InflacaoRecord] = []
@@ -203,7 +204,7 @@ async def fetch_inflacao_grupo(
         data = resp.json()
         if not data or len(data) < 2:
             return None
-    except Exception:
+    except Exception:  # noqa: BLE001 (resiliencia: loga e segue)
         return None
 
     records: list[InflacaoRecord] = []
@@ -253,6 +254,7 @@ async def build_serie_inflacao(
 #  PARTE 2: Deflacao
 # ==============================================================================
 
+
 def deflacionar(preco_base: float, inflacoes: list[float]) -> list[float]:
     precos: list[float] = []
     current = float(preco_base)
@@ -266,14 +268,13 @@ def deflacionar(preco_base: float, inflacoes: list[float]) -> list[float]:
 #  PARTE 3: CONAB / CEASA Bulk Ingestion
 # ==============================================================================
 
+
 def _validar_conab_bulk_autentico(text: str) -> bool:
     """Valida se o response e realmente um CSV da CONAB, nao HTML."""
     head = text[:200].strip()
     if head.upper().startswith("<!DOCTYPE") or head.startswith("<html"):
         return False
-    if ";" not in head:
-        return False
-    return True
+    return ";" in head
 
 
 def _mapear_conab_para_staging(
@@ -294,10 +295,11 @@ def _mapear_conab_para_staging(
         return mapeados
 
     colunas = list(registros_brutos[0].keys())
-    col_lower = set(c.lower() for c in colunas)
 
     # Tentar inferir mapeamento de colunas
-    col_produto = _match_col(colunas, ["produto", "descricao", "nome_produto", "prod", "hortifruti"])
+    col_produto = _match_col(
+        colunas, ["produto", "descricao", "nome_produto", "prod", "hortifruti"]
+    )
     col_uf = _match_col(colunas, ["uf", "estado", "uf_sigla"])
     col_municipio = _match_col(colunas, ["municipio", "cidade", "local", "municipio_nome"])
     col_preco = _match_col(colunas, ["preco_medio", "preco", "valor", "vlr", "preco_medio_mensal"])
@@ -362,13 +364,15 @@ def _mapear_conab_para_staging(
         if ano <= 0 or mes <= 0 or mes > 12:
             continue
 
-        mapeados.append({
-            "id_produto": id_prod,
-            "id_localidade": id_loc,
-            "ano": ano,
-            "mes": mes,
-            "preco_medio": round(preco, 4),
-        })
+        mapeados.append(
+            {
+                "id_produto": id_prod,
+                "id_localidade": id_loc,
+                "ano": ano,
+                "mes": mes,
+                "preco_medio": round(preco, 4),
+            }
+        )
 
     return mapeados
 
@@ -402,7 +406,7 @@ async def try_conab_bulk_download(client: httpx.AsyncClient) -> list[dict[str, A
                     logger.debug("CONAB %s: resposta nao e CSV (HTML recebido)", url)
             else:
                 logger.debug("CONAB %s: status=%d", url, resp.status_code)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 (resiliencia: loga e segue)
             logger.warning("CONAB bulk: erro %s: %s", url, e)
 
     return registros
@@ -432,12 +436,16 @@ async def try_prohortweb_csv(client: httpx.AsyncClient) -> list[dict[str, Any]]:
         payload = {"ano": ano, "mes": 0, "ceasa": "Todas", "formato": "csv"}
         try:
             resp = await client.post(url, json=payload, timeout=60)
-            if resp.status_code == 200 and len(resp.text) > 200 and _validar_conab_bulk_autentico(resp.text):
+            if (
+                resp.status_code == 200
+                and len(resp.text) > 200
+                and _validar_conab_bulk_autentico(resp.text)
+            ):
                 logger.info("ProHortweb %d: %d bytes", ano, len(resp.text))
                 registros.extend(_parse_conab_csv(resp.text))
             else:
                 logger.debug("ProHortweb %d: status=%d", ano, resp.status_code)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 (resiliencia: loga e segue)
             logger.debug("ProHortweb %d: %s", ano, e)
 
     return registros
@@ -446,6 +454,7 @@ async def try_prohortweb_csv(client: httpx.AsyncClient) -> list[dict[str, Any]]:
 # ==============================================================================
 #  PARTE 4: Motor Principal
 # ==============================================================================
+
 
 class BulkHistoricalFill:
     """Motor de preenchimento historico via deflacao IBGE + bulk CONAB."""
@@ -464,11 +473,12 @@ class BulkHistoricalFill:
 
     async def __aenter__(self):
         import asyncpg
+
         self._conn = await asyncpg.connect(self._db_url)
         self._stats.inicio = time.perf_counter()
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
+    async def __aexit__(self, *args: object) -> None:
         if self._conn:
             await self._conn.close()
         await self._client.aclose()
@@ -478,7 +488,8 @@ class BulkHistoricalFill:
     async def obter_precos_base_2025(
         self, ano_base: int = 2025, mes_base: int = 1
     ) -> list[dict[str, Any]]:
-        rows = await self._conn.fetch("""
+        rows = await self._conn.fetch(
+            """
             SELECT DISTINCT ON (f.id_produto, f.id_localidade)
                 f.id_produto,
                 p.nome_produto,
@@ -495,7 +506,10 @@ class BulkHistoricalFill:
               AND p.status_fonte = 'MAPEADA'
               AND l.uf <> 'BR'
             ORDER BY f.id_produto, f.id_localidade, f.loaded_at DESC
-        """, ano_base, mes_base)
+        """,
+            ano_base,
+            mes_base,
+        )
         return [dict(r) for r in rows]
 
     # --- INFLACAO COM CACHE ----------------------------------------------------
@@ -509,7 +523,8 @@ class BulkHistoricalFill:
             sidra_id = sidra_info["sidra_id"] if sidra_info else None
             logger.info(
                 "  Buscando inflacao: produto=%s sidra_id=%s",
-                chave_produto, sidra_id or "GRUPO",
+                chave_produto,
+                sidra_id or "GRUPO",
             )
             serie = await build_serie_inflacao(self._client, sidra_id, anos_alvo)
             self._cache_inflacao[cache_key] = serie
@@ -559,7 +574,9 @@ class BulkHistoricalFill:
             if var is None:
                 logger.debug(
                     "  Sem inflacao para %04d/%02d (prod=%s)",
-                    current_ano, current_mes, nome_prod,
+                    current_ano,
+                    current_mes,
+                    nome_prod,
                 )
                 continue
 
@@ -576,15 +593,17 @@ class BulkHistoricalFill:
 
         resultados: list[dict[str, Any]] = []
         for (ano, mes), preco in zip(meses_chain, precos):
-            resultados.append({
-                "id_produto": id_produto,
-                "id_localidade": id_localidade,
-                "ano": ano,
-                "mes": mes,
-                "preco_medio": preco,
-                "uf": uf,
-                "nome_produto": nome_prod,
-            })
+            resultados.append(
+                {
+                    "id_produto": id_produto,
+                    "id_localidade": id_localidade,
+                    "ano": ano,
+                    "mes": mes,
+                    "preco_medio": preco,
+                    "uf": uf,
+                    "nome_produto": nome_prod,
+                }
+            )
 
         return resultados
 
@@ -603,7 +622,7 @@ class BulkHistoricalFill:
         batch_size = 500
 
         for i in range(0, len(linhas), batch_size):
-            batch = linhas[i:i + batch_size]
+            batch = linhas[i : i + batch_size]
             values_clauses: list[str] = []
             params: list[Any] = []
             idx = 0
@@ -613,25 +632,27 @@ class BulkHistoricalFill:
                 idx += 1
                 p = idx
                 values_clauses.append(
-                    f"(${p}, ${p+1}, ${p+2}, ${p+3}, ${p+4}, ${p+5}, ${p+6}, ${p+7}, ${p+8})"
+                    f"(${p}, ${p + 1}, ${p + 2}, ${p + 3}, ${p + 4}, ${p + 5}, ${p + 6}, ${p + 7}, ${p + 8})"
                 )
-                params.extend([
-                    row["id_produto"],
-                    row["id_localidade"],
-                    row["ano"],
-                    row["mes"],
-                    row["preco_medio"],
-                    is_interpolado,
-                    datetime.now(timezone.utc),
-                    fonte,
-                    batch_id,
-                ])
+                params.extend(
+                    [
+                        row["id_produto"],
+                        row["id_localidade"],
+                        row["ano"],
+                        row["mes"],
+                        row["preco_medio"],
+                        is_interpolado,
+                        datetime.now(UTC),
+                        fonte,
+                        batch_id,
+                    ]
+                )
                 idx += 8
 
             sql = f"""
                 INSERT INTO staging.fact_precos_mensais
                     (id_produto, id_localidade, ano, mes, preco_medio, is_interpolado, loaded_at, fonte, batch_id)
-                VALUES {', '.join(values_clauses)}
+                VALUES {", ".join(values_clauses)}
                 ON CONFLICT ON CONSTRAINT uq_fact_precos_mensais
                 DO UPDATE SET preco_medio = EXCLUDED.preco_medio,
                               is_interpolado = EXCLUDED.is_interpolado,
@@ -652,7 +673,7 @@ class BulkHistoricalFill:
                         inseridas += int(parts[2])
                     else:
                         inseridas += len(batch)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001 (resiliencia: loga e segue)
                     logger.error("  Erro DB batch: %s", e)
                     self._stats.erros_db += 1
 
@@ -668,8 +689,9 @@ class BulkHistoricalFill:
     ) -> None:
         logger.info("=" * 60)
         logger.info("DEFLACAO IBGE SIDRA")
-        logger.info("Base: %04d/%02d | Alvo: %d-%d",
-                     ano_base, mes_base, min(anos_alvo), max(anos_alvo))
+        logger.info(
+            "Base: %04d/%02d | Alvo: %d-%d", ano_base, mes_base, min(anos_alvo), max(anos_alvo)
+        )
         logger.info("Fonte: %s", FONTE_DEFLACAO)
         logger.info("=" * 60)
 
@@ -683,16 +705,20 @@ class BulkHistoricalFill:
             if (i + 1) % 50 == 0:
                 logger.info(
                     "  Progresso: %d/%d produtos | linhas=%d",
-                    i + 1, len(precos_base), len(todas_linhas),
+                    i + 1,
+                    len(precos_base),
+                    len(todas_linhas),
                 )
             try:
                 linhas = await self.deflar_produto(prod, anos_alvo)
                 todas_linhas.extend(linhas)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 (resiliencia: loga e segue)
                 logger.error(
                     "  Erro deflando %s (prod_id=%d loc_id=%d): %s",
-                    prod["nome_produto"], prod["id_produto"],
-                    prod["id_localidade"], e,
+                    prod["nome_produto"],
+                    prod["id_produto"],
+                    prod["id_localidade"],
+                    e,
                 )
                 self._stats.erros_db += 1
 
@@ -700,7 +726,9 @@ class BulkHistoricalFill:
         logger.info("Total linhas geradas: %d", len(todas_linhas))
 
         if todas_linhas:
-            inseridas = await self.inserir_lote(todas_linhas, is_interpolado=True, fonte=FONTE_DEFLACAO)
+            inseridas = await self.inserir_lote(
+                todas_linhas, is_interpolado=True, fonte=FONTE_DEFLACAO
+            )
             self._stats.linhas_inseridas = inseridas
             logger.info("Total linhas inseridas (deflacao): %d", inseridas)
 
@@ -767,7 +795,8 @@ class BulkHistoricalFill:
         produtos, localidades = await self._carregar_dimensoes()
         logger.info(
             "Dimensoes: %d produtos, %d localidades",
-            len(produtos), len(localidades),
+            len(produtos),
+            len(localidades),
         )
 
         mapeados = _mapear_conab_para_staging(registros, produtos, localidades)
@@ -785,17 +814,39 @@ class BulkHistoricalFill:
 
     async def recarregar_sazonalidade(self) -> None:
         logger.info("=" * 60)
-        logger.info("RECALCULO - CALL sp_calcular_sazonalidade_preditiva()")
+        logger.info("RECALCULO - refresh real (engines sinteticas desativadas)")
         logger.info("=" * 60)
 
         if self._dry_run:
-            logger.info("[DRY-RUN] Chamaria CALL staging.sp_calcular_sazonalidade_preditiva()")
+            logger.info(
+                "[DRY-RUN] Chamaria CALL staging.sp_executar_carga_completa() (engines sinteticas desativadas)"
+            )
             return
 
         try:
-            await self._conn.execute("CALL staging.sp_calcular_sazonalidade_preditiva()")
-            logger.info("Recalculo concluido com sucesso!")
-        except Exception as e:
+            # Guard (R-ADD-06): linhas sinteticas NAO podem crescer — se crescerem,
+            # as engines V13/sanduiche foram (re)ativadas e o deploy esta errado.
+            n_fc_antes = await self._conn.fetchval(
+                "SELECT count(*) FROM mart.sazonalidade_produto WHERE is_forecast = TRUE"
+            )
+            logger.info("is_forecast antes do recalculo: %s", n_fc_antes)
+
+            # Orchestrator desativado (database/63 + 000021): steps 5-6 (V13/sanduiche)
+            # viram no-op guards + RAISE NOTICE; step 7 faz o refresh da MV.
+            # Dado exibido passa a ser o historico real com ano ancora (N->N-1->N-2).
+            await self._conn.execute("CALL staging.sp_executar_carga_completa()")
+
+            n_fc_depois = await self._conn.fetchval(
+                "SELECT count(*) FROM mart.sazonalidade_produto WHERE is_forecast = TRUE"
+            )
+            logger.info("is_forecast depois do recalculo: %s", n_fc_depois)
+            if n_fc_depois > n_fc_antes:
+                raise RuntimeError(
+                    f"GUARD is_forecast FALHOU: count(is_forecast=TRUE) cresceu de "
+                    f"{n_fc_antes} para {n_fc_depois} — engines sinteticas foram (re)ativadas"
+                )
+            logger.info("Recalculo concluido com sucesso (dado historico real + MV refresh)!")
+        except Exception as e:  # noqa: BLE001 (resiliencia: loga e segue)
             logger.error("Erro no recalculo: %s", e)
             self._stats.erros_db += 1
 
@@ -810,9 +861,9 @@ class BulkHistoricalFill:
             GROUP BY ano, mes
             ORDER BY ano, mes
         """)
-        print(f"\n{'='*62}")
-        print(f"  COBERTURA ATUAL ({datetime.now():%Y-%m-%d %H:%M})")
-        print(f"{'='*62}")
+        print(f"\n{'=' * 62}")
+        print(f"  COBERTURA ATUAL ({datetime.now().astimezone():%Y-%m-%d %H:%M})")
+        print(f"{'=' * 62}")
         for r in rows:
             flag = " I" if r["tem_interpolado"] else "  "
             print(f"  {r['ano']:4d}/{r['mes']:02d}: {r['produtos']:>4d} produtos{flag}")
@@ -821,6 +872,7 @@ class BulkHistoricalFill:
 # ==============================================================================
 #  ENTRYPOINT
 # ==============================================================================
+
 
 async def main() -> None:
     parser = argparse.ArgumentParser(
@@ -859,9 +911,9 @@ async def main() -> None:
 
         await engine.mostrar_cobertura()
 
-        print(f"\n{'='*62}")
-        print(f"  RESUMO DA EXECUCAO")
-        print(f"{'='*62}")
+        print(f"\n{'=' * 62}")
+        print("  RESUMO DA EXECUCAO")
+        print(f"{'=' * 62}")
         print(f"  {engine._stats.resumo()}")
         print(f"  Cache de inflacao: {len(engine._cache_inflacao)} produtos/entradas")
 

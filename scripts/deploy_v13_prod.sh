@@ -10,8 +10,13 @@
 #   2. Pré-checks: objetos v13 ausentes + tamanho do banco + contagem atual
 #   3. Aplica supabase/migrations/000019  (Engine V13 + cobertura dos 74 produtos novos)
 #   4. Aplica supabase/migrations/000020  (Sanduíche v7 — preserva forecast_method v13)
-#   5. CALL staging.sp_executar_carga_completa()  (pipeline completo + MV refresh)
-#   6. Validação da grade 2026: 660 produtos, 0 cinzas, 660/660 com 12 meses
+#   5. Aplica database/63 (transparência/dado histórico real) + 000021 (desativa
+#      engines sintéticas) — ANTES do CALL do pipeline, para que o orchestrator
+#      já esteja desativado (refatoracao-dado-historico)
+#   6. CALL staging.sp_executar_carga_completa()  (pipeline completo + MV refresh)
+#   7. Guard pós-CALL: count(is_forecast=TRUE) NÃO pode crescer (senão engines
+#      sintéticas foram reativadas — aborta o deploy)
+#   8. Validação da grade 2026: 660 produtos, 0 cinzas, 660/660 com 12 meses
 #
 # USAGE:
 #   bash scripts/deploy_v13_prod.sh --apply   # monitora + aplica + valida (PADRÃO)
@@ -37,6 +42,8 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 ENV_FILE="$ROOT_DIR/backend/.env"
 MIG_019="$ROOT_DIR/supabase/migrations/000019_engine_forecast_2024_2025_v13.sql"
 MIG_020="$ROOT_DIR/supabase/migrations/000020_fix_sanduiche_preserva_forecast_v13.sql"
+MIG_063="$ROOT_DIR/database/63_dado_historico_real_transparencia.sql"
+MIG_021="$ROOT_DIR/supabase/migrations/000021_desativar_engines_sinteticas.sql"
 MODE="apply"
 LOGFILE="$ROOT_DIR/deploy_v13_prod.log"
 
@@ -83,7 +90,7 @@ P="${DATABASE_URL_ETL:-}"
 command -v psql >/dev/null 2>&1 || die "psql não encontrado no PATH"
 
 if [ "$MODE" = "apply" ]; then
-    for f in "$MIG_019" "$MIG_020"; do
+    for f in "$MIG_019" "$MIG_020" "$MIG_063" "$MIG_021"; do
         [ -f "$f" ] || die "Migration não encontrada: $f"
     done
 fi
@@ -149,8 +156,34 @@ psql "$P" -v ON_ERROR_STOP=1 -f "$MIG_020" 2>&1 | tail -5 \
 log "000020 OK"
 
 # ------------------------------------------------------------------------------
-# 5. Pipeline completo
+# 5. Refatoração dado histórico: 63 (transparência/MV V17) + 000021 (desativa engines)
 # ------------------------------------------------------------------------------
+# refatoracao-dado-historico — aplica ANTES do CALL do pipeline: o orchestrator
+# (sp_executar_carga_completa) precisa estar DESATIVADO (no-op guards) quando o
+# pipeline rodar, senão a cópia de 000019 reativaria V13/sanduíche (S8/R-ADD-06).
+log "--- Aplicando database/63 (dado histórico real + transparência + MV V17) ---"
+out=$(psql "$P" -v ON_ERROR_STOP=1 -f "$MIG_063" 2>&1)
+rc=$?
+echo "$out" | grep -aE 'NOTA|ERRO|ERROR|erro' | tail -20
+echo "$out" | grep -aqE 'ERRO|ERROR|erro' && die "Migration 63 falhou (exit $rc) — ver log $LOGFILE"
+[ $rc -eq 0 ] || die "Migration 63 falhou (exit $rc) — ver log $LOGFILE"
+log "63 OK — MV V17 criada, engines desativadas no orchestrator (database/)"
+
+log "--- Aplicando migration 000021 (desativa engines sintéticas no track Supabase) ---"
+out=$(psql "$P" -v ON_ERROR_STOP=1 -f "$MIG_021" 2>&1)
+rc=$?
+echo "$out" | grep -aE 'NOTA|ERRO|ERROR|erro' | tail -10
+echo "$out" | grep -aqE 'ERRO|ERROR|erro' && die "Migration 000021 falhou (exit $rc) — ver log $LOGFILE"
+[ $rc -eq 0 ] || die "Migration 000021 falhou (exit $rc) — ver log $LOGFILE"
+log "000021 OK — orchestrator desativado (neutraliza a cópia de 000019)"
+
+# ------------------------------------------------------------------------------
+# 6. Pipeline completo
+# ------------------------------------------------------------------------------
+log "--- Guard pré-CALL: count(is_forecast=TRUE) ---"
+n_fc_antes=$(psql "$P" -Atc "SELECT count(*) FROM mart.sazonalidade_produto WHERE is_forecast = TRUE" 2>/dev/null || echo "n/d")
+log "is_forecast antes do CALL: $n_fc_antes"
+
 log "--- CALL staging.sp_executar_carga_completa() (pipeline completo + MV) ---"
 out=$(psql "$P" -v ON_ERROR_STOP=1 -c "CALL staging.sp_executar_carga_completa();" 2>&1)
 rc=$?
@@ -159,8 +192,16 @@ echo "$out" | grep -aqE 'ERRO|ERROR|erro' && die "Pipeline sp_executar_carga_com
 [ $rc -eq 0 ] || die "Pipeline sp_executar_carga_completa falhou (exit $rc) — ver log $LOGFILE"
 log "Pipeline completo OK"
 
+# Guard pós-CALL: linhas sintéticas NÃO podem crescer (refatoracao-dado-historico).
+n_fc_depois=$(psql "$P" -Atc "SELECT count(*) FROM mart.sazonalidade_produto WHERE is_forecast = TRUE" 2>/dev/null || echo "n/d")
+log "is_forecast depois do CALL: $n_fc_depois"
+if [ "$n_fc_antes" != "n/d" ] && [ "$n_fc_depois" != "n/d" ] && [ "$n_fc_depois" -gt "$n_fc_antes" ]; then
+    die "GUARD is_forecast FALHOU: count(is_forecast=TRUE) cresceu de $n_fc_antes para $n_fc_depois — engines sintéticas foram (re)ativadas. Abortando deploy (ver log $LOGFILE)."
+fi
+log "Guard is_forecast OK ($n_fc_antes → $n_fc_depois, sem crescimento)"
+
 # ------------------------------------------------------------------------------
-# 6. Validação da grade 2026
+# 8. Validação da grade 2026
 # ------------------------------------------------------------------------------
 log "--- Validação da grade 2026 ---"
 log "Grade:"
@@ -179,7 +220,7 @@ psql "$P" -Atc "
         || ' incompletos=' || count(*) FILTER (WHERE n < 12)
     FROM por_prod" | tee -a "$LOGFILE"
 
-log "Distribuição forecast_method 2026 (ANCHOR/PROXY_CATEGORIA/LOCF devem aparecer):"
+log "Distribuição forecast_method 2026 (reais → REAL; fallback preserva método original):"
 psql "$P" -Atc "
     SELECT '  ' || COALESCE(forecast_method, 'REAL') || ': ' || count(*)
     FROM mart.sazonalidade_produto WHERE ano = 2026

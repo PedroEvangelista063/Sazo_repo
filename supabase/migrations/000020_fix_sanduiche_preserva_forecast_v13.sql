@@ -1,126 +1,36 @@
--- =============================================================================
--- 57_expurgo_e_recalibragem.sql
--- -----------------------------------------------------------------------------
--- Objetivo: saneamento da grade sazonal + recalibragem estatística do semáforo.
+-- ============================================================================
+-- QUERO COMPRAR — Migration 000020: Sanduíche Sazonal v7 — preserva forecast_method v13
+-- PostgreSQL 17+  |  Forward-only  |  Idempotent (CREATE OR REPLACE)
 --
--- Contexto (auditoria de acurácia das views):
---   * MAPE do modelo sazonal = 22,8% (mediana do erro 15%) e apenas ~50% dos
---     pares ficam dentro do limiar de ±15% que alimentava o semáforo.
---   * A grade 2026 continha 38.882 células FORECAST LEGADAS com
---     forecast_method IS NULL (preenchimento antigo, sem método documentado):
---        - 21.664 em 2026 (21.482 em meses passados <=7, 182 em meses futuros)
---        - 17.218 em 2025
---     Nenhuma delas tem dado real (is_forecast=FALSE) no mesmo par/mês
---     (legadas_sem_real = 100%) -> DELETE 100% seguro.
+-- OBJETIVO:
+--   O sp_project_sandwich_prices_2026 (v6, aplicada via database/40/51/57 no banco
+--   vivo) projeta o PREÇO NUMÉRICO dos meses faltantes. Porém, ao rodar DEPOIS da
+--   Engine V13 (migration 000019), ele SOBRESCREVIA o forecast_method v13
+--   (ANCHOR_2024_MARGIN_2025 / PROXY_CATEGORIA_UF / LOCF_MES_ANTERIOR) com
+--   métodos antigos (SANDUICHE_MEDIA_24_25 / SANDUICHE_FATOR_SAZONAL /
+--   PROXY_HIERARQUICO) — a grade ficava 100% preenchida, mas os tooltips v13 do
+--   frontend (SazonalidadeNacional.tsx) caíam no texto genérico '📈 Estimativa'.
 --
--- FASE 1 — EXPURGO: backup auditável + DELETE das células legadas sem método.
--- FASE 2 — RECALIBRAGEM ±25%: novo semáforo oficial
---            VERDE    se preco_atual <  preco_referencia * 0.75
---            VERMELHO se preco_atual >  preco_referencia * 1.25
---            AMARELO  caso contrário
---          recalcular retroativamente status_cor na tabela e tornar a nova
---          margem o padrão de todas as funções/procedures (procedure v6).
--- FASE 3 — REFRESH MATERIALIZED VIEW + limpeza de cache do FastAPI.
--- -----------------------------------------------------------------------------
--- PADRÃO: BEGIN/COMMIT, backup auditável, DELETE idempotente, NOTICE com
--- contagens, REFRESH MV após COMMIT, seção de verificação manual.
--- =============================================================================
+--   A v7 corrige isso: TODOS os Steps preservam o forecast_method v13 já
+--   existente na célula — o Sanduíche só projeta preço/status; o método de
+--   geração do status continua sendo o da Engine V13.
+--
+--   Esta migration espelha exatamente database/57_expurgo_e_recalibragem.sql
+--   (FASE 2, procedure v7) para a cadeia de migrations Supabase — assim a
+--   replicação em produção leva o fix junto com a 000019.
+--
+-- COMPATIBILIDADE:
+--   - CREATE OR REPLACE PROCEDURE (idempotente) — sem DDL destrutiva.
+--   - Depende apenas de objetos já existentes (fn_status_cor_regra_25,
+--     fn_sandwich_historical_price, fn_preco_base_2026, fn_fator_sazonal_mensal,
+--     fn_encontrar_produto_pai, mart.fator_kg_produto_uf, staging.dim_localidade,
+--     staging.dim_produto, staging.fact_precos_mensais).
+--   - Se o ambiente NÃO tiver as funções de apoio (cadeia Supabase pura),
+--     o GRANT abaixo ainda funciona; o CALL é protegido por guard EXISTS no
+--     sp_executar_carga_completa (000019, etapa 6).
+-- ============================================================================
 
 BEGIN;
-
--- =============================================================================
--- FASE 1 — EXPURGO DE CÉLULAS LEGADAS (forecast_method IS NULL, is_forecast=TRUE)
--- =============================================================================
-
--- 1.1) Backup auditável (idempotente): preserva as linhas deletadas.
-CREATE TABLE IF NOT EXISTS mart.sazonalidade_legado_backup_57 AS
-SELECT *
-FROM mart.sazonalidade_produto
-WHERE forecast_method IS NULL
-  AND is_forecast = TRUE;
-
--- 1.2) DELETE apenas das legadas SEM método E SEM dado real no mesmo par/mês.
---      Células reais (is_forecast = FALSE, forecast_method NULL) NÃO são tocadas.
-DO $$
-DECLARE
-    v_deleted INTEGER;
-BEGIN
-    DELETE FROM mart.sazonalidade_produto s
-    USING mart.sazonalidade_produto s2
-    WHERE s.id_sazonalidade = s2.id_sazonalidade
-      AND s.forecast_method IS NULL
-      AND s.is_forecast = TRUE
-      AND NOT EXISTS (
-          SELECT 1 FROM mart.sazonalidade_produto r
-          WHERE r.id_produto      = s.id_produto
-            AND r.id_localidade   = s.id_localidade
-            AND r.ano             = s.ano
-            AND r.mes             = s.mes
-            AND r.is_forecast     = FALSE
-      );
-
-    GET DIAGNOSTICS v_deleted = ROW_COUNT;
-    RAISE NOTICE '[57] FASE 1 — Expurgo: % células legadas sem método deletadas.', v_deleted;
-END $$;
-
--- =============================================================================
--- FASE 2 — RECALIBRAGEM DO SEMÁFORO PARA ±25%
--- =============================================================================
-
--- 2.1) Novo semáforo oficial ±25% (função canônica, substitui a regra ±15%).
-CREATE OR REPLACE FUNCTION staging.fn_status_cor_regra_25(
-    p_preco_atual     NUMERIC,
-    p_preco_referencia NUMERIC
-)
-RETURNS TEXT
-LANGUAGE sql
-STABLE
-AS $$
-    SELECT CASE
-        WHEN p_preco_atual IS NULL OR p_preco_atual <= 0 THEN NULL
-        WHEN p_preco_atual <  COALESCE(p_preco_referencia, p_preco_atual) * 0.75 THEN 'VERDE'
-        WHEN p_preco_atual >  COALESCE(p_preco_referencia, p_preco_atual) * 1.25 THEN 'VERMELHO'
-        ELSE 'AMARELO'
-    END;
-$$;
-
-COMMENT ON FUNCTION staging.fn_status_cor_regra_25(NUMERIC, NUMERIC) IS
-'Semáforo oficial ±25%. VERDE se preco_atual < preco_referencia*0.75, VERMELHO se preco_atual > preco_referencia*1.25, senão AMARELO. Substitui a regra ±15% (Fase 57).';
-
-GRANT EXECUTE ON FUNCTION staging.fn_status_cor_regra_25(NUMERIC, NUMERIC) TO role_etl_writer;
-
--- 2.2) Recalcular retroativamente status_cor de TODA a tabela com a regra ±25%.
---      Aplica-se a forecasts (is_forecast=TRUE) e a células reais (FALSE).
-DO $$
-DECLARE
-    v_updated INTEGER;
-BEGIN
-    UPDATE mart.sazonalidade_produto s
-    SET status_cor = COALESCE(
-            staging.fn_status_cor_regra_25(s.preco_atual, s.preco_referencia),
-            s.status_cor
-        ),
-        calculado_em = NOW()
-    WHERE s.preco_atual IS NOT NULL
-      AND s.preco_atual > 0;
-
-    GET DIAGNOSTICS v_updated = ROW_COUNT;
-    RAISE NOTICE '[57] FASE 2 — Recalc ±25%%: status_cor recalculado em % linhas.', v_updated;
-END $$;
-
--- =============================================================================
--- FASE 2 (cont.) — PROCEDURE v7: novo padrão ±25% + PRESERVA forecast_method v13
--- -----------------------------------------------------------------------------
--- Recreate de staging.sp_project_sandwich_prices_2026() a partir da v6
--- (fator_kg, advisory lock, statement_timeout 300s, ±25%).
---
--- NOVIDADE v7 (Engine V13 — implementation_plan2): o Sanduíche projeta apenas
--- PREÇO NUMÉRICO; o forecast_method (status) é definido pela Engine V13
--- (ANCHOR_2024_MARGIN_2025 / PROXY_CATEGORIA_UF / LOCF_MES_ANTERIOR). Por isso
--- TODOS os Steps preservam o método v13 já existente na célula — só marcam
--- SANDUICHE_*/PROXY_HIERARQUICO quando a célula ainda não tem método v13.
--- Isso mantém os tooltips v13 no frontend (SazonalidadeNacional.tsx) corretos.
--- =============================================================================
 
 CREATE OR REPLACE PROCEDURE staging.sp_project_sandwich_prices_2026()
  LANGUAGE plpgsql
@@ -634,41 +544,14 @@ BEGIN
 END;
 $procedure$;
 
--- =============================================================================
--- FASE 3 — REFRESH DA MATERIALIZED VIEW + ENCERRAMENTO
--- =============================================================================
+COMMENT ON PROCEDURE staging.sp_project_sandwich_prices_2026 IS
+    'Sanduíche Sazonal v7 (±25%%) — projeta PREÇO numérico dos meses faltantes de 2026. '
+    'v7: preserva o forecast_method da Engine V13 (ANCHOR_2024_MARGIN_2025 / '
+    'PROXY_CATEGORIA_UF / LOCF_MES_ANTERIOR) em TODOS os Steps — o Sanduíche só '
+    'projeta preço/status, o método de geração continua sendo o da V13. '
+    'SANDUICHE_MEDIA_24_25/SANDUICHE_FATOR_SAZONAL/PROXY_HIERARQUICO só são '
+    'atribuídos em células sem método v13. (000020)';
+
+GRANT ALL ON PROCEDURE staging.sp_project_sandwich_prices_2026 TO role_etl_writer;
 
 COMMIT;
-
--- O REFRESH roda FORA da transação (padrão das migrations 54-56).
-REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade;
-
--- =============================================================================
--- VERIFICAÇÃO MANUAL
--- -----------------------------------------------------------------------------
--- 1) Legadas expurgadas (esperado: 0):
---    SELECT COUNT(*) FROM mart.sazonalidade_produto
---    WHERE forecast_method IS NULL AND is_forecast = TRUE;
---
--- 2) Backup preservado:
---    SELECT COUNT(*) FROM mart.sazonalidade_legado_backup_57;
---
--- 3) Nova distribuição de cores (Nacional), 2026 forecast:
---    SELECT status_cor, COUNT(*) FROM mart.sazonalidade_produto
---    WHERE ano = 2026 AND is_forecast = TRUE GROUP BY status_cor;
---
--- 4) Nova distribuição por UF:
---    SELECT l.uf, s.status_cor, COUNT(*) AS n
---    FROM mart.sazonalidade_produto s
---    JOIN staging.dim_localidade l ON l.id_localidade = s.id_localidade
---    WHERE s.ano = 2026 AND s.is_forecast = TRUE
---    GROUP BY l.uf, s.status_cor ORDER BY l.uf, s.status_cor;
---
--- 5) MV refrescada:
---    SELECT MAX(calculado_em) FROM mart.vw_api_produtos_sazonalidade;
---
--- 6) Função ±25% ativa:
---    SELECT staging.fn_status_cor_regra_25(10, 8)  -- VERMELHO (10 > 8*1.25=10? não, 10 = 10 -> AMARELO)
---    SELECT staging.fn_status_cor_regra_25(9, 8)   -- AMARELO
---    SELECT staging.fn_status_cor_regra_25(5, 8)   -- VERDE   (5 < 8*0.75=6)
--- =============================================================================

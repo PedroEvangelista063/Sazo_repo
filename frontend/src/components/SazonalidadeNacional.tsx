@@ -48,6 +48,15 @@ interface SazonalidadeNacionalProps {
   className?: string
 }
 
+function formatDataPtBr(iso: string | null | undefined): string | null {
+  if (!iso) return null
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return null
+  const day = String(d.getDate()).padStart(2, '0')
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  return `Coletado em ${day}/${month}/${d.getFullYear()}`
+}
+
 export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalProps) {
   const sorted = useMemo(() => [...data].sort((a, b) => a.produto.localeCompare(b.produto)), [data])
 
@@ -105,6 +114,9 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                 }
                 const style = STATUS_STYLES[mesData.status_cor]
                 const isLowCoverage = item.total_ufs < 3
+                const method = mesData.forecast_method
+                const isRealData = !mesData.is_forecast || !method
+                const calculadoEm = formatDataPtBr(mesData.calculado_em)
                 return (
                   <td key={mesNum} className="px-1 py-1.5 text-center">
                     <div className="group relative">
@@ -129,7 +141,44 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                               ⚠️ Cobertura em {item.total_ufs} UF{item.total_ufs > 1 ? 's' : ''}
                             </span>
                           )}
-                          {mesData.is_forecast && (
+                          {isRealData ? (
+                            <>
+                              <span className="block text-gray-300 dark:text-gray-600">
+                                ✅ Dado real coletado via CEASA/CONAB
+                              </span>
+                              {calculadoEm && (
+                                <span className="block text-gray-300 dark:text-gray-600">
+                                  {calculadoEm}
+                                </span>
+                              )}
+                            </>
+                          ) : method === 'ANCHOR_2024_MARGIN_2025' ? (
+                            <>
+                              <span className="block text-gray-300 dark:text-gray-600">
+                                📈 Previsão baseada no histórico 2024 com ajuste de tendência 2025
+                              </span>
+                              <span className="block text-gray-300 dark:text-gray-600">
+                                📈 Estimativa
+                                {mesData.baseline_confianca != null && (
+                                  <> — {mesData.baseline_confianca}%</>
+                                )}
+                              </span>
+                            </>
+                          ) : method === 'PROXY_CATEGORIA_UF' ? (
+                            <span className="block text-gray-300 dark:text-gray-600">
+                              📈 Sem histórico — média da categoria (confiança baixa)
+                              {mesData.baseline_confianca != null && (
+                                <> — {mesData.baseline_confianca}%</>
+                              )}
+                            </span>
+                          ) : method === 'LOCF_MES_ANTERIOR' ? (
+                            <span className="block text-gray-300 dark:text-gray-600">
+                              📈 Sem histórico — último status real conhecido do produto
+                              {mesData.baseline_confianca != null && (
+                                <> — {mesData.baseline_confianca}%</>
+                              )}
+                            </span>
+                          ) : (
                             <span className="block text-gray-300 dark:text-gray-600">
                               📈 Estimativa
                               {mesData.baseline_confianca != null && (

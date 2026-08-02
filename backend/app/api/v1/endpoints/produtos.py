@@ -903,6 +903,8 @@ async def _query_br_sazonalidade(
                 baseline_confianca=float(r["baseline_confianca"])
                 if r["baseline_confianca"] is not None
                 else None,
+                forecast_method=r.get("forecast_method"),
+                calculado_em=r.get("calculado_em"),
             )
         )
 
@@ -931,6 +933,7 @@ async def listar_br_sazonalidade(
         json.dumps(
             {
                 "route": "br_sazonalidade",
+                "v": 2,
                 "ano": ano,
                 "categoria": categoria,
                 "min_ufs": min_ufs,

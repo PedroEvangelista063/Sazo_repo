@@ -50,6 +50,8 @@ export interface MesSazonalidade {
   status_cor: StatusCor
   is_forecast: boolean
   baseline_confianca: number | null
+  forecast_method: string | null
+  calculado_em: string | null
 }
 
 export interface SazonalidadeNacionalItem {

@@ -13,6 +13,7 @@ Regra da Sala de Estar:
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -218,6 +219,8 @@ class MesSazonalidade(BaseModel):
     status_cor: Literal["VERDE", "AMARELO", "VERMELHO"]
     is_forecast: bool = False
     baseline_confianca: float | None = None
+    forecast_method: str | None = None
+    calculado_em: datetime | None = None
 
 
 class SazonalidadeNacionalResponse(BaseModel):
@@ -265,9 +268,7 @@ class FlowItem(BaseModel):
     descricao_tipo: str | None = Field(
         None, description="🟢 Envia para fora / 🔴 Recebe de fora / 🟡 Produção local"
     )
-    periodicidade: str | None = Field(
-        None, description="'Ano inteiro' ou 'N meses'"
-    )
+    periodicidade: str | None = Field(None, description="'Ano inteiro' ou 'N meses'")
     regiao_destino_nome: str | None = Field(
         None, description="Nome da região destino (ex: Norte, Nordeste)"
     )

@@ -23,12 +23,41 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import Beams from '@/components/Beams'
 import BlurText from '@/components/BlurText'
 
-const MONTHS_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+const MONTHS_SHORT = [
+  'Jan',
+  'Fev',
+  'Mar',
+  'Abr',
+  'Mai',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Set',
+  'Out',
+  'Nov',
+  'Dez',
+]
 
 const STATUS_FILTERS = [
-  { value: 'VERDE', label: 'Melhor Época', activeClass: 'bg-sazonal-verde-600 text-white border-sazonal-verde-600', idleClass: 'border-sazonal-verde-600 text-sazonal-verde-600 dark:text-sazonal-verde-400' },
-  { value: 'AMARELO', label: 'Preço Normal', activeClass: 'bg-sazonal-amarelo-600 text-white border-sazonal-amarelo-600', idleClass: 'border-sazonal-amarelo-600 text-sazonal-amarelo-600 dark:text-sazonal-amarelo-dark' },
-  { value: 'VERMELHO', label: 'Péssima Época', activeClass: 'bg-sazonal-vermelho-600 text-white border-sazonal-vermelho-600', idleClass: 'border-sazonal-vermelho-600 text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400' },
+  {
+    value: 'VERDE',
+    label: 'Melhor Época',
+    activeClass: 'bg-sazonal-verde-600 text-white border-sazonal-verde-600',
+    idleClass: 'border-sazonal-verde-600 text-sazonal-verde-600 dark:text-sazonal-verde-400',
+  },
+  {
+    value: 'AMARELO',
+    label: 'Preço Normal',
+    activeClass: 'bg-sazonal-amarelo-600 text-white border-sazonal-amarelo-600',
+    idleClass: 'border-sazonal-amarelo-600 text-sazonal-amarelo-600 dark:text-sazonal-amarelo-dark',
+  },
+  {
+    value: 'VERMELHO',
+    label: 'Péssima Época',
+    activeClass: 'bg-sazonal-vermelho-600 text-white border-sazonal-vermelho-600',
+    idleClass:
+      'border-sazonal-vermelho-600 text-sazonal-vermelho-600 dark:text-sazonal-vermelho-400',
+  },
 ]
 
 type ViewMode = 'grade-sazonal' | 'mapa' | 'cards'
@@ -41,7 +70,14 @@ const viewTabs: { value: ViewMode; label: string; icon: React.ReactNode }[] = [
 
 export function SupermercadoView() {
   const [selectedUF, setSelectedUF] = useState<string>('BR')
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
+  // Grade Sazonal usa o ano anterior quando o ano corrente tem menos de 6 meses
+  // publicados pela CONAB (jan–mai costumam ter apenas 56 produtos vs 235+ em jun–dez).
+  // Lógica: se estamos nos primeiros 5 meses do ano usa ano-1; do contrário usa ano corrente.
+  const [selectedYear, setSelectedYear] = useState<number>(() => {
+    const now = new Date()
+    // Antes de junho o banco ainda não tem cobertura nacional completa do ano corrente
+    return now.getMonth() < 5 ? now.getFullYear() - 1 : now.getFullYear()
+  })
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
@@ -52,9 +88,20 @@ export function SupermercadoView() {
   const headerRef = useRef<HTMLDivElement>(null)
 
   const { data: regioes } = useRegioes()
-  const { data: regiaoResumo, isLoading: regiaoLoading, isError: regiaoError } = useRegiaoResumo(selectedRegion, selectedYear)
+  const {
+    data: regiaoResumo,
+    isLoading: regiaoLoading,
+    isError: regiaoError,
+  } = useRegiaoResumo(selectedRegion, selectedYear)
 
-  const { products: produtos, allProducts, brSazonalidade, totalBR, isLoading, isError } = useHortifruti(selectedUF, selectedYear, selectedMonth)
+  const {
+    products: produtos,
+    allProducts,
+    brSazonalidade,
+    totalBR,
+    isLoading,
+    isError,
+  } = useHortifruti(selectedUF, selectedYear, selectedMonth)
   const { data: ufsDisponiveis } = useUfs()
   const { data: fluxos } = useFluxos()
 
@@ -79,7 +126,10 @@ export function SupermercadoView() {
     if (!fluxos) return map
     for (const f of fluxos) {
       if (!map.has(f.item)) {
-        const nome = f.item.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase()
+        const nome = f.item
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toUpperCase()
         map.set(nome, f.origem_uf)
       }
     }
@@ -90,9 +140,7 @@ export function SupermercadoView() {
     if (!fluxos) return []
     // Se uma UF específica está selecionada no mapa, filtra por ela
     if (selectedMapUF) {
-      return fluxos.filter(
-        (f) => f.origem_uf === selectedMapUF || f.destino_uf === selectedMapUF,
-      )
+      return fluxos.filter((f) => f.origem_uf === selectedMapUF || f.destino_uf === selectedMapUF)
     }
     if (!selectedRegion) return []
     const ufs = regioes?.find((r) => r.id === selectedRegion)?.ufs ?? []
@@ -102,7 +150,14 @@ export function SupermercadoView() {
   const activePills = useMemo(() => {
     const pills: { key: string; label: string; onRemove: () => void }[] = [
       { key: 'uf', label: selectedUF, onRemove: () => setSelectedUF('BR') },
-      { key: 'ano', label: String(selectedYear), onRemove: () => setSelectedYear(new Date().getFullYear()) },
+      {
+        key: 'ano',
+        label: String(selectedYear),
+        onRemove: () => {
+          const now = new Date()
+          setSelectedYear(now.getMonth() < 5 ? now.getFullYear() - 1 : now.getFullYear())
+        },
+      },
     ]
     if (selectedMonth != null) {
       pills.push({
@@ -121,7 +176,12 @@ export function SupermercadoView() {
     if (selectedStatus) {
       pills.push({
         key: 'status',
-        label: selectedStatus === 'VERDE' ? 'Melhor Época' : selectedStatus === 'AMARELO' ? 'Preço Normal' : 'Péssima Época',
+        label:
+          selectedStatus === 'VERDE'
+            ? 'Melhor Época'
+            : selectedStatus === 'AMARELO'
+              ? 'Preço Normal'
+              : 'Péssima Época',
         onRemove: () => setSelectedStatus(null),
       })
     }
@@ -141,9 +201,9 @@ export function SupermercadoView() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[var(--bg-body)] overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-[var(--bg-body)]">
       {/* Beams background decorativo */}
-      <div className="fixed inset-0 z-0 opacity-[0.08] dark:opacity-[0.04] pointer-events-none">
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.08] dark:opacity-[0.04]">
         <Beams
           beamWidth={1.5}
           beamHeight={12}
@@ -159,18 +219,21 @@ export function SupermercadoView() {
       {/* Header fixo */}
       <header
         ref={headerRef}
-        className="sticky top-0 z-40 h-14 border-b border-gray-200/80 dark:border-gray-700/80 bg-[var(--bg-header)] backdrop-blur-xl shadow-sm"
+        className="sticky top-0 z-40 h-14 border-b border-gray-200/80 bg-[var(--bg-header)] shadow-sm backdrop-blur-xl dark:border-gray-700/80"
       >
         <div className="flex h-full items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sazonal-verde-600 text-white shadow-md" aria-label="Sazonalidade">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-sazonal-verde-600 text-white shadow-md"
+              aria-label="Sazonalidade"
+            >
               <TrendingUp size={20} />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                Sazonalidade
-              </h1>
-              <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">Preços de Alimentos — CONAB</p>
+              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">Sazonalidade</h1>
+              <p className="text-[11px] leading-tight text-gray-500 dark:text-gray-400">
+                Preços de Alimentos — CONAB
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -197,7 +260,7 @@ export function SupermercadoView() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-wrap gap-1.5 mb-4"
+            className="mb-4 flex flex-wrap gap-1.5"
           >
             {activePills.map((pill) => (
               <motion.button
@@ -206,7 +269,7 @@ export function SupermercadoView() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="inline-flex items-center gap-1 rounded-full bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 px-2.5 py-1 text-xs font-medium text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30 transition-colors shadow-sm"
+                className="inline-flex items-center gap-1 rounded-full bg-sazonal-verde-50 px-2.5 py-1 text-xs font-medium text-sazonal-verde-700 shadow-sm transition-colors hover:bg-sazonal-verde-100 dark:bg-sazonal-verde-dark/20 dark:text-sazonal-verde-400 dark:hover:bg-sazonal-verde-dark/30"
               >
                 {pill.label}
                 <X size={12} />
@@ -217,8 +280,12 @@ export function SupermercadoView() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => { setSelectedMonth(null); setSelectedProducts([]); setSelectedStatus(null) }}
-                className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
+                onClick={() => {
+                  setSelectedMonth(null)
+                  setSelectedProducts([])
+                  setSelectedStatus(null)
+                }}
+                className="text-xs text-gray-400 underline hover:text-gray-600 dark:hover:text-gray-300"
               >
                 Limpar tudo
               </motion.button>
@@ -229,7 +296,9 @@ export function SupermercadoView() {
         {/* Loading state */}
         {isLoading && (
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => <SkeletonCard key={i} />)}
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         )}
 
@@ -238,13 +307,13 @@ export function SupermercadoView() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 shadow-sm"
+            className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 shadow-sm dark:border-red-800 dark:bg-red-900/20"
           >
             <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
               <RefreshCw size={16} />
               <p className="text-sm font-medium">Erro ao carregar dados</p>
             </div>
-            <p className="text-sm text-red-600 dark:text-red-300 mt-1">
+            <p className="mt-1 text-sm text-red-600 dark:text-red-300">
               Não foi possível carregar os dados. Tente novamente mais tarde.
             </p>
           </motion.div>
@@ -252,16 +321,16 @@ export function SupermercadoView() {
 
         {/* Empty state */}
         {!isLoading && !isError && allProducts.length === 0 && !brSazonalidade && (
-          <div className="flex flex-col items-center justify-center mt-16">
+          <div className="mt-16 flex flex-col items-center justify-center">
             <Salad size={48} className="text-gray-300 dark:text-gray-600" />
             <BlurText
               text="Nenhum dado disponível"
-              className="text-lg font-bold mt-4 text-gray-900 dark:text-gray-100"
+              className="mt-4 text-lg font-bold text-gray-900 dark:text-gray-100"
               delay={80}
               direction="top"
               animateBy="words"
             />
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               Ainda não existem dados de sazonalidade registrados pela CONAB.
             </p>
           </div>
@@ -269,13 +338,13 @@ export function SupermercadoView() {
 
         {/* Data loaded */}
         {!isLoading && !isError && (allProducts.length > 0 || brSazonalidade != null) && (
-          <div className="flex flex-col gap-6 mt-4">
+          <div className="mt-4 flex flex-col gap-6">
             {/* Período — card de seleção */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-4 shadow-lg"
+              className="rounded-xl border border-gray-200 bg-white/90 p-4 shadow-lg backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/90"
             >
               <div className="flex flex-col gap-3">
                 {/* UF + Ano + contagem */}
@@ -284,12 +353,18 @@ export function SupermercadoView() {
                     {viewMode === 'cards' ? (
                       <select
                         value={selectedUF}
-                        onChange={(e) => { setSelectedUF(e.target.value); setSelectedMonth(null); setSelectedStatus(null) }}
-                        className="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 w-24 shadow-sm"
+                        onChange={(e) => {
+                          setSelectedUF(e.target.value)
+                          setSelectedMonth(null)
+                          setSelectedStatus(null)
+                        }}
+                        className="h-9 w-24 rounded-lg border border-gray-300 bg-white px-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 dark:border-gray-600 dark:bg-gray-800"
                         aria-label="Selecionar UF"
                       >
                         {ufOptions.map((opt) => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
                         ))}
                       </select>
                     ) : (
@@ -315,21 +390,25 @@ export function SupermercadoView() {
                     return (
                       <motion.button
                         key={monthNum}
-                        onClick={() => { setSelectedMonth(isActive ? null : monthNum) }}
+                        onClick={() => {
+                          setSelectedMonth(isActive ? null : monthNum)
+                        }}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: idx * 0.02 }}
                         className={cn(
-                          'flex flex-col items-center rounded-lg border px-1 py-1.5 text-xs transition-all duration-150 min-h-[44px]',
+                          'flex min-h-[44px] flex-col items-center rounded-lg border px-1 py-1.5 text-xs transition-all duration-150',
                           isActive
-                            ? 'bg-sazonal-verde-600 text-white border-sazonal-verde-600 shadow-md shadow-sazonal-verde-600/20'
-                            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:shadow-sm',
+                            ? 'border-sazonal-verde-600 bg-sazonal-verde-600 text-white shadow-md shadow-sazonal-verde-600/20'
+                            : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:shadow-sm dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700',
                         )}
                         whileHover={!isActive ? { y: -2 } : {}}
                         whileTap={{ scale: 0.95 }}
                         aria-label={`${name} ${selectedYear}`}
                       >
-                        <span className="text-[10px] opacity-70">{String(monthNum).padStart(2, '0')}</span>
+                        <span className="text-[10px] opacity-70">
+                          {String(monthNum).padStart(2, '0')}
+                        </span>
                         <span className="text-xs font-bold">{name}</span>
                       </motion.button>
                     )
@@ -342,7 +421,9 @@ export function SupermercadoView() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => { setSelectedMonth(null) }}
+                      onClick={() => {
+                        setSelectedMonth(null)
+                      }}
                     >
                       <ChevronLeft size={14} className="mr-1" />
                       Visão Completa
@@ -362,10 +443,18 @@ export function SupermercadoView() {
             </motion.div>
 
             {/* Abas de visualização */}
-            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="w-full">
+            <Tabs
+              value={viewMode}
+              onValueChange={(v) => setViewMode(v as ViewMode)}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-3 shadow-sm">
                 {viewTabs.map((tab) => (
-                  <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2">
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="flex items-center justify-center gap-2"
+                  >
                     {tab.icon}
                     <span>{tab.label}</span>
                   </TabsTrigger>
@@ -383,11 +472,47 @@ export function SupermercadoView() {
                     >
                       {selectedUF === 'BR' && selectedMonth == null && brSazonalidade ? (
                         <div>
-                          <div className="flex items-center gap-2 mb-3">
+                          <div className="mb-3 flex flex-wrap items-center gap-2">
                             <Badge variant="secondary" className="text-xs shadow-sm">
                               {totalBR} produtos
                             </Badge>
-                            <span className="text-xs text-gray-400">Grade sazonal {selectedYear}</span>
+                            <span className="text-xs text-gray-400">
+                              Grade sazonal {selectedYear}
+                            </span>
+                            {selectedYear === new Date().getFullYear() &&
+                              new Date().getMonth() < 11 && (
+                                <Badge
+                                  variant="outline"
+                                  className="border-amber-400 text-[10px] text-amber-600 dark:text-amber-400"
+                                >
+                                  ⚠️ Ano em curso — dados parciais até{' '}
+                                  {
+                                    [
+                                      'Jan',
+                                      'Fev',
+                                      'Mar',
+                                      'Abr',
+                                      'Mai',
+                                      'Jun',
+                                      'Jul',
+                                      'Ago',
+                                      'Set',
+                                      'Out',
+                                      'Nov',
+                                      'Dez',
+                                    ][new Date().getMonth()]
+                                  }
+                                  /{selectedYear}
+                                </Badge>
+                              )}
+                            {selectedYear === new Date().getFullYear() && (
+                              <button
+                                onClick={() => setSelectedYear(selectedYear - 1)}
+                                className="ml-1 text-[10px] text-blue-500 underline hover:text-blue-700 dark:text-blue-400"
+                              >
+                                Ver {selectedYear - 1} (cobertura completa)
+                              </button>
+                            )}
                           </div>
                           <SazonalidadeNacional data={brSazonalidade} />
                         </div>
@@ -410,9 +535,9 @@ export function SupermercadoView() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="flex flex-col lg:flex-row gap-4">
+                      <div className="flex flex-col gap-4 lg:flex-row">
                         <motion.div
-                          className="flex-1 flex justify-center"
+                          className="flex flex-1 justify-center"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.3, delay: 0.1 }}
@@ -428,7 +553,7 @@ export function SupermercadoView() {
                           />
                         </motion.div>
                         <motion.div
-                          className="w-full lg:w-80 shrink-0"
+                          className="w-full shrink-0 lg:w-80"
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.3, delay: 0.15 }}
@@ -440,7 +565,10 @@ export function SupermercadoView() {
                             fluxos={fluxosRegiao}
                             isLoading={regiaoLoading}
                             isError={regiaoError}
-                            onClose={() => { setSelectedRegion(null); setSelectedMapUF(null) }}
+                            onClose={() => {
+                              setSelectedRegion(null)
+                              setSelectedMapUF(null)
+                            }}
                             onPoloClick={handlePoloClick}
                           />
                         </motion.div>
@@ -463,14 +591,18 @@ export function SupermercadoView() {
                           {STATUS_FILTERS.map((f) => (
                             <motion.button
                               key={f.value}
-                              onClick={() => setSelectedStatus(selectedStatus === f.value ? null : f.value)}
+                              onClick={() =>
+                                setSelectedStatus(selectedStatus === f.value ? null : f.value)
+                              }
                               initial={{ scale: 0.9 }}
                               animate={{ scale: 1 }}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               className={cn(
-                                'rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 shadow-sm',
-                                selectedStatus === f.value ? f.activeClass : f.idleClass + ' hover:shadow-md',
+                                'rounded-full border px-3 py-1 text-xs font-medium shadow-sm transition-all duration-150',
+                                selectedStatus === f.value
+                                  ? f.activeClass
+                                  : f.idleClass + ' hover:shadow-md',
                               )}
                             >
                               {f.label}
@@ -481,7 +613,7 @@ export function SupermercadoView() {
                               initial={{ scale: 0.9 }}
                               animate={{ scale: 1 }}
                               onClick={() => setSelectedStatus(null)}
-                              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
+                              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                               whileHover={{ scale: 1.2 }}
                               aria-label="Limpar filtro"
                             >
@@ -511,7 +643,10 @@ export function SupermercadoView() {
                                     )
                                   }
                                   origemUf={origemPorProduto.get(
-                                    p.nome_produto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase(),
+                                    p.nome_produto
+                                      .normalize('NFD')
+                                      .replace(/[\u0300-\u036f]/g, '')
+                                      .toUpperCase(),
                                   )}
                                 />
                               </motion.div>
@@ -525,7 +660,9 @@ export function SupermercadoView() {
                           </div>
                         ) : (
                           <div className="flex items-center justify-center py-10">
-                            <p className="text-sm text-gray-400">Nenhum produto encontrado para este período.</p>
+                            <p className="text-sm text-gray-400">
+                              Nenhum produto encontrado para este período.
+                            </p>
                           </div>
                         )}
                       </div>

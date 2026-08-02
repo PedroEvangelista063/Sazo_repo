@@ -52,6 +52,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger("bulk_historical")
 
+
+class GuardIsForecastError(RuntimeError):
+    """Falha do guard R-ADD-06: count(is_forecast=TRUE) cresceu apos o recalculo.
+
+    Levantada no pipeline e re-levantada antes do catch generico para que a
+    reativacao das engines sinteticas aborte o processo com exit != 0 (CI/operador
+    enxerga a falha em vez de um "sucesso" com guard engolido).
+    """
+
+
 DATABASE_URL: str = os.environ.get(
     "DATABASE_URL_ETL",
 ) or os.environ.get(
@@ -841,11 +851,15 @@ class BulkHistoricalFill:
             )
             logger.info("is_forecast depois do recalculo: %s", n_fc_depois)
             if n_fc_depois > n_fc_antes:
-                raise RuntimeError(
+                raise GuardIsForecastError(
                     f"GUARD is_forecast FALHOU: count(is_forecast=TRUE) cresceu de "
                     f"{n_fc_antes} para {n_fc_depois} — engines sinteticas foram (re)ativadas"
                 )
             logger.info("Recalculo concluido com sucesso (dado historico real + MV refresh)!")
+        except GuardIsForecastError:
+            # Guard R-ADD-06: nunca engolir — reativacao de engines sinteticas DEVE
+            # abortar o pipeline (exit != 0) para CI/operador enxergar a falha.
+            raise
         except Exception as e:  # noqa: BLE001 (resiliencia: loga e segue)
             logger.error("Erro no recalculo: %s", e)
             self._stats.erros_db += 1

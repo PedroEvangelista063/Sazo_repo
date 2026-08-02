@@ -6,19 +6,20 @@ import logging
 import os
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar, Self
 
 from pipeline.scraper.adapters.base import CotacaoRegional
 from pipeline.scraper.adapters.playwright_html import PlaywrightHtmlAdapter
 from pipeline.scraper.adapters.smart_router import (
     ALVOS_CONHECIDOS,
-    SmartCrawler2026,
     UF_ALVOS_DEDICADOS,
+    SmartCrawler2026,
 )
 from pipeline.scraper.micro_engines.base_engine import BaseMicroEngine
-from pipeline.scraper.micro_engines.ConabApiEngine import ConabApiEngine
 from pipeline.scraper.micro_engines.CeagespEngine import CeagespEngine
+from pipeline.scraper.micro_engines.ConabApiEngine import ConabApiEngine
 from pipeline.scraper.micro_engines.precosiagroweb_engine import PrecosiagrowebEngine
+from pipeline.scraper.micro_engines.precosmensaluf_engine import PrecosMensalUfEngine
 from pipeline.scraper.micro_engines.prohort_mensal_engine import ProhortMensalEngine
 
 logger = logging.getLogger(__name__)
@@ -28,12 +29,13 @@ _AUDIT_FMT = "[AUDIT] UF: {uf} | Mes/Ano: {competencia} | Alvo: {alvo} | Status:
 _UFS_CONTINGENCIA = frozenset({"AC", "AM", "AP", "MS", "PI", "RO", "RR", "SE"})
 
 _UF_SMARTROUTER_ALVOS: dict[str, list[str]] = {
-    uf: alvos for uf, alvos in UF_ALVOS_DEDICADOS.items()
-    if uf != "BR"
+    uf: alvos for uf, alvos in UF_ALVOS_DEDICADOS.items() if uf != "BR"
 }
+
 
 def _log_audit(level: int, **kw: str) -> None:
     logger.log(level, _AUDIT_FMT.format(**kw))
+
 
 _UF_CEASA_MAP: dict[str, str] = {
     "SP": "CEAGESP",
@@ -90,16 +92,14 @@ class AutonomousOrchestrator:
     # ──────────────────────────────────────────────
     # Multi-tier: tenta cada categoria de fontes
     # ──────────────────────────────────────────────
-    _TIERS: list[str] = [
+    _TIERS: ClassVar[list[str]] = [
         "core",
         "ceasas_diretas",
         "agregadores",
         "perifericos",
     ]
 
-    async def coletar(
-        self, uf: str, competencia: str
-    ) -> list[dict[str, Any]]:
+    async def coletar(self, uf: str, competencia: str) -> list[dict[str, Any]]:
         ano_str, mes_str = competencia.split("-")
         ano, mes = int(ano_str), int(mes_str)
 
@@ -111,15 +111,18 @@ class AutonomousOrchestrator:
                 self._coletar_interno(uf, ano, mes),
                 timeout=SCRAPER_TIMEOUT_SEC,
             )
-        except asyncio.TimeoutError:
-            _log_audit(logging.WARNING, uf=uf, competencia=competencia,
-                       alvo="COLETAR", status="TIMEOUT",
-                       decisao=f"Coleta excedeu {SCRAPER_TIMEOUT_SEC}s")
+        except TimeoutError:
+            _log_audit(
+                logging.WARNING,
+                uf=uf,
+                competencia=competencia,
+                alvo="COLETAR",
+                status="TIMEOUT",
+                decisao=f"Coleta excedeu {SCRAPER_TIMEOUT_SEC}s",
+            )
             return []
 
-    async def coletar_global(
-        self, competencia: str
-    ) -> list[dict[str, Any]]:
+    async def coletar_global(self, competencia: str) -> list[dict[str, Any]]:
         """Single dispatch por competência — micro-engines que coletam todas as UFs."""
         ano_str, mes_str = competencia.split("-")
         ano, mes = int(ano_str), int(mes_str)
@@ -129,20 +132,21 @@ class AutonomousOrchestrator:
             engine = self._resolver_motor(fonte_id)
             if not engine:
                 continue
-            fonte = self._encontrar_fonte(fonte_id, "ceasas_diretas") or \
-                    self._encontrar_fonte(fonte_id, "core")
+            fonte = self._encontrar_fonte(fonte_id, "ceasas_diretas") or self._encontrar_fonte(
+                fonte_id, "core"
+            )
             if not fonte:
                 await engine.close()
                 continue
-            resultado = await self._executar_com_timeout(engine, fonte["url_base"], ano, mes, fonte_id)
+            resultado = await self._executar_com_timeout(
+                engine, fonte["url_base"], ano, mes, fonte_id
+            )
             if resultado:
                 acumulado.append(resultado)
 
         return acumulado
 
-    async def _coletar_interno(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]]:
+    async def _coletar_interno(self, uf: str, ano: int, mes: int) -> list[dict[str, Any]]:
         acumulado: list[dict[str, Any]] = []
 
         # Tier 1: micro-engines (Ceagesp, CONAB) — rapido, existente
@@ -194,7 +198,8 @@ class AutonomousOrchestrator:
         resultados: list[dict[str, Any]] = []
 
         _log_audit(
-            logging.INFO, uf=uf_alvo,
+            logging.INFO,
+            uf=uf_alvo,
             competencia=f"{ano}-{mes:02d}",
             alvo=f"TIER_{categoria.upper()}",
             status="TENTANDO",
@@ -212,7 +217,8 @@ class AutonomousOrchestrator:
 
         if resultados:
             _log_audit(
-                logging.INFO, uf=uf_alvo,
+                logging.INFO,
+                uf=uf_alvo,
                 competencia=f"{ano}-{mes:02d}",
                 alvo=f"TIER_{categoria.upper()}",
                 status="SUCESSO",
@@ -250,11 +256,13 @@ class AutonomousOrchestrator:
                     else:
                         cotacoes = []
                     return [self._cotacao_to_bruta_dict(c) for c in cotacoes if c]
-                except Exception as exc:
+                except Exception as exc:  # noqa: BLE001 — adapters externos podem lançar qualquer exceção
                     _log_audit(
-                        logging.WARNING, uf=uf,
+                        logging.WARNING,
+                        uf=uf,
                         competencia=f"{ano}-{mes:02d}",
-                        alvo=fonte_id, status="FALHA",
+                        alvo=fonte_id,
+                        status="FALHA",
                         decisao=f"SmartRouter: {exc}",
                     )
                     return []
@@ -263,6 +271,7 @@ class AutonomousOrchestrator:
         if url and url.startswith("http"):
             try:
                 from pipeline.scraper.adapters.stealth import async_playwright
+
                 async with async_playwright() as pw:
                     browser = await pw.chromium.launch(headless=True)
                     context = await browser.new_context(
@@ -286,13 +295,15 @@ class AutonomousOrchestrator:
                     await browser.close()
                     if cotacoes:
                         return [self._cotacao_to_bruta_dict(c) for c in cotacoes if c]
-            except Exception:
+            except Exception:  # noqa: BLE001, S110 — fallback silencioso: browser pode falhar sem afetar a cascata
                 pass
 
         _log_audit(
-            logging.DEBUG, uf=uf,
+            logging.DEBUG,
+            uf=uf,
             competencia=f"{ano}-{mes:02d}",
-            alvo=fonte_id, status="SKIP",
+            alvo=fonte_id,
+            status="SKIP",
             decisao="Fonte sem engine/adapter registrado",
         )
         return []
@@ -300,15 +311,20 @@ class AutonomousOrchestrator:
     # ──────────────────────────────────────────────
     # Passo 1 — micro-engines (Ceagesp, CONAB)
     # ──────────────────────────────────────────────
-    async def _passo_direto(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]] | None:
+    async def _passo_direto(self, uf: str, ano: int, mes: int) -> list[dict[str, Any]] | None:
         uf_upper = uf.upper()
         fonte_id = _UF_CEASA_MAP.get(uf_upper)
         if not fonte_id:
             return None
 
-        _log_audit(logging.INFO, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TENTANDO", decisao="Passo 1: micro-engine CEASA")
+        _log_audit(
+            logging.INFO,
+            uf=uf_upper,
+            competencia=f"{ano}-{mes:02d}",
+            alvo=fonte_id,
+            status="TENTANDO",
+            decisao="Passo 1: micro-engine CEASA",
+        )
         fonte = self._encontrar_fonte(fonte_id, "ceasas_diretas")
         if not fonte:
             return None
@@ -319,23 +335,29 @@ class AutonomousOrchestrator:
 
         resultado = await self._executar_com_timeout(engine, fonte["url_base"], ano, mes, fonte_id)
         if resultado:
-            _log_audit(logging.INFO, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="SUCESSO", decisao="Dados coletados via micro-engine")
+            _log_audit(
+                logging.INFO,
+                uf=uf_upper,
+                competencia=f"{ano}-{mes:02d}",
+                alvo=fonte_id,
+                status="SUCESSO",
+                decisao="Dados coletados via micro-engine",
+            )
             return [resultado]
         return None
 
     # ──────────────────────────────────────────────
     # Passo 2 — SmartRouter (adapters dedicados por UF)
     # ──────────────────────────────────────────────
-    async def _passo_smartrouter(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]] | None:
+    async def _passo_smartrouter(self, uf: str, ano: int, mes: int) -> list[dict[str, Any]] | None:
         uf_upper = uf.upper()
         alvos = _UF_SMARTROUTER_ALVOS.get(uf_upper)
         if not alvos:
             return None
 
         _log_audit(
-            logging.INFO, uf=uf_upper,
+            logging.INFO,
+            uf=uf_upper,
             competencia=f"{ano}-{mes:02d}",
             alvo=f"SMARTROUTER_{'_'.join(alvos)}",
             status="TENTANDO",
@@ -347,8 +369,15 @@ class AutonomousOrchestrator:
                 crawler.executar_para_ufs([uf_upper], ano=ano, mes=mes),
                 timeout=SCRAPER_TIMEOUT_SEC,
             )
-        except asyncio.TimeoutError:
-            _log_audit(logging.WARNING, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo="SMARTROUTER", status="TIMEOUT", decisao=f"SmartRouter excedeu {SCRAPER_TIMEOUT_SEC}s")
+        except TimeoutError:
+            _log_audit(
+                logging.WARNING,
+                uf=uf_upper,
+                competencia=f"{ano}-{mes:02d}",
+                alvo="SMARTROUTER",
+                status="TIMEOUT",
+                decisao=f"SmartRouter excedeu {SCRAPER_TIMEOUT_SEC}s",
+            )
             return None
 
         cotacoes = resultados.get(uf_upper, [])
@@ -356,7 +385,14 @@ class AutonomousOrchestrator:
             return None
 
         brutos = [self._cotacao_to_bruta_dict(c) for c in cotacoes]
-        _log_audit(logging.INFO, uf=uf_upper, competencia=f"{ano}-{mes:02d}", alvo="SMARTROUTER", status="SUCESSO", decisao=f"{len(brutos)} registros via {len(alvos)} alvos")
+        _log_audit(
+            logging.INFO,
+            uf=uf_upper,
+            competencia=f"{ano}-{mes:02d}",
+            alvo="SMARTROUTER",
+            status="SUCESSO",
+            decisao=f"{len(brutos)} registros via {len(alvos)} alvos",
+        )
         return brutos
 
     # ──────────────────────────────────────────────
@@ -382,18 +418,24 @@ class AutonomousOrchestrator:
     # ──────────────────────────────────────────────
     # Passo final — Discovery (web search)
     # ──────────────────────────────────────────────
-    async def _passo_discovery(
-        self, uf: str, ano: int, mes: int
-    ) -> list[dict[str, Any]]:
-        _log_audit(logging.INFO, uf=uf, competencia=f"{ano}-{mes:02d}", alvo="DISCOVERY_AUTONOMO", status="TENTANDO", decisao="Todas as fontes falharam -> discovery engine")
+    async def _passo_discovery(self, uf: str, ano: int, mes: int) -> list[dict[str, Any]]:
+        _log_audit(
+            logging.INFO,
+            uf=uf,
+            competencia=f"{ano}-{mes:02d}",
+            alvo="DISCOVERY_AUTONOMO",
+            status="TENTANDO",
+            decisao="Todas as fontes falharam -> discovery engine",
+        )
         from pipeline.scraper.discovery_engine import DiscoveryEngine
+
         engine = DiscoveryEngine()
         try:
             resultados = await asyncio.wait_for(
                 engine.buscar(uf, ano, mes),
                 timeout=SCRAPER_TIMEOUT_SEC,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return []
         return resultados
 
@@ -425,11 +467,25 @@ class AutonomousOrchestrator:
                 engine.extract(url, ano, mes),
                 timeout=SCRAPER_TIMEOUT_SEC,
             )
-        except asyncio.TimeoutError:
-            _log_audit(logging.WARNING, uf="?", competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="TIMEOUT", decisao=f"Motor excedeu {SCRAPER_TIMEOUT_SEC}s")
+        except TimeoutError:
+            _log_audit(
+                logging.WARNING,
+                uf="?",
+                competencia=f"{ano}-{mes:02d}",
+                alvo=fonte_id,
+                status="TIMEOUT",
+                decisao=f"Motor excedeu {SCRAPER_TIMEOUT_SEC}s",
+            )
             return None
-        except Exception as exc:
-            _log_audit(logging.WARNING, uf="?", competencia=f"{ano}-{mes:02d}", alvo=fonte_id, status="FALHA", decisao=f"Excecao: {exc}")
+        except Exception as exc:  # noqa: BLE001 — motores externos podem lançar qualquer exceção
+            _log_audit(
+                logging.WARNING,
+                uf="?",
+                competencia=f"{ano}-{mes:02d}",
+                alvo=fonte_id,
+                status="FALHA",
+                decisao=f"Excecao: {exc}",
+            )
             return None
         finally:
             await engine.close()
@@ -452,6 +508,8 @@ class AutonomousOrchestrator:
             return ProhortMensalEngine()
         if "precosiagroweb" in fid:
             return PrecosiagrowebEngine()
+        if "precosmensal" in fid or "conab-precos-mensal" in fid:
+            return PrecosMensalUfEngine()
         if "conab" in fid:
             return ConabApiEngine()
         return None
@@ -459,8 +517,8 @@ class AutonomousOrchestrator:
     async def close(self) -> None:
         pass
 
-    async def __aenter__(self) -> "AutonomousOrchestrator":
+    async def __aenter__(self) -> Self:
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
+    async def __aexit__(self, *args: object) -> None:
         await self.close()

@@ -19,6 +19,21 @@ const MONTHS_SHORT = [
   'Dez',
 ]
 
+const GAP_STYLES = {
+  structural: {
+    bg: 'bg-gray-100 dark:bg-gray-800',
+    border: 'border-solid border-gray-300 dark:border-gray-600',
+    tooltip: 'CONAB não publicou dados para este período',
+  },
+  collection: {
+    bg: 'bg-gray-200 dark:bg-gray-700',
+    border: 'border-dashed border-amber-400 dark:border-amber-500',
+    tooltip: 'Dados não coletados neste mês — scraper pendente',
+  },
+} as const
+
+type GapKind = keyof typeof GAP_STYLES
+
 const STATUS_STYLES: Record<
   StatusCor,
   { bg: string; text: string; border: string; label: string }
@@ -55,6 +70,10 @@ function formatDataPtBr(iso: string | null | undefined): string | null {
   const day = String(d.getDate()).padStart(2, '0')
   const month = String(d.getMonth() + 1).padStart(2, '0')
   return `Coletado em ${day}/${month}/${d.getFullYear()}`
+}
+
+function classifyGap(totalUfs: number, mes: number): GapKind {
+  return totalUfs >= 5 && mes <= 4 ? 'structural' : 'collection'
 }
 
 export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalProps) {
@@ -99,13 +118,17 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
               {Array.from({ length: 12 }, (_, i) => i + 1).map((mesNum) => {
                 const mesData = item.meses.find((m) => m.mes === mesNum)
                 if (!mesData) {
+                  const gap = classifyGap(item.total_ufs, mesNum)
+                  const gapStyle = GAP_STYLES[gap]
                   return (
                     <td key={mesNum} className="px-1 py-1.5 text-center">
                       <div className="group relative">
-                        <div className="h-8 w-full rounded border border-dashed border-gray-200 bg-gray-100 dark:border-gray-700/50 dark:bg-gray-800" />
+                        <div
+                          className={cn('h-8 w-full rounded border', gapStyle.bg, gapStyle.border)}
+                        />
                         <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden -translate-x-1/2 group-hover:block">
                           <div className="whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
-                            {item.produto} — {MONTHS_SHORT[mesNum - 1]}: Sem cotações coletadas
+                            {item.produto} — {MONTHS_SHORT[mesNum - 1]}: {gapStyle.tooltip}
                           </div>
                         </div>
                       </div>

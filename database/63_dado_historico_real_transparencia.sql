@@ -135,4 +135,91 @@ COMMENT ON PROCEDURE staging.sp_executar_carga_completa IS
 
 GRANT ALL ON PROCEDURE staging.sp_executar_carga_completa TO role_etl_writer;
 
+-- ============================================================================
+-- SEÇÃO 2 — Colunas de transparência em mart.sazonalidade_produto
+-- ============================================================================
+-- 5 colunas NULLABLE (sem DEFAULT — D6: ficam NULL até o backfill único).
+-- preco_referencia já existe (05:58); apenas 5 colunas são adicionadas.
+-- As 2 UNIQUEs (uq_sazonalidade, uq_sazonalidade_data_ref) e o CHECK
+-- chk_data_ref_ano_mes (YYYY-MM) NÃO são tocados — additive-only (R-ADD-07/S10).
+
+ALTER TABLE mart.sazonalidade_produto
+    ADD COLUMN IF NOT EXISTS ano_referencia         INTEGER,
+    ADD COLUMN IF NOT EXISTS tipo_dado              TEXT,
+    ADD COLUMN IF NOT EXISTS metadado_transparencia JSONB,
+    ADD COLUMN IF NOT EXISTS idade_dado_anos        INTEGER,
+    ADD COLUMN IF NOT EXISTS preco_exibido          NUMERIC(14,4);
+
+COMMENT ON COLUMN mart.sazonalidade_produto.ano_referencia IS
+    'Ano âncora do dado exibido (última cotação REAL). NULL p/ FALLBACK_DIMENSAO.';
+COMMENT ON COLUMN mart.sazonalidade_produto.tipo_dado IS
+    'REAL_ATUAL | HISTORICO_BASE | FALLBACK_DIMENSAO (snapshot de proveniência da linha; MV é a fonte de exibição).';
+COMMENT ON COLUMN mart.sazonalidade_produto.metadado_transparencia IS
+    'JSONB: fonte_dado, data_referencia, procedencia (coleta_real_conab|sintetico_proxy|sintetico_engine), calculado_em.';
+COMMENT ON COLUMN mart.sazonalidade_produto.idade_dado_anos IS
+    'ANO_ATUAL - ano_referencia (0 = ano corrente).';
+COMMENT ON COLUMN mart.sazonalidade_produto.preco_exibido IS
+    'Preço real exibido (sem multiplicador sintético). NULL p/ linhas não exibíveis.';
+
+-- CHECK pós-backfill (R-ADD-01): valores restritos, NULL permitido
+ALTER TABLE mart.sazonalidade_produto
+    ADD CONSTRAINT chk_sazonalidade_tipo_dado
+    CHECK (tipo_dado IS NULL OR tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE','FALLBACK_DIMENSAO'));
+
+-- ============================================================================
+-- SEÇÃO 3 — Backfill único (single pass, sem JOINs, sem CROSS JOIN)
+-- ============================================================================
+-- ANO_ATUAL = EXTRACT(YEAR FROM CURRENT_DATE) em todo lugar (dinâmico — S6;
+-- 2027 não exige mudança de código). Linhas FLUXO_PROXY/is_forecast são
+-- marcadas FALLBACK_DIMENSAO, NUNCA deletadas (semântica de exibição apenas).
+-- WHERE ano_referencia IS NULL garante idempotência (re-executável).
+
+UPDATE mart.sazonalidade_produto AS s
+SET ano_referencia = EXTRACT(YEAR FROM s.data_referencia_atual)::INTEGER,
+    idade_dado_anos = EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER
+                      - EXTRACT(YEAR FROM s.data_referencia_atual)::INTEGER,
+    tipo_dado = CASE
+        WHEN COALESCE(s.fonte,'') = 'FLUXO_PROXY' OR s.is_forecast THEN 'FALLBACK_DIMENSAO'
+        WHEN EXTRACT(YEAR FROM s.data_referencia_atual)::INTEGER
+             = EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER THEN 'REAL_ATUAL'
+        ELSE 'HISTORICO_BASE'
+    END,
+    metadado_transparencia = jsonb_build_object(
+        'fonte_dado',      COALESCE(s.fonte,'desconhecida'),
+        'data_referencia', s.data_referencia_atual,
+        'procedencia', CASE
+            WHEN COALESCE(s.fonte,'') = 'FLUXO_PROXY' THEN 'sintetico_proxy'
+            WHEN s.is_forecast THEN 'sintetico_engine'
+            ELSE 'coleta_real_conab'
+        END,
+        'calculado_em',    s.calculado_em
+    ),
+    preco_exibido = CASE
+        WHEN COALESCE(s.fonte,'') <> 'FLUXO_PROXY' AND NOT s.is_forecast THEN s.preco_atual
+        ELSE NULL
+    END
+WHERE ano_referencia IS NULL;
+
+DO $$
+DECLARE
+    v_total    BIGINT;
+    v_real     BIGINT;
+    v_fallback BIGINT;
+    v_sem_ano  BIGINT;
+BEGIN
+    SELECT count(*),
+           count(*) FILTER (WHERE tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE')),
+           count(*) FILTER (WHERE tipo_dado = 'FALLBACK_DIMENSAO'),
+           count(*) FILTER (WHERE tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE') AND ano_referencia IS NULL)
+    INTO v_total, v_real, v_fallback, v_sem_ano
+    FROM mart.sazonalidade_produto;
+
+    RAISE NOTICE '[63] Backfill: % linhas (REAL_ATUAL+HISTORICO_BASE=%, FALLBACK_DIMENSAO=%, reais sem ano=%)',
+        v_total, v_real, v_fallback, v_sem_ano;
+
+    IF v_sem_ano > 0 THEN
+        RAISE EXCEPTION '[63] Backfill inconsistente: % linha(s) REAL sem ano_referencia', v_sem_ano;
+    END IF;
+END $$;
+
 COMMIT;

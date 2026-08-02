@@ -524,7 +524,7 @@ FROM (
         (EXTRACT(YEAR FROM CURRENT_DATE)::TEXT || '-' || LPAD(f.mes::TEXT, 2, '0')) AS data_referencia_atual,
         f.usou_fallback_12m,
         f.preco_estimado,
-        NULL::text AS status_cor,
+        COALESCE(f.status_cor, 'AMARELO') AS status_cor,
         f.fonte AS fonte,
         f.calculado_em,
         f.metodo_calculo,

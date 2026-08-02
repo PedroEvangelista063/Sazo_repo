@@ -130,6 +130,7 @@ DECLARE
     v_dups      BIGINT;
     v_bad_b     BIGINT;
     v_neg_nao_atual BIGINT;
+    v_nulos_status  BIGINT;
 BEGIN
     -- (c1) colunas de transparência existem na MV.
     -- ATENÇÃO: information_schema.columns NÃO lista materialized views no PG
@@ -203,6 +204,17 @@ BEGIN
     IF v_dups > 0 THEN
         RAISE EXCEPTION 'RED/GREEN falhou: % tupla(s) (produto,localidade,ano,mes) duplicada(s) na MV — double-count entre branches (D3)',
             v_dups;
+    END IF;
+
+    -- (c4) blocker REL-01: nenhuma linha da MV com status_cor NULL
+    -- (backend responses.py:71/219 exige Literal['VERDE','AMARELO','VERMELHO'] não-nulo)
+    SELECT count(*) INTO v_nulos_status
+    FROM mart.vw_api_produtos_sazonalidade
+    WHERE status_cor IS NULL;
+
+    IF v_nulos_status > 0 THEN
+        RAISE EXCEPTION 'RED/GREEN falhou: % linha(s) da MV com status_cor NULL — pydantic ValidationError -> HTTP 500 (REL-01)',
+            v_nulos_status;
     END IF;
 
     RAISE NOTICE 'OK (c): MV V17 com transparência; branch B consistente; sem duplicatas (%,% linhas)',

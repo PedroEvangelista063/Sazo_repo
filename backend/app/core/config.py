@@ -1,11 +1,20 @@
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     database_url: str = "postgresql://role_api_reader:senha@localhost:5432/quero_comprar"
     database_url_api: str = ""
     database_url_etl: str = ""
+    # ── Failover / Alta Disponibilidade ──────────────────────────────
+    # PRIMARY: banco remoto (ex.: Supabase). FALLBACK: banco local (standby).
+    # Se PRIMARY vazio, usa `database_url`. Se FALLBACK vazio, usa `database_url_local_backup`.
+    database_url_primary: str = ""
+    database_url_fallback: str = ""
+    database_url_local_backup: str = ""
+    # Caminho (relativo à raiz do repo) do dump de schema usado no bootstrap local.
+    bootstrap_schema_path: str = "database/backups/backup_schema_latest.sql"
     redis_url: str = ""
     cache_ttl_seconds: int = 3600
     cors_origins: list[str] = [

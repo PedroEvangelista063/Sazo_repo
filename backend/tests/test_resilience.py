@@ -15,10 +15,15 @@ async def test_db_timeout_isolation():
     Prova que asyncio.wait_for mata queries que excedem 2s.
     Simula um `fetch` que nunca retorna (pool travado).
     """
-    with patch("backend.app.db.session.get_api_pool") as mock_pool:
+    # Alvo correto: `fetch` passa por `_acquire("api")` (não mais `get_api_pool`
+    # após a refatoração do session.py). Patch errado fazia o teste depender da
+    # latência do banco real (passava no remoto lento, falhava no local rápido).
+    with patch("backend.app.db.session._acquire") as mock_acquire:
+
         async def _hang(*_a, **_kw):
             await asyncio.sleep(10)
-        mock_pool.side_effect = _hang
+
+        mock_acquire.side_effect = _hang
 
         with pytest.raises((TimeoutError, asyncio.TimeoutError)):
             await asyncio.wait_for(fetch("SELECT 1"), timeout=2)
@@ -31,6 +36,7 @@ async def test_infinite_loop_protection():
     Prova que um loop assíncrono infinito NÃO trava o test runner.
     O pytest-timeout (ou asyncio.wait_for) corta a execução.
     """
+
     async def infinite():
         while True:
             await asyncio.sleep(0.1)
@@ -101,9 +107,7 @@ async def test_rate_limit_memory_leak_does_not_grow():
 
     now = 90.0
     window_start = now - 60.0  # 30.0
-    windows["fake_key"] = [
-        t for t in windows["fake_key"] if t > window_start
-    ]
+    windows["fake_key"] = [t for t in windows["fake_key"] if t > window_start]
     # Após limpeza, só a futura 100.0 deve restar
     assert len(windows["fake_key"]) <= 1
 
@@ -115,8 +119,8 @@ async def test_cache_lock_contention(client: httpx.AsyncClient):
     Prova que o cache não causa race condition sob concorrência.
     O lock RLock do cache é testado sob carga paralela.
     """
+
     from backend.app.core.cache import cache
-    import time
 
     async def setter(i: int):
         await cache.set(f"key_{i}", i, 3600)

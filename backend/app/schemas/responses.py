@@ -97,6 +97,16 @@ class SazonalidadeResponse(BaseModel):
         max_length=20,
         description="Nome da região quando o dado é agregado regional (ex: SUDESTE). None quando é município/UF.",
     )
+    # ── Transparência temporal (V17 — ano âncora real) ──
+    ano_referencia: int | None = Field(
+        None,
+        description="Ano âncora do dado exibido (última cotação real). None p/ FALLBACK_DIMENSAO.",
+    )
+    tipo_dado: str | None = Field(
+        None, description="REAL_ATUAL | HISTORICO_BASE | FALLBACK_DIMENSAO"
+    )
+    mensagem_transparencia: str | None = Field(None, description="Texto de proveniência (sem R$).")
+    is_dado_legado: bool = Field(False, description="True quando ano_referencia < ano corrente.")
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
 
@@ -169,6 +179,16 @@ class SazonalidadeComPrecoResponse(BaseModel):
         description="Método de geração da projeção: NULL para dado real, SANDUICHE_MEDIA_24_25 para sanduíche sazonal, etc.",
     )
     preco_mes_anterior: float | None = None
+    # ── Transparência temporal (V17 — ano âncora real) ──
+    ano_referencia: int | None = Field(
+        None,
+        description="Ano âncora do dado exibido (última cotação real). None p/ FALLBACK_DIMENSAO.",
+    )
+    tipo_dado: str | None = Field(
+        None, description="REAL_ATUAL | HISTORICO_BASE | FALLBACK_DIMENSAO"
+    )
+    mensagem_transparencia: str | None = Field(None, description="Texto de proveniência (sem R$).")
+    is_dado_legado: bool = Field(False, description="True quando ano_referencia < ano corrente.")
 
     model_config = ConfigDict(from_attributes=True, frozen=True)
 
@@ -221,6 +241,16 @@ class MesSazonalidade(BaseModel):
     baseline_confianca: float | None = None
     forecast_method: str | None = None
     calculado_em: datetime | None = None
+    # ── Transparência temporal (V17 — ano âncora real) ──
+    ano_referencia: int | None = Field(
+        None,
+        description="Ano âncora do dado exibido (última cotação real). None p/ FALLBACK_DIMENSAO.",
+    )
+    tipo_dado: str | None = Field(
+        None, description="REAL_ATUAL | HISTORICO_BASE | FALLBACK_DIMENSAO"
+    )
+    mensagem_transparencia: str | None = Field(None, description="Texto de proveniência (sem R$).")
+    is_dado_legado: bool = Field(False, description="True quando ano_referencia < ano corrente.")
 
 
 class SazonalidadeNacionalResponse(BaseModel):
@@ -275,7 +305,10 @@ class FlowItem(BaseModel):
     # Campos de compatibilidade com o frontend (padrões seguros)
     categoria: str = "HORTIFRUTI"
     cor_indicadora: str = "#6366F1"
-    ano_referencia: int = 2024
+    ano_referencia: int | None = Field(
+        None,
+        description="Ano âncora do dado exibido (última cotação real). None quando sem âncora.",
+    )
 
     model_config = ConfigDict(frozen=True)
 

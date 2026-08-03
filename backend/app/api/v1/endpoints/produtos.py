@@ -1,5 +1,6 @@
 import hashlib
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Query
@@ -18,6 +19,41 @@ from backend.app.schemas.responses import (
 )
 
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
+
+
+def _compor_mensagem_transparencia(
+    tipo_dado: str | None,
+    ano_referencia: int | None,
+    idade: int | None = None,
+) -> str | None:
+    """Composição pt-BR da mensagem de proveniência temporal (sem R$).
+
+    R-ADD-03/S3: apenas texto de proveniência — nunca valores monetários.
+    R-ADD-04: tuplas com preço nulo ainda carregam a mensagem de contexto.
+
+    ``idade`` pode vir da coluna ``idade_dado_anos`` da MV V17; quando ausente
+    (ex: saída da ``fn_br_nacional_sazonalidade``, que não projeta essa coluna),
+    deriva de ``ANO_ATUAL - ano_referencia`` para nunca exibir "defasagem de
+    None ano".
+    """
+    if not tipo_dado:
+        return None
+    if idade is None and ano_referencia is not None:
+        idade = datetime.now(UTC).year - ano_referencia
+    if tipo_dado == "REAL_ATUAL":
+        return f"Coleta efetiva — cotação real da CONAB no ano de referência {ano_referencia}."
+    if tipo_dado == "HISTORICO_BASE":
+        suf = "s" if (idade or 0) > 1 else ""
+        return (
+            f"Dado histórico real — última cotação real da CONAB em {ano_referencia} "
+            f"(defasagem de {idade} ano{suf}). Não é estimativa sintética."
+        )
+    return "Sem histórico real para este período — valor de referência da dimensão (fallback)."
+
+
+def _is_dado_legado(ano_referencia: int | None) -> bool:
+    """True quando o dado é de ano anterior ao corrente (R-ADD-02)."""
+    return ano_referencia is not None and ano_referencia < datetime.now(UTC).year
 
 
 async def _carregar_regiao(regiao_id: str) -> tuple[list[str], int] | None:
@@ -198,6 +234,7 @@ async def _query_sazonalidade_snapshot(
         v.preco_referencia, v.preco_atual, v.data_referencia_atual,
         v.usou_fallback_12m, v.preco_estimado, v.status_cor, v.fonte,
         v.tendencia_futura, v.is_forecast, v.forecast_method,
+        v.ano_referencia, v.tipo_dado, v.idade_dado_anos,
         b.confianca AS confianca_baseline
     """
 
@@ -277,6 +314,9 @@ async def _query_sazonalidade_por_mes(
 
     full = []
     for r in rows:
+        ano_ref = r.get("ano_referencia")
+        tipo = r.get("tipo_dado")
+        idade = r.get("idade_dado_anos")
         full.append(
             SazonalidadeResponse(
                 id_produto=r.get("id_produto", 0),
@@ -299,6 +339,10 @@ async def _query_sazonalidade_por_mes(
                 if r["confianca_baseline"] is not None
                 else None,
                 forecast_method=r.get("forecast_method"),
+                ano_referencia=ano_ref,
+                tipo_dado=tipo,
+                mensagem_transparencia=_compor_mensagem_transparencia(tipo, ano_ref, idade),
+                is_dado_legado=_is_dado_legado(ano_ref),
             )
         )
 
@@ -367,6 +411,7 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
                 v.data_referencia_atual, v.preco_referencia, v.preco_atual,
                 v.usou_fallback_12m, v.preco_estimado, v.status_cor,
                 v.fonte, v.tendencia_futura, v.is_forecast, v.forecast_method,
+                v.ano_referencia, v.tipo_dado, v.idade_dado_anos,
                 b.confianca AS confianca_baseline,
                 ROW_NUMBER() OVER (
                     PARTITION BY v.id_produto, v.uf
@@ -387,31 +432,40 @@ async def _compute_periodo_full(ano, mes, uf, municipio, categoria):
 
 
 async def _build_response(rows, total, pagina, por_pagina, cache_key, settings):
-    items = [
-        SazonalidadeResponse(
-            id_produto=r.get("id_produto", 0),
-            nome_produto=r["produto"],
-            icone_url=None,
-            uf=r["uf"],
-            municipio=r.get("municipio"),
-            municipio_id=r.get("municipio_id"),
-            ano=r["ano"],
-            mes=r["mes"],
-            data_referencia_atual=r["data_referencia_atual"],
-            usou_fallback_12m=r.get("usou_fallback_12m") or False,
-            preco_estimado=r.get("preco_estimado") or False,
-            status_cor=r["status_cor"],
-            fonte=r["fonte"],
-            categoria=r.get("categoria"),
-            tendencia_futura=r.get("tendencia_futura"),
-            is_forecast=r.get("is_forecast", False),
-            confianca_baseline=float(r["confianca_baseline"])
-            if r["confianca_baseline"] is not None
-            else None,
-            forecast_method=r.get("forecast_method"),
+    items = []
+    for r in rows:
+        ano_ref = r.get("ano_referencia")
+        tipo = r.get("tipo_dado")
+        items.append(
+            SazonalidadeResponse(
+                id_produto=r.get("id_produto", 0),
+                nome_produto=r["produto"],
+                icone_url=None,
+                uf=r["uf"],
+                municipio=r.get("municipio"),
+                municipio_id=r.get("municipio_id"),
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r["data_referencia_atual"],
+                usou_fallback_12m=r.get("usou_fallback_12m") or False,
+                preco_estimado=r.get("preco_estimado") or False,
+                status_cor=r["status_cor"],
+                fonte=r["fonte"],
+                categoria=r.get("categoria"),
+                tendencia_futura=r.get("tendencia_futura"),
+                is_forecast=r.get("is_forecast", False),
+                confianca_baseline=float(r["confianca_baseline"])
+                if r["confianca_baseline"] is not None
+                else None,
+                forecast_method=r.get("forecast_method"),
+                ano_referencia=ano_ref,
+                tipo_dado=tipo,
+                mensagem_transparencia=_compor_mensagem_transparencia(
+                    tipo, ano_ref, r.get("idade_dado_anos")
+                ),
+                is_dado_legado=_is_dado_legado(ano_ref),
+            )
         )
-        for r in rows
-    ]
 
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
@@ -509,31 +563,40 @@ async def _query_br_por_mes(
 
 
 async def _build_br_response(rows, pagina, por_pagina, total, cache_key, settings):
-    items = [
-        SazonalidadeResponse(
-            id_produto=0,
-            nome_produto=r["produto"],
-            icone_url=None,
-            uf="BR",
-            municipio="BRASIL",
-            municipio_id="0",
-            ano=r["ano"],
-            mes=r["mes"],
-            data_referencia_atual=r["data_referencia_atual"],
-            usou_fallback_12m=r.get("usou_fallback_12m") or False,
-            preco_estimado=r.get("preco_estimado") or False,
-            status_cor=r["status_cor"],
-            fonte=r.get("fonte", "municipio"),
-            categoria=r.get("categoria"),
-            tendencia_futura=None,
-            is_forecast=r.get("is_forecast", False),
-            confianca_baseline=float(r["confianca_baseline"])
-            if r.get("confianca_baseline") is not None
-            else None,
-            forecast_method=r.get("forecast_method"),
+    items = []
+    for r in rows:
+        ano_ref = r.get("ano_referencia")
+        tipo = r.get("tipo_dado")
+        items.append(
+            SazonalidadeResponse(
+                id_produto=0,
+                nome_produto=r["produto"],
+                icone_url=None,
+                uf="BR",
+                municipio="BRASIL",
+                municipio_id="0",
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r["data_referencia_atual"],
+                usou_fallback_12m=r.get("usou_fallback_12m") or False,
+                preco_estimado=r.get("preco_estimado") or False,
+                status_cor=r["status_cor"],
+                fonte=r.get("fonte", "municipio"),
+                categoria=r.get("categoria"),
+                tendencia_futura=None,
+                is_forecast=r.get("is_forecast", False),
+                confianca_baseline=float(r["confianca_baseline"])
+                if r.get("confianca_baseline") is not None
+                else None,
+                forecast_method=r.get("forecast_method"),
+                ano_referencia=ano_ref,
+                tipo_dado=tipo,
+                mensagem_transparencia=_compor_mensagem_transparencia(
+                    tipo, ano_ref, r.get("idade_dado_anos")
+                ),
+                is_dado_legado=_is_dado_legado(ano_ref),
+            )
         )
-        for r in rows
-    ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
@@ -583,33 +646,42 @@ async def _query_regional_snapshot(
             offset_val,
         )
 
-    items = [
-        SazonalidadeResponse(
-            id_produto=0,
-            nome_produto=r["produto"],
-            icone_url=None,
-            uf=r["uf"],
-            municipio="REGIÃO",
-            municipio_id="0",
-            ano=r["ano"],
-            mes=r["mes"],
-            data_referencia_atual=r.get("data_referencia_atual")
-            or f"{r['ano']:04d}-{r['mes']:02d}",
-            usou_fallback_12m=False,
-            preco_estimado=False,
-            status_cor=r["status_cor"],
-            fonte="regiao",
-            categoria=r.get("categoria"),
-            tendencia_futura=None,
-            is_forecast=r.get("is_forecast", False),
-            confianca_baseline=float(r["confianca_baseline"])
-            if r.get("confianca_baseline") is not None
-            else None,
-            forecast_method=r.get("forecast_method"),
-            regiao=regiao_id.upper(),
+    items = []
+    for r in rows:
+        ano_ref = r.get("ano_referencia")
+        tipo = r.get("tipo_dado")
+        items.append(
+            SazonalidadeResponse(
+                id_produto=0,
+                nome_produto=r["produto"],
+                icone_url=None,
+                uf=r["uf"],
+                municipio="REGIÃO",
+                municipio_id="0",
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r.get("data_referencia_atual")
+                or f"{r['ano']:04d}-{r['mes']:02d}",
+                usou_fallback_12m=False,
+                preco_estimado=False,
+                status_cor=r["status_cor"],
+                fonte="regiao",
+                categoria=r.get("categoria"),
+                tendencia_futura=None,
+                is_forecast=r.get("is_forecast", False),
+                confianca_baseline=float(r["confianca_baseline"])
+                if r.get("confianca_baseline") is not None
+                else None,
+                forecast_method=r.get("forecast_method"),
+                regiao=regiao_id.upper(),
+                ano_referencia=ano_ref,
+                tipo_dado=tipo,
+                mensagem_transparencia=_compor_mensagem_transparencia(
+                    tipo, ano_ref, r.get("idade_dado_anos")
+                ),
+                is_dado_legado=_is_dado_legado(ano_ref),
+            )
         )
-        for r in rows
-    ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
@@ -666,33 +738,42 @@ async def _query_regional_por_mes(
         )
 
     total = row[0] if row else 0
-    items = [
-        SazonalidadeResponse(
-            id_produto=0,
-            nome_produto=r["produto"],
-            icone_url=None,
-            uf=r["uf"],
-            municipio="REGIÃO",
-            municipio_id="0",
-            ano=r["ano"],
-            mes=r["mes"],
-            data_referencia_atual=r.get("data_referencia_atual")
-            or f"{r['ano']:04d}-{r['mes']:02d}",
-            usou_fallback_12m=False,
-            preco_estimado=False,
-            status_cor=r["status_cor"],
-            fonte="regiao",
-            categoria=r.get("categoria"),
-            tendencia_futura=None,
-            is_forecast=r.get("is_forecast", False),
-            confianca_baseline=float(r["confianca_baseline"])
-            if r.get("confianca_baseline") is not None
-            else None,
-            forecast_method=r.get("forecast_method"),
-            regiao=regiao_id.upper(),
+    items = []
+    for r in rows:
+        ano_ref = r.get("ano_referencia")
+        tipo = r.get("tipo_dado")
+        items.append(
+            SazonalidadeResponse(
+                id_produto=0,
+                nome_produto=r["produto"],
+                icone_url=None,
+                uf=r["uf"],
+                municipio="REGIÃO",
+                municipio_id="0",
+                ano=r["ano"],
+                mes=r["mes"],
+                data_referencia_atual=r.get("data_referencia_atual")
+                or f"{r['ano']:04d}-{r['mes']:02d}",
+                usou_fallback_12m=False,
+                preco_estimado=False,
+                status_cor=r["status_cor"],
+                fonte="regiao",
+                categoria=r.get("categoria"),
+                tendencia_futura=None,
+                is_forecast=r.get("is_forecast", False),
+                confianca_baseline=float(r["confianca_baseline"])
+                if r.get("confianca_baseline") is not None
+                else None,
+                forecast_method=r.get("forecast_method"),
+                regiao=regiao_id.upper(),
+                ano_referencia=ano_ref,
+                tipo_dado=tipo,
+                mensagem_transparencia=_compor_mensagem_transparencia(
+                    tipo, ano_ref, r.get("idade_dado_anos")
+                ),
+                is_dado_legado=_is_dado_legado(ano_ref),
+            )
         )
-        for r in rows
-    ]
     result = SazonalidadeListResponse(data=items, total=total, pagina=pagina, por_pagina=por_pagina)
     await safe_set(cache_key, result.model_dump(), settings.cache_ttl_seconds)
     return result
@@ -788,6 +869,7 @@ async def listar_sazonalidade_com_preco(
                v.variacao_pct, v.preco_estimado,
                v.usou_fallback_12m, v.status_cor,
                v.fonte, v.tendencia_futura, v.is_forecast, v.forecast_method,
+               v.ano_referencia, v.tipo_dado, v.idade_dado_anos,
                b.confianca AS confianca_baseline,
                pm.preco_atual AS preco_mes_anterior
         FROM mart.vw_api_produtos_sazonalidade v
@@ -849,6 +931,12 @@ async def listar_sazonalidade_com_preco(
                 preco_mes_anterior=float(r["preco_mes_anterior"])
                 if r["preco_mes_anterior"] is not None
                 else None,
+                ano_referencia=r.get("ano_referencia"),
+                tipo_dado=r.get("tipo_dado"),
+                mensagem_transparencia=_compor_mensagem_transparencia(
+                    r.get("tipo_dado"), r.get("ano_referencia"), r.get("idade_dado_anos")
+                ),
+                is_dado_legado=_is_dado_legado(r.get("ano_referencia")),
             )
             for r in rows
         ],
@@ -905,6 +993,12 @@ async def _query_br_sazonalidade(
                 else None,
                 forecast_method=r.get("forecast_method"),
                 calculado_em=r.get("calculado_em"),
+                ano_referencia=r.get("ano_referencia"),
+                tipo_dado=r.get("tipo_dado"),
+                mensagem_transparencia=_compor_mensagem_transparencia(
+                    r.get("tipo_dado"), r.get("ano_referencia"), r.get("idade_dado_anos")
+                ),
+                is_dado_legado=_is_dado_legado(r.get("ano_referencia")),
             )
         )
 
@@ -933,7 +1027,7 @@ async def listar_br_sazonalidade(
         json.dumps(
             {
                 "route": "br_sazonalidade",
-                "v": 2,
+                "v": 3,
                 "ano": ano,
                 "categoria": categoria,
                 "min_ufs": min_ufs,

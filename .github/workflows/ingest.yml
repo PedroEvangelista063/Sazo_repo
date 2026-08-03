@@ -1,9 +1,9 @@
 name: Pipeline CONAB — Ingestão Mensal
 
 on:
-  schedule:
-    - cron: '0 3 5 * *'   # 5º dia de cada mês, 03:00 UTC
-  workflow_dispatch:        # disparo manual via GitHub UI
+  # ⚠️ Cron desativado (2026-08-03): ingestão escreve via secrets.DATABASE_URL
+  # (Aiven free, agora read-only/disco cheio). Dev é 100% local; rodar manualmente.
+  workflow_dispatch: # disparo manual via GitHub UI
 
 jobs:
   ingest-and-process:
@@ -17,8 +17,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.11"
+          cache: "pip"
 
       - name: Instalar dependências
         run: pip install -r pipeline/requirements.txt

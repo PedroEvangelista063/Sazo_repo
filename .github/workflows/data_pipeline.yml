@@ -1,8 +1,10 @@
 name: Data Pipeline
 
+# ⚠️ Cron desativado (2026-08-03): o pipeline escreve no Postgres apontado por
+# secrets.DATABASE_URL, que era o Aiven free — agora em read-only (disco cheio) e
+# inacessível pelo runner do GH (o dev virou 100% local). Rodar manualmente via
+# workflow_dispatch quando houver um destino de escrita confiável.
 on:
-  schedule:
-    - cron: "0 6 * * *"
   workflow_dispatch:
 
 jobs:

@@ -234,6 +234,23 @@ psql "$P" -Atc "
     FROM mart.sazonalidade_baseline_ponderada" | tee -a "$LOGFILE"
 
 # ------------------------------------------------------------------------------
+# 9. Purga de cache pós-deploy (refatoracao-dado-historico / R-ADD-05)
+# ------------------------------------------------------------------------------
+# Após o REFRESH MATERIALIZED VIEW + pipeline, o cache da API (InMemory/Redis)
+# pode devolver respostas obsoletas. Dispara o webhook de limpeza para garantir
+# que o próximo GET traga os dados frescos da MV V17 (ano_referencia/tipo_dado).
+log "--- Purga de cache pós-deploy ---"
+PURGE_URL="${CACHE_PURGE_URL:-http://localhost:8000/api/v1/admin/cache/clear}"
+PURGE_KEY="${CACHE_PURGE_KEY:-qc_cache_purge_2026}"
+PURGE_RESP=$(curl -s -m 10 -o /dev/null -w '%{http_code}' -X POST "$PURGE_URL" \
+    -H "X-API-Key: $PURGE_KEY" -H 'Content-Type: application/json' -d '{}' 2>/dev/null || echo "000")
+if [ "$PURGE_RESP" = "200" ]; then
+    log "Cache purgado com sucesso (HTTP 200)."
+else
+    log "AVISO: purge de cache retornou HTTP $PURGE_RESP (API possivelmente offline) — executar manualmente: POST $PURGE_URL com X-API-Key após subir a API."
+fi
+
+# ------------------------------------------------------------------------------
 # Fim
 # ------------------------------------------------------------------------------
 log "=== Deploy V13 concluído com sucesso! Log completo: $LOGFILE ==="

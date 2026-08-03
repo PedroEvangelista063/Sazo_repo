@@ -28,6 +28,7 @@ from typing import NoReturn
 
 import polars as pl
 import requests
+from dotenv import load_dotenv
 from psycopg2.extras import execute_values
 from tenacity import (
     before_sleep_log,
@@ -36,7 +37,6 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -131,6 +131,7 @@ class ContextoCarga:
         mes: Mês inferido do contexto (1-12).
         ano: Ano inferido do contexto.
     """
+
     arquivo: str = ""
     mes: int | None = None
     ano: int | None = None
@@ -139,9 +140,18 @@ class ContextoCarga:
 # ── Inferência de metadados a partir do nome do arquivo ─────────────
 
 MESES_BR: dict[str, int] = {
-    "janeiro": 1, "fevereiro": 2, "marco": 3, "abril": 4,
-    "maio": 5, "junho": 6, "julho": 7, "agosto": 8,
-    "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12,
+    "janeiro": 1,
+    "fevereiro": 2,
+    "marco": 3,
+    "abril": 4,
+    "maio": 5,
+    "junho": 6,
+    "julho": 7,
+    "agosto": 8,
+    "setembro": 9,
+    "outubro": 10,
+    "novembro": 11,
+    "dezembro": 12,
 }
 
 QUALIDADE_COL: str = "_qualidade"
@@ -161,7 +171,7 @@ def _inferir_mes_do_contexto(arquivo: str) -> int | None:
         Mês (1-12) ou ``None`` se não foi possível inferir.
     """
     nome = Path(arquivo).stem.lower()
-    m = re.search(r'(?:^|[_\s])(\d{2})(?:_\d{4}|$)', nome)
+    m = re.search(r"(?:^|[_\s])(\d{2})(?:_\d{4}|$)", nome)
     if m:
         mes = int(m.group(1))
         if 1 <= mes <= 12:
@@ -356,7 +366,7 @@ KEY_COLS_FFILL: list[str] = ["produto", "uf", "ano", "mes"]
 
 def _forward_fill_keys(df: pl.DataFrame) -> pl.DataFrame:
     """Aplica forward-fill nas colunas de agrupamento temporal/espacial.
-    
+
     Deve ser chamado ANTES do filtro de nulls, para que as linhas
     com campos implícitos sejam preenchidas antes da validação.
     """
@@ -367,12 +377,33 @@ def _forward_fill_keys(df: pl.DataFrame) -> pl.DataFrame:
 # ── Mapeamento IBGE → UF para fallback de Municípios Órfãos ──────────
 # Os primeiros 2 dígitos do código IBGE de 7 dígitos identificam a UF.
 IBGE_UF: dict[str, str] = {
-    "11": "RO", "12": "AC", "13": "AM", "14": "RR", "15": "PA",
-    "16": "AP", "17": "TO", "21": "MA", "22": "PI", "23": "CE",
-    "24": "RN", "25": "PB", "26": "PE", "27": "AL", "28": "SE",
-    "29": "BA", "31": "MG", "32": "ES", "33": "RJ", "35": "SP",
-    "41": "PR", "42": "SC", "43": "RS", "50": "MS", "51": "MT",
-    "52": "GO", "53": "DF",
+    "11": "RO",
+    "12": "AC",
+    "13": "AM",
+    "14": "RR",
+    "15": "PA",
+    "16": "AP",
+    "17": "TO",
+    "21": "MA",
+    "22": "PI",
+    "23": "CE",
+    "24": "RN",
+    "25": "PB",
+    "26": "PE",
+    "27": "AL",
+    "28": "SE",
+    "29": "BA",
+    "31": "MG",
+    "32": "ES",
+    "33": "RJ",
+    "35": "SP",
+    "41": "PR",
+    "42": "SC",
+    "43": "RS",
+    "50": "MS",
+    "51": "MT",
+    "52": "GO",
+    "53": "DF",
 }
 
 
@@ -381,7 +412,7 @@ def _infer_uf_fallback(
     municipio_nome: str | None,
 ) -> str | None:
     """Infere UF a partir do código IBGE ou sufixo do nome do município.
-    
+
     Ex: municipio_id='3550308' → prefixo '35' → SP
         municipio_nome='SÃO PAULO-SP' → sufixo '-SP' → SP
     """
@@ -391,6 +422,7 @@ def _infer_uf_fallback(
             return uf
     if municipio_nome:
         import re as _re
+
         m = _re.search(r"-([A-Z]{2})$", municipio_nome.upper().strip())
         if m:
             return m.group(1)
@@ -458,12 +490,15 @@ def transform_uf(
 
     # Filtrar inválidos (após fallback, linhas que ainda estão nulas
     # são genuinamente inválidas — sem produto, preço, UF, ou mês)
+    # ATENÇÃO: parênteses obrigatórios em ``len_chars() == 2`` — Python dá
+    # precedência maior a ``&`` que a ``==`` (bug histórico de regressão).
+    # preco >= 0.01: valores residuais de divisão arredondam p/ 0 no CHECK
+    # numérico do banco (fact_precos_mensais_preco_medio_check: preco > 0).
     df = df.filter(
         pl.col("preco_medio").is_not_null()
-        & (pl.col("preco_medio") > 0)
+        & (pl.col("preco_medio") >= 0.01)
         & pl.col("produto").is_not_null()
-        & pl.col("uf").str.len_chars()
-        == 2
+        & (pl.col("uf").str.len_chars() == 2)
         & pl.col("ano").is_not_null()
         & pl.col("mes").is_not_null()
         & pl.col("mes").is_between(1, 12)
@@ -476,8 +511,11 @@ def transform_uf(
     if df.height == 0:
         raise ValueError("Zero linhas após limpeza — estrutura do arquivo mudou?")
 
-    logger.info("UF: %d -> %d linhas (%d removidas) | qualidade=%s",
-        before, df.height, after,
+    logger.info(
+        "UF: %d -> %d linhas (%d removidas) | qualidade=%s",
+        before,
+        df.height,
+        after,
         df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
     )
     return df.select([*UF_COLUMNS, QUALIDADE_COL])
@@ -555,9 +593,7 @@ def transform_municipio(
         )
         for prefix, uf_name in IBGE_UF.items():
             uf_from_ibge = (
-                pl.when(uf_from_ibge == prefix)
-                .then(pl.lit(uf_name))
-                .otherwise(uf_from_ibge)
+                pl.when(uf_from_ibge == prefix).then(pl.lit(uf_name)).otherwise(uf_from_ibge)
             )
         df = df.with_columns(uf_from_ibge.alias("uf"))
 
@@ -579,8 +615,11 @@ def transform_municipio(
         df = df.with_columns(pl.lit(None).cast(pl.Utf8).alias("municipio_nome"))
 
     after = before - df.height
-    logger.info("Municipio: %d -> %d linhas (%d removidas) | qualidade=%s",
-        before, df.height, after,
+    logger.info(
+        "Municipio: %d -> %d linhas (%d removidas) | qualidade=%s",
+        before,
+        df.height,
+        after,
         df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
     )
     return df.select([*MUN_COLUMNS, QUALIDADE_COL])
@@ -644,15 +683,15 @@ def transform_prohort(
             raise ValueError(f"Coluna obrigatória ausente no Prohort: {col}")
 
     # Calcular preco_medio = valor / quantidade
+    # ATENÇÃO: qtd/valor podem chegar como NUMÉRICOS (polars lê por inferência)
+    # — converter via String + troca de vírgula só quando for texto, senão
+    # cast direto (bug histórico: .str.replace em coluna i64 → InvalidOperation).
+    def _qtd_valor_to_float(col: str) -> pl.Expr:
+        return pl.col(col).cast(pl.String).str.replace(",", ".").cast(pl.Float64, strict=False)
+
     df = df.with_columns(
-        pl.col("qtd_comercializada_kg")
-        .str.replace(",", ".")
-        .cast(pl.Float64, strict=False)
-        .alias("_qtd"),
-        pl.col("valor_comercializado")
-        .str.replace(",", ".")
-        .cast(pl.Float64, strict=False)
-        .alias("_valor"),
+        _qtd_valor_to_float("qtd_comercializada_kg").alias("_qtd"),
+        _qtd_valor_to_float("valor_comercializado").alias("_valor"),
         pl.col("ano").cast(pl.Int32, strict=False),
         pl.col("mes").cast(pl.Int32, strict=False),
     )
@@ -683,13 +722,13 @@ def transform_prohort(
     # não conseguiu preencher
     df = _apply_fallback_context(df, contexto)
 
-    # Filtrar inválidos
+    # Filtrar inválidos (parênteses obrigatórios em ``len_chars() == 2``).
+    # preco >= 0.01: resíduos de valor/qtd arredondam p/ 0 no CHECK do banco.
     df = df.filter(
         pl.col("preco_medio").is_not_null()
-        & (pl.col("preco_medio") > 0)
+        & (pl.col("preco_medio") >= 0.01)
         & pl.col("produto").is_not_null()
-        & pl.col("uf").str.len_chars()
-        == 2
+        & (pl.col("uf").str.len_chars() == 2)
         & pl.col("ano").is_not_null()
         & pl.col("mes").is_not_null()
         & pl.col("mes").is_between(1, 12)
@@ -713,8 +752,11 @@ def transform_prohort(
     if df.height == 0:
         raise ValueError("Zero linhas após limpeza do Prohort — estrutura mudou?")
 
-    logger.info("Prohort: %d -> %d linhas (%d removidas) | qualidade=%s",
-        before, df.height, after,
+    logger.info(
+        "Prohort: %d -> %d linhas (%d removidas) | qualidade=%s",
+        before,
+        df.height,
+        after,
         df.get_column(QUALIDADE_COL).mode().to_list() if QUALIDADE_COL in df.columns else "N/A",
     )
     return df.select([*PROHORT_COLUMNS, QUALIDADE_COL])
@@ -886,6 +928,20 @@ def _get_pg_conn():
     return conn
 
 
+def _normalizar_nome(nome: str) -> str:
+    """Normaliza nome para match por similaridade (sem acentos, minúsculas).
+
+    Ex: ``ABÓBORA`` → ``abobora`` · ``Abacaxi Pérola`` → ``abacaxi perola``.
+    Usado no match de produtos para evitar duplicatas quando a CONAB
+    nomeia o mesmo item de formas diferentes (``abobora`` vs ``ABÓBORA``).
+    """
+    import unicodedata as _ud
+
+    s = _ud.normalize("NFD", nome or "")
+    s = "".join(c for c in s if _ud.category(c) != "Mn")  # remove acentos
+    return s.lower().strip()
+
+
 def _ensure_dimensions(
     conn,
     df_uf: pl.DataFrame,
@@ -896,20 +952,58 @@ def _ensure_dimensions(
 
     Estratégia: INSERT ON CONFLICT DO NOTHING + SELECT em lote.
     Isso é ~10x mais rápido que INSERT...RETURNING linha por linha.
+
+    O match de PRODUTO é feito por nome NORMALIZADO (sem acentos): a CONAB
+    grava o mesmo item com variações (``abobora`` vs ``ABÓBORA``); sem isso,
+    cada variação criaria um id_produto novo e o preço nunca preencheria a
+    linha canônica da grade. A variante mais frequente vira a canônica.
     """
 
     with conn.cursor() as cur:
-        # Produtos
+        # Produtos — carregar mapa atual (por nome exato E por nome normalizado)
+        cur.execute("SELECT id_produto, nome_produto FROM staging.dim_produto")
+        rows_existentes = cur.fetchall()
+        produto_map = {row[1]: row[0] for row in rows_existentes}  # nome exato → id
+        norm_to_id: dict[str, int] = {}
+        for _id, _nome in rows_existentes:
+            norm = _normalizar_nome(_nome)
+            if norm and norm not in norm_to_id:
+                norm_to_id[norm] = _id
+
+        # Colecionar produtos de entrada
         produtos = set(df_uf["produto"].to_list() + df_mun["produto"].to_list())
         if df_prohort is not None:
             produtos |= set(df_prohort["produto"].to_list())
-        execute_values(
-            cur,
-            "INSERT INTO staging.dim_produto (nome_produto) VALUES %s ON CONFLICT DO NOTHING",
-            [(p,) for p in produtos],
-        )
-        cur.execute("SELECT id_produto, nome_produto FROM staging.dim_produto")
-        produto_map = {row[1]: row[0] for row in cur.fetchall()}
+
+        # Resolver cada produto de entrada para o id canônico:
+        #  1. nome exato já existe → id existente
+        #  2. nome normalizado casa com existente → id existente (evita dup)
+        #  3. senão → novo id (INSERT)
+        novos_para_inserir: list[str] = []
+        for p in produtos:
+            if p in produto_map:
+                continue
+            norm = _normalizar_nome(p)
+            if norm in norm_to_id:
+                produto_map[p] = norm_to_id[norm]
+            else:
+                novos_para_inserir.append(p)
+
+        if novos_para_inserir:
+            execute_values(
+                cur,
+                "INSERT INTO staging.dim_produto (nome_produto) VALUES %s ON CONFLICT DO NOTHING",
+                [(p,) for p in novos_para_inserir],
+            )
+            # Recarregar mapa para incluir os recém-criados
+            cur.execute("SELECT id_produto, nome_produto FROM staging.dim_produto")
+            for _id, _nome in cur.fetchall():
+                if _nome in produto_map:
+                    continue
+                produto_map[_nome] = _id
+                norm = _normalizar_nome(_nome)
+                if norm and norm not in norm_to_id:
+                    norm_to_id[norm] = _id
 
         # Localidades (UF + Municipio)
         localidades = set()
@@ -923,11 +1017,15 @@ def _ensure_dimensions(
             ):
                 localidades.add((row[0], row[1] if row[1] else None, row[2] if row[2] else None))
 
+        # dim_localidade usa ÍNDICES ÚNICOS PARCIAIS (WHERE municipio_id IS
+        # NULL / NOT NULL) — índices parciais NÃO são elegíveis para inferência
+        # em ``ON CONFLICT (col...)``; ``ON CONFLICT DO NOTHING`` (sem target)
+        # respeita qualquer constraint única existente, inclusive parciais.
         execute_values(
             cur,
             """
             INSERT INTO staging.dim_localidade (uf, municipio_id, municipio_nome)
-            VALUES %s ON CONFLICT (uf, municipio_id) DO NOTHING
+            VALUES %s ON CONFLICT DO NOTHING
             """,
             [(uf, mid, mnome) for uf, mid, mnome in localidades],
         )
@@ -1040,22 +1138,27 @@ def _registrar_carga(
     duracao: float,
     status: str,
 ) -> None:
-    """Registra metadados da carga em raw.controle_carga."""
+    """Registra metadados da carga em raw.controle_carga.
+
+    Schema real da tabela (diferente do legado):
+        (id serial, tipo text, status text, total_linhas int,
+         inseridas int, erro text, criado_em timestamptz)
+    O `batch_id` é preservado no campo `tipo` para rastreabilidade.
+    """
     with conn.cursor() as cur:
         cur.execute(
             """
             INSERT INTO raw.controle_carga
-                (batch_id, arquivo, linhas_lidas, linhas_inseridas,
-                 linhas_rejeitadas, duracao_seg, status, concluido_em)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())
-            ON CONFLICT (batch_id) DO UPDATE SET
-                linhas_inseridas  = EXCLUDED.linhas_inseridas,
-                linhas_rejeitadas = EXCLUDED.linhas_rejeitadas,
-                duracao_seg       = EXCLUDED.duracao_seg,
-                status            = EXCLUDED.status,
-                concluido_em      = NOW()
+                (tipo, status, total_linhas, inseridas, erro, criado_em)
+            VALUES (%s, %s, %s, %s, %s, NOW())
             """,
-            (batch_id, arquivo, lidas, inseridas, rejeitadas, duracao, status),
+            (
+                f"{arquivo}:{batch_id}",
+                status,
+                lidas,
+                inseridas,
+                None if status == "sucesso" else f"rejeitadas={rejeitadas} dur={duracao:.1f}s",
+            ),
         )
     conn.commit()
 

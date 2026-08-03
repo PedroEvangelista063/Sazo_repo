@@ -87,3 +87,6 @@ database/backups/
 # Terminal artifacts (pipe redirection leftovers)
 ion |*
 backend/ion |*
+
+# Backups de .env (podem conter segredos)
+backend/.env.bak-*

@@ -7,14 +7,14 @@ Use no **SQL Editor** do dashboard: https://supabase.com/dashboard/project/kxsqr
 
 ## 📌 Informações do Projeto
 
-| Item | Valor |
-|---|---|
-| Project ID | `kxsqrcccaaxplpktmutl` |
-| Host | `aws-1-us-east-1.pooler.supabase.com` |
-| Portas | `5432` (pooler transacional) / `6543` (pooler sessão) |
-| PostgreSQL | `17` |
-| Total registros no `fact_precos_mensais` | `42.358` |
-| Período | `2024-01` a `2026-12` |
+| Item                                     | Valor                                                 |
+| ---------------------------------------- | ----------------------------------------------------- |
+| Project ID                               | `kxsqrcccaaxplpktmutl`                                |
+| Host                                     | `aws-1-us-east-1.pooler.supabase.com`                 |
+| Portas                                   | `5432` (pooler transacional) / `6543` (pooler sessão) |
+| PostgreSQL                               | `17`                                                  |
+| Total registros no `fact_precos_mensais` | `42.358`                                              |
+| Período                                  | `2024-01` a `2026-12`                                 |
 
 ---
 
@@ -32,6 +32,7 @@ Use no **SQL Editor** do dashboard: https://supabase.com/dashboard/project/kxsqr
 ---
 
 <!-- ================================================================== -->
+
 ## 1. GAP Detalhado por Produto
 
 Mostra **produto + localidade + quais meses específicos estão faltando**.
@@ -89,6 +90,7 @@ LIMIT 100;
 ---
 
 <!-- ================================================================== -->
+
 ## 2. Ranking de Produtos com Mais Gaps
 
 Produtos ordenados por **taxa de ocupação** (menor = mais gaps).
@@ -117,6 +119,7 @@ LIMIT 30;
 ---
 
 <!-- ================================================================== -->
+
 ## 3. Localidades Órfãs
 
 Localidades que **existem na dimensão mas NUNCA receberam dado**.
@@ -144,6 +147,7 @@ ORDER BY l.uf, l.municipio_nome;
 ---
 
 <!-- ================================================================== -->
+
 ## 4. Produtos Órfãos
 
 Produtos **cadastrados mas que NUNCA tiveram coleta**.
@@ -176,6 +180,7 @@ ORDER BY diagnostico, p.nome_produto;
 ---
 
 <!-- ================================================================== -->
+
 ## 5. Resumo Executivo
 
 Visão geral de saúde do banco em uma única consulta.
@@ -208,6 +213,7 @@ FROM staging.fact_precos_mensais;
 ---
 
 <!-- ================================================================== -->
+
 ## 6. Gaps Recentes (últimos 6 meses)
 
 Produtos que estão **sem dado nos meses mais recentes** — prioridade de coleta.
@@ -248,6 +254,7 @@ LIMIT 30;
 ---
 
 <!-- ================================================================== -->
+
 ## 7. Visão Geral de Produtos com Gaps
 
 Lista produtos que têm **muitas localidades mas poucos meses** por localidade.
@@ -274,30 +281,35 @@ LIMIT 50;
 ---
 
 <!-- ================================================================== -->
+
 ## 8. Teste de Conexão (terminal)
 
 Comandos para testar a conexão com o Supabase remoto pelo terminal Linux.
 
 ```bash
+# A credencial NUNCA deve ser colada em arquivo versionado.
+# Carregue a URL do backend/.env (gitignored) antes dos comandos:
+export DATABASE_URL="$(grep -E '^DATABASE_URL_PRIMARY=' backend/.env | cut -d= -f2-)"
+
 # Teste de rede
 nc -zv aws-1-us-east-1.pooler.supabase.com 5432
 
 # Conexão direta com psql
-psql "postgresql://postgres.kxsqrcccaaxplpktmutl:Marfia8976%2A@aws-1-us-east-1.pooler.supabase.com:5432/postgres" -c "SELECT version();"
+psql "$DATABASE_URL" -c "SELECT version();"
 
 # Listar tabelas
-psql "postgresql://postgres.kxsqrcccaaxplpktmutl:Marfia8976%2A@aws-1-us-east-1.pooler.supabase.com:5432/postgres" -c "\dt"
+psql "$DATABASE_URL" -c "\dt"
 
 # Conexão via Python
 python3 -c "
-import asyncio, asyncpg
+import asyncio, asyncpg, os
 async def test():
-    conn = await asyncpg.connect('postgresql://postgres.kxsqrcccaaxplpktmutl:Marfia8976%2A@aws-1-us-east-1.pooler.supabase.com:5432/postgres')
+    conn = await asyncpg.connect(os.environ['DATABASE_URL'])
     print('Conectado! Versao:', await conn.fetchval('SELECT version()'))
     await conn.close()
 asyncio.run(test())
 "
 
 # Verificar migrations aplicadas
-psql "postgresql://postgres.kxsqrcccaaxplpktmutl:Marfia8976%2A@aws-1-us-east-1.pooler.supabase.com:5432/postgres" -c "SELECT * FROM supabase_migrations.schema_migrations;"
+psql "$DATABASE_URL" -c "SELECT * FROM supabase_migrations.schema_migrations;"
 ```

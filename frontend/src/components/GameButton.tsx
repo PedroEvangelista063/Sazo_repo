@@ -21,21 +21,21 @@ interface GameButtonProps {
 const VARIANT_STYLES: Record<string, string> = {
   primary: `
     bg-sazonal-verde-600 text-white
-    shadow-[0_3px_0_rgb(5,100,48)]
-    hover:shadow-[0_5px_0_rgb(5,100,48)]
-    active:shadow-[0_1px_0_rgb(5,100,48)]
+    shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_3px_0_rgb(5,100,48)]
+    hover:shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_rgb(5,100,48)]
+    active:shadow-[inset_0_-2px_0_rgba(0,0,0,0.22),0_1px_0_rgb(5,100,48)]
   `,
   secondary: `
     bg-sazonal-amarelo-600 text-white
-    shadow-[0_3px_0_rgb(161,98,7)]
-    hover:shadow-[0_5px_0_rgb(161,98,7)]
-    active:shadow-[0_1px_0_rgb(161,98,7)]
+    shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_3px_0_rgb(161,98,7)]
+    hover:shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_rgb(161,98,7)]
+    active:shadow-[inset_0_-2px_0_rgba(0,0,0,0.22),0_1px_0_rgb(161,98,7)]
   `,
   danger: `
     bg-sazonal-vermelho-600 text-white
-    shadow-[0_3px_0_rgb(185,28,28)]
-    hover:shadow-[0_5px_0_rgb(185,28,28)]
-    active:shadow-[0_1px_0_rgb(185,28,28)]
+    shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_3px_0_rgb(185,28,28)]
+    hover:shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_rgb(185,28,28)]
+    active:shadow-[inset_0_-2px_0_rgba(0,0,0,0.22),0_1px_0_rgb(185,28,28)]
   `,
   ghost: `
     bg-transparent text-sazonal-verde-600 dark:text-sazonal-verde-400
@@ -44,9 +44,9 @@ const VARIANT_STYLES: Record<string, string> = {
   `,
   success: `
     bg-emerald-600 text-white
-    shadow-[0_3px_0_rgb(5,122,85)]
-    hover:shadow-[0_5px_0_rgb(5,122,85)]
-    active:shadow-[0_1px_0_rgb(5,122,85)]
+    shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_3px_0_rgb(5,122,85)]
+    hover:shadow-[inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_rgb(5,122,85)]
+    active:shadow-[inset_0_-2px_0_rgba(0,0,0,0.22),0_1px_0_rgb(5,122,85)]
   `,
 }
 
@@ -85,19 +85,21 @@ export function GameButton({
       onClick={onClick}
       type={type}
       className={cn(
-        'relative inline-flex items-center justify-center font-semibold rounded-xl',
+        'relative inline-flex items-center justify-center rounded-2xl font-semibold',
         'transition-shadow',
-        'disabled:opacity-50 disabled:cursor-not-allowed',
+        variant !== 'ghost' &&
+          'bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0)_45%)]',
+        'disabled:cursor-not-allowed disabled:opacity-50',
         VARIANT_STYLES[variant],
         SIZE_STYLES[size],
         fullWidth && 'w-full',
-        className
+        className,
       )}
     >
       {/* Inner glow pulse when pulse prop is set */}
       {pulse && (
         <motion.span
-          className="absolute inset-0 bg-white/15 rounded-xl blur-xl opacity-0"
+          className="absolute inset-0 rounded-xl bg-white/15 opacity-0 blur-xl"
           animate={{ opacity: [0, 1, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -106,7 +108,7 @@ export function GameButton({
       {/* Loading spinner */}
       {loading && (
         <motion.svg
-          className="absolute w-5 h-5 text-current animate-spin"
+          className="absolute h-5 w-5 animate-spin text-current"
           viewBox="0 0 24 24"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}

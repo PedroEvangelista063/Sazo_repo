@@ -70,14 +70,9 @@ const viewTabs: { value: ViewMode; label: string; icon: React.ReactNode }[] = [
 
 export function SupermercadoView() {
   const [selectedUF, setSelectedUF] = useState<string>('BR')
-  // Grade Sazonal usa o ano anterior quando o ano corrente tem menos de 6 meses
-  // publicados pela CONAB (jan–mai costumam ter apenas 56 produtos vs 235+ em jun–dez).
-  // Lógica: se estamos nos primeiros 5 meses do ano usa ano-1; do contrário usa ano corrente.
-  const [selectedYear, setSelectedYear] = useState<number>(() => {
-    const now = new Date()
-    // Antes de junho o banco ainda não tem cobertura nacional completa do ano corrente
-    return now.getMonth() < 5 ? now.getFullYear() - 1 : now.getFullYear()
-  })
+  // Grade Sazonal sempre exibe o ano corrente — a MV V17 preenche meses sem dado
+  // real com o dado real do ano âncora (N → N-1 → N-2), com transparência na célula.
+  const [selectedYear, setSelectedYear] = useState<number>(() => new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
@@ -153,10 +148,7 @@ export function SupermercadoView() {
       {
         key: 'ano',
         label: String(selectedYear),
-        onRemove: () => {
-          const now = new Date()
-          setSelectedYear(now.getMonth() < 5 ? now.getFullYear() - 1 : now.getFullYear())
-        },
+        onRemove: () => setSelectedYear(new Date().getFullYear()),
       },
     ]
     if (selectedMonth != null) {
@@ -479,38 +471,18 @@ export function SupermercadoView() {
                             <span className="text-xs text-gray-400">
                               Grade sazonal {selectedYear}
                             </span>
-                            {selectedYear === new Date().getFullYear() &&
-                              new Date().getMonth() < 11 && (
-                                <Badge
-                                  variant="outline"
-                                  className="border-amber-400 text-[10px] text-amber-600 dark:text-amber-400"
-                                >
-                                  ⚠️ Ano em curso — dados parciais até{' '}
-                                  {
-                                    [
-                                      'Jan',
-                                      'Fev',
-                                      'Mar',
-                                      'Abr',
-                                      'Mai',
-                                      'Jun',
-                                      'Jul',
-                                      'Ago',
-                                      'Set',
-                                      'Out',
-                                      'Nov',
-                                      'Dez',
-                                    ][new Date().getMonth()]
-                                  }
-                                  /{selectedYear}
-                                </Badge>
-                              )}
+                            {selectedYear === new Date().getFullYear() && (
+                              <span className="text-[10px] text-gray-400">
+                                Grade com dados de {selectedYear - 2}–{selectedYear} (ano âncora
+                                exibido por célula)
+                              </span>
+                            )}
                             {selectedYear === new Date().getFullYear() && (
                               <button
                                 onClick={() => setSelectedYear(selectedYear - 1)}
                                 className="ml-1 text-[10px] text-blue-500 underline hover:text-blue-700 dark:text-blue-400"
                               >
-                                Ver {selectedYear - 1} (cobertura completa)
+                                Ver {selectedYear - 1} (histórico)
                               </button>
                             )}
                           </div>

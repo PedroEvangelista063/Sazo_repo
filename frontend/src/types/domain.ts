@@ -19,6 +19,11 @@ export interface ProdutoVarejo {
   confianca_baseline: number | null
   tendencia_futura: 'QUEDA' | 'ALTA' | 'ESTAVEL' | null
   regiao: string | null
+  // ── Transparência temporal (V17 — ano âncora real) ──
+  ano_referencia?: number | null
+  tipo_dado?: string | null
+  mensagem_transparencia?: string | null
+  is_dado_legado?: boolean
 }
 
 export interface Categoria {
@@ -52,6 +57,11 @@ export interface MesSazonalidade {
   baseline_confianca: number | null
   forecast_method: string | null
   calculado_em: string | null
+  // ── Transparência temporal (V17 — ano âncora real) ──
+  ano_referencia?: number | null
+  tipo_dado?: string | null
+  mensagem_transparencia?: string | null
+  is_dado_legado?: boolean
 }
 
 export interface SazonalidadeNacionalItem {

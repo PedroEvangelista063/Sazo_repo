@@ -2,20 +2,45 @@ import { motion } from 'framer-motion'
 import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
+import { DataTransparencyInfo } from '@/components/DataTransparencyInfo'
 import { CheckCircle2, MinusCircle, XCircle, Check, Truck } from 'lucide-react'
 import type { ProdutoVarejo } from '../types/domain'
 
 const PRODUTO_EMOJI: Record<string, string> = {
-  ARROZ: '🍚', BANANA: '🍌', BATATA: '🥔', CAFE: '☕',
-  CEBOLA: '🧅', CENOURA: '🥕', FEIJAO: '🫘', LARANJA: '🍊',
-  LEITE: '🥛', MACA: '🍎', MANDIOCA: '🌿', MILHO: '🌽',
-  OVO: '🥚', REPOLHO: '🥬', SOJA: '🫘', TOMATE: '🍅',
-  UVA: '🍇', ALFACE: '🥬', BETERRABA: '🥗', PIMENTAO: '🫑',
-  FRANGO: '🍗', CARNE: '🥩', QUEIJO: '🧀', IOGURTE: '🥛',
-  OLEO: '🫒', ACUCAR: '🍚', FARINHA: '🌾', MACARRAO: '🍝',
+  ARROZ: '🍚',
+  BANANA: '🍌',
+  BATATA: '🥔',
+  CAFE: '☕',
+  CEBOLA: '🧅',
+  CENOURA: '🥕',
+  FEIJAO: '🫘',
+  LARANJA: '🍊',
+  LEITE: '🥛',
+  MACA: '🍎',
+  MANDIOCA: '🌿',
+  MILHO: '🌽',
+  OVO: '🥚',
+  REPOLHO: '🥬',
+  SOJA: '🫘',
+  TOMATE: '🍅',
+  UVA: '🍇',
+  ALFACE: '🥬',
+  BETERRABA: '🥗',
+  PIMENTAO: '🫑',
+  FRANGO: '🍗',
+  CARNE: '🥩',
+  QUEIJO: '🧀',
+  IOGURTE: '🥛',
+  OLEO: '🫒',
+  ACUCAR: '🍚',
+  FARINHA: '🌾',
+  MACARRAO: '🍝',
 }
 
-const STATUS_CONFIG: Record<string, { label: string; icon: typeof CheckCircle2; cor: string; corBg: string }> = {
+const STATUS_CONFIG: Record<
+  string,
+  { label: string; icon: typeof CheckCircle2; cor: string; corBg: string }
+> = {
   VERDE: {
     label: 'Melhor Época!',
     icon: CheckCircle2,
@@ -37,8 +62,31 @@ const STATUS_CONFIG: Record<string, { label: string; icon: typeof CheckCircle2; 
 }
 
 function getEmoji(name: string): string {
-  const key = name.toUpperCase().replace(/[^A-Z ]/g, '').trim().split(/\s+/)[0] ?? ''
+  const key =
+    name
+      .toUpperCase()
+      .replace(/[^A-Z ]/g, '')
+      .trim()
+      .split(/\s+/)[0] ?? ''
   return PRODUTO_EMOJI[key] ?? '🛒'
+}
+
+function tipoDadoLabel(
+  tipo: string | null | undefined,
+  ano: number | null | undefined,
+): string | null {
+  if (!tipo) return null
+  if (tipo === 'REAL_ATUAL') return 'Coleta Efetiva'
+  if (tipo === 'HISTORICO_BASE') {
+    return ano != null ? `Histórico Real '${String(ano).slice(2)}` : 'Histórico Real'
+  }
+  return 'Referência'
+}
+
+function tipoDadoVariant(tipo: string | null | undefined): 'outline' | 'default' | 'warning' {
+  if (tipo === 'REAL_ATUAL') return 'default'
+  if (tipo === 'HISTORICO_BASE') return 'warning'
+  return 'outline'
 }
 
 interface ProductCardProps {
@@ -49,12 +97,14 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, isSelected, onToggle, origemUf }: ProductCardProps) {
-  const config = STATUS_CONFIG[product.status_cor] ?? {
-    label: 'Dados Insuficientes',
-    icon: MinusCircle,
-    cor: '#9ca3af',
-    corBg: 'rgba(156,163,175,0.08)' as const,
-  } as (typeof STATUS_CONFIG)[string]
+  const config =
+    STATUS_CONFIG[product.status_cor] ??
+    ({
+      label: 'Dados Insuficientes',
+      icon: MinusCircle,
+      cor: '#9ca3af',
+      corBg: 'rgba(156,163,175,0.08)' as const,
+    } as (typeof STATUS_CONFIG)[string])
   const emoji = getEmoji(product.nome_produto)
   const Icon = config.icon
 
@@ -68,75 +118,65 @@ export function ProductCard({ product, isSelected, onToggle, origemUf }: Product
       <SpotlightCard
         spotlightColor={config.corBg as `rgba(${number}, ${number}, ${number}, ${number})`}
         className={cn(
-          'border rounded-xl cursor-pointer transition-shadow duration-200 overflow-hidden',
+          'cursor-pointer overflow-hidden rounded-3xl border transition-shadow duration-200',
           isSelected
-            ? 'border-gray-300 dark:border-gray-600 shadow-xl'
-            : 'border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg',
+            ? 'border-gray-300 shadow-[0_22px_44px_-14px_rgba(21,83,45,0.35),inset_0_-6px_12px_rgba(0,0,0,0.35),inset_0_6px_12px_rgba(255,255,255,0.10)] dark:border-gray-600 dark:shadow-clay-dark-hover'
+            : 'border-gray-200 shadow-[0_18px_36px_-12px_rgba(21,83,45,0.28),inset_0_-6px_12px_rgba(0,0,0,0.35),inset_0_6px_12px_rgba(255,255,255,0.10)] hover:shadow-[0_28px_52px_-14px_rgba(21,83,45,0.35),inset_0_-6px_12px_rgba(0,0,0,0.35),inset_0_6px_12px_rgba(255,255,255,0.12)] dark:border-gray-700 dark:shadow-clay-dark',
           onToggle ? 'cursor-pointer' : 'cursor-default',
         )}
       >
-        <div className="relative p-3 flex flex-col items-center gap-1">
+        <div className="relative flex flex-col items-center gap-1 p-3">
           {isSelected && onToggle && (
-            <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-sazonal-verde-600 flex items-center justify-center shadow-md">
-              <Check className="w-3.5 h-3.5 text-white" />
+            <div className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-sazonal-verde-600 shadow-md">
+              <Check className="h-3.5 w-3.5 text-white" />
             </div>
           )}
 
-          <span
-            className="text-[28px] leading-none"
-            role="img"
-            aria-label={product.nome_produto}
-          >
+          <span className="text-[28px] leading-none" role="img" aria-label={product.nome_produto}>
             {emoji}
           </span>
 
-          <p className="text-sm font-bold text-center leading-tight text-gray-900 dark:text-gray-100 mt-0.5">
+          <p className="mt-0.5 text-center text-sm font-bold leading-tight text-gray-900 dark:text-gray-100">
             {product.nome_produto}
           </p>
 
-          <div className="flex items-center gap-1 text-xs mt-0.5" style={{ color: config.cor }}>
+          <div className="mt-0.5 flex items-center gap-1 text-xs" style={{ color: config.cor }}>
             <Icon size={14} />
             <span>{config.label}</span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-1 mt-1">
-            {product.is_forecast && (
-              <div className="relative group">
-                <Badge variant="outline" className="text-[10px] cursor-default shadow-sm">
-                  📊 Estimativa
-                </Badge>
-                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-50">
-                  <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
-                    Dado estimado com base no histórico de 2024–2025.
-                    Confiança: {product.confianca_baseline ?? '?'}%
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
-                  </div>
-                </div>
-              </div>
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-1">
+            {tipoDadoLabel(product.tipo_dado, product.ano_referencia) && (
+              <Badge
+                variant={tipoDadoVariant(product.tipo_dado)}
+                className="cursor-default text-[10px] shadow-sm"
+              >
+                {tipoDadoLabel(product.tipo_dado, product.ano_referencia)}
+              </Badge>
             )}
-            {product.preco_estimado && (
-              <div className="relative group">
-                <Badge variant="outline" className="text-[10px] cursor-default text-amber-600 border-amber-300 dark:text-amber-400 dark:border-amber-700 shadow-sm">
-                  🪄 Estimado
-                </Badge>
-                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-50">
-                  <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
-                    Preço estimado por inteligência artificial com base no histórico recente.
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
-                  </div>
-                </div>
-              </div>
-            )}
+            <DataTransparencyInfo
+              tipo_dado={product.tipo_dado}
+              ano_referencia={product.ano_referencia}
+              mensagem_transparencia={product.mensagem_transparencia}
+              is_dado_legado={product.is_dado_legado}
+              size={12}
+            />
           </div>
 
+          {(product.ano_referencia != null || product.tipo_dado) && (
+            <p className="mt-0.5 text-center text-[10px] text-gray-400 dark:text-gray-500">
+              Ano de apuração: {product.ano_referencia ?? '—'}
+            </p>
+          )}
+
           {product.usou_fallback_12m && (
-            <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="mt-0.5 text-center text-[10px] text-gray-400 dark:text-gray-500">
               * Média 12 meses
             </p>
           )}
 
           {origemUf && (
-            <div className="flex items-center gap-1 mt-1 text-[9px] text-gray-400 dark:text-gray-500">
+            <div className="mt-1 flex items-center gap-1 text-[9px] text-gray-400 dark:text-gray-500">
               <Truck size={9} />
               <span>Origem: {origemUf}</span>
             </div>

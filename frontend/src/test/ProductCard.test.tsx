@@ -69,19 +69,61 @@ describe('ProductCard', () => {
     expect(screen.queryByText(/R\$/)).not.toBeInTheDocument()
   })
 
-  // Forecast badge
-  it('exibe badge 📊 Estimativa quando is_forecast for true', () => {
+  // Transparência temporal (V17) — sem badges sintéticos 📊/🪄
+  it('exibe badge "Coleta Efetiva" quando tipo_dado for REAL_ATUAL', () => {
     render(
       <ProductCard
-        product={makeProduct({ is_forecast: true, confianca_baseline: 85 })}
+        product={makeProduct({
+          ano_referencia: 2026,
+          tipo_dado: 'REAL_ATUAL',
+          is_dado_legado: false,
+        })}
       />,
     )
-    expect(screen.getByText(/📊 Estimativa/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Coleta Efetiva/).length).toBeGreaterThan(0)
   })
 
-  it('não exibe badge de forecast quando is_forecast for false', () => {
-    render(<ProductCard product={makeProduct({ is_forecast: false })} />)
+  it('exibe badge histórico + ano quando tipo_dado for HISTORICO_BASE', () => {
+    render(
+      <ProductCard
+        product={makeProduct({
+          ano_referencia: 2025,
+          tipo_dado: 'HISTORICO_BASE',
+          is_dado_legado: true,
+        })}
+      />,
+    )
+    expect(screen.getAllByText(/Histórico Real/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/'25/).length).toBeGreaterThan(0)
+  })
+
+  it('não exibe badges sintéticos 📊 Estimativa / 🪄 Estimado', () => {
+    render(
+      <ProductCard
+        product={makeProduct({
+          is_forecast: true,
+          preco_estimado: true,
+          confianca_baseline: 85,
+          tipo_dado: 'HISTORICO_BASE',
+          ano_referencia: 2025,
+        })}
+      />,
+    )
     expect(screen.queryByText(/📊 Estimativa/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/🪄 Estimado/)).not.toBeInTheDocument()
+  })
+
+  it('exibe rodapé com ano de apuração quando há ano_referencia', () => {
+    render(
+      <ProductCard
+        product={makeProduct({
+          ano_referencia: 2025,
+          tipo_dado: 'HISTORICO_BASE',
+          is_dado_legado: true,
+        })}
+      />,
+    )
+    expect(screen.getByText(/Ano de apuração: 2025/)).toBeInTheDocument()
   })
 
   // Fallback 12m

@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { DataTransparencyInfo } from '@/components/DataTransparencyInfo'
 import type { SazonalidadeNacionalItem, StatusCor } from '@/types/domain'
 
 const MONTHS_SHORT = [
@@ -18,21 +19,6 @@ const MONTHS_SHORT = [
   'Nov',
   'Dez',
 ]
-
-const GAP_STYLES = {
-  structural: {
-    bg: 'bg-gray-100 dark:bg-gray-800',
-    border: 'border-solid border-gray-300 dark:border-gray-600',
-    tooltip: 'CONAB não publicou dados para este período',
-  },
-  collection: {
-    bg: 'bg-gray-200 dark:bg-gray-700',
-    border: 'border-dashed border-amber-400 dark:border-amber-500',
-    tooltip: 'Dados não coletados neste mês — scraper pendente',
-  },
-} as const
-
-type GapKind = keyof typeof GAP_STYLES
 
 const STATUS_STYLES: Record<
   StatusCor,
@@ -63,17 +49,14 @@ interface SazonalidadeNacionalProps {
   className?: string
 }
 
-function formatDataPtBr(iso: string | null | undefined): string | null {
-  if (!iso) return null
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return null
-  const day = String(d.getDate()).padStart(2, '0')
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  return `Coletado em ${day}/${month}/${d.getFullYear()}`
+function anoAtual(): number {
+  return new Date().getFullYear()
 }
 
-function classifyGap(totalUfs: number, mes: number): GapKind {
-  return totalUfs >= 5 && mes <= 4 ? 'structural' : 'collection'
+/** Badge de ano âncora: '26 (atual) / '25 / '24 — sem texto sintético. */
+function yearBadge(ano: number | null | undefined): string | null {
+  if (ano == null) return null
+  return `'${String(ano).slice(2)}`
 }
 
 export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalProps) {
@@ -117,101 +100,56 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
               </td>
               {Array.from({ length: 12 }, (_, i) => i + 1).map((mesNum) => {
                 const mesData = item.meses.find((m) => m.mes === mesNum)
+                const isLegado =
+                  Boolean(mesData?.is_dado_legado) ||
+                  (mesData?.ano_referencia != null && mesData.ano_referencia < anoAtual())
+                const badge = yearBadge(mesData?.ano_referencia)
+
                 if (!mesData) {
-                  const gap = classifyGap(item.total_ufs, mesNum)
-                  const gapStyle = GAP_STYLES[gap]
+                  // Defensivo: sem linha no mês → célula vazia muted (novo modelo
+                  // preenche todos os meses do ano corrente com dado real/âncora).
                   return (
                     <td key={mesNum} className="px-1 py-1.5 text-center">
-                      <div className="group relative">
-                        <div
-                          className={cn('h-8 w-full rounded border', gapStyle.bg, gapStyle.border)}
-                        />
-                        <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden -translate-x-1/2 group-hover:block">
-                          <div className="whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
-                            {item.produto} — {MONTHS_SHORT[mesNum - 1]}: {gapStyle.tooltip}
-                          </div>
-                        </div>
-                      </div>
+                      <div className="h-8 w-full rounded border border-transparent bg-gray-50 dark:bg-gray-800/40" />
                     </td>
                   )
                 }
+
                 const style = STATUS_STYLES[mesData.status_cor]
                 const isLowCoverage = item.total_ufs < 3
-                const method = mesData.forecast_method
-                const isRealData = !mesData.is_forecast || !method
-                const calculadoEm = formatDataPtBr(mesData.calculado_em)
                 return (
                   <td key={mesNum} className="px-1 py-1.5 text-center">
-                    <div className="group relative">
+                    <div className="group relative flex h-8 w-full items-center justify-center gap-1 rounded-md border">
                       <motion.div
-                        whileHover={{ scale: 1.15 }}
+                        whileHover={{ scale: 1.08 }}
                         className={cn(
-                          'flex h-8 w-full cursor-default items-center justify-center rounded-md border',
+                          'flex h-full w-full cursor-default items-center justify-center rounded-md border',
                           style.bg,
                           style.text,
                           style.border,
                         )}
+                        aria-label={`${item.produto} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
                       >
-                        {mesData.is_forecast && (
-                          <span className="absolute right-0.5 top-0 text-[8px] opacity-60">📈</span>
+                        {badge && (
+                          <span className="text-[9px] font-semibold opacity-80">{badge}</span>
                         )}
                       </motion.div>
-                      <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden -translate-x-1/2 group-hover:block">
-                        <div className="whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
-                          {item.produto} — {MONTHS_SHORT[mesNum - 1]}: {style.label}
-                          {isLowCoverage && (
-                            <span className="block font-medium text-amber-300 dark:text-amber-600">
-                              ⚠️ Cobertura em {item.total_ufs} UF{item.total_ufs > 1 ? 's' : ''}
-                            </span>
-                          )}
-                          {isRealData ? (
-                            <>
-                              <span className="block text-gray-300 dark:text-gray-600">
-                                ✅ Dado real coletado via CEASA/CONAB
-                              </span>
-                              {calculadoEm && (
-                                <span className="block text-gray-300 dark:text-gray-600">
-                                  {calculadoEm}
-                                </span>
-                              )}
-                            </>
-                          ) : method === 'ANCHOR_2024_MARGIN_2025' ? (
-                            <>
-                              <span className="block text-gray-300 dark:text-gray-600">
-                                📈 Previsão baseada no histórico 2024 com ajuste de tendência 2025
-                              </span>
-                              <span className="block text-gray-300 dark:text-gray-600">
-                                📈 Estimativa
-                                {mesData.baseline_confianca != null && (
-                                  <> — {mesData.baseline_confianca}%</>
-                                )}
-                              </span>
-                            </>
-                          ) : method === 'PROXY_CATEGORIA_UF' ? (
-                            <span className="block text-gray-300 dark:text-gray-600">
-                              📈 Sem histórico — média da categoria (confiança baixa)
-                              {mesData.baseline_confianca != null && (
-                                <> — {mesData.baseline_confianca}%</>
-                              )}
-                            </span>
-                          ) : method === 'LOCF_MES_ANTERIOR' ? (
-                            <span className="block text-gray-300 dark:text-gray-600">
-                              📈 Sem histórico — último status real conhecido do produto
-                              {mesData.baseline_confianca != null && (
-                                <> — {mesData.baseline_confianca}%</>
-                              )}
-                            </span>
-                          ) : (
-                            <span className="block text-gray-300 dark:text-gray-600">
-                              📈 Estimativa
-                              {mesData.baseline_confianca != null && (
-                                <> — {mesData.baseline_confianca}%</>
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                      {(isLegado || mesData.tipo_dado) && (
+                        <DataTransparencyInfo
+                          tipo_dado={mesData.tipo_dado}
+                          ano_referencia={mesData.ano_referencia}
+                          mensagem_transparencia={mesData.mensagem_transparencia}
+                          is_dado_legado={isLegado}
+                          size={11}
+                          className="absolute right-0.5 top-0.5"
+                        />
+                      )}
                     </div>
+                    {isLowCoverage && (
+                      <p className="mt-0.5 text-[9px] leading-none text-amber-600 dark:text-amber-400">
+                        ⚠️ {item.total_ufs} UF{item.total_ufs > 1 ? 's' : ''}
+                      </p>
+                    )}
                   </td>
                 )
               })}

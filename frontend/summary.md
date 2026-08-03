@@ -1,27 +1,37 @@
 # summary.md — /frontend (Aplicativo B2C)
 
 ## Propósito
+
 App React PWA (offline-first, mobile-first). Interface de cores (verde/amarelo/vermelho) para preços de hortifrúti — NUNCA exibe valores monetários. Fallbacks visuais com emojis.
 
 ## Stack
+
 - React 19, Vite + PWA plugin (vite-plugin-pwa), TailwindCSS 3 + tailwindcss-animate
-- **shadcn/ui**: Card, Button, Dialog, Badge, Skeleton, Tabs
+- **shadcn/ui**: Card, Button, Dialog, Badge, Skeleton, Tabs, Table, Select
+- **React Router 7** (`react-router` — pacote único; `react-router-dom` foi fundido no v7)
 - **TanStack Table** (TabelaView), **Recharts** (GraficosView)
-- **Framer Motion** / **Motion** (animações: hover/tap springs, loading, pulse glow, shake, tab transitions)
+- **Framer Motion** / **Motion** (animações: hover/tap springs, loading, pulse glow, shake, tab transitions), **GSAP 3** (animações avançadas — instalado, uso a definir)
 - **React Bits**: Beams (Three.js background), SpotlightCard (mouse spotlight), TiltedCard (3D tilt), BlurText (blur reveal)
 - **Three.js** + **@react-three/fiber** + **@react-three/drei** (motor 3D do Beams)
 - Radix UI primitives (Dialog, Slot, Select, Tabs, Tooltip)
-- Zustand 5 (persist), TanStack Query v5, class-variance-authority, clsx, tailwind-merge
+- Estado global: Zustand 5 (persist) **e** Redux Toolkit 2 + React-Redux 9 — definir fronteira de uso (ex.: Redux p/ fluxos complexos, Zustand p/ preferências/cache leve)
+- Data fetching: TanStack Query v5 **e** SWR 2 — TanStack é o padrão atual; SWR instalado p/ uso pontual/referência
+- Formulários: React Hook Form 7 + validação **Zod 4** (atenção: breaking changes vs Zod 3)
+- **Material UI 9** (@mui/material + @mui/icons-material + @emotion/react + @emotion/styled) — instalado p/ componentes novos/escopados
+- **Claymorphism** (2026-08-03): tokens `shadow-clay-*` + `rounded-clay*` no tailwind.config.js; sombras de 3 camadas tintadas (ver docs/RELATORIO_CLAYMORPHISM.md)
+- **Rewind UI 0.20** (@rewind-ui/core + @tailwindcss/forms + @tailwindcss/typography + tailwind-scrollbar) — componentes Tailwind; requer React 18 (instalado com `--legacy-peer-deps`, sem suporte oficial a React 19)
+- **date-fns 4** (datas), class-variance-authority, clsx, tailwind-merge
 - Lucide React (ícones), canvas-confetti (efeitos de celebração)
 - dotted-map (instalado para referência, não usado em produção — mapa custom com 27 dots manuais)
 - **Testes**: Vitest + React Testing Library
 
 ## Regras de Ouro
+
 1. **Sem Dinheiro na Tela**: NUNCA exibir `R$`, `$`, ou valores numéricos de preço. Apenas cores (Verde = barato, Amarelo = médio, Vermelho = caro) derivadas da API.
 2. **Offline-first**: PWA com service worker. TanStack Query com `staleTime` alto e cache persistente via Zustand.
 3. **Mobile-first**: design responsivo partindo de 320px. Touch targets >= 44px.
 4. **Fallback Visual**: emoji unicode via `PRODUTO_EMOJI` map — nunca quebrar layout.
-5. **Tailwind + shadcn/ui**: zero Mantine/MUI/Ant Design. Tudo com Tailwind utility classes + componentes shadcn. React Bits como biblioteca de efeitos animados.
+5. **Tailwind + shadcn/ui (padrão)**: UI principal com Tailwind utility classes + componentes shadcn. Material UI 9 e Mantine estão instalados — usá-los apenas de forma escopada (ex.: componentes novos complexos), sem misturar os 3 design systems no mesmo componente. React Bits como biblioteca de efeitos animados.
 6. **Sem Loading Spinners Genéricos**: usar SkeletonCards com animação de pulsar via Tailwind animate-pulse.
 7. **Streaming**: `useDataStream` hook para receber dados em SSE (Server-Sent Events) do backend.
 8. **Tema**: suporte a dark/light mode via classe `.dark` no `<html>`, controlado por `useTheme` hook.
@@ -30,25 +40,31 @@ App React PWA (offline-first, mobile-first). Interface de cores (verde/amarelo/v
 11. **Mapa Regional em Dots**: `BrasilMap.tsx` usa 27 círculos SVG (um por UF) em vez de polígonos ou `dotted-map` (gerava 5MB de SVG). Cores por região, interativo com hover/click/glow.
 
 ## Forecast — Badge de Transparência
+
 - `ProdutoVarejo` type em `domain.ts` inclui `is_forecast: boolean` e `confianca_baseline: number | null`
 - `ProductCard.tsx` renderiza `<Badge variant="outline">📊 Estimativa</Badge>` com tooltip via CSS `group-hover`
 - Badge posicionado ao lado do semáforo, não abaixo do card
 - Nenhuma alteração em fetch/staleTime — apenas renderização condicional
 
 ## View Modes (3 modos na SupermercadoView)
+
 A SupermercadoView oferece 3 modos de visualização com Tabs shadcn + Framer Motion AnimatePresence:
+
 - **Cards** (padrão) — grid de `ProductCard` com SpotlightCard + semáforo + status filter chips
 - **Mapa Regional** — `BrasilMap` (27 dots por UF) + `RegiaoPanel` (SpotlightCard com polos CEASA)
 - **Grade Sazonal** — `SazonalidadeNacional` grid (apenas BR Nacional sem filtro de mês)
 
 ## Juicy UI — Game-Inspired Components
+
 - `GameButton.tsx` — Framer Motion button com hover/tap springs, loading spinner, pulse glow, shake on error
 - `GameCard.tsx` — Card animado com entrada Framer Motion, badge forecast, hover scale, confetti on VERDE
 - `LivingStatus.tsx` — Indicador de status com animação pulsante e transições suaves
 - `useConfetti.ts` — Hook canvas-confetti para efeitos de celebração
 
 ## Mapa Regional — Filtro por Região + Seleção por UF
+
 A aba "Mapa Regional" implementa:
+
 - `useRegioes()` — fetch `GET /api/v1/regioes` → lista de 5 regiões com UFs, polos CEASA
 - `useRegiaoResumo(regiaoId, ano)` — fetch `/api/v1/sazonalidade?regiao={id}&ano={ano}` → snapshot de produtos
 - `BrasilMap.tsx` — 27 círculos SVG posicionados por coordenada real de cada UF, coloridos por região
@@ -61,13 +77,53 @@ A aba "Mapa Regional" implementa:
   - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-08-03)
+
+### Claymorphism — implementação (2026-08-03)
+
+Estilo "argila" (almost flat + skeuomórfico) aplicado conforme `docs/RELATORIO_CLAYMORPHISM.md`:
+
+- **Tokens** (`tailwind.config.js`): `boxShadow.clay-*` (clay-card, clay-btn, clay-press, clay-dark...) e `borderRadius.clay*` (28/20/32px) — sombra de 3 camadas: drop tintado verde + inset inferior escuro (curvatura) + inset superior claro (luz de topo).
+- **Base shadcn**: `ui/card.tsx` (rounded-clay + shadow-clay-card + dark), `ui/button.tsx` (nova variant `clay` com press/lift), `ui/badge.tsx` (rounded-full), `ui/dialog.tsx` (rounded-clay + clay-card).
+- **Cards do app**: `ProductCard` (shadow-clay-card/hover + dark), `GameCard` (rounded-2xl + clay + whileHover framer com sombra clay), `SkeletonCard` (rounded-clay), `DataTransparencyInfo` (tooltip rounded-clay-sm).
+- **GameButton**: raio rounded-2xl + highlight de topo (gradiente branco skeuo) + lip inferior inset escuro (sombra moldada) — mantendo o padrão keycap.
+- **Dark mode**: variantes `dark:shadow-clay-dark` re-derivadas (drop escuro profundo + brilho de topo ~6%).
+- **Escopo seletivo**: tabelas/gráficos (TabelaView/GraficosView) e header glass NÃO alterados; regra de ouro nº 1 (sem R$) intacta.
+
+### Instalação de Bibliotecas (frontend/package.json + frontend/package-lock.json)
+
+Lote de dependências adicionadas via `npm install` (nenhum código alterado):
+
+| Biblioteca                                                                          | Versão                 | Uso previsto                                                                                                                                      |
+| ----------------------------------------------------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| react-router                                                                        | 7.18.2                 | Roteamento (v7 — pacote único; `react-router-dom` fundido nele)                                                                                   |
+| @reduxjs/toolkit + react-redux                                                      | 2.12.0 / 9.3.0         | Estado global (Redux)                                                                                                                             |
+| react-hook-form                                                                     | 7.84.0                 | Formulários                                                                                                                                       |
+| zod                                                                                 | 4.4.3                  | Validação de schema (v4 — breaking changes vs v3)                                                                                                 |
+| gsap                                                                                | 3.15.0                 | Animações avançadas                                                                                                                               |
+| swr                                                                                 | 2.5.0                  | Data fetching (concorre com TanStack Query)                                                                                                       |
+| date-fns                                                                            | 4.4.0                  | Manipulação de datas                                                                                                                              |
+| @mui/material + @mui/icons-material + @emotion/*                                    | 9.2.0 / 11.14.x        | Design system Material UI                                                                                                                         |
+| @rewind-ui/core + @tailwindcss/forms + @tailwindcss/typography + tailwind-scrollbar | 0.20.0 / 0.5.x / 4.0.2 | Componentes Tailwind (React 18-only — instalado com `--legacy-peer-deps`)                                                                         |
+| @testing-library/dom (devDep)                                                       | 10.4.1                 | Peer dependency explícita do @testing-library/react — o `--legacy-peer-deps` havia removido a instalação automática dela, quebrando lint e testes |
+
+Já presentes (não reinstaladas): axios, @tanstack/react-query (5.101.4), zustand, framer-motion, lucide-react e shadcn/ui (config `components.json` + `src/components/ui/`).
+
+Observações:
+
+- `npm audit` reporta 2 vulnerabilidades de alta severidade (pré-existentes; `npm audit fix` ainda não rodado).
+- **Rewind UI**: pacote oficial é `@rewind-ui/core` (o `rewind-ui` no npm é abandonado desde 2023). Exige React 18 — instalado com `--legacy-peer-deps`; React 19.2.8 mantido no topo e deps internas aninhadas (framer-motion 10, date-fns 2). Ainda NÃO configurado no `tailwind.config.js` (faltam o content glob `./node_modules/@rewind-ui/core/dist/theme/styles/*.js` e os plugins `@tailwindcss/forms` + `tailwind-scrollbar` + `@tailwindcss/typography`).
+- Coexistência de 3 design systems (Mantine, shadcn/Tailwind, MUI) e sobreposição de data fetching (TanStack + SWR) e estado global (Zustand + Redux) — ver regra 5 e seção Stack para a convenção.
+
 ## Mudanças Recentes (2026-07-30)
 
 ### Ajustes na SupermercadoView
+
 - `src/pages/SupermercadoView.tsx` — Ajustes menores no layout da página principal
 - Melhor alinhamento dos seletores (UF, mês, ano) e responsividade
 
 ## BRNationalIcon — Ícone BR Animado
+
 - `BRNationalIcon.tsx` — substitui o dropdown de UF nos modos **Grade Sazonal** e **Mapa Regional**
 - Exibe bandeira do Brasil (SVG) com pulse animation + 5 frutas orbitando (Framer Motion + CSS keyframes `fruit-orbit-{0-4}`)
 - Modo **Cards** mantém o dropdown de UF normal (comportamento condicional em `SupermercadoView.tsx`)
@@ -75,6 +131,7 @@ A aba "Mapa Regional" implementa:
 - `BRNationalIcon.test.tsx` — 5 testes unitários (render, pulse, orbit count, fallback emoji, UF toggle)
 
 ## Mapa Rápido
+
 - `src/App.tsx` — root, inicializa useTheme + useDataStream
 - `src/main.tsx` — entry point Vite + PWA registration + QueryClientProvider
 - `src/components/ProductCard.tsx` — card de produto (emoji + semáforo + badge forecast + SpotlightCard)
@@ -93,7 +150,7 @@ A aba "Mapa Regional" implementa:
 - `src/components/SpotlightCard.tsx` — React Bits: card com spotlight que segue o mouse
 - `src/components/TiltedCard.tsx` — React Bits: card com 3D tilt ao hover
 - `src/components/BlurText.tsx` — React Bits: texto com blur/fade animado
-- `src/components/ui/` — componentes base shadcn (card, button, dialog, badge, skeleton, tabs)
+- `src/components/ui/` — componentes base shadcn (card, button, dialog, badge, skeleton, tabs, table, select)
 - `src/lib/utils.ts` — função `cn()` (clsx + tailwind-merge)
 - `src/hooks/useHortifruti.ts` — TanStack Query fetch
 - `src/hooks/useRegioes.ts` — fetch `GET /api/v1/regioes`

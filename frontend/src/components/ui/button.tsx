@@ -8,10 +8,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'bg-sazonal-verde-600 text-white shadow hover:bg-sazonal-verde-700',
-        destructive:
-          'bg-sazonal-vermelho-600 text-white shadow-sm hover:bg-sazonal-vermelho-700',
+        default: 'bg-sazonal-verde-600 text-white shadow hover:bg-sazonal-verde-700',
+        destructive: 'bg-sazonal-vermelho-600 text-white shadow-sm hover:bg-sazonal-vermelho-700',
         outline:
           'border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700',
         secondary:
@@ -19,7 +17,9 @@ const buttonVariants = cva(
         ghost: 'hover:bg-gray-100 dark:hover:bg-gray-700',
         link: 'text-sazonal-verde-600 underline-offset-4 hover:underline',
         green: 'bg-sazonal-verde-600 text-white shadow-sm hover:bg-sazonal-verde-700',
-        light: 'bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30',
+        light:
+          'bg-sazonal-verde-50 dark:bg-sazonal-verde-dark/20 text-sazonal-verde-700 dark:text-sazonal-verde-400 hover:bg-sazonal-verde-100 dark:hover:bg-sazonal-verde-dark/30',
+        clay: 'bg-sazonal-verde-600 text-white !rounded-2xl shadow-clay-btn hover:bg-sazonal-verde-700 hover:shadow-clay-btn-hover hover:-translate-y-0.5 active:translate-y-[2px] active:scale-[0.98] active:shadow-clay-press transition-all',
       },
       size: {
         default: 'h-9 px-4 py-2',
@@ -37,8 +37,7 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
@@ -46,11 +45,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
     )
   },
 )

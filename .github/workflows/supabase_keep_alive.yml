@@ -1,4 +1,4 @@
-name: Supabase Keep-Alive
+name: Keep-Alive Postgres (Aiven)
 
 on:
   schedule:
@@ -21,7 +21,7 @@ jobs:
       - name: Install driver de conexão
         run: pip install asyncpg
 
-      - name: Ping no Supabase (keep-alive)
+      - name: Ping no Postgres Aiven (keep-alive)
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python utilities/github_supabase_ping.py

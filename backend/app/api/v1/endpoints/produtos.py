@@ -3,7 +3,7 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Response
 
 from backend.app.core.cache import cache, safe_set
 from backend.app.core.config import get_settings
@@ -70,20 +70,25 @@ async def _carregar_regiao(regiao_id: str) -> tuple[list[str], int] | None:
     return None
 
 
-async def _query_sazonalidade(
-    regiao: str | None = None,
-    uf: str | None = None,
-    municipio: str | None = None,
-    produto: str | None = None,
-    status_cor: str | None = None,
-    categoria: str | None = None,
-    ano: int | None = None,
-    mes: int | None = None,
-    pagina: int = 1,
-    por_pagina: int = 100,
-) -> SazonalidadeListResponse:
-    settings = get_settings()
-    cache_key = hashlib.md5(
+def _build_sazonalidade_cache_key(
+    regiao: str | None,
+    uf: str | None,
+    municipio: str | None,
+    produto: str | None,
+    status_cor: str | None,
+    categoria: str | None,
+    ano: int | None,
+    mes: int | None,
+    pagina: int,
+    por_pagina: int,
+) -> str:
+    """Chave de cache compartilhada entre o endpoint e `_query_sazonalidade`.
+
+    Deve espelhar EXATAMENTE a chave usada no cache set (MD5 de dict com
+    sort_keys, default=str), para que a checagem HIT/MISS do endpoint enxergue
+    o mesmo objeto armazenado pelo helper.
+    """
+    return hashlib.md5(
         json.dumps(
             {
                 "regiao": regiao,
@@ -101,6 +106,56 @@ async def _query_sazonalidade(
             default=str,
         ).encode()
     ).hexdigest()
+
+
+async def _ultimo_refresh_mv_iso() -> str:
+    """Modificação do arquivo físico da MV em ISO8601 UTC (vazio se indisponível).
+
+    Consulta assíncrona via pool da API (não bloqueia o event loop). Em
+    qualquer exceção retorna ``""`` para o header X-Last-Refresh ficar ausente
+    sem quebrar a resposta.
+    """
+    try:
+        row = await fetchrow(
+            "SELECT (pg_stat_file("
+            "pg_relation_filepath('mart.vw_api_produtos_sazonalidade'::regclass)"
+            ")).modification AS last_refresh"
+        )
+        if row is None or row[0] is None:
+            return ""
+        last = row[0]
+        if last.tzinfo is None:
+            last = last.replace(tzinfo=UTC)
+        return last.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:  # noqa: BLE001  # header de transparência nunca deve quebrar a resposta
+        return ""
+
+
+async def _query_sazonalidade(
+    regiao: str | None = None,
+    uf: str | None = None,
+    municipio: str | None = None,
+    produto: str | None = None,
+    status_cor: str | None = None,
+    categoria: str | None = None,
+    ano: int | None = None,
+    mes: int | None = None,
+    pagina: int = 1,
+    por_pagina: int = 100,
+) -> SazonalidadeListResponse:
+    settings = get_settings()
+    cache_key = _build_sazonalidade_cache_key(
+        regiao,
+        uf,
+        municipio,
+        produto,
+        status_cor,
+        categoria,
+        ano,
+        mes,
+        pagina,
+        por_pagina,
+    )
 
     cached = await cache.get(cache_key)
     if cached is not None:
@@ -781,6 +836,7 @@ async def _query_regional_por_mes(
 
 @router.get("", response_model=SazonalidadeListResponse)
 async def listar_sazonalidade(
+    response: Response,
     regiao: str | None = Query(
         None, description="ID da região (norte, nordeste, centro-oeste, sudeste, sul)"
     ),
@@ -794,6 +850,25 @@ async def listar_sazonalidade(
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),
 ):
+    cache_key = _build_sazonalidade_cache_key(
+        regiao,
+        uf,
+        municipio,
+        produto,
+        status_cor,
+        categoria,
+        ano,
+        mes,
+        pagina,
+        por_pagina,
+    )
+    cached = await cache.get(cache_key)
+    if cached is not None:
+        response.headers["X-Cache-Status"] = "HIT"
+        response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
+        return SazonalidadeListResponse(**cached)
+    response.headers["X-Cache-Status"] = "MISS"
+    response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
     return await _query_sazonalidade(
         regiao=regiao,
         uf=uf,
@@ -1002,6 +1077,31 @@ async def _query_br_sazonalidade(
             )
         )
 
+    # Grade de 12 meses: meses ausentes (1..12) entram como CINZA (sem histórico
+    # real para o período), mantendo ordenação crescente e os meses com dados.
+    for item in prod_map.values():
+        meses = item["meses"]
+        if isinstance(meses, list):
+            existentes = {m.mes for m in meses}
+            for mes in range(1, 13):
+                if mes not in existentes:
+                    meses.append(
+                        MesSazonalidade(
+                            mes=mes,
+                            status_cor="CINZA",
+                            is_forecast=False,
+                            baseline_confianca=None,
+                            forecast_method=None,
+                            calculado_em=None,
+                            ano_referencia=None,
+                            tipo_dado=None,
+                            mensagem_transparencia="Sem histórico real para este período.",
+                            is_dado_legado=False,
+                        )
+                    )
+            meses.sort(key=lambda m: m.mes)
+            item["meses"] = meses
+
     all_items = list(prod_map.values())
     total = len(all_items)
     page = all_items[offset_val : offset_val + por_pagina]
@@ -1016,6 +1116,7 @@ async def _query_br_sazonalidade(
 
 @router.get("/br-sazonalidade", response_model=SazonalidadeNacionalListResponse)
 async def listar_br_sazonalidade(
+    response: Response,
     ano: int = Query(..., ge=2024, le=2030, description="Ano da sazonalidade"),
     categoria: str | None = Query(None, description="Filtro por categoria"),
     min_ufs: int = Query(1, ge=1, le=27, description="Mínimo de UFs por produto/mês"),
@@ -1041,8 +1142,12 @@ async def listar_br_sazonalidade(
 
     cached = await cache.get(cache_key)
     if cached is not None:
+        response.headers["X-Cache-Status"] = "HIT"
+        response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
         return SazonalidadeNacionalListResponse(**cached)
 
+    response.headers["X-Cache-Status"] = "MISS"
+    response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
     offset_val = (pagina - 1) * por_pagina
     return await _query_br_sazonalidade(
         ano, categoria, min_ufs, pagina, por_pagina, offset_val, cache_key, settings

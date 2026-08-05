@@ -108,6 +108,54 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
+## Mudanças Recentes (2026-08-03)
+
+### Limiares Dinâmicos de Cor — Z-Score por Volatilidade (65_limiares_cores_dinamicos_zscore.sql)
+
+- **Novo arquivo**: `database/65_limiares_cores_dinamicos_zscore.sql` (752 linhas) — substitui o semáforo ESTÁTICO (±25% fixo na view/MV 63:88, ±15% fixo na procedure 59) por limiares DINÂMICOS baseados no desvio padrão histórico de cada `(id_produto, id_localidade)` sobre os últimos 24 meses REAIS de `staging.fact_precos_mensais`:
+  - **VERDE** se `preco_exibido < preco_referencia - 1.0 * desvio_padrao`; **VERMELHO** se `> + 1.0 * desvio_padrao`; **AMARELO** caso contrário (inclui base insuficiente/sem estatística).
+  - Piso de segurança (CV mínimo 10%): produtos com desvio nulo/zero ou CV < 10% usam `desvio_efetivo = 10% da média` (banda mínima não-degenerada).
+- **Fase 1** — `staging.fn_estatisticas_volatilidade_24m()`: AVG/STDDEV/COUNT por `(id_produto, id_localidade)` na janela dos últimos 24 meses reais (STDDEV amostral, igual à Fase 10).
+- **Fase 2** — `staging.fn_status_cor_zscore(preco_exibido, preco_referencia, desvio_padrao)`: semáforo dinâmico ±1σ.
+- **Fase 3** — propagação ao mart:
+  1. 3 colunas novas em `mart.sazonalidade_produto` (`desvio_padrao_historico`, `limite_superior`, `limite_inferior`);
+  2. UPDATE full da base (regra dinâmica + limites);
+  3. `sp_calcular_sazonalidade()` — CASE ±15% substituído pela regra dinâmica via LATERAL + gravação das 3 colunas;
+  4. `mart.vw_anchor_sazonalidade` — `status_cor` dinâmico via LATERAL + 3 colunas novas no output;
+  5. MV `mart.vw_api_produtos_sazonalidade` **V18** (DROP+CREATE, `WITH DATA`, MESMOS 3 branches / colunas / 7 índices / GRANTs da V17 — apenas 3 colunas adicionadas).
+- **Fase 4** — proof query executada pelo orchestrator após o apply.
+- Idempotência: `CREATE OR REPLACE` / `ADD COLUMN IF NOT EXISTS` / `DROP IF EXISTS`; MV recriada com DROP + CREATE (não existe `CREATE OR REPLACE` para MV) + `WITH DATA`. Não toca em `backup_schema_latest.sql` (regenerado automaticamente).
+
+### Dado Histórico Real + Transparência (63_dado_historico_real_transparencia.sql)
+
+- **Novo arquivo**: `database/63_dado_historico_real_transparencia.sql` (refatoracao-dado-historico) — substitui as projeções SINTÉTICAS (Sanduíche Sazonal + Engine V13) por DADO HISTÓRICO REAL com transparência temporal (ano âncora N → N-1 → N-2):
+  - `sp_executar_carga_completa()` — steps sintéticos (5-6) viram no-op guards + `RAISE NOTICE`; novo step 7 = `REFRESH MATERIALIZED VIEW CONCURRENTLY` da MV (o orchestrator vira dono do refresh).
+  - 5 colunas novas em `mart.sazonalidade_produto`: `ano_referencia`, `tipo_dado`, `metadado_transparencia`, `idade_dado_anos`, `preco_exibido` (+ CHECK `chk_sazonalidade_tipo_dado`).
+  - Backfill único: real → `REAL_ATUAL`/`HISTORICO_BASE`; `FLUXO_PROXY`/`is_forecast` → `FALLBACK_DIMENSAO` (nunca deletado).
+  - View auxiliar `mart.vw_anchor_sazonalidade` (âncora N→N-1→N-2 via LATERAL, SEM CROSS JOIN — evita padrão OOM da Fase 62).
+  - MV `mart.vw_api_produtos_sazonalidade` **V17**: 3 branches UNION ALL (A reais, B âncora em ano atual, C fallback dimensão) + 7 índices + GRANT.
+  - `fn_br_nacional_sazonalidade` recriada com `ano_referencia`, `tipo_dado`.
+  - Constraints preservadas: `uq_sazonalidade`, `uq_sazonalidade_data_ref`, `chk_data_ref_ano_mes`.
+- **Fixes subsequentes (05c7407f, 3e3d224b)**: idempotência do CHECK + ordem do rollback 64 + `pg_attribute`; branch C da MV V17 emite `COALESCE(f.status_cor,'AMARELO')` — elimina `status_cor NULL` (bloqueador REL-01: pydantic ValidationError → HTTP 500).
+
+### Rollback do Dado Histórico (64_rollback_dado_historico.sql)
+
+- **Novo arquivo**: `database/64_rollback_dado_historico.sql` — rollback-ONLY (não roda em deploy; acionado manualmente via `psql`). Desfaz database/63 + 000021:
+  1. Restaura `sp_executar_carga_completa` com engines sintéticas ATIVAS (corpo original da Fase 62);
+  2. Remove MV V17 + as 5 colunas de transparência + CHECK + comentários;
+  3. Remove `mart.vw_anchor_sazonalidade`;
+  4. Recria MV `vw_api_produtos_sazonalidade` V16 (padrão Fase 36) + refresh;
+  5. Restaura `fn_br_nacional_sazonalidade` (sem `ano_referencia`/`tipo_dado`).
+- Reaplicar database/63 após rollback reaplica a refatoração (idempotente).
+
+### Engine Forecast V13 (62_engine_forecast_2024_2025_v13.sql)
+
+- **Novo arquivo**: `database/62_engine_forecast_2024_2025_v13.sql` — motor de BASELINE PONDERADA 2024→2025 (precede e é substituído pelo 63):
+  - Nova tabela `mart.sazonalidade_baseline_ponderada` com Matriz de Decisão (60% âncora 2024 + 40% margem 2025) e cadeia de fallbacks: `ANCHOR_2024_MARGIN_2025 → PROXY_CATEGORIA_UF → LOCF_MES_ANTERIOR`.
+  - `sp_calcular_forecast_2026_v13()` projeta 2026 preservando linhas reais (`is_forecast = FALSE` no ON CONFLICT).
+  - `fn_br_nacional_sazonalidade` recriada com `forecast_method` + `calculado_em`.
+- `database/57_expurgo_e_recalibragem.sql` — ajustado para preservar `forecast_method v13` no expurgo/recalibragem.
+
 ## Mudanças Recentes (2026-07-30)
 
 ### Fix Crítico: Forecast 2026 (ON CONFLICT, DISTINCT ON, ano+mes)
@@ -232,6 +280,10 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 
 - `39_locf_real_gaps_sazonalidade.sql` — LOCF multi-fallback para preencher gaps de preço
 - `scripts/injetar_sintetico_coldstart.py` — Geração de preços sintéticos para cold-start
+- `62_engine_forecast_2024_2025_v13.sql` — Engine V13 (baseline ponderada 2024→2025)
+- `63_dado_historico_real_transparencia.sql` — Dado histórico real + transparência (ano âncora, MV V17)
+- `64_rollback_dado_historico.sql` — Rollback-ONLY da refatoração (desfaz 63 + 000021)
+- `65_limiares_cores_dinamicos_zscore.sql` — Limiares dinâmicos de cor (Z-Score ±1σ, MV V18)
 
 ## Mapa Rápido
 
@@ -252,6 +304,10 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `37_fix_br_regional_functions.sql` — Fix funções BR regionais
 - `38_add_qualidade_column.sql` — Coluna de qualidade para produtos
 - `39_locf_real_gaps_sazonalidade.sql` — LOCF real para gaps de preço
+- `62_engine_forecast_2024_2025_v13.sql` — Engine V13 (baseline ponderada 2024→2025, Matriz de Decisão)
+- `63_dado_historico_real_transparencia.sql` — Dado histórico real + transparência temporal (ano âncora, MV V17)
+- `64_rollback_dado_historico.sql` — Rollback-ONLY do dado histórico (desfaz 63 + 000021)
+- `65_limiares_cores_dinamicos_zscore.sql` — Limiares dinâmicos de cor (Z-Score ±1σ, MV V18)
 
 ## Migração Supabase (2026-07-17)
 

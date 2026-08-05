@@ -79,6 +79,29 @@ A aba "Mapa Regional" implementa:
 
 ## Mudanças Recentes (2026-08-03)
 
+### Transparência de Dados Históricos (2026-08-03)
+
+UI de transparência temporal (dado histórico real vs referência), acompanhando a MV V17 do banco (ano âncora N → N-1 → N-2):
+
+- **`DataTransparencyInfo.tsx`** (novo) — ícone (i) circulado com tooltip/popover explicativo:
+  - Contrato **aditivo**: renderiza `null` quando `!tipo_dado` — consumidores antigos sem os novos campos continuam funcionando
+  - Tipos de dado (`tipo_dado`): `REAL_ATUAL` → título "Dado Atual" + badge "Coleta Efetiva"; `HISTORICO_BASE` → "Ano de Origem: N" + badge "Histórico Real CONAB"; demais → "Dado de Referência"/"Referência"
+  - Defasagem automática: `is_dado_legado` + `ano_referencia` < ano corrente → "Histórico de N ano(s) atrás"
+  - NUNCA renderiza R$ (regra S3/R-ADD-03) — só ano, tipo, defasagem e proveniência
+  - Tooltip claymorphism (`rounded-clay-sm`, `shadow-clay-card`/`shadow-clay-dark`), acessível via `role="button"`/`role="tooltip"` (hover + focus-within)
+- **`types/domain.ts`** — `ProdutoVarejo` e `MesSazonalidade` ganham campos opcionais: `ano_referencia`, `tipo_dado`, `mensagem_transparencia`, `is_dado_legado`
+- **`ProductCard.tsx`** — badges de tipo de dado substituem os sintéticos: `tipoDadoLabel()`/`tipoDadoVariant()` → "Coleta Efetiva" (variant `default`) / "Histórico Real '25" (variant `warning`) + `DataTransparencyInfo` + rodapé "Ano de apuração: N". Removidos badges 📊 Estimativa / 🪄 Estimado
+- **`SazonalidadeNacional.tsx`** — células da grade exibem badge de ano âncora (`'26`/`'25`/`'24`, sem texto sintético) + ícone (i) `DataTransparencyInfo` quando `is_dado_legado`/`tipo_dado`; removida classificação de gaps estruturais vs coleta (`GAP_STYLES`); célula sem linha virou muted vazia; aviso de baixa cobertura (< 3 UFs) abaixo da célula
+- **`SupermercadoView.tsx`** — Grade Sazonal agora **sempre exibe o ano corrente** (MV V17 preenche meses sem dado com dado real do ano âncora); removido badge "⚠️ Ano em curso — dados parciais"; subtítulo "Grade com dados de N-2–N (ano âncora exibido por célula)"; botão "Ver N-1 (histórico)"
+- **`GameCard.tsx`** / **`GameButton.tsx`** / **`ui/card.tsx`** / **`ui/button.tsx`** / **`ui/badge.tsx`** / **`ui/dialog.tsx`** — reestilização claymorphism (ver seção abaixo); `ui/button.tsx` ganhou nova variant `clay`
+
+**Testes novos/atualizados (Vitest + RTL):**
+
+- **`DataTransparencyInfo.test.tsx`** (novo) — 4 testes: contrato aditivo (`null` → nada renderizado), "Dado Atual"+"Coleta Efetiva" para `REAL_ATUAL`, sem R$ no DOM (S3), exposição de `mensagem_transparencia`
+- **`SazonalidadeNacional.test.tsx`** (novo) — 4 testes: badge de ano legado `'25` em célula histórica, ícone (i) presente, célula sem dados vazia (sem tooltip de gap), sem R$ na grade (S3)
+- **`ProductCard.test.tsx`** (atualizado) — badges "Coleta Efetiva" (REAL_ATUAL) / histórico + ano (HISTORICO_BASE), ausência de badges sintéticos 📊/🪄, rodapé com ano de apuração
+- **`smoke_e2e.mjs`** (novo) — smoke E2E headless (Playwright chromium) contra `http://127.0.0.1:5173` (`SMOKE_BASE_URL`): app renderiza, clica na aba Grade Sazonal, ausência de tooltips de gap estrutural/coleta, ícones (i)/badges de ano presentes, sem R$ no DOM, badges "Coleta Efetiva"/"Histórico Real", sem badges sintéticos 📊/🪄, sem erros de console. Exit 0 = PASS, 1 = FAIL
+
 ### Claymorphism — implementação (2026-08-03)
 
 Estilo "argila" (almost flat + skeuomórfico) aplicado conforme `docs/RELATORIO_CLAYMORPHISM.md`:
@@ -134,7 +157,8 @@ Observações:
 
 - `src/App.tsx` — root, inicializa useTheme + useDataStream
 - `src/main.tsx` — entry point Vite + PWA registration + QueryClientProvider
-- `src/components/ProductCard.tsx` — card de produto (emoji + semáforo + badge forecast + SpotlightCard)
+- `src/components/ProductCard.tsx` — card de produto (emoji + semáforo + badges de tipo de dado + DataTransparencyInfo + SpotlightCard)
+- `src/components/DataTransparencyInfo.tsx` — ícone (i) de transparência temporal (ano âncora / tipo_dado / defasagem)
 - `src/components/GameCard.tsx` — card animado com Framer Motion + confetti
 - `src/components/GameButton.tsx` — botão com springs Framer Motion
 - `src/components/LivingStatus.tsx` — indicador pulsante de status
@@ -142,7 +166,7 @@ Observações:
 - `src/components/GraficosView.tsx` — Recharts (gráficos de linha/barras)
 - `src/components/BrasilMap.tsx` — mapa do Brasil com 27 dots SVG (um por UF), interativo por região
 - `src/components/RegiaoPanel.tsx` — painel lateral do mapa regional (SpotlightCard)
-- `src/components/SazonalidadeNacional.tsx` — grid sazonal BR (12 meses x produtos)
+- `src/components/SazonalidadeNacional.tsx` — grid sazonal BR (12 meses x produtos) com badge de ano âncora + DataTransparencyInfo
 - `src/components/CategoriesModal.tsx` — modal de categorias (shadcn Dialog)
 - `src/components/SkeletonCard.tsx` — loading state (shadcn Skeleton)
 - `src/components/ThemeToggle.tsx` — dark/light toggle
@@ -184,7 +208,10 @@ Frontend (Vite) ─── VITE_API_URL ───→ Backend FastAPI ─── as
 - `src/types/index.ts` — barrel exports de tipos
 - `src/store/useUserStore.ts` — Zustand store (preferências do usuário, persist IndexedDB)
 - `src/vite-env.d.ts` — tipos Vite (import.meta.env)
-- `src/test/ProductCard.test.tsx` — 10 testes unitários (Vitest + RTL)
+- `src/test/ProductCard.test.tsx` — 12 testes unitários (Vitest + RTL, inclui badges de tipo de dado)
+- `src/test/DataTransparencyInfo.test.tsx` — 4 testes de transparência temporal (contrato aditivo, badges, sem R$)
+- `src/test/SazonalidadeNacional.test.tsx` — 4 testes da grade sazonal (badge ano âncora, ícone (i), sem gaps/R$)
+- `src/test/smoke_e2e.mjs` — smoke E2E headless (Playwright) contra o dev server (transparência + sem R$)
 - `vite.config.ts` — configuração Vite + PWA + proxy dev + vitest
 - `tailwind.config.js` — Tailwind com cores sazonais + tailwindcss-animate
 - `components.json` — configuração shadcn/ui + registry @react-bits

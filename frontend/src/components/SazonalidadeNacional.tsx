@@ -25,22 +25,28 @@ const STATUS_STYLES: Record<
   { bg: string; text: string; border: string; label: string }
 > = {
   VERDE: {
-    bg: 'bg-sazonal-verde-100 dark:bg-sazonal-verde-900/30',
-    text: 'text-sazonal-verde-700 dark:text-sazonal-verde-300',
-    border: 'border-sazonal-verde-300 dark:border-sazonal-verde-700',
+    bg: 'bg-sazonal-verde-600/20 dark:bg-sazonal-verde-700/45',
+    text: 'text-sazonal-verde-700 dark:text-sazonal-verde-400',
+    border: 'border-sazonal-verde-600/45 dark:border-sazonal-verde-400/45',
     label: 'Melhor Época',
   },
   AMARELO: {
-    bg: 'bg-sazonal-amarelo-100 dark:bg-sazonal-amarelo-900/30',
-    text: 'text-sazonal-amarelo-700 dark:text-sazonal-amarelo-300',
-    border: 'border-sazonal-amarelo-300 dark:border-sazonal-amarelo-700',
+    bg: 'bg-sazonal-amarelo-600/20 dark:bg-sazonal-amarelo-dark/45',
+    text: 'text-sazonal-amarelo-dark dark:text-sazonal-amarelo-400',
+    border: 'border-sazonal-amarelo-600/45 dark:border-sazonal-amarelo-400/45',
     label: 'Preço Normal',
   },
   VERMELHO: {
-    bg: 'bg-sazonal-vermelho-100 dark:bg-sazonal-vermelho-900/30',
-    text: 'text-sazonal-vermelho-700 dark:text-sazonal-vermelho-300',
-    border: 'border-sazonal-vermelho-300 dark:border-sazonal-vermelho-700',
+    bg: 'bg-sazonal-vermelho-600/20 dark:bg-sazonal-vermelho-dark/45',
+    text: 'text-sazonal-vermelho-dark dark:text-sazonal-vermelho-400',
+    border: 'border-sazonal-vermelho-600/45 dark:border-sazonal-vermelho-400/45',
     label: 'Péssima Época',
+  },
+  CINZA: {
+    bg: 'bg-gray-100 dark:bg-gray-800/40',
+    text: 'text-gray-400 dark:text-gray-500',
+    border: 'border-gray-200/70 dark:border-gray-700/60',
+    label: 'Sem Cotação',
   },
 }
 
@@ -110,32 +116,41 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                   // preenche todos os meses do ano corrente com dado real/âncora).
                   return (
                     <td key={mesNum} className="px-1 py-1.5 text-center">
-                      <div className="h-8 w-full rounded border border-transparent bg-gray-50 dark:bg-gray-800/40" />
+                      <div className="h-8 w-full rounded border border-transparent bg-gray-50 dark:bg-gray-800/60" />
                     </td>
                   )
                 }
 
-                const style = STATUS_STYLES[mesData.status_cor]
+                const style = STATUS_STYLES[mesData.status_cor] ?? STATUS_STYLES.CINZA
+                const isCinza = mesData.status_cor === 'CINZA'
                 const isLowCoverage = item.total_ufs < 3
                 return (
                   <td key={mesNum} className="px-1 py-1.5 text-center">
                     <div className="group relative flex h-8 w-full items-center justify-center gap-1 rounded-md border">
                       <motion.div
-                        whileHover={{ scale: 1.08 }}
+                        whileHover={isCinza ? {} : { scale: 1.08 }}
                         className={cn(
-                          'flex h-full w-full cursor-default items-center justify-center rounded-md border',
+                          'flex h-full w-full cursor-default items-center justify-center rounded-md border shadow-clay-press dark:shadow-clay-dark',
+                          isCinza && 'opacity-60',
                           style.bg,
                           style.text,
                           style.border,
                         )}
                         aria-label={`${item.produto} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
                       >
-                        {badge && (
-                          <span className="text-[9px] font-semibold opacity-80">{badge}</span>
+                        {isCinza ? (
+                          <span className="px-0.5 text-[9px] font-medium leading-none">
+                            Sem Cotação
+                          </span>
+                        ) : (
+                          badge && (
+                            <span className="text-[9px] font-semibold opacity-80">{badge}</span>
+                          )
                         )}
                       </motion.div>
-                      {(isLegado || mesData.tipo_dado) && (
+                      {(isLegado || mesData.tipo_dado || isCinza) && (
                         <DataTransparencyInfo
+                          status_cor={mesData.status_cor}
                           tipo_dado={mesData.tipo_dado}
                           ano_referencia={mesData.ano_referencia}
                           mensagem_transparencia={mesData.mensagem_transparencia}

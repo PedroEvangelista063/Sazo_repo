@@ -1,14 +1,17 @@
 # summary.md — /pipeline (Motor de Extração)
 
 ## Propósito
+
 Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focados extraem payloads sujos (HTML/JSON/CSV) e os depositam na Landing Zone (`raw.coleta_bruta`). Proibido validar, transformar ou filtrar dados durante a extração.
 
 ## Stack
+
 - Python 3.13+, Polars, Playwright, HTTPX, asyncio, curl-cffi, patchright
 - asyncpg (pool) para conexão com PostgreSQL
 - Pydantic v2 (apenas para schemas de coleta, não para validação na borda)
 
 ## Regras de Ouro
+
 1. **Scrape Now, Parse Later**: a extração NUNCA valida dados. Joga o payload bruto na `raw.coleta_bruta` e morre.
 2. **Run and Die**: sem `while True`, sem daemon. O processo acorda, colhe, descarrega e encerra com `sys.exit(0)`.
 3. **Timeout Global**: `asyncio.wait_for(task, timeout=1200)` — 20 min de vida máxima do job.
@@ -23,13 +26,33 @@ Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focad
 ## Mudanças Recentes (2026-07-30)
 
 ### Ingestão CONAB Aprimorada (ingestao_conab.py)
+
 - `pipeline/ingestao_conab.py` — Expansão de +351 linhas
 - Melhorias no parsing dos dados CONAB (cotação semanais)
 - Normalização de produtos e variedades para o schema staging
 - Tratamento de dados duplicados e consistência temporal
 
+## Mudanças Recentes (2026-08-02/03)
+
+### Guard is_forecast — re-levanta GuardIsForecastError (run_bulk_historical_fill.py)
+
+- `pipeline/run_bulk_historical_fill.py` — o guard que monitora `count(is_forecast=TRUE)` antes/depois do recálculo agora **aborta em vez de engolir** (R4-001 blocker / R-ADD-06):
+  - Nova exceção `GuardIsForecastError(RuntimeError)` — falha do guard: `count(is_forecast=TRUE)` cresceu após o recálculo (indica que engines sintéticas V13/sanduíche foram (re)ativadas e o deploy está errado).
+  - `except GuardIsForecastError: raise` — re-levantada ANTES do catch genérico (`except Exception`), que antes engolia o erro e continuava como "sucesso". Com o re-raise, o pipeline aborta com exit != 0 e CI/operador enxergam a falha.
+- Commit `20970929` (slice 1d) já havia adicionado o guard (com `raise RuntimeError`) + desativado as engines sintéticas no pipeline; `245c9d1d` transformou o raise em exceção específica re-levantada.
+
+### Ingestão CONAB — correções de parsing (ingestao_conab.py)
+
+- `pipeline/ingestao_conab.py` (commit 39199a29) — correções funcionais sobre o parsing CONAB:
+  - Filtro de preço: `preco_medio >= 0.01` (antes `> 0`) — valores residuais de divisão arredondam p/ 0 no CHECK numérico do banco (`fact_precos_mensais_preco_medio_check: preco > 0`).
+  - Precedência corrigida: `& (pl.col("uf").str.len_chars() == 2)` — parênteses obrigatórios (bug histórico de regressão: Python dá precedência maior a `&` que a `==`).
+  - Helper `_qtd_valor_to_float(col)` — converte qtd/valor via String + troca de vírgula só quando texto; cast direto quando numérico (bug histórico: `.str.replace` em coluna i64 → InvalidOperation).
+  - Demais mudanças são formatação/refactor (dicts expansivos, loggers multi-linha).
+
 ## Pós-Coleta — Ciclo Medalhão (executar_ciclo_medalhao)
+
 O ciclo completo em `persistence.py` executa **2 passos** (simplificado — forecast agora é 100% SQL):
+
 1. **SortingEngine** — raw.coleta_bruta → staging.fact_precos_mensais
 2. **sp_executar_carga_completa()** — pipeline completo em uma SP:
    - `sp_carregar_landing_para_staging()`
@@ -44,24 +67,30 @@ A lógica de forecast foi migrada dos scripts Python (`calcular_baseline.py`, `p
 ## Fluxo dos Dados — Volumes Reais
 
 ### 1. RAW — Landing Zone (bronze)
+
 ```
 Scraper → raw.coleta_bruta
 ```
+
 15 registros (payloads brutos JSONB, sem constraints). `raw.precos_uf` e `raw.precos_municipio` para carga CONAB 1:1.
 
 ### 2. STAGING — Dados Limpos (silver)
+
 ```
 raw.coleta_bruta ──→ SortingEngine ──→ staging.fact_precos_mensais
 ```
+
 - `staging.fact_precos_mensais`: **45.114** registros (dados tipados, UPSERT por `ON CONFLICT`)
 - `staging.dim_produto`: **865** produtos únicos
 - `staging.dim_localidade`: 850 localidades únicas
 - Rejeitados vão para `ops.quarentena_coleta`
 
 ### 3. MART — Negócio + API (gold)
+
 ```
 staging ──→ sp_executar_carga_completa() ──→ mart.sazonalidade_produto
 ```
+
 - `mart.sazonalidade_produto`: **145.740** registros totais (pós LOCF + sintéticos + forecast)
   - **79.980** reais (`is_forecast=FALSE`)
   - **65.760** forecast (`is_forecast=TRUE`)
@@ -69,20 +98,24 @@ staging ──→ sp_executar_carga_completa() ──→ mart.sazonalidade_produ
 - `mart.sazonalidade_baseline`: **23.449** (24_25) + **32.581** (25_26) combinações (moda do status_cor)
 
 ### 4. MV — View Materializada
+
 ```
 mart ──→ REFRESH MV ──→ mart.vw_api_produtos_sazonalidade
 ```
+
 - **139.255** linhas disponíveis para a API (filtro ALIMENTO_VAREJO + status_cor válido)
 - JOIN entre `sazonalidade_produto`, `dim_produto`, `dim_localidade`, `dim_categoria`
 - Filtra apenas `categoria_b2c = 'ALIMENTO_VAREJO'` e `status_cor IN ('VERDE','AMARELO','VERMELHO')`
 - A API é **read-only** — consulta exclusivamente a MV, nunca `raw` ou `staging`
 
 ## Orquestrador Global
+
 - `AutonomousOrchestrator.coletar_global(competencia)` — dispatch único por competência que executa micro-engines (ceagesp, conab) para TODAS as UFs sem filtrar por UF específica
 - Usado pelo endpoint `POST /api/v1/admin/coletar-global` no backend
 - Substitui múltiplas chamadas `_coletar_interno` por UF quando o objetivo é coletar dados nacionais
 
 ## Mapa Rápido
+
 - `scraper/main_runner.py` — entry point Run and Die (pool asyncpg + timeout 1200s)
 - `scraper/orchestrator.py` — `AutonomousOrchestrator` (cascata 3 passos + auditoria + coletar_global)
 - `scraper/micro_engines/base_engine.py` — ABC + Semaphore(3) + CircuitBreaker

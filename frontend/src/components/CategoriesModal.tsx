@@ -1,11 +1,5 @@
 import { useState, useMemo } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from './ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { Search, X, ChevronLeft } from 'lucide-react'
@@ -63,8 +57,13 @@ export function CategoriesModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!o) handleClose() }}>
-      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) handleClose()
+      }}
+    >
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {drillCategory ? (
@@ -72,7 +71,10 @@ export function CategoriesModal({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => { setDrillCategory(null); setSearchQuery('') }}
+                  onClick={() => {
+                    setDrillCategory(null)
+                    setSearchQuery('')
+                  }}
                   aria-label="Voltar"
                 >
                   <ChevronLeft size={16} />
@@ -101,13 +103,16 @@ export function CategoriesModal({
             {categorias.map((cat) => (
               <Button
                 key={cat.nome}
-                onClick={() => { setDrillCategory(cat.nome); setSearchQuery('') }}
+                onClick={() => {
+                  setDrillCategory(cat.nome)
+                  setSearchQuery('')
+                }}
                 variant="light"
-                className="justify-between h-auto py-3"
+                className="h-auto justify-between rounded-2xl py-3 shadow-clay-btn hover:shadow-clay-btn-hover active:translate-y-[1px] active:shadow-clay-press"
               >
                 <span className="flex items-center gap-2">
                   <span className="text-xl">{cat.icone || '📆'}</span>
-                  <span className="font-semibold text-sm">{cat.nome.replace(/_/g, ' ')}</span>
+                  <span className="text-sm font-semibold">{cat.nome.replace(/_/g, ' ')}</span>
                 </span>
                 <Badge variant="secondary">{cat.total_produtos}</Badge>
               </Button>
@@ -118,22 +123,25 @@ export function CategoriesModal({
         {!isLoading && drillCategory && (
           <div className="flex flex-col gap-2">
             <div className="relative mb-1">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              />
               <input
                 type="text"
                 placeholder="Buscar produto..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.currentTarget.value)}
-                className="w-full h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600"
+                className="h-9 w-full rounded-clay-sm border border-gray-300 bg-white pl-9 pr-3 text-sm shadow-clay-press outline-none focus:ring-2 focus:ring-sazonal-verde-600 dark:border-gray-600 dark:bg-gray-800"
               />
             </div>
             {catMap[drillCategory]?.descricao && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <p className="mb-1 text-xs text-gray-500 dark:text-gray-400">
                 {catMap[drillCategory].descricao}
               </p>
             )}
             {drillProdutos.length === 0 ? (
-              <p className="text-center py-6 text-sm text-gray-400">
+              <p className="py-6 text-center text-sm text-gray-400">
                 Nenhum produto disponível nesta categoria
               </p>
             ) : (
@@ -146,8 +154,8 @@ export function CategoriesModal({
                       onClick={() => onToggleProduct(prod)}
                       className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-sazonal-verde-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          ? 'bg-sazonal-verde-600 text-white shadow-clay-btn'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-clay-btn-hover dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
                       {prod}
@@ -160,7 +168,7 @@ export function CategoriesModal({
           </div>
         )}
 
-        <p className="text-center text-xs text-gray-400 pt-2">
+        <p className="pt-2 text-center text-xs text-gray-400">
           {selectedProducts.length > 0
             ? `${selectedProducts.length} produto${selectedProducts.length === 1 ? '' : 's'} na lista`
             : 'Toque nos produtos para adicionar à sua lista'}

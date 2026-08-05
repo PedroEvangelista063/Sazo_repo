@@ -90,3 +90,7 @@ backend/ion |*
 
 # Backups de .env (podem conter segredos)
 backend/.env.bak-*
+
+# MCP config (config local com segredos — token GitHub fica só na máquina)
+.mcp.json
+opencode.jsonc

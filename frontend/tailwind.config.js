@@ -30,8 +30,45 @@ export default {
           },
         },
       },
+      keyframes: {
+        // Slide horizontal contínuo do background (mapa do Brasil)
+        'slide-horizontal': {
+          '0%': { backgroundPositionX: '0%' },
+          '100%': { backgroundPositionX: '100%' },
+        },
+        // Piscar suave — opacidade 0.3 ↔ 0.8 num ciclo longo (5s)
+        'blink-slow': {
+          '0%, 100%': { opacity: '0.3' },
+          '50%': { opacity: '0.8' },
+        },
+        // Pulsar suave — scale 1 ↔ 1.05 num ciclo longo (6s)
+        'pulse-soft': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+        },
+        // Combinada (blink + pulse) — evita o conflito de duas `animate-*`
+        // no mesmo elemento (o shorthand `animation` não empilha)
+        'flag-breathe': {
+          '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+          '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+        },
+        // Crossfade de slides — cada bandeira ocupa um slot de 6s num ciclo de
+        // 162s (27 bandeiras). Fades apenas nas bordas (4%→94% opaco): a bandeira
+        // N desvanece no fim do slot enquanto a N+1 entra no início — sempre há
+        // uma visível (gap máximo de um frame no limite do slot).
+        'flag-cycle': {
+          '0%': { opacity: '0' },
+          '4%': { opacity: '1' },
+          '94%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+      },
       animation: {
-        'pulse-soft': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'slide-horizontal': 'slide-horizontal 90s linear infinite',
+        'blink-slow': 'blink-slow 5s ease-in-out infinite',
+        'pulse-soft': 'pulse-soft 6s ease-in-out infinite',
+        'flag-breathe': 'flag-breathe 6s ease-in-out infinite',
+        'flag-cycle': 'flag-cycle 162s linear infinite',
       },
       boxShadow: {
         // Claymorphism — sombra "argila": drop tintado + inset inferior escuro + inset superior claro

@@ -35,8 +35,8 @@ import { ProductCard } from '@/components/ProductCard'
 import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { SazonalidadeNacional } from '@/components/SazonalidadeNacional'
 import { PainelTransparenciaRodape } from '@/components/PainelTransparenciaRodape'
+import { GradeSazonalAcordeao } from '@/components/GradeSazonalAcordeao'
 import { DynamicBackground } from '@/components/DynamicBackground'
 import { BRNationalIcon } from '@/components/BRNationalIcon'
 import { cn } from '@/lib/utils'
@@ -563,7 +563,9 @@ export function SupermercadoView() {
                               </button>
                             )}
                           </div>
-                          <SazonalidadeNacional data={brSazonalidade} />
+                          {/* Agrupamento por macrocategorias (accordion) — evita a
+                              sobrecarga de 200+ linhas simultâneas da grade */}
+                          <GradeSazonalAcordeao data={brSazonalidade} />
                         </div>
                       ) : (
                         <div className="flex items-center justify-center py-10">

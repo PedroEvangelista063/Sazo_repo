@@ -17,6 +17,7 @@ from backend.app.api.v1.endpoints.stream import router as stream_router
 from backend.app.api.v1.endpoints.ufs import router as ufs_router
 from backend.app.core.cache import cache, init_cache
 from backend.app.core.config import get_settings
+from backend.app.core.events import broadcaster
 from backend.app.core.ratelimit import RateLimitMiddleware
 from backend.app.core.timeout import TimeoutMiddleware
 from backend.app.db.bootstrap import run_bootstrap_once
@@ -126,7 +127,27 @@ async def lifespan(app: FastAPI):
             "CONCURRENTLY). Dados de leitura continuam disponíveis."
         )
 
+    async def _cache_invalidator():
+        """Escuta eventos de pipeline e invalida o cache quando o ETL termina.
+
+        O evento ETL_FINISHED é publicado por POST /_internal/etl-done ao fim do
+        pipeline. Sem este subscriber, o cache in-memory continuaria servindo
+        dados antigos por até CACHE_TTL_SECONDS (24h) após a MV ser atualizada.
+        """
+        q = broadcaster.subscribe()
+        try:
+            while True:
+                msg = await q.get()
+                if msg.get("event") == "ETL_FINISHED":
+                    await cache.clear()
+                    logger.info("Cache limpo após evento ETL_FINISHED.")
+                q.task_done()
+        except asyncio.CancelledError:
+            broadcaster.unsubscribe(q)
+            raise
+
     asyncio.create_task(_background_mv_refresh())
+    asyncio.create_task(_cache_invalidator())
 
     yield
     await close_pools()

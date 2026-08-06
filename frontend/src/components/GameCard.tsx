@@ -143,7 +143,7 @@ export function GameCard({ product, isSelected, onToggle }: GameCardProps) {
         <span className="text-[28px]" role="img" aria-label={product.nome_produto}>
           {emoji}
         </span>
-        <p className="px-1 text-center text-sm font-bold leading-tight text-gray-900 dark:text-gray-100">
+        <p className="px-1 text-center font-display text-sm font-bold leading-tight text-gray-900 dark:text-gray-100">
           {product.nome_produto}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-1">

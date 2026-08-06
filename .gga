@@ -45,6 +45,12 @@ STRICT_MODE="true"
 # Increase for large changesets or slow connections
 TIMEOUT="300"
 
+# OpenCode agent profile used for the review (default: primary agent)
+# This project's opencode primary agent is `gentle-orchestrator` (an SDD
+# orchestrator that delegates and never replies in the STATUS: format GGA
+# requires). Using the native `build` executor agent keeps the review inline.
+OPENCODE_AGENT="build"
+
 # Base branch for --pr-mode (auto-detects main/master/develop if empty)
 # Default: auto-detect
 # PR_BASE_BRANCH="main"

@@ -136,7 +136,7 @@ export function ProductCard({ product, isSelected, onToggle, origemUf }: Product
             {emoji}
           </span>
 
-          <p className="mt-0.5 text-center text-sm font-bold leading-tight text-gray-900 dark:text-gray-100">
+          <p className="mt-0.5 text-center font-display text-sm font-bold leading-tight text-gray-900 dark:text-gray-100">
             {product.nome_produto}
           </p>
 

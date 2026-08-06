@@ -251,7 +251,9 @@ export function SupermercadoView() {
               <TrendingUp size={20} />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">Sazonalidade</h1>
+              <h1 className="font-display text-sm font-bold text-gray-900 dark:text-gray-100">
+                Sazonalidade
+              </h1>
               <p className="text-[11px] leading-tight text-gray-500 dark:text-gray-400">
                 Preços de Alimentos — CONAB
               </p>

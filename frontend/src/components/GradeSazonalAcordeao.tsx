@@ -86,7 +86,7 @@ export function GradeSazonalAcordeao({
                 {grupo.emoji}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-bold text-gray-900 dark:text-gray-100">
+                <span className="block truncate font-display text-sm font-bold text-gray-900 dark:text-gray-100">
                   {grupo.nome}
                 </span>
                 <span className="block truncate text-[10px] text-gray-400 dark:text-gray-500">

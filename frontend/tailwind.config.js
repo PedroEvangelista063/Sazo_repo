@@ -4,6 +4,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        display: ['"Fredoka Variable"', '"Nunito"', 'ui-rounded', 'system-ui', 'sans-serif'],
+      },
       colors: {
         sazonal: {
           verde: {

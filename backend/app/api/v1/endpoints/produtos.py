@@ -1055,9 +1055,12 @@ async def _query_br_sazonalidade(
                 "produto": r["produto"],
                 "classificao_produto": r["classificao_produto"],
                 "categoria": r["categoria"],
-                "total_ufs": r["total_ufs"],
+                "total_ufs": 0,
                 "meses": [],
             }
+        # total_ufs reflete o MAX de UFs observadas no ano (não fixa no mês 1)
+        if r["total_ufs"] and r["total_ufs"] > prod_map[key]["total_ufs"]:
+            prod_map[key]["total_ufs"] = r["total_ufs"]
         prod_map[key]["meses"].append(
             MesSazonalidade(
                 mes=r["mes"],
@@ -1124,16 +1127,20 @@ async def listar_br_sazonalidade(
     por_pagina: int = Query(100, ge=1, le=2000),
 ):
     settings = get_settings()
+    # Chave atrelada ao X-Last-Refresh da MV: quando a MV é recriada, o
+    # modification time muda e a chave muda — o cache antigo é ignorado.
+    mv_refresh = await _ultimo_refresh_mv_iso()
     cache_key = hashlib.md5(
         json.dumps(
             {
                 "route": "br_sazonalidade",
-                "v": 3,
+                "v": 4,
                 "ano": ano,
                 "categoria": categoria,
                 "min_ufs": min_ufs,
                 "pagina": pagina,
                 "por_pagina": por_pagina,
+                "mv_refresh": mv_refresh,
             },
             sort_keys=True,
             default=str,

@@ -147,6 +147,11 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    # Headers de transparência precisam ser legíveis pelo JS do navegador em
+    # requisições cross-origin (ex.: frontend Vite -> API FastAPI). Sem
+    # expose_headers, o Starlette não emite Access-Control-Expose-Headers e o
+    # rodapé de transparência (PainelTransparenciaRodape) nunca renderiza.
+    expose_headers=["X-Cache-Status", "X-Last-Refresh"],
 )
 
 app.add_middleware(

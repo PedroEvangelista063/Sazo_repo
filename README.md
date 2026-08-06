@@ -1,366 +1,281 @@
-# QUERO COMPRAR — Sua Bússola de Sazonalidade para a Feira
+# 🛒 QUERO COMPRAR — O App que Te Avisa Quando a Fruta Está Barata
 
-**App B2C que revela a melhor época para comprar hortigranjeiros usando dados CONAB (2024-2026) e cotações CEASA.**  
-Economia real na feira e no supermercado — sem achismo, com dados. Apenas cores, nunca valores monetários na tela.
+[![Tests & Build](https://github.com/PedroEvangelista063/Quero_Comprar_ext/actions/workflows/tests.yml/badge.svg)](https://github.com/PedroEvangelista063/Quero_Comprar_ext/actions/workflows/tests.yml)
+[![Python](https://img.shields.io/badge/Python-3.13+-3776AB?logo=python&logoColor=white&style=flat)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black&style=flat)](https://react.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white&style=flat)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white&style=flat)](https://www.postgresql.org/)
 
-> 🟢 **Barato** (safra) → 🟡 **Normal** → 🔴 **Caro** (entressafra)
+> **"Comer bem não pode ser um luxo."** — esse é o lema.
 
----
+O **Quero Comprar** é um app web que usa **dados reais do governo (CONAB) e cotações de CEASAs** para te dizer, em um piscar de olhos, **qual é a melhor época para comprar** hortifrúti na feira ou no supermercado. Sem achismo, sem tabela infinita de preços, sem letra miúda: só um **semáforo de cores** que qualquer um entende.
 
-## Índice
+🟢 **Barato** (tá na safra) → 🟡 **Normal** → 🔴 **Caro** (entressafra, corre da compra!)
 
-- [Arquitetura](#arquitetura)
-- [Stack](#stack)
-- [Pipeline — Motor de Extração (ELT)](#pipeline--motor-de-extração-elt)
-- [Database — Medalhão (raw → staging → mart)](#database--medalhão-raw--staging--mart)
-- [Backend — FastAPI](#backend--fastapi)
-- [Frontend — PWA React](#frontend--pwa-react)
-- [Arquitetura Híbrida — Supabase + Local](#arquitetura-híbrida--supabase--local)
-- [RLS — Row Level Security](#rls--row-level-security)
-- [Agentes de IA (agentget)](#agentes-de-ia-agentget)
-- [Configuração Centralizada](#configuração-centralizada)
-- [Setup Local](#setup-local)
-- [Scripts Úteis](#scripts-úteis)
-- [Comandos npm](#comandos-npm)
-- [Deploy](#deploy)
+E o melhor: o app **nunca mostra R$ na tela**. Preço aqui é cor, não número — decisão rápida, sem poluição visual.
 
 ---
 
-## Arquitetura
+## 📌 Índice
+
+| Pasta / Seção                                   | O que tem lá dentro                              |
+| ----------------------------------------------- | ------------------------------------------------ |
+| 🌍 [O Projeto](#-o-projeto)                     | A ideia, o público e a mágica do semáforo        |
+| 🏗️ [Arquitetura](#️-arquitetura)                 | Como os dados viajam do governo até a sua tela   |
+| 📁 [Estrutura de Pastas](#-estrutura-de-pastas) | Mapa da casa, com link para cada cômodo          |
+| 🔧 [`pipeline/`](#-pipeline--a-garagem)         | Os robôs que caçam dados na internet             |
+| 🗄️ [`database/`](#-database--a-despensa)        | O banco de dados medalhão (raw → staging → mart) |
+| ⚙️ [`backend/`](#-backend--a-cozinha)           | A API FastAPI que serve dados prontos            |
+| 🎨 [`frontend/`](#-frontend--a-sala-de-estar)   | A PWA React que você usa no celular              |
+| 📐 [`config/`](#-config--as-plantas-da-casa)    | Toda a configuração em JSON                      |
+| 🩺 [`utilities/`](#-utilities--o-checkup)       | Auditorias, diagnósticos e ferramentas CLI       |
+| 🚀 [`scripts/`](#-scripts--os-ferramentais)     | Deploy, sync de banco e automação                |
+| ☁️ [`supabase/`](#-supabase--a-nuvem)           | Migrations e RLS do banco remoto                 |
+| 📚 [`docs/`](#-docs--a-biblioteca)              | Relatórios, arquitetura e decisões               |
+| 🧪 [Testes](#-testes)                           | Como garantimos que nada quebra                  |
+| 🚀 [Setup Local](#-setup-local)                 | Rode o projeto na sua máquina                    |
+| 🧰 [Comandos Úteis](#-comandos-úteis)           | Atalhos que facilitam a vida                     |
+| ☁️ [Deploy](#-deploy)                           | Onde cada pedaço vive em produção                |
+
+---
+
+## 🌍 O Projeto
+
+**Pensa comigo:** todo mundo já chegou na feira, viu um tomate lindo e pagou caro — pra descobrir uma semana depois que estava na safra e custava metade. Injusto, né?
+
+O **Quero Comprar** resolve isso com ciência de dados:
+
+1. **Coletamos** cotações públicas de preços de hortifrúti (CONAB + CEASAs de todo o Brasil);
+2. **Analisamos** a sazonalidade de cada produto: quando ele naturalmente fica barato (safra) e quando fica caro (entressafra);
+3. **Entregamos** um semáforo de cores: verde = melhor época, amarelo = preço normal, vermelho = melhor esperar.
+
+O resultado é uma **bússola de compras**: você abre o app, vê o mapa do Brasil, toca no seu estado e descobre o que vale a pena comprar agora. Economia real na feira, baseada em dados públicos e gratuitos.
+
+### Por que isso importa?
+
+- **Pra você**: para de gastar dinheiro à toa e aprende os ciclos naturais dos alimentos.
+- **Pra sociedade**: dados públicos usados de verdade, virando valor pra todo mundo — open data com propósito.
+- **Pro planeta**: menos desperdício, compra mais inteligente.
+
+---
+
+## 🏗️ Arquitetura
+
+O projeto segue a metáfora de uma **casa brasileira** — cada pasta é um cômodo com um papel claro:
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                        QUERO COMPRAR VG                            │
-│                                                                    │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────────┐ │
-│  │ PIPELINE │    │ DATABASE │    │ BACKEND  │    │   FRONTEND   │ │
-│  │ (Garagem)│───▶│(Despensa)│───▶│ (Cozinha)│───▶│(Sala de Estar)│ │
-│  │ ETL/ELT  │    │PostgreSQL│    │ FastAPI  │    │  React PWA   │ │
-│  │ Scrapers │    │ Supabase │    │ asyncpg  │    │  TanStack Q  │ │
-│  └──────────┘    └──────────┘    └──────────┘    └──────────────┘ │
-│       │               │               │                            │
-│       └── raw ──▶ staging ──▶ mart ──┘                            │
-│                                                                    │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐                     │
-│  │   CONFIG │    │ SCRIPTS  │    │UTILITIES │                     │
-│  │ JSONs    │    │ Automação│    │Diagnóstico│                     │
-│  └──────────┘    └──────────┘    └──────────┘                     │
-└────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│                       QUERO COMPRAR                           │
+│                                                               │
+│  ┌────────────┐   ┌──────────┐   ┌──────────┐   ┌───────────┐ │
+│  │ pipeline/  │──▶│ database/│──▶│ backend/ │──▶│ frontend/ │ │
+│  │ 🚗 Garagem │   │ 🗄️ Despensa│  │ ⚙️ Cozinha│  │ 🛋️ Sala    │ │
+│  │ ETL/Scrap  │   │ PostgreSQL│  │  FastAPI │  │ React PWA │ │
+│  └────────────┘   └──────────┘   └──────────┘   └───────────┘ │
+│        │               │               │                      │
+│        └── raw ──▶ staging ──▶ mart ──┘                      │
+│                                                               │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐  ┌────────────┐   │
+│  │ config/  │  │ scripts/ │  │ utilities/│  │ supabase/  │   │
+│  │ 📐 Plantas│  │ 🚀 Auto  │  │ 🩺 Checkup│  │ ☁️ Nuvem    │   │
+│  └──────────┘  └──────────┘  └───────────┘  └────────────┘   │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-### Fluxo dos Dados
+### Fluxo dos dados
 
 ```
-CONAB/CEASA ──→ Scraper ──→ raw.coleta_bruta ──→ SortingEngine
-    ──→ staging.fact_precos_mensais ──→ sp_executar_carga_completa()
-    ──→ mart.sazonalidade_produto ──→ REFRESH MV
-    ──→ mart.vw_api_produtos_sazonalidade ◀── FastAPI (read-only)
-    ──→ Frontend React (cores, nunca R$)
+CONAB / CEASA ──▶ 🚗 pipeline (scrapers) ──▶ raw.coleta_bruta
+   ──▶ SortingEngine ──▶ staging.fact_precos_mensais
+   ──▶ sp_executar_carga_completa() + LOCF + forecast ──▶ mart.sazonalidade_produto
+   ──▶ REFRESH MV ──▶ mart.vw_api_produtos_sazonalidade
+   ──▶ ⚙️ backend (FastAPI, read-only) ──▶ 🎨 frontend (cores, nunca R$)
 ```
 
-### Volumes Atuais
-
-| Camada | Tabela | Registros |
-|--------|--------|-----------|
-| RAW | `raw.coleta_bruta` | 15 |
-| STAGING | `staging.fact_precos_mensais` | 42.358 |
-| MART | `mart.sazonalidade_produto` | 62.291 |
-| MV | `mart.vw_api_produtos_sazonalidade` | 62.291 |
-| OPS | `ops.quarentena_coleta` | 9 |
+> 🗄️ **Arquitetura Medalhão**: `raw` (bronze — dados crus, sem filtro) → `staging` (prata — limpos e tipados) → `mart` (ouro — prontos para consumo). A API só lê da camada ouro. Escrita? Só o pipeline.
 
 ---
 
-## Stack
-
-### Backend
-| Tecnologia | Versão | Função |
-|------------|--------|--------|
-| Python | 3.13+ | Runtime |
-| FastAPI | — | API HTTP assíncrona |
-| asyncpg | — | Pool de conexão PostgreSQL |
-| Pydantic | v2 | Schemas de resposta e validação |
-| httpx | — | HTTP client para scrapers |
-| Uvicorn | — | Servidor ASGI |
-
-### Frontend
-| Tecnologia | Versão | Função |
-|------------|--------|--------|
-| React | 19 | Core UI |
-| Vite | 6 | Bundler + PWA plugin |
-| TailwindCSS | 3.4 | Utility classes + dark mode |
-| shadcn/ui | — | Radix primitives + CVA |
-| TanStack Query | 5 | Cache offline-first |
-| TanStack Table | 8 | Tabela de dados |
-| Zustand | 5 | Estado persistente |
-| Framer Motion / Motion | 12 | Animações (springs, AnimatePresence) |
-| React Bits | — | Beams, SpotlightCard, TiltedCard, BlurText |
-| Three.js / R3F / Drei | — | Visualizações 3D |
-| Recharts | — | Gráficos de linha/barra |
-| Lucide React | — | Ícones |
-| Vitest + RTL | — | Testes unitários |
-
-### Database
-| Tecnologia | Versão | Função |
-|------------|--------|--------|
-| PostgreSQL | 17 (Supabase) / 18 (local) | Banco relacional |
-| PL/pgSQL | — | Stored Procedures (forecast) |
-| Supabase CLI | — | Migrations e deploy |
-
-### Pipeline
-| Tecnologia | Função |
-|------------|--------|
-| Polars | Manipulação de dados (nunca pandas) |
-| Playwright | Scraping de páginas web |
-| HTTPX | Requisições HTTP assíncronas |
-| asyncpg | Pool de conexão com banco |
-| curl-cffi | Scraping com fingerprint de navegador |
-
----
-
-## Pipeline — Motor de Extração (ELT)
-
-> "Scrape Now, Parse Later" — extração nunca valida dados. Apenas deposita na Landing Zone.
-
-### Micro-Motores
-
-| Motor | Função |
-|-------|--------|
-| `scraper/micro_engines/` | Motores especialistas (um por layout de fonte) |
-| `scraper/orchestrator.py` | `AutonomousOrchestrator` — cascata CEASA → Agregadores → Discovery |
-| `scraper/discovery_engine.py` | Dorks de busca + anti-PDF |
-| `scraper/circuit_breaker.py` | CircuitBreaker (5 falhas → 120s recovery) |
-| `scraper/persistence.py` | Ciclo medalhão (SortingEngine + `sp_executar_carga_completa`) |
-| `scraper/main_runner.py` | Entry point Run and Die (timeout 1200s) |
-
-### Regras de Ouro
-
-- **Run and Die**: sem `while True`. O processo acorda, colhe, descarrega e encerra.
-- **Timeout Global**: `asyncio.wait_for(task, timeout=1200)` — 20 min de vida máxima.
-- **Concorrência**: `asyncio.Semaphore(3)` por motor.
-- **Janela Temporal**: estritamente 2024-2026.
-- **Sem ORM no pipeline**: queries raw com asyncpg. Nada de SQLAlchemy.
-- **Fontes centralizadas**: `config/sources_matrix.json` — configuration over code.
-
----
-
-## Database — Medalhão (raw → staging → mart)
-
-### Camadas
-
-| Schema | Função |
-|--------|--------|
-| `raw` | Landing Zone sem barreiras — sem FKs, sem constraints |
-| `staging` | Dados limpos com tipagem, UPSERT, dimensões |
-| `mart` | Sazonalidade materializada + baselines para forecast |
-| `ops` | Observabilidade: quarentena, audit logs, config |
-
-### Forecast (100% SQL, v2 Ponderado)
-
-O modelo preditivo roda integralmente no banco via `sp_calcular_forecast_2026()`:
+## 📁 Estrutura de Pastas
 
 ```
-Duas baselines permanentes:
-  mart.sazonalidade_baseline_25_26 ── primária (moda 2025-2026, 32.581 linhas)
-  mart.sazonalidade_baseline_24_25 ── fallback (moda 2024-2025, 23.449 linhas)
-
-baseline_ponderado = FULL JOIN com CASE weighting:
-  primary vence quando confianca >= 30
-  fallback * 0.5 usado quando primary ausente ou confianca < 30
-
-Colunas de rastreabilidade:
-  is_forecast BOOLEAN ── TRUE = projeção, FALSE = dado real
-  baseline_confianca NUMERIC(5,2) ── confiança efetiva (0-100)
-  forecast_method TEXT ── método usado na projeção
-  tendencia_futura TEXT ── QUEDA / ALTA / ESTAVEL
+quero_comprar_vg/
+├── 🚗 pipeline/       # Motor de extração: scrapers, orquestrador, WAF bypass
+├── 🗄️ database/       # 70+ migrations SQL, dados processados, scripts de forecast
+├── ⚙️ backend/        # API FastAPI (Python 3.13+, asyncpg, Pydantic v2)
+├── 🎨 frontend/       # PWA React 19 (Vite, Tailwind, shadcn/ui, Framer Motion)
+├── 📐 config/         # JSONs: fontes, regiões, fluxos de abastecimento
+├── 🩺 utilities/      # Auditorias E2E, backups, keep-alive, diagnósticos
+├── 🚀 scripts/        # Deploy, sync local↔remoto, restauração
+├── ☁️ supabase/       # Migrations (000001–000021) + RLS do banco remoto
+├── 📚 docs/           # Relatórios técnicos, arquitetura, convenções
+├── 🧪 tests/          # Testes de integração (banco + pipeline)
+├── Makefile           # Atalhos: dev, test, lint, build
+└── package.json       # Scripts npm do monorepo
 ```
 
-**Resultado**: 19.933 projeções para Ago-Dez 2026 em ~1s. 12.884 registros reais Jan-Jul intactos.
+---
 
-### Migrações Supabase (15 formais)
+## 🚗 `pipeline/` — A Garagem
 
-| Migration | Objetivo |
-|-----------|----------|
-| `000001-000012` | Schemas, tabelas RAW/STAGING/MART, funções, MV, roles, forecast v2, ops |
-| `000013` | Reconciliação de drift Fase 4 (18 objetos) |
-| `000014` | Trigger de anomalia por UF + auditoria |
-| `000015` | RLS em 4 tabelas com 5 políticas |
+> **"Scrape Now, Parse Later"** — o scraper não pensa, só colhe.
 
-### Materialized View (V14)
+Micro-motores burros e focados extraem payloads crus (HTML/JSON/CSV) de fontes públicas e jogam tudo na **Landing Zone** (`raw.coleta_bruta`). Depois, um motor de parsing transforma em dados limpos.
 
-`mart.vw_api_produtos_sazonalidade` — a única fonte que a API consulta:
-- JOIN: `sazonalidade_produto` + `dim_produto` + `dim_localidade` + `dim_categoria`
-- Filtro: `categoria_b2c = 'ALIMENTO_VAREJO'`, exclusão de B2B
-- Colunas: `is_forecast`, `baseline_confianca`, `forecast_method`, `tendencia_futura`
+| Peça                          | Função                                                               |
+| ----------------------------- | -------------------------------------------------------------------- |
+| `scraper/micro_engines/`      | Um motor especialista por layout de fonte (CONAB, CEASA, Prohort...) |
+| `scraper/orchestrator.py`     | Orquestrador autônomo: CEASA direta → Agregadores → Discovery        |
+| `scraper/transport/`          | WAF bypass, fingerprint de navegador, resolvers de captcha           |
+| `scraper/circuit_breaker.py`  | Se falhar 5×, espera 120s e tenta de novo (sem pânico)               |
+| `scraper/persistence.py`      | Ciclo medalhão: SortingEngine + `sp_executar_carga_completa()`       |
+| `scraper/main_runner.py`      | "Run and Die": acorda, colhe, descarrega, morre. Sem daemon.         |
+| `processor/sorting_engine.py` | Classifica e encaminha payloads para o schema certo                  |
+
+**Regras de ouro:** nunca valida na extração • timeout global de 20 min • concorrência limitada (semáforo 3) • janela temporal **estrita 2024–2026** • fontes centralizadas em `config/sources_matrix.json`.
 
 ---
 
-## Backend — FastAPI
+## 🗄️ `database/` — A Despensa
 
-API HTTP assíncrona que serve o frontend B2C. Consulta **exclusivamente** views materializadas e funções `fn_*`.
+O coração do projeto: **PostgreSQL** organizado em camadas medalhão, com **70+ migrations SQL numeradas** (01 → 70) que evoluem o schema de forma idempotente.
 
-### Endpoints
+| Schema    | Papel                                                                  |
+| --------- | ---------------------------------------------------------------------- |
+| `raw`     | Landing Zone sem barreiras — sem FK, sem constraint, velocidade máxima |
+| `staging` | Dados limpos, tipados, com UPSERT (`ON CONFLICT`)                      |
+| `mart`    | Sazonalidade materializada + baselines + forecasts                     |
+| `ops`     | Observabilidade: quarentena de coleta, audit logs                      |
 
-| Rota | Função |
-|------|--------|
-| `GET /api/v1/sazonalidade` | Snapshot de sazonalidade (+ filtro regional `?regiao=`) |
-| `GET /api/v1/sazonalidade/{uf}/{municipio}` | Por localidade |
-| `GET /api/v1/sazonalidade/historico/{ano}/{mes}` | Série temporal |
-| `GET /api/v1/regioes` | Lista 5 regiões com UFs e polos CEASA |
-| `GET /api/v1/categorias` | Categorias de varejo |
-| `GET /api/v1/ufs` | UFs disponíveis |
-| `GET /api/v1/municipios?uf=SP` | Municípios por UF |
-| `GET /api/v1/admin/coletar-global` | Coleta para todas as UFs |
-| `GET /api/v1/stream/updates` | SSE para notificações em tempo real |
-| `GET /health` | Health check |
+### Forecast 100% SQL
 
-### Regras de Ouro
+O modelo preditivo roda **inteiro no banco** (`sp_calcular_forecast_2026()`):
 
-- **Sem ORM**: queries raw com asyncpg. Nada de SQLAlchemy, Django ORM ou Tortoise.
-- **Read-Only**: a API só lê de `mart.vw_*` e funções `fn_*`. Escrita é exclusividade do pipeline.
-- **Event Loop Starvation**: toda rota com timeout (`asyncio.wait_for` ou `TimeoutMiddleware`).
-- **Cache Interno**: LRU/TTL em `core/cache.py` (Redis opcional via `REDIS_URL`).
-- **Rate Limit**: 60 requisições/minuto por IP (`core/ratelimit.py`).
-- **Pydantic v2**: schemas de resposta validados na borda, não no banco.
+- Baselines ponderadas 2024–2025 e 2025–2026 com peso por confiança;
+- Rastreabilidade completa: `is_forecast`, `baseline_confianca`, `forecast_method`, `tendencia_futura`;
+- **Transparência total**: dado real (`is_forecast=false`) nunca é sobrescrito por projeção — `ON CONFLICT DO NOTHING`.
+
+### Materialized View (fonte única da API)
+
+`mart.vw_api_produtos_sazonalidade` — join entre fato + dimensões, filtrada para varejo (B2C). A API lê **só daqui**. Simples, rápido e seguro.
 
 ---
 
-## Frontend — PWA React
+## ⚙️ `backend/` — A Cozinha
 
-App offline-first, mobile-first. Interface de semáforo (verde/amarelo/vermelho) — **nunca exibe valores monetários**.
+API HTTP **assíncrona** em **FastAPI** que prepara os dados e serve ao frontend. Filosofia: **zero ORM, queries raw com asyncpg, read-only**.
+
+| Rota                                        | O que faz                                          |
+| ------------------------------------------- | -------------------------------------------------- |
+| `GET /api/v1/sazonalidade`                  | Snapshot de sazonalidade (filtro regional incluso) |
+| `GET /api/v1/sazonalidade/{uf}/{municipio}` | Sazonalidade por localidade                        |
+| `GET /api/v1/regioes`                       | As 5 regiões com UFs e polos CEASA                 |
+| `GET /api/v1/ufs`                           | UFs disponíveis                                    |
+| `GET /api/v1/municipios?uf=SP`              | Municípios por estado                              |
+| `GET /api/v1/categorias`                    | Categorias de varejo                               |
+| `GET /api/v1/fluxos`                        | Fluxos de abastecimento CEASA (mapa)               |
+| `GET /api/v1/stream/updates`                | SSE — atualizações em tempo real                   |
+| `GET /health`                               | Health check                                       |
+
+**Defesas embutidas:** cache interno LRU/TTL • rate limit por IP • timeouts em toda rota (nada de travar o event loop) • validação na borda com Pydantic v2 • RLS no banco (`role_api_reader` = SELECT only).
+
+---
+
+## 🎨 `frontend/` — A Sala de Estar
+
+**PWA offline-first, mobile-first.** Interface sem dinheiro na tela — só semáforo, emoji e animações gostosas.
 
 ### Views
 
-| View | Descrição |
-|------|-----------|
-| **Cards** | Grid de `ProductCard` com SpotlightCard + semáforo + status filter |
-| **Mapa Regional** | `BrasilMap` (27 dots SVG por UF) + `RegiaoPanel` com polos CEASA e arcos de fluxo |
-| **Grade Sazonal** | Grid BR Nacional (12 meses × produtos) sem filtro de mês |
+| View              | O que é                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| **Cards**         | Grid de produtos com cards animados (Framer Motion), semáforo e filtros        |
+| **Mapa Regional** | `BrasilMap`: 27 dots SVG (um por UF) + painel com polos CEASA e arcos de fluxo |
+| **Grade Sazonal** | Grade nacional 12 meses × produtos, agrupada em accordion por categoria        |
 
-### Flags Visuais
+### Stack de orgulho
 
-- `is_forecast=true` → badge `📊 Estimativa` com tooltip da % de confiança
-- `tendencia_futura` → indicador de tendência (QUEDA/ALTA/ESTAVEL)
+- **React 19 + Vite + PWA** — app rápido, instala no celular, funciona offline;
+- **TailwindCSS 3 + shadcn/ui** — visual consistente, dark/light mode;
+- **Framer Motion** — animações de verdade: springs, glow, tilt, blur reveal;
+- **React Bits** — Beams (fundo 3D com Three.js), SpotlightCard, TiltedCard, BlurText;
+- **TanStack Query v5 + Zustand 5** — cache e estado persistente;
+- **Claymorphism** — botões "fofos" com sombras de argila (tokens `shadow-clay-*`);
+- **Emoji em vez de imagem** — cada produto tem seu emoji, zero dependência de foto.
 
-### Componentes
-
-| Componente | Função |
-|------------|--------|
-| `ProductCard` | Card de produto (emoji + semáforo + forecast badge) |
-| `BrasilMap` | Mapa com 27 dots SVG interativos (cores por região) |
-| `RegiaoPanel` | Painel lateral com info da região e fluxos CEASA |
-| `SazonalidadeNacional` | Grid sazonal BR completo |
-| `BRNationalIcon` | Bandeira BR animada com frutas orbitando |
-| `GameButton` | Botão com springs Framer Motion + loading + shake |
-| `GameCard` | Card animado com entrada + confetti no verde |
-| `Beams` | Background Three.js com feixes de luz |
-| `SpotlightCard` | Card com spotlight que segue o mouse |
-| `TiltedCard` | Card com 3D tilt ao hover |
-| `BlurText` | Texto com blur/fade animado |
-
-### Regras de Ouro
-
-- **🚫 Nunca R$ na tela** — só cores (Verde/Amarelo/Vermelho).
-- **🚫 Sem imagens** — emoji unicode exclusivamente.
-- **Offline-first**: PWA + TanStack Query com `staleTime` alto.
-- **Mobile-first**: design responsivo partindo de 320px. Touch targets ≥ 44px.
-- **SkeletonCards** em vez de spinners genéricos.
-- **Dark/Light mode** via classe `.dark` no `<html>`.
+> 🧭 **Regra sagrada do frontend:** 🚫 nunca `R$` na tela, 🚫 sem imagens (só emoji), ✅ skeletons (sem spinner chato), ✅ touch ≥ 44px, ✅ dark/light mode.
 
 ---
 
-## Arquitetura Híbrida — Supabase + Local
+## 📐 `config/` — As Plantas da Casa
 
-```
-REMOTO (PRIMARY — Active)              LOCAL (STANDBY — Backup/Sandbox)
-───────────────────────────────        ────────────────────────────────────
-Supabase kxsqrcccaaxplpktmutl          PostgreSQL 18 nativo Linux Mint
-DATABASE_URL (5432) — DDL/ETL          localhost:5432/quero_comprar
-DATABASE_URL_API (6543) — API reads    postgres / postgres_dev_local
-DATABASE_URL_ETL (5432) — cargas
+**Configuration over code**: toda fonte, região e fluxo mora em JSON. O código só lê e executa.
 
-npm run dev → REMOTO (padrão)          npm run db:backup:restore → Remote ➔ Local
-                                        NUNCA Local ➔ Remote automático
-```
-
-### Conexão (backend/.env)
-
-```env
-# REMOTO (PRIMARY)
-DATABASE_URL          → Session Pooler :5432   (DDL, ETL)
-DATABASE_URL_API      → Transaction Pooler :6543 (API reads)
-DATABASE_URL_ETL      → Session Pooler :5432   (cargas)
-
-# LOCAL (STANDBY)
-DATABASE_URL_LOCAL_BACKUP → localhost:5432/quero_comprar
-```
-
-### Workflow Seguro
-
-```bash
-npm run dev              # Desenvolvimento → REMOTO (padrão)
-npm run db:backup        # Backup de segurança (schema + dados)
-npm run db:backup:restore # Backup + restaura no banco local
-```
-
-> ⚠️ Apenas migrations em `supabase/migrations/` podem ir Local ➔ Remote.  
-> `statement_cache_size=0` é obrigatório quando usando pooler do Supabase.
+| Arquivo               | Conteúdo                                                                           |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| `sources_matrix.json` | 24+ fontes em 4 categorias (core, agregadores, CEASAs, periféricos)                |
+| `regions.json`        | As 5 regiões com UFs e polos CEASA                                                 |
+| `flows.json`          | **166 fluxos** de abastecimento entre UFs (origem, destino, produto, sazonalidade) |
+| `sources_map.json`    | Mapeamento produto → fontes regionais                                              |
 
 ---
 
-## RLS — Row Level Security
+## 🩺 `utilities/` — O Checkup
 
-Ativo via migration `000015_rls_security_layer.sql` em 4 tabelas:
+Ferramentas CLI autônomas de diagnóstico e auditoria. **Read-only por padrão**, sem efeitos colaterais:
 
-| Tabela | role_etl_writer | role_api_reader |
-|--------|----------------|-----------------|
-| `mart.sazonalidade_produto` | ALL (bypass) | SELECT |
-| `staging.dim_produto` | ALL (bypass) | ❌ sem acesso |
-| `staging.fact_precos_mensais` | ALL (bypass) | ❌ sem acesso |
-| `ops.audit_logs` | INSERT+SELECT | ❌ sem acesso |
-
-- `role_etl_writer` tem bypass total (`USING(true)`)
-- `role_api_reader` tem SELECT apenas nas tabelas de mart
-- `service_role` e `postgres` bypass automático
+- `audit_full_stack.py` — auditoria E2E: banco primário + fallback + API + frontend;
+- `validate_e2e.py` / `test_scraper_e2e.py` — validações ponta a ponta;
+- `backup_local_db.sh` — backup versionado do banco local (retém os últimos 5);
+- `supabase_keep_alive.py` — evita que a instância free "dorme" por inatividade;
+- `_check_*.py` — micro-diagnósticos pontuais de banco/migrations.
 
 ---
 
-## Agentes de IA (agentget)
+## 🚀 `scripts/` — Os Ferramentais
 
-67 agentes especializados instalados em `.agents/agents/` via [AgentGet](https://agentget.sh/) para auxiliar no desenvolvimento:
+Automação de ambiente, deploy e manutenção:
 
-| Categoria | Agentes |
-|-----------|---------|
-| **Code Review** | `code-reviewer`, `python-reviewer`, `typescript-reviewer`, `react-reviewer`, `fastapi-reviewer`, `database-reviewer`, `security-reviewer`, `fsharp-reviewer`, `go-reviewer`, `java-reviewer`, `kotlin-reviewer`, `php-reviewer`, `rust-reviewer`, `swift-reviewer`, `cpp-reviewer`, `csharp-reviewer`, `flutter-reviewer`, `django-reviewer`, `vue-reviewer` |
-| **Arquitetura** | `code-architect`, `architect`, `homelab-architect`, `network-architect` |
-| **Build & Test** | `build-error-resolver`, `e2e-runner`, `pr-test-analyzer`, `harness-optimizer`, `react-build-resolver`, `rust-build-resolver`, `go-build-resolver`, `java-build-resolver`, `kotlin-build-resolver`, `django-build-resolver`, `cpp-build-resolver`, `dart-build-resolver`, `swift-build-resolver`, `pytorch-build-resolver`, `harmonyos-app-resolver` |
-| **Planejamento** | `planner`, `tdd-guide`, `refactor-cleaner`, `loop-operator` |
-| **Exploração** | `code-explorer`, `spec-miner`, `performance-optimizer`, `silent-failure-hunter`, `doc-updater`, `docs-lookup`, `comment-analyzer`, `conversation-analyzer` |
-| **ML/AI** | `mle-reviewer`, `gan-evaluator`, `gan-generator`, `gan-planner`, `agent-evaluator` |
-| **Outros** | `seo-specialist`, `marketing-agent`, `healthcare-reviewer`, `network-config-reviewer`, `network-troubleshooter`, `a11y-architect`, `chief-of-staff`, `code-simplifier`, `type-design-analyzer`, `opensource-forker`, `opensource-packager`, `opensource-sanitizer` |
+- `deploy_v13_prod.sh` — deploy de produção com purga de cache pós-deploy;
+- `sync_db_remote_to_local.sh` — snapshot remoto → local (backup/restore);
+- `sync_conab_local_to_remote.sh` — replica carga CONAB do local → remoto;
+- `setup_organism.sh` / `.ps1` — setup do ecossistema (Linux/Windows);
+- `restore/` — scripts de restauração de banco.
 
 ---
 
-## Configuração Centralizada
+## ☁️ `supabase/` — A Nuvem
 
-Arquivos JSON em `config/` — configuration over code:
+Migrations formais do banco remoto (**000001 → 000021**): schemas, tabelas, roles (`role_etl_writer`, `role_api_reader`), RLS (Row Level Security), views materializadas e o engine de forecast.
 
-| Arquivo | Conteúdo |
-|---------|----------|
-| `sources_matrix.json` | 24+ fontes em 4 categorias (core, agregadores, CEASAs diretas, periféricos) |
-| `regions.json` | 5 regiões brasileiras com UFs e polos CEASA |
-| `flows.json` | 166 fluxos de abastecimento CEASA/CONAB entre UFs |
-| `sources_map.json` | Mapeamento produto → fontes regionais |
+> 🔐 **RLS ativo** em 4 tabelas-chave: escritor do ETL tem bypass total; a API só lê com `SELECT`; e o `service_role`/`postgres` passam direto. Banco aberto para leitura, fechado para escrita indevida.
 
 ---
 
-## Setup Local
+## 📚 `docs/` — A Biblioteca
+
+Relatórios técnicos e decisões de arquitetura: `PROJECT_RULES.md`, `CONVENTIONS.md`, `DATABASE_ARCHITECTURE.md`, relatórios de auditoria E2E, claymorphism, limiares z-score, dado histórico real, plano de deploy e muito mais. A trilha de raciocínio do projeto fica registrada aqui.
+
+---
+
+## 🧪 Testes
+
+| Camada           | Ferramenta               | Roda com                          |
+| ---------------- | ------------------------ | --------------------------------- |
+| Backend (Python) | pytest                   | `make test:backend`               |
+| Frontend (TS)    | Vitest + Testing Library | `make test:frontend`              |
+| Tudo             | pytest + vitest          | `make test` ou `npm run dev:test` |
+| Lint             | ruff + prettier          | `make lint`                       |
+
+---
+
+## 🚀 Setup Local
 
 ### Pré-requisitos
 
-- Python 3.13+
-- Node.js ≥ 22.22.1
-- npm ≥ 10.0.0
-- PostgreSQL 17+ (opcional — Supabase remoto é o padrão)
+- Python **3.13+**
+- Node.js **≥ 22.22.1** e npm **≥ 10**
+- PostgreSQL **17+** (opcional — o remoto pode ser o padrão)
 
 ### Instalação
 
@@ -371,103 +286,63 @@ cd Quero_Comprar_ext
 
 # 2. Ambiente Python
 python3 -m venv .venv
-source .venv/bin/activate  # Linux/Mac
+source .venv/bin/activate          # Linux/Mac
 pip install -r backend/requirements.txt
 
-# 3. Dependências npm (raiz + frontend)
+# 3. Dependências npm
 npm install
 npm --prefix frontend install
 
-# 4. Configure as variáveis de ambiente
-cp .env.example .env
-# Edite backend/.env com as credenciais do Supabase (veja backend/.env.example)
+# 4. Configure o ambiente
+cp backend/.env.example backend/.env
+# Edite backend/.env com suas credenciais de banco
 
-# 5. Rodar (desenvolvimento)
+# 5. Rode tudo
 npm run dev:all
-# Backend: http://localhost:8000
-# Frontend: http://localhost:5173
+# 🎨 Frontend: http://localhost:5173
+# ⚙️ Backend:  http://localhost:8000
 ```
 
-### Docker (Backup Local Opcional)
-
-```bash
-docker compose up -d postgres-backup
-# PostgreSQL 17 em localhost:5433 (não conflita com nativo :5432)
-```
+> 💡 **Banco local opcional:** `docker compose up -d postgres-backup` sobe um PostgreSQL 17 em `localhost:5433` para backups e testes.
 
 ---
 
-## Scripts Úteis
+## 🧰 Comandos Úteis
 
-```bash
-# Coleta manual de dados CEASA/CONAB
-npm run scrape:manual
-
-# Backup do banco remoto para local
-npm run db:backup               # Apenas gerar backups
-npm run db:backup:restore       # Gerar + restaurar no banco local
-npm run db:backup:schema        # Apenas schema
-npm run db:backup:data          # Apenas dados
-
-# Testes
-npm run dev:test               # Backend + frontend
-make test                      # Mesmo, via Makefile
-
-# Lint
-make lint                      # ruff (Python) + prettier (TypeScript)
-
-# Build PWA
-npm run build:frontend
-
-# Utilitários de diagnóstico
-python utilities/_check_db.py               # Conexão com banco
-python utilities/audit_full.py              # Auditoria completa
-python utilities/validate_e2e.py            # Teste end-to-end
-python database/scripts/validar_forecast.py # Validação do forecast
-```
+| Comando                     | O que faz                            |
+| --------------------------- | ------------------------------------ |
+| `npm run dev:all`           | Backend + frontend em paralelo 🔥    |
+| `npm run dev:backend`       | Só a API FastAPI (porta 8000)        |
+| `npm run dev:frontend`      | Só o Vite (porta 5173)               |
+| `npm run scrape:manual`     | Coleta CEASA/CONAB sob demanda       |
+| `npm run build:frontend`    | Build PWA de produção                |
+| `npm run db:backup`         | Backup remoto → local                |
+| `npm run db:backup:restore` | Backup + restore no banco local      |
+| `make test`                 | Todos os testes (backend + frontend) |
+| `make lint`                 | ruff + prettier                      |
 
 ---
 
-## Comandos npm
+## ☁️ Deploy
 
-| Comando | O que faz |
-|---------|-----------|
-| `npm run dev:all` | Backend + Frontend em paralelo |
-| `npm run dev:backend` | Apenas FastAPI (porta 8000) |
-| `npm run dev:frontend` | Apenas Vite (porta 5173) |
-| `npm run scrape:manual` | Coleta CEASA/CONAB sob demanda |
-| `npm run build:frontend` | Build PWA de produção |
-| `npm run db:backup` | Backup remoto → local |
-| `npm run db:backup:restore` | Backup + restore no banco local |
-| `npm run db:test:local` | Testes no banco local |
-| `npm run db:test:remote` | Testes no banco remoto |
-| `npm run install:all` | Instala dependências completas |
+| Camada      | Plataforma                    | Região           |
+| ----------- | ----------------------------- | ---------------- |
+| 🗄️ Banco    | Supabase / Aiven (PostgreSQL) | us-east-1 / Ohio |
+| ⚙️ API      | Render (Web Service)          | Ohio             |
+| 🎨 Frontend | Vercel (SPA + PWA)            | Edge             |
 
 ---
 
-## Deploy
+## 🧠 Curiosidades do Projeto
 
-| Camada | Plataforma | Região |
-|--------|-----------|--------|
-| Banco | Supabase (PostgreSQL 17) | us-east-1 |
-| API | Render (Web Service, Python) | Ohio |
-| Frontend | Vercel (SPA, PWA) | Edge |
-
----
-
-## Metáfora da Casa
-
-O micro-monorepo segue a metáfora de uma **casa brasileira**:
-
-- **🚗 Garagem** (`pipeline/`) — a máquina que transforma dados brutos em informação
-- **🗄️ Despensa** (`database/`) — onde os dados são armazenados e organizados
-- **🍳 Cozinha** (`backend/`) — onde a API prepara os dados para servir
-- **🛋️ Sala de Estar** (`frontend/`) — onde o consumidor final aproveita
-- **📐 Config** (`config/`) — plantas e especificações da casa
-- **🔧 Scripts** (`scripts/`) — ferramentas de manutenção
-- **🩺 Utilities** (`utilities/`) — diagnósticos e checkups
-- **🤖 Agentes** (`.agents/`) — assistentes de IA especializados
+- 🧮 O forecast roda **100% em SQL** — sem Python, sem servidor externo;
+- 🗺️ O mapa do Brasil tem **27 dots SVG** desenhados à mão (um por capital), com arcos animados de fluxos de abastecimento;
+- 🤖 O scraper é **anti-bot com honra**: bypass de WAF, fingerprint de navegador e até resolver de captcha;
+- 📊 Dados **CONAB + 20 listas de cotações CEASA** processados em Polars (nunca pandas — regra da casa!);
+- 🌙 Tema escuro, confete quando o produto está na melhor época e uma **bandeira do Brasil animada com frutas orbitando** 🍓🇧🇷.
 
 ---
 
-**Feito com dados públicos CONAB/CEASA, amor ao código aberto, e a certeza de que comida não pode ser cara demais.**
+**Feito com dados públicos CONAB/CEASA, muito café, e a certeza de que comida boa não pode ser cara demais.** 🥑❤️
+
+> Quer ajudar? Pull requests são bem-vindos — e lembre-se das regras da casa: sem R$ na tela, sem pandas, e dados sempre com transparência.

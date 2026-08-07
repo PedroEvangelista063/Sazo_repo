@@ -1060,6 +1060,7 @@ def _copy_to_fact(
     tem_qualidade = QUALIDADE_COL in df.columns
     rows: list[tuple] = []
     seen = set()
+    descartados_preco = 0
     for row in df.iter_rows():
         produto = row[0]
         uf = row[1] if is_uf else row[3]
@@ -1067,6 +1068,13 @@ def _copy_to_fact(
         mes = row[3] if is_uf else row[5]
         preco = row[4] if is_uf else row[6]
         municipio_id = None if is_uf else (row[1] if row[1] else None)
+
+        # FASE 1 — Malha fina: preço nulo, não-numérico ou <= 0 NÃO entra na fato.
+        # (defesa em profundidade; as transformações já filtram, mas nunca confie
+        # em downstream para manter a integridade do preço.)
+        if preco is None or not isinstance(preco, (int, float)) or preco <= 0:
+            descartados_preco += 1
+            continue
 
         if municipio_id is None:
             loc_key = (uf, None)
@@ -1085,6 +1093,12 @@ def _copy_to_fact(
         rows.append((id_prod, id_loc, ano, mes, preco, batch_id, qualidade))
 
     if not rows:
+        if descartados_preco:
+            logger.warning(
+                "_copy_to_fact[is_uf=%s]: %d linhas descartadas pela malha fina (preço nulo/inválido)",
+                is_uf,
+                descartados_preco,
+            )
         return 0
 
     COPY_SQL = """

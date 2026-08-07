@@ -6,7 +6,7 @@ import logging
 import re
 import unicodedata
 import uuid
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 import asyncpg
 from pydantic import BaseModel, Field, field_validator
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 _PRECO_RE = re.compile(r"(?:R\$\s*)?(\d+[.,]\d+)")
-_HTML_RE = re.compile(r"^\s*(?:<!DOCTYPE|<html|<head|<body|<div)", re.I)
+_HTML_RE = re.compile(r"^\s*(?:<!DOCTYPE|<html|<head|<body|<div)", re.IGNORECASE)
 
 
 def _normalizar(texto: str) -> str:
@@ -28,27 +28,109 @@ def _normalizar(texto: str) -> str:
     nfkd = unicodedata.normalize("NFKD", texto)
     return "".join(c for c in nfkd if not unicodedata.combining(c))
 
+
 # ──────────────────────────────────────────────
 # Contrato Pydantic — ProdutoSazonalSchema
 # ──────────────────────────────────────────────
 _HORTIFRUTI_KEYWORDS: set[str] = {
-    "abacate", "abacaxi", "abóbora", "abobrinha", "aipo", "alface",
-    "alho", "ameixa", "amora", "banana", "batata", "batata-doce",
-    "berinjela", "beterraba", "brócolis", "caqui", "cará", "carambola",
-    "cenoura", "cebola", "cereja", "chuchu", "coco", "coentro",
-    "couve", "couve-flor", "espinafre", "feijão", "figo", "gengibre",
-    "goiaba", "graviola", "hortelã", "inhame", "jaca", "kiwi",
-    "laranja", "limão", "maçã", "mamão", "manga", "mandioca",
-    "mandioquinha", "maracujá", "melancia", "melão", "milho",
-    "morango", "mostarda", "nectarina", "noz", "palmito", "pêra",
-    "pêssego", "pepino", "pimenta", "pimentão", "quiabo", "repolho",
-    "rúcula", "salsa", "salsão", "tangerina", "tomate", "uva",
-    "vagem", "acerola", "caju", "cajá", "dendê", "jambo", "pitanga",
-    "umbu", "cupuaçu", "açaí", "bacuri", "murici", "pequi",
-    "buriti", "mangaba", "araticum", "cagaita", "guariroba",
-    "jenipapo", "mama-cadela", "pinhão", "taioba", "ora-pro-nóbis",
-    "bertalha", "azedinha", "almeirão", "escarola", "radite",
-    "alho-poró", "cebolinha", "manjericão", "alecrim", "sálvia",
+    "abacate",
+    "abacaxi",
+    "abóbora",
+    "abobrinha",
+    "aipo",
+    "alface",
+    "alho",
+    "ameixa",
+    "amora",
+    "banana",
+    "batata",
+    "batata-doce",
+    "berinjela",
+    "beterraba",
+    "brócolis",
+    "caqui",
+    "cará",
+    "carambola",
+    "cenoura",
+    "cebola",
+    "cereja",
+    "chuchu",
+    "coco",
+    "coentro",
+    "couve",
+    "couve-flor",
+    "espinafre",
+    "feijão",
+    "figo",
+    "gengibre",
+    "goiaba",
+    "graviola",
+    "hortelã",
+    "inhame",
+    "jaca",
+    "kiwi",
+    "laranja",
+    "limão",
+    "maçã",
+    "mamão",
+    "manga",
+    "mandioca",
+    "mandioquinha",
+    "maracujá",
+    "melancia",
+    "melão",
+    "milho",
+    "morango",
+    "mostarda",
+    "nectarina",
+    "noz",
+    "palmito",
+    "pêra",
+    "pêssego",
+    "pepino",
+    "pimenta",
+    "pimentão",
+    "quiabo",
+    "repolho",
+    "rúcula",
+    "salsa",
+    "salsão",
+    "tangerina",
+    "tomate",
+    "uva",
+    "vagem",
+    "acerola",
+    "caju",
+    "cajá",
+    "dendê",
+    "jambo",
+    "pitanga",
+    "umbu",
+    "cupuaçu",
+    "açaí",
+    "bacuri",
+    "murici",
+    "pequi",
+    "buriti",
+    "mangaba",
+    "araticum",
+    "cagaita",
+    "guariroba",
+    "jenipapo",
+    "mama-cadela",
+    "pinhão",
+    "taioba",
+    "ora-pro-nóbis",
+    "bertalha",
+    "azedinha",
+    "almeirão",
+    "escarola",
+    "radite",
+    "alho-poró",
+    "cebolinha",
+    "manjericão",
+    "alecrim",
+    "sálvia",
 }
 
 _HORTIFRUTI_NORM: frozenset[str] = frozenset(_normalizar(k).lower() for k in _HORTIFRUTI_KEYWORDS)
@@ -100,7 +182,10 @@ class SortingEngine:
     async def run(self) -> int:
         if self._pool is None:
             self._pool = await asyncpg.create_pool(
-                self._dsn, min_size=1, max_size=4, command_timeout=30,
+                self._dsn,
+                min_size=1,
+                max_size=4,
+                command_timeout=30,
             )
         total_processados = 0
 
@@ -136,7 +221,9 @@ class SortingEngine:
     # Processamento individual
     # ──────────────────────────────────────────────
     async def _processar_linha(
-        self, conn: asyncpg.Connection, linha: asyncpg.Record,
+        self,
+        conn: asyncpg.Connection,
+        linha: asyncpg.Record,
     ) -> None:
         raw_id = linha["id"]
         payload = linha["payload_bruto"]
@@ -144,12 +231,15 @@ class SortingEngine:
 
         dados_lista = self._parsear_payload(payload)
         if not dados_lista:
-            await self._rejeitar(conn, raw_id, "parse_failed: payload_bruto não pôde ser interpretado")
+            await self._rejeitar(
+                conn, raw_id, "parse_failed: payload_bruto não pôde ser interpretado"
+            )
             await self._marcar_processado(conn, raw_id)
             return
 
         aceitos = 0
-        for dados in dados_lista:
+        descartados_preco = 0
+        for idx, dados in enumerate(dados_lista):
             try:
                 produto = ProdutoSazonalSchema(
                     nome_produto=dados["nome_produto"],
@@ -157,7 +247,15 @@ class SortingEngine:
                     uf=dados["uf"],
                     data_referencia=dados.get("data_referencia") or competencia,
                 )
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 — payload externo pode lançar qualquer exceção (malha fina)
+                # FASE 1 — Malha fina: item com preço nulo/vazio/zero/não-numérico
+                # (ou outro campo inválido) NÃO prossegue. Em vez de descarte
+                # silencioso, registra quarentena individual para rastreabilidade.
+                motivo = f"malha_fina: {type(exc).__name__}: {exc}"
+                if "preco" in str(exc).lower() or (dados.get("preco_kg") is None):
+                    descartados_preco += 1
+                    motivo = f"malha_fina: preco_invalido: {dados.get('preco_kg')!r}"
+                await self._rejeitar(conn, raw_id, motivo)
                 continue
 
             nome_norm = _normalizar(produto.nome_produto).lower()
@@ -172,15 +270,16 @@ class SortingEngine:
 
         if aceitos == 0:
             await self._rejeitar(
-                conn, raw_id,
+                conn,
+                raw_id,
                 f"b2c_filter: nenhum dos {len(dados_lista)} itens é hortifrutigranjeiro",
             )
 
         await self._marcar_processado(conn, raw_id)
 
-# ──────────────────────────────────────────────
-# Parser — roteia conforme o formato do payload
-# ──────────────────────────────────────────────
+    # ──────────────────────────────────────────────
+    # Parser — roteia conforme o formato do payload
+    # ──────────────────────────────────────────────
     @staticmethod
     def _parsear_payload(payload: Any) -> list[dict[str, Any]] | None:
         if isinstance(payload, dict):
@@ -218,7 +317,10 @@ class SortingEngine:
     # Staging insert (upsert dimensões + fato)
     # ──────────────────────────────────────────────
     async def _inserir_staging(
-        self, conn: asyncpg.Connection, produto: ProdutoSazonalSchema, raw_id: uuid.UUID,
+        self,
+        conn: asyncpg.Connection,
+        produto: ProdutoSazonalSchema,
+        raw_id: uuid.UUID,
     ) -> None:
         ano, mes = map(int, produto.data_referencia.split("-"))
 
@@ -262,7 +364,10 @@ class SortingEngine:
 
         logger.debug(
             "[SORTING] Inserido staging: %s | UF=%s | %s | R$ %.2f",
-            produto.nome_produto, produto.uf, produto.data_referencia, produto.preco_kg,
+            produto.nome_produto,
+            produto.uf,
+            produto.data_referencia,
+            produto.preco_kg,
         )
 
     # ──────────────────────────────────────────────
@@ -270,7 +375,9 @@ class SortingEngine:
     # ──────────────────────────────────────────────
     @staticmethod
     async def _rejeitar(
-        conn: asyncpg.Connection, raw_id: uuid.UUID, motivo: str,
+        conn: asyncpg.Connection,
+        raw_id: uuid.UUID,
+        motivo: str,
     ) -> None:
         await conn.execute(
             """
@@ -284,7 +391,8 @@ class SortingEngine:
 
     @staticmethod
     async def _marcar_processado(
-        conn: asyncpg.Connection, raw_id: uuid.UUID,
+        conn: asyncpg.Connection,
+        raw_id: uuid.UUID,
     ) -> None:
         await conn.execute(
             "UPDATE raw.coleta_bruta SET processado = TRUE WHERE id = $1",
@@ -295,16 +403,17 @@ class SortingEngine:
         if self._owns_pool and self._pool and not self._pool.is_closing():
             await self._pool.close()
 
-    async def __aenter__(self) -> "SortingEngine":
+    async def __aenter__(self) -> Self:
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
+    async def __aexit__(self, *args: object) -> None:
         await self.close()
 
 
 # ──────────────────────────────────────────────
 # Parsers auxiliares
 # ──────────────────────────────────────────────
+
 
 def _is_html(texto: str) -> bool:
     """Retorna True se o texto parece HTML (DOCTYPE ou tag raiz)."""
@@ -331,7 +440,7 @@ def _extrair_de_html(html: str) -> list[dict[str, Any]] | None:
     return None
 
 
-def _extrair_de_html_tabela(soup: "BeautifulSoup") -> list[dict[str, Any]] | None:
+def _extrair_de_html_tabela(soup: BeautifulSoup) -> list[dict[str, Any]] | None:
     """
     Varre todas as <table> no HTML, procura linhas com padrão
     (nome_produto, preço). Retorna TODOS os produtos encontrados.
@@ -357,11 +466,34 @@ def _extrair_de_html_tabela(soup: "BeautifulSoup") -> list[dict[str, Any]] | Non
 
             # Nome: primeira coluna real (nao-header)
             nome = ""
-            if textos[0] and not any(x in textos[0].lower() for x in ["produto", "item", "nome", "embalagem", "preco", "r$", "categoria", "classif"]):
+            if textos[0] and not any(
+                x in textos[0].lower()
+                for x in [
+                    "produto",
+                    "item",
+                    "nome",
+                    "embalagem",
+                    "preco",
+                    "r$",
+                    "categoria",
+                    "classif",
+                ]
+            ):
                 nome = textos[0]
             else:
                 for t in textos:
-                    if t and not any(x in t.lower() for x in ["produto", "item", "nome", "embalagem", "preco", "r$", "categoria"]):
+                    if t and not any(
+                        x in t.lower()
+                        for x in [
+                            "produto",
+                            "item",
+                            "nome",
+                            "embalagem",
+                            "preco",
+                            "r$",
+                            "categoria",
+                        ]
+                    ):
                         nome = t
                         break
             if not nome:
@@ -398,17 +530,19 @@ def _extrair_de_html_tabela(soup: "BeautifulSoup") -> list[dict[str, Any]] | Non
             else:
                 preco_kg = precos_linha[0]
 
-            resultados.append({
-                "nome_produto": nome,
-                "preco_kg": round(preco_kg, 4),
-                "uf": "SP",
-                "data_referencia": None,
-            })
+            resultados.append(
+                {
+                    "nome_produto": nome,
+                    "preco_kg": round(preco_kg, 4),
+                    "uf": "SP",
+                    "data_referencia": None,
+                }
+            )
 
     return resultados if resultados else None
 
 
-def _extrair_de_html_texto_rico(soup: "BeautifulSoup") -> dict[str, Any] | None:
+def _extrair_de_html_texto_rico(soup: BeautifulSoup) -> dict[str, Any] | None:
     """
     Fallback: procura por texto contendo 'R$' seguido de preço,
     com um nome de produto nas proximidades (tag <strong>, <b>, <hX>).
@@ -440,7 +574,7 @@ def _extrair_de_html_texto_rico(soup: "BeautifulSoup") -> dict[str, Any] | None:
     return None
 
 
-def _encontrar_nome_proximo(elem: "Tag", soup: "BeautifulSoup") -> str | None:
+def _encontrar_nome_proximo(elem: Tag, soup: BeautifulSoup) -> str | None:
     """
     Tenta encontrar o nome do produto próximo a um elemento de preço.
     Procura: tag anterior, parent, irmão anterior, ou <th> anterior.
@@ -474,6 +608,7 @@ def _encontrar_nome_proximo(elem: "Tag", soup: "BeautifulSoup") -> str | None:
 
     # 3. Texto direto ao redor (regex)
     import re as _re
+
     parent = elem.parent
     if parent:
         full = parent.get_text(strip=True)
@@ -500,12 +635,14 @@ def _extrair_de_texto(texto: str) -> list[dict[str, Any]] | None:
         return None
 
     preco = float(precos[0].replace(",", "."))
-    return [{
-        "nome_produto": nome_produto,
-        "preco_kg": preco,
-        "uf": "BR",
-        "data_referencia": None,
-    }]
+    return [
+        {
+            "nome_produto": nome_produto,
+            "preco_kg": preco,
+            "uf": "BR",
+            "data_referencia": None,
+        }
+    ]
 
 
 def _extrair_de_dict(d: dict) -> list[dict[str, Any]] | None:
@@ -534,12 +671,14 @@ def _extrair_de_dict(d: dict) -> list[dict[str, Any]] | None:
     except (ValueError, TypeError):
         return None
 
-    return [{
-        "nome_produto": str(nome).strip(),
-        "preco_kg": preco_float,
-        "uf": str(uf).strip().upper()[:2],
-        "data_referencia": str(data_ref).strip() if data_ref else None,
-    }]
+    return [
+        {
+            "nome_produto": str(nome).strip(),
+            "preco_kg": preco_float,
+            "uf": str(uf).strip().upper()[:2],
+            "data_referencia": str(data_ref).strip() if data_ref else None,
+        }
+    ]
 
 
 async def main() -> None:

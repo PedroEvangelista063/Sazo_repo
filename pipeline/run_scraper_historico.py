@@ -8,20 +8,20 @@ import os
 import sys
 import time
 import uuid
-from datetime import date, datetime
+from datetime import UTC, datetime
 from typing import Any
 
 import polars as pl
 
+from pipeline.scraper.adapters import AgrolinkCEASAAdapter, CotacaoRegional
+from pipeline.scraper.adapters.smart_router import TODAS_UFS, SmartCrawler2026
 from pipeline.scraper.ceasa_spider import (
-    RAW_DIR,
     LOCALIDADES_ALVO,
+    RAW_DIR,
     CotacaoHistorica,
 )
 from pipeline.scraper.data_normalizer import DataNormalizer
-from pipeline.scraper.adapters import AgrolinkCEASAAdapter, CotacaoRegional
 from pipeline.scraper.price_collector import PriceCollector
-from pipeline.scraper.adapters.smart_router import SmartCrawler2026, ALVOS_CONHECIDOS, TODAS_UFS
 from pipeline.scraper.transport import (
     BrowserConfig,
     EngineType,
@@ -37,7 +37,16 @@ logger = logging.getLogger(__name__)
 
 OUTPUT = RAW_DIR / "scraper_hortifruti_historico.parquet"
 STAGING_COLUNAS = ["produto", "uf", "municipio", "ano", "mes", "valor_produto_kg"]
-STAGING_COLUNAS_FUZZY = ["produto", "uf", "municipio", "ano", "mes", "valor_produto_kg", "is_fuzzy", "match_score"]
+STAGING_COLUNAS_FUZZY = [
+    "produto",
+    "uf",
+    "municipio",
+    "ano",
+    "mes",
+    "valor_produto_kg",
+    "is_fuzzy",
+    "match_score",
+]
 STAGING_SCHEMA = {
     "produto": pl.String,
     "uf": pl.String,
@@ -86,7 +95,7 @@ def _salvar_audit_mes(ano: int, mes: int, cobertura_pct: float, status: str, lin
         "cobertura_pct": round(cobertura_pct, 2),
         "status": status,
         "linhas_carregadas": linhas,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "batch_id": str(uuid.uuid4()),
     }
     path.write_text(json.dumps(registro, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -147,7 +156,22 @@ def _get_pg_conn():
     return conn
 
 
-def _ensure_dimensions(conn, produtos_uf: set[str], uf_list: set[str]) -> dict:
+def _ensure_dimensions(
+    conn,
+    produtos_uf: set[str],
+    localidades: set[tuple[str, str | None, str | None]],
+) -> dict:
+    """Sincroniza dim_produto e dim_localidade (níveis Estado e Município).
+
+    staging.dim_localidade usa índices ÚNICOS PARCIAIS:
+      - uq_dim_localidade_uf_nivel_estado  UNIQUE (uf)               WHERE municipio_id IS NULL
+      - uq_dim_localidade_municipio        UNIQUE (uf, municipio_id) WHERE municipio_id IS NOT NULL
+
+    Índices parciais NÃO são elegíveis para inferência de conflito em
+    ``ON CONFLICT (col...)`` sem o ``index_predicate`` explícito — por isso cada
+    nível declara seu próprio ``WHERE`` na cláusula ON CONFLICT.
+    Strings vazias ("") são convertidas em None/NULL antes do execute().
+    """
     from psycopg2.extras import execute_values
 
     with conn.cursor() as cur:
@@ -159,24 +183,55 @@ def _ensure_dimensions(conn, produtos_uf: set[str], uf_list: set[str]) -> dict:
         cur.execute("SELECT id_produto, nome_produto FROM staging.dim_produto")
         produto_map = {row[1]: row[0] for row in cur.fetchall()}
 
-        for uf in uf_list:
+        # Separa as linhas por nível ANTES de montar a query: estado (municipio_id NULL)
+        # vs município (municipio_id com código IBGE). "" vira None.
+        linhas_estado: list[tuple[str, None, None]] = []
+        linhas_municipio: list[tuple[str, str, str | None]] = []
+        for uf, municipio_id, municipio_nome in localidades:
+            mid = (municipio_id or None) if municipio_id else None
+            mnome = (municipio_nome or None) if municipio_nome else None
+            if mid is None:
+                linhas_estado.append((uf, None, None))
+            else:
+                linhas_municipio.append((uf, mid, mnome))
+
+        if linhas_estado:
             execute_values(
                 cur,
                 """
                 INSERT INTO staging.dim_localidade (uf, municipio_id, municipio_nome)
-                VALUES %s ON CONFLICT (uf, municipio_id) DO NOTHING
+                VALUES %s ON CONFLICT (uf) WHERE municipio_id IS NULL DO NOTHING
                 """,
-                [(uf, "", "")],
+                linhas_estado,
+            )
+        if linhas_municipio:
+            execute_values(
+                cur,
+                """
+                INSERT INTO staging.dim_localidade (uf, municipio_id, municipio_nome)
+                VALUES %s ON CONFLICT (uf, municipio_id) WHERE municipio_id IS NOT NULL DO NOTHING
+                """,
+                linhas_municipio,
             )
 
-        cur.execute(
-            "SELECT id_localidade, uf FROM staging.dim_localidade "
-            "WHERE municipio_id = '' OR municipio_id IS NULL"
-        )
-        loc_map = {row[1]: row[0] for row in cur.fetchall()}
+        # Mapa por nível: (uf) → id_localidade p/ estado; (uf, municipio_id) → id p/ município.
+        # uf é CHAR(2) e volta com padding — strip() evita miss no lookup.
+        cur.execute("SELECT id_localidade, uf, municipio_id FROM staging.dim_localidade")
+        loc_uf_map: dict[str, int] = {}
+        loc_mun_map: dict[tuple[str, str], int] = {}
+        for id_loc, uf, municipio_id in cur.fetchall():
+            uf_clean = uf.strip()
+            if municipio_id is None or municipio_id == "":
+                loc_uf_map.setdefault(uf_clean, id_loc)
+            else:
+                loc_mun_map[(uf_clean, municipio_id)] = id_loc
 
     conn.commit()
-    return {"produtos": produto_map, "localidades": loc_map}
+    return {
+        "produtos": produto_map,
+        "localidades_uf": loc_uf_map,
+        "localidades_municipio": loc_mun_map,
+    }
 
 
 def _load_mes_into_fact(
@@ -189,7 +244,8 @@ def _load_mes_into_fact(
     from psycopg2.extras import execute_values
 
     prod_map = mapping["produtos"]
-    loc_map = mapping["localidades"]
+    loc_uf_map = mapping["localidades_uf"]
+    loc_mun_map = mapping["localidades_municipio"]
     batch_id = str(uuid.uuid4())
 
     col_produto = "produto"
@@ -197,10 +253,10 @@ def _load_mes_into_fact(
     col_ano = "ano"
     col_mes = "mes"
     col_preco = "valor_produto_kg"
-    has_fuzzy = "is_fuzzy" in df_mes.columns
 
     rows: list[tuple] = []
     seen: set[tuple] = set()
+    descartados_preco = 0
     for row_dict in df_mes.iter_rows(named=True):
         produto = row_dict.get(col_produto, "")
         uf = row_dict.get(col_uf, "")
@@ -208,8 +264,21 @@ def _load_mes_into_fact(
         mes = row_dict.get(col_mes, 0)
         preco = row_dict.get(col_preco, 0.0)
 
+        # FASE 1 — Malha fina: preço nulo/vazio/<= 0 NÃO entra na fato.
+        # (o normalizer já descarta, mas esta é a última barreira antes do INSERT)
+        if preco is None or not isinstance(preco, (int, float)) or preco <= 0:
+            descartados_preco += 1
+            continue
+
         id_prod = prod_map.get(produto)
-        id_loc = loc_map.get(uf)
+        # Resolve localidade: nível Município (código IBGE) quando disponível,
+        # senão cai no nível Estado (comportamento para parquet sem código).
+        id_loc = None
+        municipio_id = row_dict.get("municipio_id") or None
+        if municipio_id is not None:
+            id_loc = loc_mun_map.get((uf, str(municipio_id)))
+        if id_loc is None:
+            id_loc = loc_uf_map.get(uf)
         if id_prod is None or id_loc is None:
             continue
 
@@ -220,6 +289,11 @@ def _load_mes_into_fact(
         rows.append((id_prod, id_loc, ano, mes, preco, batch_id))
 
     if not rows:
+        if descartados_preco:
+            logger.warning(
+                "_load_mes_into_fact: %d linhas descartadas pela malha fina (preço nulo/inválido)",
+                descartados_preco,
+            )
         return 0
 
     with conn.cursor() as cur:
@@ -257,27 +331,17 @@ def _executar_ciclo_medalhao(conn) -> None:
 def _notificar_backend_etl_fim() -> None:
     """Notifica o backend via POST interno que o ETL terminou."""
     from pipeline.cache_purge import purge_cache_sync
+
     purge_cache_sync()
 
 
 # ── Scraper ─────────────────────────────────────────────────────────
 
+
 def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) -> pl.DataFrame:
     if not items:
         logger.warning("formatar_staging: lista vazia, sem dados para processar")
         return pl.DataFrame(schema=STAGING_SCHEMA)
-
-    df = pl.DataFrame(
-        {
-            "produto_original": [i.produto_original for i in items],
-            "valor_produto_kg": [round(i.valor_produto_kg, 4) for i in items],
-            "uf": [i.uf for i in items],
-            "municipio": [i.municipio for i in items],
-            "ano": [i.ano for i in items],
-            "mes": [i.mes for i in items],
-            "fonte": [i.fonte for i in items],
-        }
-    )
 
     df_norm = normalizer.normalizar_lote(items, cutoff=0.0)
 
@@ -290,15 +354,17 @@ def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) 
         (pl.col("match_score") > 0.0) & (pl.col("match_score") < 70.0)
     ).height
     df_high = df_norm.filter(pl.col("match_score") >= 70.0)
-    df_fuzzy = df_norm.filter(
-        (pl.col("match_score") >= 50.0) & (pl.col("match_score") < 70.0)
-    )
+    df_fuzzy = df_norm.filter((pl.col("match_score") >= 50.0) & (pl.col("match_score") < 70.0))
 
     logger.info(
         "Normalizer: total=%d | high(>=70)=%d | fuzzy(50-70)=%d | "
         "desc-nome=%d | desc-preco=%d | desc-score=%d",
-        total, df_high.height, df_fuzzy.height,
-        descartados_nome, descartados_preco, descartados_score,
+        total,
+        df_high.height,
+        df_fuzzy.height,
+        descartados_nome,
+        descartados_preco,
+        descartados_score,
     )
 
     if df_high.height == 0 and df_fuzzy.height == 0:
@@ -341,12 +407,15 @@ def formatar_staging(items: list[CotacaoHistorica], normalizer: DataNormalizer) 
     ).unique()
     logger.info(
         "Staging: %d high + %d fuzzy = %d total",
-        df_high_agg.height, df_fuzzy_agg.height, resultado.height,
+        df_high_agg.height,
+        df_fuzzy_agg.height,
+        resultado.height,
     )
     return resultado
 
 
 # ── SmartCrawler Bridge ──────────────────────────────────────────────
+
 
 def _cotacao_regional_para_historica(
     regionais: dict[str, list[CotacaoRegional]],
@@ -393,7 +462,9 @@ async def _coletar_mes(
         if len(items) == 0:
             mes_fallback = mes - 1 if mes > 1 else 12
             ano_fallback = ano if mes > 1 else ano - 1
-            logger.info("FALLBACK DATA: %04d/%02d -> %04d/%02d", ano, mes, ano_fallback, mes_fallback)
+            logger.info(
+                "FALLBACK DATA: %04d/%02d -> %04d/%02d", ano, mes, ano_fallback, mes_fallback
+            )
             collector.definir_mes_alvo(ano_fallback, mes_fallback)
             items_fb, _ = await collector.collect_all()
             if items_fb:
@@ -417,8 +488,29 @@ async def _coletar_mes(
     return blocos
 
 
-def _extrair_ufs(df: pl.DataFrame) -> set[str]:
-    return set(df["uf"].unique().to_list())
+def _extrair_localidades(df: pl.DataFrame) -> set[tuple[str, str | None, str | None]]:
+    """Extrai (uf, municipio_id, municipio_nome) distintos do DataFrame.
+
+    Nível Estado: município vazio/ausente → (uf, None, None).
+    Nível Município: apenas quando há código IBGE (coluna municipio_id) — o nome
+    sozinho não basta, pois o índice parcial exige municipio_id NOT NULL.
+    """
+    tem_codigo = "municipio_id" in df.columns
+    locs: set[tuple[str, str | None, str | None]] = set()
+    cols = ["uf", "municipio_id", "municipio"] if tem_codigo else ["uf"]
+    for row in df.select(cols).unique().iter_rows():
+        uf = row[0]
+        if tem_codigo:
+            codigo = (row[1] or None) if row[1] else None
+            nome = (row[2] or None) if row[2] else None
+            if codigo is None:
+                locs.add((uf, None, None))
+            else:
+                locs.add((uf, str(codigo).strip(), nome))
+        else:
+            # Sem código IBGE no parquet → apenas o nível Estado é carregável.
+            locs.add((uf, None, None))
+    return locs
 
 
 def _extrair_produtos(df: pl.DataFrame) -> set[str]:
@@ -437,27 +529,55 @@ def _separar_por_mes(df: pl.DataFrame) -> dict[tuple[int, int], pl.DataFrame]:
 
 async def main() -> None:
     parser = argparse.ArgumentParser(description="Scraper + Carga Medalhao — Qualidade Progressiva")
-    parser.add_argument("--descobrir", action="store_true", help="Executa descoberta de novas fontes antes da coleta")
-    parser.add_argument("--concorrencia", type=int, default=4, help="Maximo de requisicoes simultaneas")
-    parser.add_argument("--desde", type=str, default=None, help="Mes inicial (YYYY-MM). Omitir = mes corrente")
-    parser.add_argument("--ate", type=str, default=None, help="Mes final (YYYY-MM). Omitir = mes corrente")
-    parser.add_argument("--qualidade-minima", type=float, default=QUALIDADE_MINIMA_PCT, help="%% minima de cobertura para ignorar mes (0-100)")
-    parser.add_argument("--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range")
+    parser.add_argument(
+        "--descobrir",
+        action="store_true",
+        help="Executa descoberta de novas fontes antes da coleta",
+    )
+    parser.add_argument(
+        "--concorrencia", type=int, default=4, help="Maximo de requisicoes simultaneas"
+    )
+    parser.add_argument(
+        "--desde", type=str, default=None, help="Mes inicial (YYYY-MM). Omitir = mes corrente"
+    )
+    parser.add_argument(
+        "--ate", type=str, default=None, help="Mes final (YYYY-MM). Omitir = mes corrente"
+    )
+    parser.add_argument(
+        "--qualidade-minima",
+        type=float,
+        default=QUALIDADE_MINIMA_PCT,
+        help="%% minima de cobertura para ignorar mes (0-100)",
+    )
+    parser.add_argument(
+        "--forcar", action="store_true", help="Ignora qualidade e raspa todos os meses do range"
+    )
     parser.add_argument("--db-url", type=str, default=DATABASE_URL, help="PostgreSQL URL")
-    parser.add_argument("--skip-load", action="store_true", help="So salva parquet, nao carrega no banco")
-    parser.add_argument("--uf", type=str, default=None, help="Lista de UFs separadas por virgula (ex: AC,AM,AP). Padrao = todas")SQL URL")
-    parser.add_argument("--skip-load", action="store_true", help="So salva parquet, nao carrega no banco")
+    parser.add_argument(
+        "--skip-load", action="store_true", help="So salva parquet, nao carrega no banco"
+    )
+    parser.add_argument(
+        "--uf",
+        type=str,
+        default=None,
+        help="Lista de UFs separadas por virgula (ex: AC,AM,AP). Padrao = todas",
+    )
     args = parser.parse_args()
 
     logger.info("=== SCRAPER REGIONAL + CARGA MEDALHAO (w/ SelfHealingOrganism) ===")
     logger.info("Qualidade minima: %.1f%% | DB: %s", args.qualidade_minima, args.db_url)
 
-    hoje = date.today()
+    hoje = datetime.now(UTC).date()
     if args.desde:
         ano_inicio, mes_inicio = (int(x) for x in args.desde.split("-"))
         ano_fim, mes_fim = (int(x) for x in (args.ate or args.desde).split("-"))
         meses_planejados = _iterar_meses(ano_inicio, mes_inicio, ano_fim, mes_fim)
-        logger.info("Range: %d meses (%s a %s)", len(meses_planejados), args.desde, f"{ano_fim:04d}-{mes_fim:02d}")
+        logger.info(
+            "Range: %d meses (%s a %s)",
+            len(meses_planejados),
+            args.desde,
+            f"{ano_fim:04d}-{mes_fim:02d}",
+        )
     else:
         meses_planejados = [(hoje.year, hoje.month)]
 
@@ -468,19 +588,24 @@ async def main() -> None:
     else:
         try:
             import asyncpg
+
             if sys.platform == "win32":
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
             conn = await asyncpg.connect(args.db_url)
             try:
-                meses_para_raspar, coberturas_conhecidas = await _meses_com_qualidade_insuficiente(conn, meses_planejados, args.qualidade_minima)
+                meses_para_raspar, coberturas_conhecidas = await _meses_com_qualidade_insuficiente(
+                    conn, meses_planejados, args.qualidade_minima
+                )
             finally:
                 await conn.close()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — banco pode estar indisponível; fallback raspa todos os meses
             logger.warning("Nao foi possivel consultar qualidade (%s) — raspando todos os meses", e)
             meses_para_raspar = meses_planejados
 
     if not meses_para_raspar:
-        logger.info("Nenhum mes precisa de raspagem (todos acima de %.1f%%).", args.qualidade_minima)
+        logger.info(
+            "Nenhum mes precisa de raspagem (todos acima de %.1f%%).", args.qualidade_minima
+        )
         return
 
     logger.info("Meses para raspar: %d de %d", len(meses_para_raspar), len(meses_planejados))
@@ -490,6 +615,7 @@ async def main() -> None:
 
     if args.descobrir:
         from pipeline.scraper.buscador_fontes import descobrir_fontes, fontes_para_localidades
+
         rel = await descobrir_fontes()
         novas = fontes_para_localidades(rel.fontes)
         logger.info("Descoberta: %d novas fontes", len(novas))
@@ -520,7 +646,9 @@ async def main() -> None:
         logger.info("SelfHealingOrganism inicializado (pool=%d retries=%d)", 3, 3)
 
         # ── 3. Raspar ────────────────────────────────────────────
-        blocos = await _coletar_mes(meses_para_raspar, collector, normalizer, smartcrawler_ufs, organism)
+        blocos = await _coletar_mes(
+            meses_para_raspar, collector, normalizer, smartcrawler_ufs, organism
+        )
 
         if not blocos:
             logger.warning("Nenhum dado coletado em nenhum mes.")
@@ -540,9 +668,9 @@ async def main() -> None:
         meses_por_mes = _separar_por_mes(df_final)
 
         try:
-            todas_ufs = _extrair_ufs(df_final)
             todos_produtos = _extrair_produtos(df_final)
-            mapping = _ensure_dimensions(conn, todos_produtos, todas_ufs)
+            localidades = _extrair_localidades(df_final)
+            mapping = _ensure_dimensions(conn, todos_produtos, localidades)
 
             total_inseridas = 0
             meses_ok = 0
@@ -576,7 +704,12 @@ async def main() -> None:
                     conn.rollback()
                     logger.exception("Ciclo medalhao falhou")
 
-            logger.info("=== RESUMO: %d meses OK, %d falha, %d linhas ===", meses_ok, meses_falha, total_inseridas)
+            logger.info(
+                "=== RESUMO: %d meses OK, %d falha, %d linhas ===",
+                meses_ok,
+                meses_falha,
+                total_inseridas,
+            )
 
         except Exception:
             conn.rollback()

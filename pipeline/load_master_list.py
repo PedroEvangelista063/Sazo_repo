@@ -58,6 +58,7 @@ def main() -> None:
     try:
         inserted = 0
         updated = 0
+        bloqueados = 0
         with conn.cursor() as cur:
             for nome_produto, id_categoria, csv_categoria in rows:
                 cur.execute(
@@ -79,6 +80,39 @@ def main() -> None:
                     )
                     updated += 1
                 else:
+                    # FASE 1 — Prevenção de órfãos: produto novo só entra na
+                    # dim_produto se JÁ existe preço real na fact_precos_mensais.
+                    # Sem isso, a master list criava "produtos fantasmas" (sem
+                    # nenhum preço) que poluíam a sazonalidade e o frontend.
+                    cur.execute(
+                        """
+                        SELECT EXISTS (
+                            SELECT 1
+                            FROM staging.fact_precos_mensais f
+                            JOIN staging.dim_produto dp ON dp.id_produto = f.id_produto
+                            WHERE dp.nome_produto = %s
+                        )
+                        """,
+                        (nome_produto,),
+                    )
+                    tem_preco_real = cur.fetchone()[0]
+                    if not tem_preco_real:
+                        # Sem preço real → não cadastra (evita fantasma);
+                        # registra em quarentena para rastreabilidade.
+                        cur.execute(
+                            """
+                            INSERT INTO ops.quarentena_coleta
+                                (raw_id, motivo_falha, data_rejeicao)
+                            VALUES (%s, %s, NOW())
+                            """,
+                            (
+                                f"master_list:{nome_produto}",
+                                "sem_preco_real: cadastro bloqueado — produto sem preço válido na fact",
+                            ),
+                        )
+                        bloqueados += 1
+                        continue
+
                     cur.execute(
                         """
                         INSERT INTO staging.dim_produto
@@ -90,7 +124,9 @@ def main() -> None:
                     inserted += 1
 
         conn.commit()
-        print(f"\nDone: {inserted} inserted, {updated} updated")
+        print(
+            f"\nDone: {inserted} inserted, {updated} updated, {bloqueados} blocked (sem preço real)"
+        )
 
         with conn.cursor() as cur:
             cur.execute("""

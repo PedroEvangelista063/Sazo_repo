@@ -300,12 +300,27 @@ async def _query_sazonalidade_snapshot(
            AND b.mes = v.mes
     """
 
+    # QUALITY GATE: o snapshot deve refletir o último mês com DADO REAL, não a
+    # projeção/fallback mais recente da MV. Prioriza estritamente REAL_ATUAL
+    # (coleta efetiva do ano corrente) sobre HISTORICO_BASE (dado real defasado)
+    # sobre FALLBACK_DIMENSAO no ORDER BY da window function; produtos sem
+    # nenhum dado real caem para o histórico/fallback mais recente.
+    _SNAPSHOT_ORDER_BY = """
+        ORDER BY CASE v.tipo_dado
+                     WHEN 'REAL_ATUAL' THEN 0
+                     WHEN 'HISTORICO_BASE' THEN 1
+                     ELSE 2
+                 END,
+                 v.ano DESC,
+                 v.mes DESC
+    """
+
     count_query = f"""
         SELECT COUNT(*) AS total FROM (
             SELECT v.id_produto, v.uf,
                    ROW_NUMBER() OVER (
                        PARTITION BY v.id_produto, v.uf
-                       ORDER BY v.ano DESC, v.mes DESC
+                       {_SNAPSHOT_ORDER_BY}
                    ) AS rn
             FROM mart.vw_api_produtos_sazonalidade v
             WHERE {where}
@@ -316,7 +331,7 @@ async def _query_sazonalidade_snapshot(
             SELECT {BASE_COLS},
                    ROW_NUMBER() OVER (
                        PARTITION BY v.id_produto, v.uf
-                       ORDER BY v.ano DESC, v.mes DESC
+                       {_SNAPSHOT_ORDER_BY}
                    ) AS rn
             FROM mart.vw_api_produtos_sazonalidade v
             {BASE_JOIN}
@@ -636,12 +651,12 @@ async def _build_br_response(rows, pagina, por_pagina, total, cache_key, setting
                 usou_fallback_12m=r.get("usou_fallback_12m") or False,
                 preco_estimado=r.get("preco_estimado") or False,
                 status_cor=r["status_cor"],
-                fonte=r.get("fonte", "municipio"),
+                fonte=r["fonte"],
                 categoria=r.get("categoria"),
-                tendencia_futura=None,
+                tendencia_futura=r.get("tendencia_futura"),
                 is_forecast=r.get("is_forecast", False),
                 confianca_baseline=float(r["confianca_baseline"])
-                if r.get("confianca_baseline") is not None
+                if r["confianca_baseline"] is not None
                 else None,
                 forecast_method=r.get("forecast_method"),
                 ano_referencia=ano_ref,
@@ -1079,31 +1094,6 @@ async def _query_br_sazonalidade(
                 is_dado_legado=_is_dado_legado(r.get("ano_referencia")),
             )
         )
-
-    # Grade de 12 meses: meses ausentes (1..12) entram como CINZA (sem histórico
-    # real para o período), mantendo ordenação crescente e os meses com dados.
-    for item in prod_map.values():
-        meses = item["meses"]
-        if isinstance(meses, list):
-            existentes = {m.mes for m in meses}
-            for mes in range(1, 13):
-                if mes not in existentes:
-                    meses.append(
-                        MesSazonalidade(
-                            mes=mes,
-                            status_cor="CINZA",
-                            is_forecast=False,
-                            baseline_confianca=None,
-                            forecast_method=None,
-                            calculado_em=None,
-                            ano_referencia=None,
-                            tipo_dado=None,
-                            mensagem_transparencia="Sem histórico real para este período.",
-                            is_dado_legado=False,
-                        )
-                    )
-            meses.sort(key=lambda m: m.mes)
-            item["meses"] = meses
 
     all_items = list(prod_map.values())
     total = len(all_items)

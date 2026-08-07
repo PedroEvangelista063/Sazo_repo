@@ -236,7 +236,7 @@ class MesSazonalidade(BaseModel):
     """Status de um mês específico na sazonalidade BR Nacional."""
 
     mes: int = Field(..., ge=1, le=12)
-    status_cor: Literal["VERDE", "AMARELO", "VERMELHO", "CINZA"]
+    status_cor: Literal["VERDE", "AMARELO", "VERMELHO"]
     is_forecast: bool = False
     baseline_confianca: float | None = None
     forecast_method: str | None = None

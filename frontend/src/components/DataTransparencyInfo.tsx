@@ -7,7 +7,7 @@ export interface DataTransparencyInfoProps {
   ano_referencia?: number | null
   /** REAL_ATUAL | HISTORICO_BASE | FALLBACK_DIMENSAO */
   tipo_dado?: string | null
-  /** Status da célula (CINZA = sem cotação real para o período). */
+  /** Status da célula (VERDE/AMARELO/VERMELHO). */
   status_cor?: string | null
   /** Texto de proveniência da API (sem R$). */
   mensagem_transparencia?: string | null
@@ -45,27 +45,24 @@ function defasagemLabel(ano: number | null | undefined, isLegado?: boolean): str
 /**
  * Ícone (i) circulado com tooltip/popover explicativo de transparência temporal.
  *
- * - Renderiza `null` quando não há `tipo_dado` nem `status_cor === 'CINZA'`
+ * - Renderiza `null` quando não há `tipo_dado`
  *   (contrato aditivo — consumidores antigos sem os novos campos continuam funcionando).
- * - No estado CINZA, o tooltip exibe a `mensagem_transparencia` da API
- *   (ex.: "Sem histórico real para este período.").
+ * - O tooltip exibe a `mensagem_transparencia` da API quando fornecida.
  * - NUNCA renderiza R$ (R-ADD-03/S3) — apenas ano, tipo, defasagem e proveniência.
  */
 export function DataTransparencyInfo({
   ano_referencia,
   tipo_dado,
-  status_cor,
   mensagem_transparencia,
   is_dado_legado,
   size = 14,
   className,
 }: DataTransparencyInfoProps) {
-  const isCinza = status_cor === 'CINZA'
-  if (!tipo_dado && !isCinza) return null
+  if (!tipo_dado) return null
 
   const dif = defasagemLabel(ano_referencia, is_dado_legado)
-  const label = isCinza ? 'Sem Histórico' : badgeLabel(tipo_dado)
-  const title = isCinza ? 'Sem Cotação' : titulo(tipo_dado, ano_referencia)
+  const label = badgeLabel(tipo_dado)
+  const title = titulo(tipo_dado, ano_referencia)
 
   return (
     <span className={cn('group relative inline-flex items-center', className)}>
@@ -88,24 +85,16 @@ export function DataTransparencyInfo({
               {label}
             </Badge>
           </span>
-          {isCinza ? (
-            <span className="mt-1 block text-[11px] leading-snug text-gray-600 dark:text-gray-300">
-              {mensagem_transparencia ?? 'Sem histórico real para este período.'}
+          <span className="mt-1 block text-[11px] leading-snug text-gray-600 dark:text-gray-300">
+            Este valor reflete a última cotação real registrada para este produto no mês
+            correspondente. Não é uma estimativa sintética.
+          </span>
+          {dif && (
+            <span className="mt-1 block text-[10px] font-medium text-amber-600 dark:text-amber-400">
+              {dif}
             </span>
-          ) : (
-            <>
-              <span className="mt-1 block text-[11px] leading-snug text-gray-600 dark:text-gray-300">
-                Este valor reflete a última cotação real registrada para este produto no mês
-                correspondente. Não é uma estimativa sintética.
-              </span>
-              {dif && (
-                <span className="mt-1 block text-[10px] font-medium text-amber-600 dark:text-amber-400">
-                  {dif}
-                </span>
-              )}
-            </>
           )}
-          {mensagem_transparencia && !isCinza && (
+          {mensagem_transparencia && (
             <span className="mt-1 block text-[10px] leading-snug text-gray-400 dark:text-gray-500">
               {mensagem_transparencia}
             </span>

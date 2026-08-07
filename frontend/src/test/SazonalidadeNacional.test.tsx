@@ -115,33 +115,4 @@ describe('SazonalidadeNacional', () => {
     )
     expect(container.textContent).not.toContain('R$')
   })
-
-  it('célula CINZA fica inativa com texto "Sem Cotação" + ícone (i) e sem badge de ano', () => {
-    const { container } = render(
-      <SazonalidadeNacional
-        data={[
-          makeItem({
-            meses: [
-              {
-                mes: 3,
-                status_cor: 'CINZA',
-                is_forecast: false,
-                baseline_confianca: null,
-                forecast_method: null,
-                calculado_em: null,
-                tipo_dado: null,
-                mensagem_transparencia: 'Sem histórico real para este período.',
-              },
-            ],
-          }),
-        ]}
-      />,
-    )
-    expect(screen.getAllByText('Sem Cotação').length).toBeGreaterThan(0)
-    expect(screen.getAllByRole('button', { name: /informação/i }).length).toBeGreaterThan(0)
-    expect(container.textContent).toContain('Sem histórico real para este período.')
-    // CINZA não tem ano âncora → nenhum badge de ano no DOM
-    expect(container.textContent).not.toMatch(/'\d{2}/)
-    expect(container.textContent).not.toContain('R$')
-  })
 })

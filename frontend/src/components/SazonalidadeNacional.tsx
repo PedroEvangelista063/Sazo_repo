@@ -42,12 +42,6 @@ const STATUS_STYLES: Record<
     border: 'border-sazonal-vermelho-600/45 dark:border-sazonal-vermelho-400/45',
     label: 'Péssima Época',
   },
-  CINZA: {
-    bg: 'bg-gray-100 dark:bg-gray-800/40',
-    text: 'text-gray-400 dark:text-gray-500',
-    border: 'border-gray-200/70 dark:border-gray-700/60',
-    label: 'Sem Cotação',
-  },
 }
 
 interface SazonalidadeNacionalProps {
@@ -121,34 +115,31 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                   )
                 }
 
-                const style = STATUS_STYLES[mesData.status_cor] ?? STATUS_STYLES.CINZA
-                const isCinza = mesData.status_cor === 'CINZA'
+                const style = STATUS_STYLES[mesData.status_cor] ?? {
+                  bg: 'bg-gray-100 dark:bg-gray-800/40',
+                  text: 'text-gray-400 dark:text-gray-500',
+                  border: 'border-gray-200/70 dark:border-gray-700/60',
+                  label: 'Sem Cotação',
+                }
                 const isLowCoverage = item.total_ufs < 3
                 return (
                   <td key={mesNum} className="px-1 py-1.5 text-center">
                     <div className="group relative flex h-8 w-full items-center justify-center gap-1 rounded-md border">
                       <motion.div
-                        whileHover={isCinza ? {} : { scale: 1.08 }}
+                        whileHover={{ scale: 1.08 }}
                         className={cn(
                           'flex h-full w-full cursor-default items-center justify-center rounded-md border shadow-clay-press dark:shadow-clay-dark',
-                          isCinza && 'opacity-60',
                           style.bg,
                           style.text,
                           style.border,
                         )}
                         aria-label={`${item.produto} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
                       >
-                        {isCinza ? (
-                          <span className="px-0.5 text-[9px] font-medium leading-none">
-                            Sem Cotação
-                          </span>
-                        ) : (
-                          badge && (
-                            <span className="text-[9px] font-semibold opacity-80">{badge}</span>
-                          )
+                        {badge && (
+                          <span className="text-[9px] font-semibold opacity-80">{badge}</span>
                         )}
                       </motion.div>
-                      {(isLegado || mesData.tipo_dado || isCinza) && (
+                      {(isLegado || mesData.tipo_dado) && (
                         <DataTransparencyInfo
                           status_cor={mesData.status_cor}
                           tipo_dado={mesData.tipo_dado}

@@ -34,7 +34,7 @@ try {
     await page.waitForTimeout(4000)
   }
 
-  // 3. Quadros cinzas / tooltips de gap NÃO devem existir
+  // 3. Tooltips de gap NÃO devem existir
   const gapTooltip = await page.getByText(/CONAB não publicou dados|scraper pendente/i).count()
   check('Sem tooltips de gap estrutural/coleta', gapTooltip === 0, `${gapTooltip} encontrados`)
 

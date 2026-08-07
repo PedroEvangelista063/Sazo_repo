@@ -1,4 +1,4 @@
-export type StatusCor = 'VERDE' | 'AMARELO' | 'VERMELHO' | 'CINZA'
+export type StatusCor = 'VERDE' | 'AMARELO' | 'VERMELHO'
 
 export interface ProdutoVarejo {
   id_produto: number

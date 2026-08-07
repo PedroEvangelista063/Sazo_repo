@@ -43,17 +43,14 @@ describe('DataTransparencyInfo', () => {
     expect(container.textContent).not.toContain('R$')
   })
 
-  it('renderiza tooltip "Sem Cotação" com mensagem_transparencia quando status_cor=CINZA', () => {
+  it('renderiza nada quando há status_cor mas sem tipo_dado (contrato aditivo estrito)', () => {
     const { container } = render(
       <DataTransparencyInfo
-        status_cor="CINZA"
+        status_cor="AMARELO"
         tipo_dado={null}
         mensagem_transparencia="Sem histórico real para este período."
       />,
     )
-    expect(screen.getByRole('button', { name: /informação/i })).toBeInTheDocument()
-    expect(container.textContent).toContain('Sem Cotação')
-    expect(container.textContent).toContain('Sem histórico real para este período.')
-    expect(container.textContent).not.toContain('R$')
+    expect(container.firstChild).toBeNull()
   })
 })

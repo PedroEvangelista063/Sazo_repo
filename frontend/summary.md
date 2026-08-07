@@ -1,5 +1,7 @@
 # summary.md — /frontend (Aplicativo B2C)
 
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+
 ## Propósito
 
 App React PWA (offline-first, mobile-first). Interface de cores (verde/amarelo/vermelho) para preços de hortifrúti — NUNCA exibe valores monetários. Fallbacks visuais com emojis.

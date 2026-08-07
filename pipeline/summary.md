@@ -1,5 +1,7 @@
 # summary.md — /pipeline (Motor de Extração)
 
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+
 ## Propósito
 
 Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focados extraem payloads sujos (HTML/JSON/CSV) e os depositam na Landing Zone (`raw.coleta_bruta`). Proibido validar, transformar ou filtrar dados durante a extração.

@@ -1,6 +1,6 @@
 # 🛒 QUERO COMPRAR — O App que Te Avisa Quando a Fruta Está Barata
 
-[![Tests & Build](https://github.com/PedroEvangelista063/Quero_Comprar_ext/actions/workflows/tests.yml/badge.svg)](https://github.com/PedroEvangelista063/Quero_Comprar_ext/actions/workflows/tests.yml)
+[![Tests & Build](https://github.com/PedroEvangelista063/Sazo_repo/actions/workflows/tests.yml/badge.svg)](https://github.com/PedroEvangelista063/Sazo_repo/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/Python-3.13+-3776AB?logo=python&logoColor=white&style=flat)](https://www.python.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black&style=flat)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white&style=flat)](https://fastapi.tiangolo.com/)
@@ -281,8 +281,8 @@ Relatórios técnicos e decisões de arquitetura: `PROJECT_RULES.md`, `CONVENTIO
 
 ```bash
 # 1. Clone
-git clone https://github.com/PedroEvangelista063/Quero_Comprar_ext.git
-cd Quero_Comprar_ext
+git clone https://github.com/PedroEvangelista063/Sazo_repo.git
+cd Sazo_repo
 
 # 2. Ambiente Python
 python3 -m venv .venv

@@ -1,5 +1,7 @@
 # summary.md — /backend (API B2C)
 
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+
 ## Propósito
 
 API HTTP assíncrona (FastAPI) que serve o frontend B2C. Consulta apenas views materializadas (`mart.vw_*`). Sem ORM. Sem lógica de transformação pesada. Endpoints protegidos contra Event Loop Starvation.

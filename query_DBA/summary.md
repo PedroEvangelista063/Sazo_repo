@@ -1,5 +1,7 @@
 # summary.md — /query_DBA (Kit de Monitoramento do Banco Local)
 
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+
 ## Propósito
 
 Kit de queries e scripts **read-only** para o DBA monitorar o PostgreSQL local (`localhost:5432/quero_comprar`). Validadas contra o banco real em 2026-08-06 — seguras para rodar a qualquer momento.

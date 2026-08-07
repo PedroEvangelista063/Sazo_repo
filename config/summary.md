@@ -1,5 +1,7 @@
 # summary.md — /config
 
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+
 ## Propósito
 
 Centralização de JSONs de roteamento, matriz de fontes, regiões e configurações do ecossistema. Nada de código aqui — apenas dados de configuração.

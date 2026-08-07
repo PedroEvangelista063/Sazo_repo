@@ -10,7 +10,7 @@ services:
   - type: web
     name: qcomprar-api
     env: python
-    repo: https://github.com/PedroEvangelista063/Quero_Comprar_ext
+    repo: https://github.com/PedroEvangelista063/Sazo_repo
     branch: main
     plan: free
     region: ohio

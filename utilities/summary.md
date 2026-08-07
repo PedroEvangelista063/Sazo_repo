@@ -1,5 +1,7 @@
 # summary.md — /utilities
 
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+
 ## Propósito
 
 Ferramentas CLI autônomas para diagnóstico, auditoria, validação E2E e verificação de health-check. Scripts descartáveis e de uso único — sem lógica compartilhada com o pipeline principal.

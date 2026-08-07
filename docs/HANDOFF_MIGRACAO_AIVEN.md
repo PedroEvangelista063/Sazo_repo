@@ -171,7 +171,7 @@ pool_min_size / pool_max_size / pool_statement_timeout_ms
 
 - ✅ `.github/workflows/supabase_keep_alive.yml` editado e commitado (`62fc3226`): agora usa `secrets.DATABASE_URL` (era `secrets.SUPABASE_DATABASE_URL`).
 - ✅ `data_pipeline.yml`/`ingest.yml` já usam `secrets.DATABASE_URL` → cobertos pelo mesmo secret.
-- ✅ Secret `DATABASE_URL` do repo `PedroEvangelista063/Quero_Comprar_ext` = DSN Aiven (via REST API, HTTP 201). `SUPABASE_DATABASE_URL` **não existia** no repo (lista vazia antes) → nada a remover.
+- ✅ Secret `DATABASE_URL` do repo `PedroEvangelista063/Sazo_repo` (ex-`Quero_Comprar_ext`) = DSN Aiven (via REST API, HTTP 201). `SUPABASE_DATABASE_URL` **não existia** no repo (lista vazia antes) → nada a remover.
 - ✅ Ping simulado localmente: `DATABASE_URL=<dsn> python3 utilities/github_supabase_ping.py` → EXIT 0.
 - ⚠️ Obs.: o log dos scripts de keep-alive ainda diz "Supabase Ping OK" (string genérica; cosmético, sem mudança de código).
 - Opcional: remover `SUPABASE_URL`/`SUPABASE_KEY` do `backend/.env` (órfãos).

@@ -4,6 +4,12 @@
 
 Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Quero Comprar VG.
 
+## Mudanças Recentes (2026-08-07)
+
+### Nenhuma mudança neste lote (FASE 1/2)
+
+- Lote `08e87f6d` concentrado em `pipeline/`, `database/` e `query_DBA/` (malha fina de preço, bloqueio de órfãos, expurgo de fantasmas, kit DBA). /scripts inalterado.
+
 ## Mudanças Recentes (2026-08-03)
 
 ### Purga de cache pós-deploy (deploy_v13_prod.sh)

@@ -77,6 +77,13 @@ A aba "Mapa Regional" implementa:
   - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-08-07)
+
+### MV V20 — Fim das Grades 12 Meses CINZA (dados; sem mudança de código)
+
+- O banco (migration `database/71_expurgo_produtos_sem_preco.sql`) expurgou produtos sem NENHUM preço real e suprimiu-os da MV `vw_api_produtos_sazonalidade` (**V20**).
+- **Impacto no frontend**: o app nunca mais recebe produtos 12 meses CINZA (fantasmas) — a UI de fallback CINZA continua funcionando como está, mas com dados legítimos apenas. Nenhum componente foi alterado neste lote.
+
 ## Mudanças Recentes (2026-08-03)
 
 ### Transparência de Dados Históricos (2026-08-03)

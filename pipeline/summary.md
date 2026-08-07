@@ -23,6 +23,35 @@ Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focad
 9. **Orquestrador**: cascata CEASA direta → Agregadores → Discovery. Log `[AUDIT]` a cada pivotagem.
 10. **Fontes**: centralizadas em `config/sources_matrix.json` — configuration over code.
 
+## Mudanças Recentes (2026-08-07) — FASE 1/2 (Qualidade > Quantidade)
+
+### Malha Fina de Preço — defesa em profundidade (FASE 1)
+
+Preço nulo, vazio, não-numérico ou `<= 0` NÃO entra em `staging.fact_precos_mensais`. A validação existe em 3 camadas independentes:
+
+- `pipeline/ingestao_conab.py` — `_copy_to_fact()`: descarta linhas com `preco is None`, não-numérico ou `<= 0`, com contador `descartados_preco` + warning no log.
+- `pipeline/processor/sorting_engine.py` — malha fina no parse: item com preço inválido NÃO prossegue e é registrado em `ops.quarentena_coleta` com motivo individual `malha_fina: preco_invalido: <valor>` (rastreabilidade, sem descarte silencioso). Log de resumo `descartados pela malha fina` por linha processada (commit `16aa9537`).
+- `pipeline/run_scraper_historico.py` — `_load_mes_into_fact()`: última barreira antes do INSERT (idêntica à da ingestão CONAB).
+
+### Bloqueio de Produtos Órfãos na Master List (FASE 1)
+
+- `pipeline/load_master_list.py` — produto novo só entra em `staging.dim_produto` se JÁ existir preço real na `fact_precos_mensais` (check `SELECT EXISTS`). Sem preço → NÃO cadastra e registra em `ops.quarentena_coleta` com motivo `sem_preco_real` (nome do produto no motivo). Elimina os "produtos fantasmas" que poluíam sazonalidade e frontend.
+  - **Fix (commit `16aa9537`)**: `raw_id` é `UUID NOT NULL` — a quarentena agora usa `uuid.uuid5(NAMESPACE_OID, "master_list:<nome>")` (UUID determinístico e idempotente) em vez da string `master_list:<nome>` (que quebraria com `invalid input syntax for type uuid`).
+- Resumo final agora imprime `blocked (sem preço real)` além de inserted/updated.
+
+### Suporte a Municípios no Scraper Histórico (FASE 1)
+
+- `pipeline/run_scraper_historico.py`:
+  - `_ensure_dimensions()` reescrita: `dim_localidade` usa índices ÚNICOS PARCIAIS (estado vs município) — cada nível declara seu próprio `index_predicate` no `ON CONFLICT` (`WHERE municipio_id IS NULL` / `WHERE municipio_id IS NOT NULL`); strings vazias viram `None/NULL` antes do `execute()`.
+  - `_extrair_localidades()` — extrai `(uf, municipio_id, municipio_nome)`; sem código IBGE → nível Estado.
+  - `_load_mes_into_fact()` resolve localidade no nível Município (código IBGE) com fallback para o nível Estado.
+  - `_extrair_ufs()` removido (substituído por `_extrair_localidades`).
+
+### Novo Script: `pipeline/load_parquet_to_db.py`
+
+- Hotfix de carga rápida do parquet `database/processed_data/01_raw/scraper_hortifruti_historico.parquet` — **BYPASS de rede** (não refaz requisições web), replicando a lógica CORRIGIDA do `run_scraper_historico.py`: índices parciais com `index_predicate` por nível + malha fina de preço.
+- Flags: `--parquet`, `--skip-medalhao`, `--skip-refresh-mv`, `--skip-notify`; executa `sp_executar_carga_completa()` + REFRESH MV + purge de cache ao final.
+
 ## Mudanças Recentes (2026-07-30)
 
 ### Ingestão CONAB Aprimorada (ingestao_conab.py)

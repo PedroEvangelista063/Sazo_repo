@@ -14,6 +14,12 @@ Python 3.13+, asyncpg, httpx, argparse (ou entrada via env vars).
 2. **Diagnóstico, não Produção**: esses scripts NUNCA são chamados pelo pipeline ou pela API. Exclusivamente para uso manual em CLI.
 3. **Sem Side Effects Permanentes**: scripts de `_check_*`, `validate_*`, `audit_*` devem ser read-only por padrão. Qualquer escrita deve ser explícita via flag `--apply`.
 
+## Mudanças Recentes (2026-08-07)
+
+### Nenhuma mudança neste lote (FASE 1/2)
+
+- Lote `08e87f6d` concentrado em `pipeline/`, `database/` e `query_DBA/` (malha fina de preço, bloqueio de órfãos, expurgo de fantasmas, kit DBA). /utilities inalterado.
+
 ## Mudanças Recentes (2026-08-03)
 
 ### Backup Local Versionado (backup_local_db.sh)

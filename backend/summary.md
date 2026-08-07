@@ -33,6 +33,13 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 
 **Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
 
+## Mudanças Recentes (2026-08-07)
+
+### MV V20 — Expurgo de Produtos Fantasmas (banco; sem mudança de código)
+
+- Banco recriou a MV `mart.vw_api_produtos_sazonalidade` na **V20** (`database/71_expurgo_produtos_sem_preco.sql`): produtos sem NENHUMA âncora real (`REAL_ATUAL`/`HISTORICO_BASE`) foram expurgados da `dim_produto` e suprimidos da MV.
+- **Impacto na API**: a MV é a única fonte de leitura da API — ela deixa de servir automaticamente grades 12 meses CINZA (produtos fantasmas). Nenhuma mudança de código/endpoint neste lote; contratos e campos (`ano_referencia`, `tipo_dado`, etc.) permanecem os mesmos.
+
 ## Mudanças Recentes (2026-07-30)
 
 ### Cache TTL Reduzido: 24h → 1h

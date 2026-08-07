@@ -108,6 +108,27 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
+## Mudanças Recentes (2026-08-07)
+
+### Expurgo de Produtos Sem Preço — MV V20 (71_expurgo_produtos_sem_preco.sql)
+
+- **Novo arquivo**: `database/71_expurgo_produtos_sem_preco.sql` (FASE 2 do "Qualidade > Quantidade") — expurga os **produtos fantasmas** (sem NENHUM registro em `fact_precos_mensais`) e recria a MV **V20** suprimindo produtos sem âncora real:
+  - **Baseline medido (pré-migração)**: `staging.dim_produto` = 2.869 (627 sem fact), `staging.fact_precos_mensais` = 266.773, `mart.sazonalidade_produto` = 364.383 (10.518 órfãs), MV = 260.487 (~10.176 linhas de fantasmas).
+  - **1) Backup**: tabelas em `ops` (`dim_produto_expurgado_backup`, `sazonalidade_orfao_backup`, `dim_produto_canonico_expurgado_backup`) para rollback manual sem perda.
+  - **2) DELETE defensivo**: órfãos em `status_fonte_produto`, `dim_fluxo_abastecimento` e `mart.sazonalidade_produto` (sem FK) + `mart.dim_produto_canonico` (tem FK p/ dim_produto — bloqueava o DELETE).
+  - **3) DELETE** dos fantasmas em `staging.dim_produto` (`NOT EXISTS` na fato).
+  - **4) MV V20** (`DROP + CREATE`, `WITH DATA`): adiciona CTE `produtos_com_ancora AS MATERIALIZED` (produtos com PELO MENOS uma linha `REAL_ATUAL`/`HISTORICO_BASE` na âncora) + `JOIN` final de supressão — **produto 12 meses CINZA (sem nenhuma âncora real) nunca mais chega ao frontend**. Branch C sem COALESCE morto (FASE 68 preservado), 7 índices padrão + GRANT.
+  - **5) Prova embutida**: bloco `DO` com `RAISE NOTICE 'EXPURGO-71: ...'` com contagens pós-expurgo.
+  - 100% transacional (`BEGIN`/`COMMIT`), idempotente via `DROP IF EXISTS`/`DROP MATERIALIZED VIEW IF EXISTS`.
+
+### Novos Arquivos (database/)
+
+- `71_expurgo_produtos_sem_preco.sql` — Expurgo de produtos sem preço + supressão na MV V20 (FASE 2)
+
+### Mapa Rápido — adicionado
+
+- `71_expurgo_produtos_sem_preco.sql` — Expurgo de fantasmas + MV V20 (supressão de produtos sem âncora real)
+
 ## Mudanças Recentes (2026-08-03)
 
 ### Limiares Dinâmicos de Cor — Z-Score por Volatilidade (65_limiares_cores_dinamicos_zscore.sql)

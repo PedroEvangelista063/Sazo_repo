@@ -1,4 +1,4 @@
-.PHONY: dev dev-all dev-backend dev-frontend build test test-backend test-frontend lint lint-python lint-ts clean install install-all install-backend install-frontend db-backup db-drain
+.PHONY: dev dev-all dev-backend dev-frontend build test test-backend test-frontend lint lint-python lint-ts clean install install-all install-backend install-frontend db-backup db-drain db-disk
 
 dev:
 	npm run dev:all
@@ -62,3 +62,6 @@ db-backup:
 
 db-drain:
 	python3 ops/drain_logs.py
+
+db-disk:
+	python3 ops/disk_report.py

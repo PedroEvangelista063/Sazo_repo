@@ -1,7 +1,7 @@
 """Camada de acesso a dados com failover / Alta Disponibilidade.
 
 Estratégia de resiliência:
-  - `primary`: banco remoto (ex.: Supabase pooler).
+  - `primary`: banco remoto (ex.: Aiven).
   - `fallback`: banco local de standby (mesmo schema, dados read-only).
 
 Circuit breaker:
@@ -35,10 +35,9 @@ _COOLDOWN_SECONDS = 60.0
 _KIND_TIMEOUT = {"api": 120, "etl": 60}
 
 _RESTORE_HINT = (
-    " Se o motivo for instância Supabase pausada (57P03/EAUTHQUERY), restaure-a no "
-    "dashboard (https://supabase.com/dashboard) e aguarde o half-open (~60s) "
-    "reconectar — não é preciso reiniciar. "
-    "Mantenha o keep-alive ativo (utilities/supabase_keep_alive.py + GitHub Actions)."
+    " Se o motivo for indisponibilidade do banco remoto (Aiven), confira o status "
+    "do serviço no console Aiven e aguarde o half-open (~60s) reconectar — não é "
+    "preciso reiniciar. O cold-standby local cobre o período de indisponibilidade."
 )
 
 
@@ -95,7 +94,7 @@ async def _init_pool(url: str, max_conn: int, min_conn: int, command_timeout: in
         min_size=min_conn,
         max_size=max_conn,
         command_timeout=command_timeout,
-        statement_cache_size=0,  # required for Supabase PgBouncer (transaction mode)
+        statement_cache_size=0,  # compatível com poolers em modo transaction (ex.: pgbouncer)
     )
 
 

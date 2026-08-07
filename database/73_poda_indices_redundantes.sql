@@ -16,7 +16,7 @@
 --     (anchor chain da MV 63, LOCF). Ao dropar, todas passam a usar a UNIQUE.
 --     Nenhuma mudança funcional; B-tree cobre ASC e DESC igualmente.
 --
--- Idempotente (IF EXISTS) — pode rodar em qualquer ambiente (Aiven/local/Supabase).
+-- Idempotente (IF EXISTS) — pode rodar em qualquer ambiente (Aiven/local).
 -- ============================================================================
 
 DROP INDEX IF EXISTS mart.idx_sazonalidade_data_ref;

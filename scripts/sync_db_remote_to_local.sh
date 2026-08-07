@@ -5,7 +5,7 @@
 # QUERO COMPRAR — Hybrid DB Architecture
 #
 # PURPOSE:
-#   Espelha o banco REMOTO (Supabase, primary/active) para o banco LOCAL
+#   Espelha o banco REMOTO (Aiven, primary/active) para o banco LOCAL
 #   (PostgreSQL nativo no Linux Mint, cold-standby/backup).
 #
 # FLOW:
@@ -26,7 +26,7 @@
 # SAFETY:
 #   - NUNCA faz o caminho inverso (Local ➔ Remote)
 #   - Usa transação serializável para consistência do dump
-#   - Ignora schemas do Supabase (auth, storage, realtime, etc.) no schema dump
+#   - Ignora schemas auxiliares (auth, storage, realtime, etc.) no schema dump
 #   - Preserva owner original dos objetos
 # ==============================================================================
 
@@ -124,7 +124,7 @@ echo ""
 if [[ "$DO_SCHEMA" == true ]]; then
     echo -e "${GREEN}📦 [1/2] Dump do SCHEMA (DDL)...${NC}"
 
-    # Schemas do Supabase que NÃO devem ser copiados
+    # Schemas auxiliares que NÃO devem ser copiados
     # Incluímos staging, mart e ops (nossos schemas de negócio)
     SCHEMAS_TO_INCLUDE="staging|mart|ops"
 
@@ -143,7 +143,6 @@ if [[ "$DO_SCHEMA" == true ]]; then
         --exclude-schema='extensions' \
         --exclude-schema='graphql' \
         --exclude-schema='graphql_public' \
-        --exclude-schema='supabase_functions' \
         --exclude-schema='pgbouncer' \
         --exclude-schema='pgsodium_masks' \
         --file="${SCHEMA_FILE_TS}" \
@@ -173,7 +172,6 @@ if [[ "$DO_DATA" == true ]]; then
         "vault.*"
         "extensions.*"
         "graphql.*"
-        "supabase_functions.*"
         "ops.audit_logs"              # auditoria imutável, não essencial
         "ops.audit_llm_queries"        # LLM logs
         "ops.quarentena_coleta"        # dados descartados
@@ -201,7 +199,6 @@ if [[ "$DO_DATA" == true ]]; then
         --exclude-schema='extensions' \
         --exclude-schema='graphql' \
         --exclude-schema='graphql_public' \
-        --exclude-schema='supabase_functions' \
         --exclude-schema='pgbouncer' \
         --exclude-schema='pgsodium_masks' \
         ${BUILD_EXCLUDE} \

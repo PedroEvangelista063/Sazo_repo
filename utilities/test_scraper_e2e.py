@@ -63,7 +63,7 @@ COMPETENCIA = f"{ANO}-{MES:02d}"
 async def _init_pool_conn(conn) -> None:
     """Eleva o statement_timeout da sessão.
 
-    O Supabase tem statement_timeout padrão de 2min (120s) no servidor, e o
+    O banco remoto (Aiven free) pode encerrar SPs/queries longas no servidor, e o
     sp_executar_carga_completa() demora ~118s — fica no limite e pode ser
     cancelado pelo servidor. Como o client command_timeout=300 já cobre a
     duração, elevamos o limite do lado do servidor para 300s por segurança.
@@ -120,7 +120,7 @@ async def main() -> int:
         return 2
 
     print("=" * 74)
-    print("  TESTE E2E MICRO-BATCH — CONAB → Supabase medalhão → cache")
+    print("  TESTE E2E MICRO-BATCH — CONAB → medalhão → cache")
     print("=" * 74)
     print(f"  UF={UF_ALVO} | competência={COMPETENCIA} | limite={LIMITE_MAXIMO} registros")
     print(f"  DSN: {_mascarar_dsn(dsn)}")
@@ -243,7 +243,7 @@ async def main() -> int:
         print("[CARGA] executar_ciclo_medalhao(pool) — SortingEngine → "
               "sp_executar_carga_completa → purge interno...")
         print("[CARGA] Nota: statement_timeout elevado para 300s via pool init "
-              "(default do servidor Supabase é 2min; a SP demora ~118s).")
+              "(o servidor remoto pode encerrar a SP longa; ela demora ~118s).")
         await executar_ciclo_medalhao(pool)
         print(f"[CARGA] Ciclo medalhão CONCLUÍDO em {time.perf_counter()-t_ciclo:.1f}s")
     finally:

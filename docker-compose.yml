@@ -3,11 +3,11 @@
 # ==============================================================================
 #
 # USO:
-#   O banco de desenvolvimento PRINCIPAL é o Supabase remoto.
+#   O banco de desenvolvimento PRINCIPAL é o banco remoto (Aiven).
 #   Este compose oferece serviços AUXILIARES para o ambiente local.
 #
 # SERVIÇOS:
-#   postgres-backup — Espelho local (cold-standby) do Supabase remoto.
+#   postgres-backup — Espelho local (cold-standby) do banco remoto (Aiven).
 #                     Usado para backup seguro e testes de queries pesadas.
 #                     ATENÇÃO: Se você usa PostgreSQL nativo no Linux Mint
 #                     (localhost:5432), este serviço é OPCIONAL.
@@ -20,7 +20,7 @@
 #                     Senha: admin
 #
 # ⚠️  NUNCA use este compose para o banco primário de desenvolvimento.
-#     O remoto (Supabase) é a fonte da verdade operacional.
+#     O remoto (Aiven) é a fonte da verdade operacional.
 # ==============================================================================
 
 version: "3.9"

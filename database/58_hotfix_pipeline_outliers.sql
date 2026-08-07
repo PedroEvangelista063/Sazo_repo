@@ -32,7 +32,7 @@
 --            Limpeza retroativa: mover alvos do fact para precos_rejeitados
 --            (com backup auditável) e deletar do fact.
 --
---   FASE 4 — Deploy Local+Supabase, REFRESH MV CONCURRENTLY e validação.
+--   FASE 4 — Deploy Local+Remoto, REFRESH MV CONCURRENTLY e validação.
 -- =====================================================================
 
 BEGIN;

@@ -456,7 +456,7 @@ $$;
 ALTER TABLE mart.sazonalidade_produto
     DROP CONSTRAINT IF EXISTS chk_forecast_method;
 
--- Supabase pode ter constraint com nome auto-gerado
+-- O banco pode ter constraint com nome auto-gerado
 ALTER TABLE mart.sazonalidade_produto
     DROP CONSTRAINT IF EXISTS sazonalidade_produto_forecast_method_check;
 
@@ -490,7 +490,7 @@ COMMENT ON COLUMN mart.sazonalidade_produto.forecast_method IS
 -- A engine de forecast (000013 e a V13) insere linhas projetadas com
 -- fonte='BASELINE_HISTORICO' em runtime — sem relaxar o check, o INSERT da
 -- procedure V13 falharia. O banco vivo já tem esse check relaxado via
--- scripts/restore/fix_supabase_schema.sql; esta seção garante o mesmo em
+-- esta seção garante o mesmo em
 -- qualquer ambiente (idempotente: lookup genérico + DROP + ADD, padrão
 -- da migration 19).
 

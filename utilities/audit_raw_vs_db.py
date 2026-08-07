@@ -31,7 +31,7 @@ import psycopg2
 from dotenv import load_dotenv
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Configuração de ambiente (padrão do projeto: DATABASE_URL → Supabase)
+# Configuração de ambiente (padrão do projeto: DATABASE_URL → banco remoto/Aiven)
 # ─────────────────────────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -212,7 +212,7 @@ FROM staging.dim_produto
 
 def carregar_fact_em_memoria() -> dict[tuple, list[tuple]]:
     """Carrega toda a fact_precos_mensais em memória, indexada por
-    (nome_produto_upper, uf, ano, mes). Evita N+1 queries no Supabase.
+    (nome_produto_upper, uf, ano, mes). Evita N+1 queries no banco.
     """
     idx: dict[tuple, list[tuple]] = {}
     for row in query(SQL_FACT_POR_CHAVE):

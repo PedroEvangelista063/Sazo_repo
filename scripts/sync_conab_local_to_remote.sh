@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ============================================================================
-# QUERO COMPRAR — Sync da carga CONAB (fact/mart) local → Supabase remoto
+# QUERO COMPRAR — Sync da carga CONAB (fact/mart) local → banco remoto (Aiven)
 # ----------------------------------------------------------------------------
 # Contexto: a ingestão CONAB (PrecosMensalUF + ProhortMensal) foi executada no
-# banco LOCAL (5432) porque o Supabase remoto estava em hot standby (57P03).
+# banco LOCAL (5432) porque o banco remoto (Aiven) estava indisponível.
 # Quando o remoto voltar, rodar este script para replicar os dados novos.
 #
 # O que replica (somente as tabelas alteradas pela carga):
@@ -34,7 +34,7 @@ if [ -z "${LOCAL_URL:-}" ]; then
   echo "[sync] ERRO: defina DATABASE_URL ou preencha DATABASE_URL em backend/.env" >&2
   exit 1
 fi
-REMOTE_URL="${DATABASE_URL_REMOTO:?Defina DATABASE_URL_REMOTO com a URL do Supabase}"
+REMOTE_URL="${DATABASE_URL_REMOTO:?Defina DATABASE_URL_REMOTO com a URL do banco remoto (Aiven)}"
 
 log() { echo "[sync] $(date '+%H:%M:%S') $*"; }
 

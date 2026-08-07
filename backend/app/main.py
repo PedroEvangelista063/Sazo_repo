@@ -38,7 +38,7 @@ async def _connect_pool_with_retry(
     name: str,
     max_wait_seconds: float = 120.0,
 ) -> None:
-    """Faz o pool aguardar o banco voltar (ex.: recovery do Supabase) com backoff,
+    """Faz o pool aguardar o banco voltar (ex.: recovery do banco remoto) com backoff,
     em vez de derrubar o startup instantaneamente."""
     loop = asyncio.get_event_loop()
     deadline = loop.time() + max_wait_seconds
@@ -67,7 +67,7 @@ async def _connect_pool_with_retry(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Aguarda bancos aceitarem conexão (ex.: crash recovery do Supabase free)
+    # Aguarda bancos aceitarem conexão (ex.: crash recovery do banco remoto)
     # Se a nuvem estiver fora, o failover do session.py roteia para o banco local.
     await _connect_pool_with_retry(get_api_pool, "api")
     await _connect_pool_with_retry(get_etl_pool, "etl")

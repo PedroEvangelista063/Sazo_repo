@@ -38,7 +38,7 @@ BEGIN;
 ALTER TABLE mart.sazonalidade_produto
     DROP CONSTRAINT IF EXISTS chk_forecast_method;
 
--- FIX: Supabase pode ter constraint com nome auto-gerado
+-- FIX: o banco pode ter constraint com nome auto-gerado
 ALTER TABLE mart.sazonalidade_produto
     DROP CONSTRAINT IF EXISTS sazonalidade_produto_forecast_method_check;
 

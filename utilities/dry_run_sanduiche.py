@@ -12,7 +12,7 @@ Uso:
     # Local (padrão)
     python3 utilities/dry_run_sanduiche.py
 
-    # Remoto (Supabase)
+    # Remoto (Aiven)
     DATABASE_URL="postgresql://..." python3 utilities/dry_run_sanduiche.py
 
 Dependências:

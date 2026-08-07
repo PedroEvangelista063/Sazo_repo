@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-disk_report.py — Relatório de uso de disco do banco (Aiven/Supabase).
+disk_report.py — Relatório de uso de disco do banco (Aiven).
 
 Mostra:
   1. Nível do NÓ (capacidade × usado × livre) via Aiven API — quando

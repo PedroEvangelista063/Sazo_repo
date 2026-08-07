@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     database_url_api: str = ""
     database_url_etl: str = ""
     # ── Failover / Alta Disponibilidade ──────────────────────────────
-    # PRIMARY: banco remoto (ex.: Supabase). FALLBACK: banco local (standby).
+    # PRIMARY: banco remoto (ex.: Aiven). FALLBACK: banco local (standby).
     # Se PRIMARY vazio, usa `database_url`. Se FALLBACK vazio, usa `database_url_local_backup`.
     database_url_primary: str = ""
     database_url_fallback: str = ""

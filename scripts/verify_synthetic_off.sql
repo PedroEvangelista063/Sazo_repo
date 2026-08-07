@@ -32,23 +32,16 @@
 -- ASSERTIONS DE ARQUIVO (grep — rodar fora do psql; documentadas para o
 -- verify/deploy phase). O padrão é ANCORADO (^ + whitespace): a linha de
 -- audit trail "-- CALL ... (desativado)" NÃO casa (começa com "--"),
--- portanto o count esperado é 0 em ambos os arquivos:
+-- portanto o count esperado é 0:
 --   1.  grep -cE '^\s*CALL staging\.sp_calcular_forecast_2026_v13' \
 --         database/63_dado_historico_real_transparencia.sql  → 0
---   2.  grep -cE '^\s*CALL staging\.sp_calcular_forecast_2026_v13' \
---         supabase/migrations/000021_desativar_engines_sinteticas.sql  → 0
---   3.  grep -cE '^\s*CALL staging\.sp_project_sandwich_prices_2026' \
+--   2.  grep -cE '^\s*CALL staging\.sp_project_sandwich_prices_2026' \
 --         database/63_dado_historico_real_transparencia.sql  → 0
---   4.  grep -cE '^\s*CALL staging\.sp_project_sandwich_prices_2026' \
---         supabase/migrations/000021_desativar_engines_sinteticas.sql  → 0
---   5.  grep -c "sp_calcular_sazonalidade_preditiva" \
+--   3.  grep -c "sp_calcular_sazonalidade_preditiva" \
 --         pipeline/run_bulk_historical_fill.py  → 0
 --      (path de recálculo agora é real-only; docstring atualizada)
---   6.  deploy_v13_prod.sh: linha de "database/63" e "000021" ANTES da
---      seção "CALL staging.sp_executar_carga_completa":
---      grep -n "63_dado_historico\|000021_desativar\|sp_executar_carga_completa" \
---         scripts/deploy_v13_prod.sh
---   7.  Guard pós-CALL no deploy: grep -n "is_forecast" scripts/deploy_v13_prod.sh
+--   (A migration supabase/000021 e scripts/deploy_v13_prod.sh foram removidos
+--    do repositório — a desativação é verificada contra database/63 acima.)
 -- ============================================================================
 
 -- (a) pg_proc — engines sintéticas fora do orchestrator -----------------------

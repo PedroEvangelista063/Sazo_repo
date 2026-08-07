@@ -117,7 +117,7 @@ def _resolve_dsn(cli_url: str | None) -> str:
 
 
 def _ensure_ssl(dsn: str) -> str:
-    """Adiciona sslmode=require para hosts remotos que não o declaram (ex: Supabase pooler)."""
+    """Adiciona sslmode=require para hosts remotos que não o declaram (ex: Aiven)."""
     if "sslmode" in dsn:
         return dsn
     if "localhost" in dsn or "127.0.0.1" in dsn:

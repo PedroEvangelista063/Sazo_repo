@@ -7,7 +7,7 @@ Documentos completos: `docs/PROJECT_RULES.md` e `docs/CONVENTIONS.md`.
 
 - Backend: Python 3.13+, FastAPI[standard], Pydantic v2, asyncpg, httpx, Uvicorn, Polars
 - Frontend: React 19, Vite PWA, TailwindCSS 3, shadcn/ui (Radix + CVA), Framer Motion, Zustand 5, TanStack Query v5, TanStack Table v8, Recharts, Lucide
-- Database: PostgreSQL 16+ (Supabase)
+- Database: PostgreSQL 16+ (Aiven / PostgreSQL local)
 
 ## Engenharia Geral
 

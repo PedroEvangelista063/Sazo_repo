@@ -8,7 +8,7 @@
 #
 # Schemas de plataforma (auth/storage/realtime) são excluídos por convenção do
 # projeto (ver database/summary.md) — protege contra falhas/permissão caso o
-# script seja apontado para o Supabase; no Aiven eles não existem (inofensivo).
+# script seja apontado para outro provedor; no Aiven eles não existem (inofensivo).
 #
 # Não dependemos dos backups automáticos da plataforma: este é o nosso próprio
 # backup, executado manualmente e sob demanda.

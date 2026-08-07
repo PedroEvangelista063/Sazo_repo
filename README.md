@@ -262,8 +262,8 @@ Relatórios técnicos e decisões de arquitetura: `PROJECT_RULES.md`, `CONVENTIO
 
 | Camada           | Ferramenta               | Roda com                          |
 | ---------------- | ------------------------ | --------------------------------- |
-| Backend (Python) | pytest                   | `make test:backend`               |
-| Frontend (TS)    | Vitest + Testing Library | `make test:frontend`              |
+| Backend (Python) | pytest                   | `make test-backend`               |
+| Frontend (TS)    | Vitest + Testing Library | `make test-frontend`              |
 | Tudo             | pytest + vitest          | `make test` ou `npm run dev:test` |
 | Lint             | ruff + prettier          | `make lint`                       |
 

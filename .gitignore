@@ -81,6 +81,10 @@ tests/
 
 # Database backups (FASE 2: sync_db_remote_to_local)
 database/backups/
+
+# Drenagem e backup local sob demanda (BYOB — FASE 1/2: nunca versionar gigabytes)
+database/backups_locais/
+database/logs_locais/
 .docker/pg_data/
 .aider*
 

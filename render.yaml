@@ -30,3 +30,38 @@ services:
         sync: false
       - key: PYTHON_VERSION
         value: "3.11"
+
+  # ── Cron de Drenagem de Logs (diário 02:00 UTC) ───────────────────────────
+  # Exporta logs operacionais (ops.audit_logs etc.) → CSV → upload imediato
+  # p/ Object Storage S3-compatible → TRUNCATE no banco da nuvem (Aiven).
+  # Disco do Render é efêmero: DELETE_AFTER_UPLOAD=1 remove os temporários
+  # após o upload confirmado (HTTP 200). Lock anti-concorrência embutido
+  # (pg_try_advisory_lock) + single-run guarantee do Render.
+  # ⚠️ DATABASE_URL aqui deve apontar para o Aiven (não para o banco do Render).
+  - type: cron
+    name: qcomprar-drain-logs
+    env: python
+    repo: https://github.com/PedroEvangelista063/Sazo_repo
+    branch: main
+    plan: free
+    region: ohio
+    schedule: "0 2 * * *"
+    buildCommand: pip install -r ops/requirements.txt
+    startCommand: python ops/drain_logs.py
+    envVars:
+      - key: DATABASE_URL # Aiven (banco a drenar) — preencher no dashboard
+        sync: false
+      - key: OBJECT_STORAGE_BUCKET # ex: sazo-backups
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: S3_ENDPOINT_URL # vazio = AWS S3; R2: https://<account>.r2.cloudflarestorage.com
+        sync: false
+      - key: S3_REGION # opcional (padrão us-east-1)
+        sync: false
+      - key: DELETE_AFTER_UPLOAD
+        value: "1"
+      - key: PYTHON_VERSION
+        value: "3.11"

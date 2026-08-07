@@ -1,0 +1,43 @@
+# ARQUIVO DESATIVADO: Arquitetura migrada para BYOB e Drenagem Local sob demanda.
+# ------------------------------------------------------------------------------
+# Este workflow (cron diário 03:30 UTC) deletava ops.audit_logs e outras tabelas
+# de retenção SEM exportar localmente antes — conflitava com a arquitetura
+# "Drain-First" (drenar/exportar antes de excluir) e podia causar perda
+# irreversível de dados de auditoria.
+#
+# Substituído por:
+#   - Local (sob demanda): make db-backup / make db-drain (ops/backup_local_ondemand.sh,
+#     ops/drain_logs.py + ops/storage.py)
+#   - Nuvem (automação):   Render Cron Job "qcomprar-drain-logs" (render.yaml,
+#                          schedule "0 2 * * *") — exporta → upload S3 → TRUNCATE.
+#
+# TODO: remover definitivamente após confirmação do cron do Render em produção.
+
+# name: Supabase Cleanup (retenção de disco)
+#
+# on:
+#   schedule:
+#     - cron: "30 3 * * *" # Diariamente 03:30 UTC
+#   workflow_dispatch: # Execução manual pelo painel do GitHub
+#
+# jobs:
+#   cleanup:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 5
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.12"
+#           cache: pip
+#
+#       - name: Install driver de conexão
+#         run: pip install asyncpg
+#
+#       - name: Rodar limpeza diária (retenção de audit_logs/rejeitados/llm)
+#         env:
+#           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+#         run: python utilities/supabase_cleanup.py

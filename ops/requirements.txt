@@ -1,0 +1,5 @@
+# Dependências mínimas do cron de drenagem/backup (Render Cron Job).
+# Build leve de propósito: NÃO puxar o pipeline inteiro (patchright/camoufox/spacy).
+psycopg2-binary>=2.9.10
+boto3>=1.34.0
+requests>=2.31.0

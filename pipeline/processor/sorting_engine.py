@@ -268,6 +268,13 @@ class SortingEngine:
             await self._inserir_staging(conn, produto, raw_id)
             aceitos += 1
 
+        if descartados_preco:
+            logger.warning(
+                "[SORTING] %s: %d itens descartados pela malha fina (preço inválido)",
+                raw_id,
+                descartados_preco,
+            )
+
         if aceitos == 0:
             await self._rejeitar(
                 conn,

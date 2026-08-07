@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import os
 import sys
+import uuid
 from pathlib import Path
 
 import psycopg2
@@ -99,6 +100,8 @@ def main() -> None:
                     if not tem_preco_real:
                         # Sem preço real → não cadastra (evita fantasma);
                         # registra em quarentena para rastreabilidade.
+                        # raw_id é UUID: usa uuid5 determinístico por nome
+                        # (idempotente entre execuções) e mantém o nome no motivo.
                         cur.execute(
                             """
                             INSERT INTO ops.quarentena_coleta
@@ -106,8 +109,8 @@ def main() -> None:
                             VALUES (%s, %s, NOW())
                             """,
                             (
-                                f"master_list:{nome_produto}",
-                                "sem_preco_real: cadastro bloqueado — produto sem preço válido na fact",
+                                uuid.uuid5(uuid.NAMESPACE_OID, f"master_list:{nome_produto}"),
+                                f"sem_preco_real: cadastro bloqueado — produto sem preço válido na fact ({nome_produto})",
                             ),
                         )
                         bloqueados += 1

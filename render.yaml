@@ -23,7 +23,7 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: CORS_ORIGINS
-        value: '["https://qcomprar.vercel.app"]'
+        value: '["http://localhost:5173","https://sazo-repo.vercel.app"]'
       - key: RATE_LIMIT_PER_MINUTE
         value: "120"
       # Chave interna que protege /_internal/* (gerar com: openssl rand -hex 32)

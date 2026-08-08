@@ -42,6 +42,12 @@
       "type": "remote",
       "url": "https://mcp.supabase.com/mcp",
       "enabled": false
+    },
+    "vercel": {
+      "type": "remote",
+      "url": "https://mcp.vercel.com",
+      "enabled": true,
+      "oauth": true
     }
   }
 }

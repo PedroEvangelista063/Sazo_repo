@@ -8,10 +8,10 @@ class Settings(BaseSettings):
     database_url_api: str = ""
     database_url_etl: str = ""
     # ── Failover / Alta Disponibilidade ──────────────────────────────
-    # PRIMARY: banco remoto (ex.: Aiven). FALLBACK: banco local (standby).
-    # Se PRIMARY vazio, usa `database_url`. Se FALLBACK vazio, usa `database_url_local_backup`.
+    # PRIMARY: banco remoto (Aiven — única fonte da verdade).
+    # STANDBY: banco local (sandbox/snapshot) via `database_url_local_backup`.
+    # Se PRIMARY vazio, usa `database_url`. Sem Supabase.
     database_url_primary: str = ""
-    database_url_fallback: str = ""
     database_url_local_backup: str = ""
     # Caminho (relativo à raiz do repo) do dump de schema usado no bootstrap local.
     bootstrap_schema_path: str = "database/backups/backup_schema_latest.sql"

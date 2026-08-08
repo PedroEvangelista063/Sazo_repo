@@ -1,11 +1,10 @@
-databases:
-  - name: qcomprar-db
-    databaseName: quero_comprar
-    user: qcomprar_user
-    plan: free
-    region: ohio
-    ipAllowList: []
-
+# ─────────────────────────────────────────────────────────────
+# Render Blueprint — qcomprar-api (Web Service)
+#
+# Banco de dados: Aiven PostgreSQL (única fonte da verdade).
+# O Render NÃO gerencia mais banco de dados (qcomprar-db removido).
+# DATABASE_URL e segredos são preenchidos no dashboard (sync: false).
+# ─────────────────────────────────────────────────────────────
 services:
   - type: web
     name: qcomprar-api
@@ -18,15 +17,23 @@ services:
     buildCommand: pip install -r backend/requirements.txt
     startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      # ── Aiven PostgreSQL (única fonte da verdade) ─────────────
+      # Conexão do Aiven: postgresql://USER:PASS@HOST:26536/defaultdb?sslmode=require
+      # Preencher no dashboard do Render (não usar banco interno do Render).
       - key: DATABASE_URL
-        fromDatabase:
-          name: qcomprar-db
-          property: connectionString
+        sync: false
       - key: CORS_ORIGINS
         value: '["https://qcomprar.vercel.app"]'
       - key: RATE_LIMIT_PER_MINUTE
         value: "120"
+      # Chave interna que protege /_internal/* (gerar com: openssl rand -hex 32)
       - key: INTERNAL_API_KEY
+        sync: false
+      # Webhook de invalidação de cache pós-ETL (CACHE_PURGE_KEY = INTERNAL_API_KEY)
+      # CACHE_PURGE_URL ex: https://<seu-servico>.onrender.com/_internal/cache-clear
+      - key: CACHE_PURGE_URL
+        sync: false
+      - key: CACHE_PURGE_KEY
         sync: false
       - key: PYTHON_VERSION
         value: "3.11"

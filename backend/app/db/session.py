@@ -59,9 +59,9 @@ def _primary_url() -> str:
 
 
 def _fallback_url() -> str:
-    """Base de fallback: DATABASE_URL_FALLBACK, senão DATABASE_URL_LOCAL_BACKUP."""
+    """Base de standby: DATABASE_URL_LOCAL_BACKUP (local), senão DATABASE_URL."""
     s = get_settings()
-    return s.database_url_fallback or s.database_url_local_backup or s.database_url
+    return s.database_url_local_backup or s.database_url
 
 
 def _resolve_pool_url(kind: str) -> str:

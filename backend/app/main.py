@@ -20,7 +20,7 @@ from backend.app.core.config import get_settings
 from backend.app.core.events import broadcaster
 from backend.app.core.ratelimit import RateLimitMiddleware
 from backend.app.core.timeout import TimeoutMiddleware
-from backend.app.db.bootstrap import run_bootstrap_once
+from backend.app.db.bootstrap import ensure_mv_refresh_log, run_bootstrap_once
 from backend.app.db.session import close_pools, get_active_mode, get_api_pool, get_etl_pool
 
 logger = logging.getLogger(__name__)
@@ -80,6 +80,12 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("Banco ativo: primary (nuvem)")
 
+    # Fonte permission-safe do X-Last-Refresh (Aiven nega pg_stat_file).
+    try:
+        await ensure_mv_refresh_log(await get_etl_pool())
+    except Exception:  # noqa: BLE001  # nunca deve impedir o startup
+        logger.warning("Falha ao garantir audit.mv_refresh_log no startup.")
+
     # Tenta cache Redis; se sem redis_url, mantém InMemoryCache
     init_cache(get_settings().redis_url)
 
@@ -102,6 +108,25 @@ async def lifespan(app: FastAPI):
             await conn.execute(
                 "REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade"
             )
+            try:
+                await conn.execute(
+                    """
+                    CREATE SCHEMA IF NOT EXISTS audit;
+                    CREATE TABLE IF NOT EXISTS audit.mv_refresh_log (
+                        mv_name text PRIMARY KEY,
+                        refreshed_at timestamptz NOT NULL DEFAULT now()
+                    );
+                    INSERT INTO audit.mv_refresh_log (mv_name, refreshed_at)
+                    VALUES ('vw_api_produtos_sazonalidade', now())
+                    ON CONFLICT (mv_name) DO UPDATE SET refreshed_at = now();
+                    """
+                )
+                logger.info("audit.mv_refresh_log atualizada após MV refresh em background.")
+            except Exception:
+                logger.warning(
+                    "Falha ao gravar audit.mv_refresh_log no MV refresh background (ignorado).",
+                    exc_info=True,
+                )
         finally:
             try:
                 await conn.close()

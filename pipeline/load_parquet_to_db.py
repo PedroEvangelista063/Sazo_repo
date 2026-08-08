@@ -216,7 +216,27 @@ def _refresh_mv(conn) -> None:
     with conn.cursor() as cur:
         cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY mart.vw_api_produtos_sazonalidade")
     conn.commit()
-    logger.info("MV mart.vw_api_produtos_sazonalidade atualizada")
+    # Registra o timestamp do refresh na fonte permission-safe do X-Last-Refresh
+    # (Aiven/Supabase negam pg_stat_file aos papéis padrão).
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "CREATE SCHEMA IF NOT EXISTS audit; "
+                "CREATE TABLE IF NOT EXISTS audit.mv_refresh_log ("
+                "  mv_name text PRIMARY KEY,"
+                "  refreshed_at timestamptz NOT NULL DEFAULT now()"
+                ")"
+            )
+            cur.execute(
+                "INSERT INTO audit.mv_refresh_log (mv_name, refreshed_at) "
+                "VALUES ('vw_api_produtos_sazonalidade', now()) "
+                "ON CONFLICT (mv_name) DO UPDATE SET refreshed_at = now()"
+            )
+        conn.commit()
+        logger.info("MV mart.vw_api_produtos_sazonalidade atualizada (log gravado)")
+    except Exception:  # log de metadata nunca deve quebrar a carga
+        conn.rollback()
+        logger.warning("Falha ao gravar audit.mv_refresh_log (ignorado)", exc_info=True)
 
 
 def _notificar_backend_etl_fim() -> None:

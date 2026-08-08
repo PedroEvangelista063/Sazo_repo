@@ -81,12 +81,19 @@ def _build_sazonalidade_cache_key(
     mes: int | None,
     pagina: int,
     por_pagina: int,
+    mv_refresh: str = "",
 ) -> str:
     """Chave de cache compartilhada entre o endpoint e `_query_sazonalidade`.
 
     Deve espelhar EXATAMENTE a chave usada no cache set (MD5 de dict com
     sort_keys, default=str), para que a checagem HIT/MISS do endpoint enxergue
     o mesmo objeto armazenado pelo helper.
+
+    ``mv_refresh`` (mtime da MV em ISO UTC) entra na chave para que QUALQUER
+    atualização da Materialized View invalide automaticamente o cache desta rota
+    — a mesma estratégia já usada em ``br-sazonalidade``. Sem isso, a rota só
+    seria invalidada pelo webhook de purge (que em produção aponta para
+    ``localhost``) ou pelo TTL de 24h.
     """
     return hashlib.md5(
         json.dumps(
@@ -101,6 +108,7 @@ def _build_sazonalidade_cache_key(
                 "mes": mes,
                 "pagina": pagina,
                 "por_pagina": por_pagina,
+                "mv_refresh": mv_refresh,
             },
             sort_keys=True,
             default=str,
@@ -109,24 +117,41 @@ def _build_sazonalidade_cache_key(
 
 
 async def _ultimo_refresh_mv_iso() -> str:
-    """Modificação do arquivo físico da MV em ISO8601 UTC (vazio se indisponível).
+    """Modificação da MV em ISO8601 UTC (vazio se indisponível).
 
-    Consulta assíncrona via pool da API (não bloqueia o event loop). Em
-    qualquer exceção retorna ``""`` para o header X-Last-Refresh ficar ausente
-    sem quebrar a resposta.
+    Fonte primária: mtime do arquivo físico (pg_stat_file) — mais preciso.
+    Fallback permission-safe: tabela ``audit.mv_refresh_log`` gravada pela
+    esteira ETL após cada REFRESH. Necessário porque Aiven nega
+    ``pg_stat_file`` para avnadmin/postgres, o que deixava o header
+    X-Last-Refresh sempre vazio em produção. Consulta assíncrona via pool da
+    API; qualquer exceção retorna ``""`` sem quebrar a resposta.
     """
+
+    def _fmt(last) -> str:
+        if last is None:
+            return ""
+        if last.tzinfo is None:
+            last = last.replace(tzinfo=UTC)
+        return last.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
     try:
         row = await fetchrow(
             "SELECT (pg_stat_file("
             "pg_relation_filepath('mart.vw_api_produtos_sazonalidade'::regclass)"
             ")).modification AS last_refresh"
         )
-        if row is None or row[0] is None:
-            return ""
-        last = row[0]
-        if last.tzinfo is None:
-            last = last.replace(tzinfo=UTC)
-        return last.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+        value = _fmt(row[0] if row else None)
+        if value:
+            return value
+    except Exception:  # noqa: BLE001, S110  # sem privilégio -> fallback deliberado
+        pass
+
+    try:
+        row = await fetchrow(
+            "SELECT refreshed_at FROM audit.mv_refresh_log "
+            "WHERE mv_name = 'vw_api_produtos_sazonalidade'"
+        )
+        return _fmt(row[0] if row else None)
     except Exception:  # noqa: BLE001  # header de transparência nunca deve quebrar a resposta
         return ""
 
@@ -155,6 +180,7 @@ async def _query_sazonalidade(
         mes,
         pagina,
         por_pagina,
+        mv_refresh=await _ultimo_refresh_mv_iso(),
     )
 
     cached = await cache.get(cache_key)
@@ -372,8 +398,17 @@ async def _query_sazonalidade_por_mes(
     _cache_key,
     settings,
 ) -> SazonalidadeListResponse:
-    # Chave: apenas dimensões imutáveis — sem produto, status_cor, paginação
-    hist_parts = [str(ano), str(mes), uf or "", municipio or "", categoria or ""]
+    # Chave: apenas dimensões imutáveis — sem produto, status_cor, paginação.
+    # mv_refresh entra para que a atualização da MV também invalide este cache
+    # aninhado (senão o outer key mudaria mas o hist serviria dado velho).
+    hist_parts = [
+        str(ano),
+        str(mes),
+        uf or "",
+        municipio or "",
+        categoria or "",
+        await _ultimo_refresh_mv_iso(),
+    ]
     hist_key = "saz_hist_" + "_".join(hist_parts).rstrip("_")
 
     cached_full = await cache.get(hist_key)
@@ -422,7 +457,10 @@ async def _query_sazonalidade_por_mes(
 
 
 def _slice_periodo(full_dicts, produto, status_cor, pagina, por_pagina):
-    filtered = full_dicts
+    # Normaliza entradas: com InMemoryCache o cache guarda objetos Pydantic
+    # (não dicts como no Redis), e .get() falharia com AttributeError — bug de
+    # produção que derrubava GET /sazonalidade?mes=... com 500 no 2º hit.
+    filtered = [d if isinstance(d, dict) else d.model_dump() for d in full_dicts]
     if produto:
         p = produto.upper()
         filtered = [d for d in filtered if p in (d.get("nome_produto") or "").upper()]
@@ -876,6 +914,7 @@ async def listar_sazonalidade(
         mes,
         pagina,
         por_pagina,
+        mv_refresh=await _ultimo_refresh_mv_iso(),
     )
     cached = await cache.get(cache_key)
     if cached is not None:
@@ -900,6 +939,7 @@ async def listar_sazonalidade(
 
 @router.get("/com-preco", response_model=SazonalidadeComPrecoListResponse)
 async def listar_sazonalidade_com_preco(
+    response: Response,
     uf: str | None = Query(None, min_length=2, max_length=2),
     produto: str | None = Query(None),
     ano: int | None = Query(None, ge=2024, le=2030),
@@ -918,6 +958,7 @@ async def listar_sazonalidade_com_preco(
                 "mes": mes,
                 "pagina": pagina,
                 "por_pagina": por_pagina,
+                "mv_refresh": await _ultimo_refresh_mv_iso(),
             },
             sort_keys=True,
         ).encode()
@@ -925,7 +966,12 @@ async def listar_sazonalidade_com_preco(
 
     cached = await cache.get(cache_key)
     if cached is not None:
+        response.headers["X-Cache-Status"] = "HIT"
+        response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
         return SazonalidadeComPrecoListResponse(**cached)
+
+    response.headers["X-Cache-Status"] = "MISS"
+    response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
 
     offset_val = (pagina - 1) * por_pagina
     conds = ["1=1"]
@@ -1153,6 +1199,7 @@ async def listar_br_sazonalidade(
 
 @router.get("/{uf}/{municipio}", response_model=SazonalidadeListResponse)
 async def listar_por_localidade(
+    response: Response,
     uf: str,
     municipio: str,
     categoria: str | None = Query(None, description="Nome da categoria (FRUTAS, LEGUMES, etc.)"),
@@ -1161,6 +1208,22 @@ async def listar_por_localidade(
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(100, ge=1, le=2000),
 ):
+    cache_key = _build_sazonalidade_cache_key(
+        regiao=None,
+        uf=uf,
+        municipio=municipio,
+        produto=None,
+        status_cor=None,
+        categoria=categoria,
+        ano=ano,
+        mes=mes,
+        pagina=pagina,
+        por_pagina=por_pagina,
+        mv_refresh=await _ultimo_refresh_mv_iso(),
+    )
+    cached = await cache.get(cache_key)
+    response.headers["X-Cache-Status"] = "HIT" if cached is not None else "MISS"
+    response.headers["X-Last-Refresh"] = await _ultimo_refresh_mv_iso()
     return await _query_sazonalidade(
         uf=uf,
         municipio=municipio,

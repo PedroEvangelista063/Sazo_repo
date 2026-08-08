@@ -40,7 +40,27 @@ def _repo_root() -> Path:
 
 def _fallback_url() -> str:
     s = get_settings()
-    return s.database_url_fallback or s.database_url_local_backup or s.database_url
+    return s.database_url_local_backup or s.database_url
+
+
+async def ensure_mv_refresh_log(pool) -> None:
+    """Garante a tabela ``audit.mv_refresh_log`` (DDL idempotente).
+
+    Fonte permission-safe do ``X-Last-Refresh``: a esteira ETL grava o
+    timestamp de cada REFRESH da MV aqui, porque Aiven nega
+    ``pg_stat_file`` para os papéis padrão. Nunca quebra o startup.
+    """
+    try:
+        await pool.execute(
+            "CREATE SCHEMA IF NOT EXISTS audit; "
+            "CREATE TABLE IF NOT EXISTS audit.mv_refresh_log ("
+            "  mv_name text PRIMARY KEY,"
+            "  refreshed_at timestamptz NOT NULL DEFAULT now()"
+            ")"
+        )
+        logger.info("[BOOTSTRAP] audit.mv_refresh_log garantida.")
+    except Exception as exc:  # noqa: BLE001  # metadata opcional: nunca quebra o startup
+        logger.warning("[BOOTSTRAP] Não foi possível criar audit.mv_refresh_log: %s", exc)
 
 
 def _resolve_schema_path() -> Path | None:

@@ -21,9 +21,7 @@ export function TopAppBar({ onCalendarClick, onThemeToggle }: TopAppBarProps) {
         >
           🇧🇷
         </div>
-        <h1 className="font-display-lg text-display-lg tracking-tight text-primary">
-          HortiSazonal
-        </h1>
+        <h1 className="font-display-lg text-display-lg tracking-tight text-primary">Sazo Brasil</h1>
       </div>
       <div className="flex items-center gap-sm">
         {onCalendarClick && (

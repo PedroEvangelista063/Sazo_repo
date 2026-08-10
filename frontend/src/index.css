@@ -116,18 +116,37 @@
     border-radius: 2rem;
     background: theme('colors.surface-container');
     box-shadow: 
-        inset -5px -5px 10px rgba(255, 255, 255, 0.7), 
-        inset 5px 5px 10px rgba(0, 0, 0, 0.05),
-        8px 8px 16px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
+        inset -4px -4px 8px rgba(255, 255, 255, 0.65),
+        inset 4px 4px 8px rgba(0, 0, 0, 0.04),
+        6px 6px 14px rgba(0, 0, 0, 0.04),
+        -2px -2px 6px rgba(255, 255, 255, 0.5);
+    transition: box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-.clay-card:hover, .clay-card:active {
+/* Hover passivo: APENAS sombra muda — zero scale */
+.clay-card:hover {
     box-shadow: 
-        inset 4px 4px 8px rgba(0, 0, 0, 0.08), 
-        inset -4px -4px 8px rgba(255, 255, 255, 0.8),
-        2px 2px 5px rgba(0, 0, 0, 0.02);
-    transform: scale(0.98);
+        inset -3px -3px 6px rgba(255, 255, 255, 0.7),
+        inset 3px 3px 6px rgba(0, 0, 0, 0.06),
+        8px 8px 18px rgba(0, 0, 0, 0.06),
+        -2px -2px 6px rgba(255, 255, 255, 0.6);
+}
+/* Active: sombra afunda */
+.clay-card:active {
+    box-shadow: 
+        inset 5px 5px 10px rgba(0, 0, 0, 0.08),
+        inset -5px -5px 10px rgba(255, 255, 255, 0.6),
+        2px 2px 4px rgba(0, 0, 0, 0.02);
+    transform: translateY(1px);
+}
+/* Variante clicável: suave translateY sem scale */
+.clay-card--interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        inset -3px -3px 6px rgba(255, 255, 255, 0.7),
+        inset 3px 3px 6px rgba(0, 0, 0, 0.06),
+        10px 10px 20px rgba(0, 0, 0, 0.08),
+        -3px -3px 8px rgba(255, 255, 255, 0.7);
 }
 
 .tab-btn.active {
@@ -160,3 +179,26 @@
 }
 .flow-receiving { stroke: theme('colors.primary'); }
 .flow-sending { stroke: #3b82f6; }
+
+/* ===== RESPONSIVIDADE APRIMORADA ===== */
+
+/* Safe area para dispositivos com notch */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  footer.docked {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 0.375rem);
+  }
+}
+
+html { scroll-behavior: smooth; }
+body { overflow-x: hidden; }
+
+/* Nav lateral — scroll snap horizontal em mobile */
+@media (max-width: 767px) {
+  nav.hide-scrollbar.sticky {
+    scroll-snap-type: x mandatory;
+  }
+  nav.hide-scrollbar.sticky > button {
+    scroll-snap-align: center;
+    flex-shrink: 0;
+  }
+}

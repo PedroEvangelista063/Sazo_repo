@@ -121,14 +121,12 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                   border: 'border-gray-200/70 dark:border-gray-700/60',
                   label: 'Sem Cotação',
                 }
-                const isLowCoverage = item.total_ufs < 3
                 return (
                   <td key={mesNum} className="px-1 py-1.5 text-center">
                     <div className="group relative flex h-8 w-full items-center justify-center gap-1 rounded-md border">
-                      <motion.div
-                        whileHover={{ scale: 1.08 }}
+                      <div
                         className={cn(
-                          'flex h-full w-full cursor-default items-center justify-center rounded-md border shadow-clay-press dark:shadow-clay-dark',
+                          'shadow-clay-press flex h-full w-full cursor-default items-center justify-center rounded-md border dark:shadow-clay-dark',
                           style.bg,
                           style.text,
                           style.border,
@@ -138,7 +136,7 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                         {badge && (
                           <span className="text-[9px] font-semibold opacity-80">{badge}</span>
                         )}
-                      </motion.div>
+                      </div>
                       {(isLegado || mesData.tipo_dado) && (
                         <DataTransparencyInfo
                           status_cor={mesData.status_cor}
@@ -151,11 +149,6 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                         />
                       )}
                     </div>
-                    {isLowCoverage && (
-                      <p className="mt-0.5 text-[9px] leading-none text-amber-600 dark:text-amber-400">
-                        ⚠️ {item.total_ufs} UF{item.total_ufs > 1 ? 's' : ''}
-                      </p>
-                    )}
                   </td>
                 )
               })}

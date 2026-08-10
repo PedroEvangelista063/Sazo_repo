@@ -142,7 +142,7 @@ export function SupermercadoView() {
 
       <OfflineBanner />
 
-      <main className="mx-auto mt-4 flex w-full max-w-7xl flex-col gap-lg px-margin-mobile pb-xl pt-sm md:flex-row">
+      <main className="mx-auto mt-4 flex w-full max-w-7xl flex-col gap-lg px-margin-mobile pb-[7rem] pt-sm md:flex-row md:pt-20">
         {/* Side Navigation Filters */}
         <nav className="hide-scrollbar sticky top-16 z-30 flex h-auto w-full shrink-0 flex-row items-center gap-4 overflow-x-auto rounded-2xl bg-surface-container/90 px-4 py-3 shadow-clay-dark backdrop-blur-md md:top-24 md:h-fit md:w-16 md:flex-col md:overflow-y-auto md:rounded-full md:py-lg">
           <div className="whitespace-nowrap text-center font-label-sm text-[10px] text-secondary md:mb-2 md:mt-4 md:rotate-[-90deg]">
@@ -150,27 +150,54 @@ export function SupermercadoView() {
           </div>
 
           <button
-            className={`scroll-snap-align-center flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${selectedStatus === 'VERDE' ? 'bg-status-green text-on-primary shadow-clay-green brightness-110' : 'bg-status-green/80 text-on-primary/80 shadow-clay-dark'}`}
+            className={`scroll-snap-align-center flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 ${
+              selectedStatus === 'VERDE'
+                ? 'bg-primary shadow-clay-green ring-2 ring-primary/40 brightness-110'
+                : 'bg-primary/70 shadow-clay-dark hover:bg-primary/90'
+            }`}
             title="Melhor Época"
+            aria-label="Filtrar: Melhor Época"
+            aria-pressed={selectedStatus === 'VERDE'}
             onClick={() => toggleStatusFilter('VERDE')}
           >
-            <span className="material-symbols-outlined text-[18px]">done</span>
+            <span
+              className="block h-3.5 w-3.5 rounded-full bg-white/90 shadow-inner"
+              aria-hidden="true"
+            />
           </button>
 
           <button
-            className={`scroll-snap-align-center flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${selectedStatus === 'AMARELO' ? 'bg-status-yellow text-on-secondary-container shadow-clay-pressed brightness-110' : 'bg-status-yellow/80 text-on-secondary-container/80 shadow-clay-dark'}`}
+            className={`scroll-snap-align-center flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 ${
+              selectedStatus === 'AMARELO'
+                ? 'bg-secondary-container shadow-clay-pressed ring-2 ring-secondary-container/40 brightness-110'
+                : 'bg-secondary-container/70 shadow-clay-dark hover:bg-secondary-container/90'
+            }`}
             title="Preço Normal"
+            aria-label="Filtrar: Preço Normal"
+            aria-pressed={selectedStatus === 'AMARELO'}
             onClick={() => toggleStatusFilter('AMARELO')}
           >
-            <span className="material-symbols-outlined text-[18px]">remove</span>
+            <span
+              className="block h-3.5 w-3.5 rounded-full bg-white/90 shadow-inner"
+              aria-hidden="true"
+            />
           </button>
 
           <button
-            className={`scroll-snap-align-center flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${selectedStatus === 'VERMELHO' ? 'bg-status-red text-on-error shadow-clay-pressed brightness-110' : 'bg-status-red/80 text-on-error/80 shadow-clay-dark'}`}
+            className={`scroll-snap-align-center flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 ${
+              selectedStatus === 'VERMELHO'
+                ? 'bg-tertiary-container shadow-clay-pressed ring-2 ring-tertiary-container/40 brightness-110'
+                : 'bg-tertiary-container/70 shadow-clay-dark hover:bg-tertiary-container/90'
+            }`}
             title="Péssima Época"
+            aria-label="Filtrar: Péssima Época"
+            aria-pressed={selectedStatus === 'VERMELHO'}
             onClick={() => toggleStatusFilter('VERMELHO')}
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <span
+              className="block h-3.5 w-3.5 rounded-full bg-white/90 shadow-inner"
+              aria-hidden="true"
+            />
           </button>
 
           <button
@@ -184,14 +211,13 @@ export function SupermercadoView() {
 
         {/* Main Content Area */}
         <div className="w-full flex-1 overflow-hidden">
-          <NavigationTabs
-            activeTab={viewMode}
-            onTabChange={(tab) => setViewMode(tab as ViewMode)}
-          />
-
           <div className="mt-4">
-            {/* UF / Ano selectors (Mobile friendly or global context) */}
-            <div className="rounded-clay shadow-clay-card mb-4 flex flex-wrap items-center justify-between bg-surface-container-low p-4">
+            {/* Filtros de visão + seletores UF/Ano alinhados na mesma linha da superfície clay */}
+            <div className="rounded-clay shadow-clay-card mb-4 flex flex-wrap items-center justify-between gap-lg bg-surface-container-low p-4">
+              <NavigationTabs
+                activeTab={viewMode}
+                onTabChange={(tab) => setViewMode(tab as ViewMode)}
+              />
               <div className="flex items-center gap-4">
                 <select
                   value={selectedUF}
@@ -200,7 +226,7 @@ export function SupermercadoView() {
                     setSelectedMonth(null)
                     setSelectedStatus(null)
                   }}
-                  className="h-10 rounded-lg border border-outline-variant bg-surface-container px-3 text-on-surface outline-none transition-colors focus:border-primary"
+                  className="h-10 w-full rounded-lg border border-outline-variant bg-surface-container px-3 text-on-surface outline-none transition-colors focus:border-primary sm:w-auto"
                 >
                   {ufOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>

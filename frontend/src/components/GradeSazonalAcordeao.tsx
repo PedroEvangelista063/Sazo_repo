@@ -56,7 +56,9 @@ export function GradeSazonalAcordeao({
   }
 
   if (grupos.length === 0) {
-    return <p className="py-4 text-center text-sm text-gray-400">Sem dados para exibir.</p>
+    return (
+      <p className="py-4 text-center text-sm text-on-surface-variant">Sem dados para exibir.</p>
+    )
   }
 
   return (
@@ -66,7 +68,7 @@ export function GradeSazonalAcordeao({
         return (
           <section
             key={grupo.id}
-            className="rounded-clay border border-gray-200 bg-white/80 shadow-clay-card backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/80 dark:shadow-clay-dark"
+            className="clay-card overflow-hidden border border-outline-variant/40"
           >
             {/* Header sticky — gruda abaixo do header do app enquanto rola */}
             <button
@@ -76,20 +78,19 @@ export function GradeSazonalAcordeao({
               aria-expanded={aberto}
               aria-controls={`acordeao-${grupo.id}`}
               className={cn(
-                'sticky top-14 z-20 flex w-full items-center gap-3 rounded-clay border border-transparent px-4 py-3 text-left',
-                'bg-white/95 shadow-clay-btn backdrop-blur-sm transition-all duration-150',
-                'hover:shadow-clay-btn-hover active:translate-y-[1px] active:shadow-clay-press',
-                'dark:bg-gray-800/95 dark:shadow-clay-dark dark:hover:shadow-clay-dark-hover',
+                'rounded-clay sticky top-14 z-20 flex w-full items-center gap-3 border border-transparent px-4 py-3 text-left',
+                'border-b border-outline-variant/20 bg-surface-container-lowest/95 backdrop-blur-sm transition-all duration-150',
+                'active:shadow-clay-press hover:bg-surface-container/80 active:translate-y-[1px]',
               )}
             >
               <span className="text-xl leading-none" aria-hidden="true">
                 {grupo.emoji}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-display text-sm font-bold text-gray-900 dark:text-gray-100">
+                <span className="font-display block truncate text-sm font-bold text-on-surface">
                   {grupo.nome}
                 </span>
-                <span className="block truncate text-[10px] text-gray-400 dark:text-gray-500">
+                <span className="block truncate text-[10px] text-on-surface-variant">
                   {grupo.descricao}
                 </span>
               </span>
@@ -99,7 +100,7 @@ export function GradeSazonalAcordeao({
               <ChevronDown
                 size={16}
                 className={cn(
-                  'shrink-0 text-gray-400 transition-transform duration-300',
+                  'shrink-0 text-on-surface-variant transition-transform duration-300',
                   aberto && 'rotate-180',
                 )}
               />

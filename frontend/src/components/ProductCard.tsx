@@ -69,11 +69,11 @@ export function ProductCard({ product, isSelected, onToggle }: ProductCardProps)
   return (
     <motion.div
       onClick={onToggle}
-      whileHover={{ y: -4, scale: 1.02 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ y: -2 }}
+      whileTap={{ y: 1 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        'clay-card group relative flex cursor-pointer flex-col items-center justify-center p-md',
+        'clay-card clay-card--interactive group relative flex cursor-pointer flex-col items-center justify-center p-md',
         isSelected ? 'bg-primary/5 ring-2 ring-primary' : '',
       )}
     >

@@ -258,6 +258,9 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `29_focus_2025_2026.sql` — Filtro temporal: apenas >= 2025, exclusão de B2B (INSUMO_AGRICOLA, MAQUINARIO, FLORES).
 - `30_engine_preditiva_forecast_2026.sql` (v1) → (v2 ponderado) — **538 linhas**: baseline_25_26 DDL, CTE baseline_ponderado (FULL JOIN + CASE), CHECK 4 valores, remoção guarda confiança >= 25. Execução em 1.02s.
 - `32_fn_regional_snapshot.sql` — Funções `fn_regioes_listar()` e `fn_resumo_regiao()` para filtro regional.
+- `74_quality_gate_12_meses.sql` (2026-08-08, commit `71c2a8f5`) — Expurgo físico: só permanecem produtos com `COUNT(DISTINCT mes) = 12` na janela 2024–2026 em `staging.fact_precos_mensais` (critério FRACO: meses espalhados entre anos passam — 863 produtos, 0 com 36/36).
+- `75_restaura_sazonalidade_baseline.sql` (2026-08-08, commit `732f5408`) — Restaura `mart.sazonalidade_baseline` (tabela ativa no LEFT JOIN dos endpoints /sazonalidade) dropada por engano (incidente HTTP 500 prod). 20.088 linhas / 140 produtos.
+- `76_quality_gate_completude_serie.sql` (2026-08-10) — **QUALITY GATE DE COMPLETUDE (vitrine perfeita)**: recria a MV `mart.vw_api_produtos_sazonalidade` (V21) com CTE `produtos_completos` — só entram produtos com série mensal COMPLETA (12/12 meses REAIS, `NOT COALESCE(is_interpolado,FALSE)`) em 2024 OU 2025. JOIN final filtra sumariamente o grupo Z (gaps em todos os anos). Pós: MV 210.367→177.485 linhas, 468→358 produtos, FALLBACK 31.799→18.487; `ops.serie_incompleta_backup` (146 produtos) para auditoria. Aplicada LOCAL + REMOTO (Aiven) com números idênticos.
 
 ### Migrações Formais (supabase/migrations/*.sql — reconciliadas no remoto)
 

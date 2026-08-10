@@ -4,14 +4,17 @@ import { glowPulse } from '@/lib/motion-presets'
 
 export type StatusCor = 'VERDE' | 'AMARELO' | 'VERMELHO'
 
-const STATUS_CONFIG: Record<StatusCor, {
-  label: string
-  bg: string
-  text: string
-  border: string
-  dotColor: string
-  glowColor: string
-}> = {
+const STATUS_CONFIG: Record<
+  StatusCor,
+  {
+    label: string
+    bg: string
+    text: string
+    border: string
+    dotColor: string
+    glowColor: string
+  }
+> = {
   VERDE: {
     label: 'Melhor Época',
     bg: 'bg-sazonal-verde-100 dark:bg-sazonal-verde-dark/30',
@@ -65,16 +68,16 @@ export function LivingStatus({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       className={cn(
-        'inline-flex items-center font-medium rounded-full',
+        'inline-flex items-center rounded-full font-medium',
         sizeStyles[size],
         cfg.bg,
         cfg.text,
         cfg.border,
-        className
+        className,
       )}
     >
       <motion.span
-        className="flex-shrink-0 w-1.5 h-1.5 rounded-full"
+        className="h-1.5 w-1.5 flex-shrink-0 rounded-full"
         style={{ backgroundColor: cfg.dotColor }}
         animate={glowPulse(cfg.glowColor)}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -90,11 +93,7 @@ interface StatusFilterChipsProps {
   className?: string
 }
 
-export function StatusFilterChips({
-  selectedStatus,
-  onChange,
-  className,
-}: StatusFilterChipsProps) {
+export function StatusFilterChips({ selectedStatus, onChange, className }: StatusFilterChipsProps) {
   const chips: { value: StatusCor; label: string }[] = [
     { value: 'VERDE', label: 'Melhor Época' },
     { value: 'AMARELO', label: 'Preço Normal' },
@@ -112,14 +111,19 @@ export function StatusFilterChips({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           className={cn(
-            'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all',
+            'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all',
             selectedStatus === value
-              ? `${STATUS_CONFIG[value].bg} ${STATUS_CONFIG[value].text} ${STATUS_CONFIG[value].border} shadow-[0_0_0_2px_${STATUS_CONFIG[value].dotColor}]`
-              : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+              ? `${STATUS_CONFIG[value].bg} ${STATUS_CONFIG[value].text} ${STATUS_CONFIG[value].border}`
+              : 'border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800',
           )}
+          style={
+            selectedStatus === value
+              ? { boxShadow: `0 0 0 2px ${STATUS_CONFIG[value].dotColor}` }
+              : undefined
+          }
         >
           <motion.span
-            className="w-1.5 h-1.5 rounded-full"
+            className="h-1.5 w-1.5 rounded-full"
             style={{ backgroundColor: STATUS_CONFIG[value].dotColor }}
             animate={selectedStatus === value ? glowPulse(STATUS_CONFIG[value].dotColor) : {}}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -132,11 +136,16 @@ export function StatusFilterChips({
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
           onClick={() => onChange(null)}
-          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
+          className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           aria-label="Limpar filtro"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </motion.button>
       )}

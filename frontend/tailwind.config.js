@@ -4,96 +4,93 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        display: ['"Fredoka Variable"', '"Nunito"', 'ui-rounded', 'system-ui', 'sans-serif'],
-      },
       colors: {
-        sazonal: {
-          verde: {
-            50: '#f0fdf4',
-            100: '#dcfce7',
-            400: '#4ade80',
-            600: '#16a34a',
-            700: '#15803d',
-            dark: '#14532d',
-          },
-          amarelo: {
-            50: '#fefce8',
-            100: '#fef9c3',
-            400: '#facc15',
-            600: '#ca8a04',
-            dark: '#a16207',
-          },
-          vermelho: {
-            50: '#fef2f2',
-            100: '#fee2e2',
-            400: '#f87171',
-            600: '#dc2626',
-            dark: '#991b1b',
-          },
-        },
-      },
-      keyframes: {
-        // Slide horizontal contínuo do background (mapa do Brasil)
-        'slide-horizontal': {
-          '0%': { backgroundPositionX: '0%' },
-          '100%': { backgroundPositionX: '100%' },
-        },
-        // Piscar suave — opacidade 0.3 ↔ 0.8 num ciclo longo (5s)
-        'blink-slow': {
-          '0%, 100%': { opacity: '0.3' },
-          '50%': { opacity: '0.8' },
-        },
-        // Pulsar suave — scale 1 ↔ 1.05 num ciclo longo (6s)
-        'pulse-soft': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.05)' },
-        },
-        // Combinada (blink + pulse) — evita o conflito de duas `animate-*`
-        // no mesmo elemento (o shorthand `animation` não empilha)
-        'flag-breathe': {
-          '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
-          '50%': { opacity: '0.8', transform: 'scale(1.05)' },
-        },
-        // Crossfade de slides — cada bandeira ocupa um slot de 6s num ciclo de
-        // 162s (27 bandeiras). Fades apenas nas bordas (4%→94% opaco): a bandeira
-        // N desvanece no fim do slot enquanto a N+1 entra no início — sempre há
-        // uma visível (gap máximo de um frame no limite do slot).
-        'flag-cycle': {
-          '0%': { opacity: '0' },
-          '4%': { opacity: '1' },
-          '94%': { opacity: '1' },
-          '100%': { opacity: '0' },
-        },
-      },
-      animation: {
-        'slide-horizontal': 'slide-horizontal 90s linear infinite',
-        'blink-slow': 'blink-slow 5s ease-in-out infinite',
-        'pulse-soft': 'pulse-soft 6s ease-in-out infinite',
-        'flag-breathe': 'flag-breathe 6s ease-in-out infinite',
-        'flag-cycle': 'flag-cycle 162s linear infinite',
-      },
-      boxShadow: {
-        // Claymorphism — sombra "argila": drop tintado + inset inferior escuro + inset superior claro
-        'clay-card':
-          '0 18px 36px -12px rgba(21, 83, 45, 0.28), inset 0 -6px 12px rgba(21, 83, 45, 0.10), inset 0 6px 12px rgba(255, 255, 255, 0.55)',
-        'clay-card-hover':
-          '0 28px 52px -14px rgba(21, 83, 45, 0.35), inset 0 -6px 12px rgba(21, 83, 45, 0.10), inset 0 6px 12px rgba(255, 255, 255, 0.60)',
-        'clay-btn':
-          '0 12px 24px -8px rgba(21, 83, 45, 0.35), inset 0 -4px 8px rgba(21, 83, 45, 0.28), inset 0 4px 8px rgba(255, 255, 255, 0.45)',
-        'clay-btn-hover':
-          '0 16px 32px -10px rgba(21, 83, 45, 0.40), inset 0 -5px 10px rgba(21, 83, 45, 0.30), inset 0 5px 10px rgba(255, 255, 255, 0.50)',
-        'clay-press':
-          '0 6px 12px -6px rgba(21, 83, 45, 0.30), inset 0 -2px 4px rgba(21, 83, 45, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.35)',
-        'clay-dark':
-          '0 25px 50px -12px rgba(0, 0, 0, 0.55), inset 0 -8px 16px rgba(0, 0, 0, 0.45), inset 0 8px 16px rgba(255, 255, 255, 0.06)',
-        'clay-dark-hover':
-          '0 32px 64px -14px rgba(0, 0, 0, 0.60), inset 0 -8px 16px rgba(0, 0, 0, 0.50), inset 0 8px 16px rgba(255, 255, 255, 0.08)',
+        'surface-container-highest': '#d4e4fa',
+        surface: '#f8f9ff',
+        'outline-variant': '#bdcaba',
+        'error-container': '#ffdad6',
+        'on-primary-fixed': '#002109',
+        'inverse-surface': '#233143',
+        'on-secondary': '#ffffff',
+        'tertiary-fixed': '#ffdad6',
+        'on-primary-container': '#f7fff2',
+        'on-tertiary': '#ffffff',
+        'primary-fixed': '#7ffc97',
+        'surface-dim': '#ccdbf2',
+        background: '#f8f9ff',
+        'surface-tint': '#006e2d',
+        'on-primary-fixed-variant': '#005320',
+        error: '#ba1a1a',
+        'on-secondary-fixed-variant': '#574500',
+        secondary: '#735c00',
+        'tertiary-fixed-dim': '#ffb4ab',
+        'on-primary': '#ffffff',
+        'surface-container': '#e5efff',
+        'on-surface-variant': '#3e4a3d',
+        'on-background': '#0d1c2d',
+        'secondary-fixed-dim': '#eec200',
+        'on-secondary-fixed': '#231b00',
+        'surface-variant': '#d4e4fa',
+        'primary-fixed-dim': '#62df7d',
+        'surface-container-low': '#eef4ff',
+        'on-surface': '#0d1c2d',
+        'on-secondary-container': '#6f5900',
+        'surface-bright': '#f8f9ff',
+        outline: '#6e7b6c',
+        'primary-container': '#00873a',
+        tertiary: '#bb0112',
+        'inverse-primary': '#62df7d',
+        'inverse-on-surface': '#e9f1ff',
+        'tertiary-container': '#e02928',
+        'on-error': '#ffffff',
+        'secondary-fixed': '#ffe083',
+        'on-tertiary-container': '#fffbff',
+        'on-error-container': '#93000a',
+        'on-tertiary-fixed': '#410002',
+        'surface-container-high': '#dbe9ff',
+        'surface-container-lowest': '#ffffff',
+        'on-tertiary-fixed-variant': '#93000b',
+        'secondary-container': '#fed01b',
+        primary: '#006b2c',
       },
       borderRadius: {
-        clay: '1.75rem', // 28px — cards
-        'clay-sm': '1.25rem', // 20px — tooltips/elementos pequenos
-        'clay-lg': '2rem', // 32px — destaque
+        DEFAULT: '1rem',
+        lg: '2rem',
+        xl: '3rem',
+        full: '9999px',
+      },
+      spacing: {
+        sm: '8px',
+        xs: '4px',
+        xl: '32px',
+        lg: '24px',
+        'margin-mobile': '20px',
+        md: '16px',
+        unit: '4px',
+        gutter: '16px',
+      },
+      fontFamily: {
+        'body-md': ['Plus Jakarta Sans'],
+        'display-lg': ['Plus Jakarta Sans'],
+        'label-sm': ['Plus Jakarta Sans'],
+        'body-lg': ['Plus Jakarta Sans'],
+        'headline-md': ['Plus Jakarta Sans'],
+        sans: ['Plus Jakarta Sans', 'sans-serif'],
+      },
+      fontSize: {
+        'body-md': ['16px', { lineHeight: '1.5', fontWeight: '400' }],
+        'display-lg': ['32px', { lineHeight: '1.2', fontWeight: '800' }],
+        'label-sm': ['12px', { lineHeight: '1.2', letterSpacing: '0.05em', fontWeight: '600' }],
+        'body-lg': ['18px', { lineHeight: '1.5', fontWeight: '500' }],
+        'headline-md': ['24px', { lineHeight: '1.3', fontWeight: '700' }],
+      },
+      boxShadow: {
+        'clay-dark':
+          'inset -6px -6px 12px rgba(255, 255, 255, 0.4), inset 6px 6px 12px rgba(0, 0, 0, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.05)',
+        'clay-green':
+          'inset -6px -6px 12px rgba(255, 255, 255, 0.3), inset 6px 6px 12px rgba(0, 107, 44, 0.2), 4px 4px 10px rgba(0, 107, 44, 0.15)',
+        'clay-pressed':
+          'inset 6px 6px 12px rgba(0, 0, 0, 0.1), inset -6px -6px 12px rgba(255, 255, 255, 0.4)',
       },
     },
   },

@@ -1,0 +1,15 @@
+{
+  "include": ["backend/app", "pipeline", "utilities"],
+  "exclude": ["**/node_modules", "**/__pycache__", "**/.venv"],
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux",
+  "typeCheckingMode": "standard",
+  "reportMissingImports": true,
+  "reportUnknownMemberType": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownParameterType": false,
+  "reportUnknownArgumentType": false,
+  "reportImplicitStringConcatenation": false
+}

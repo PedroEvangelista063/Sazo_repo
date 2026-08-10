@@ -108,3 +108,55 @@
     transform: rotate(648deg) translateX(20px) rotate(-360deg);
   }
 }
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.clay-card {
+    border-radius: 2rem;
+    background: theme('colors.surface-container');
+    box-shadow: 
+        inset -5px -5px 10px rgba(255, 255, 255, 0.7), 
+        inset 5px 5px 10px rgba(0, 0, 0, 0.05),
+        8px 8px 16px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.clay-card:hover, .clay-card:active {
+    box-shadow: 
+        inset 4px 4px 8px rgba(0, 0, 0, 0.08), 
+        inset -4px -4px 8px rgba(255, 255, 255, 0.8),
+        2px 2px 5px rgba(0, 0, 0, 0.02);
+    transform: scale(0.98);
+}
+
+.tab-btn.active {
+    background-color: theme('colors.primary');
+    color: theme('colors.on-primary');
+    box-shadow: theme('boxShadow.clay-green');
+}
+.tab-btn:not(.active) {
+    background-color: theme('colors.surface-container');
+    color: theme('colors.on-surface-variant');
+}
+
+.status-green { color: theme('colors.primary-container'); }
+.status-yellow { color: theme('colors.secondary-container'); }
+.status-red { color: theme('colors.tertiary-container'); }
+
+.bg-status-green { background-color: theme('colors.primary-container'); }
+.bg-status-yellow { background-color: theme('colors.secondary-container'); }
+.bg-status-red { background-color: theme('colors.tertiary-container'); }
+
+@keyframes flow-arc {
+    0% { stroke-dashoffset: 100; opacity: 0; }
+    50% { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+}
+.flow-path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: flow-arc 2s linear infinite;
+}
+.flow-receiving { stroke: theme('colors.primary'); }
+.flow-sending { stroke: #3b82f6; }

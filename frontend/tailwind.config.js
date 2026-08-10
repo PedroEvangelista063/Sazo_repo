@@ -5,6 +5,33 @@ export default {
   theme: {
     extend: {
       colors: {
+        sazonal: {
+          verde: {
+            50: '#f0fdf4',
+            100: '#dcfce7',
+            400: '#4ade80',
+            500: '#22c55e',
+            600: '#16a34a',
+            700: '#15803d',
+            dark: '#14532d',
+          },
+          amarelo: {
+            50: '#fefce8',
+            100: '#fef9c3',
+            400: '#facc15',
+            600: '#ca8a04',
+            700: '#a16207',
+            dark: '#a16207',
+          },
+          vermelho: {
+            50: '#fef2f2',
+            100: '#fee2e2',
+            400: '#f87171',
+            600: '#dc2626',
+            700: '#b91c1c',
+            dark: '#991b1b',
+          },
+        },
         'surface-container-highest': '#d4e4fa',
         surface: '#f8f9ff',
         'outline-variant': '#bdcaba',

@@ -29,21 +29,36 @@ function makeProduct(overrides: Partial<ProdutoVarejo>): ProdutoVarejo {
 }
 
 describe('ProductCard', () => {
-  // Teste 1: Renderiza cores do semáforo corretamente
-  it('renderiza "Melhor Época!" quando status_cor for VERDE', () => {
-    render(<ProductCard product={makeProduct({ status_cor: 'VERDE' })} />)
-    expect(screen.getByText('Melhor Época!')).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: 'TOMATE' })).toBeInTheDocument()
+  // Teste 1: Círculo de cor do semáforo (novo contrato claymorphism)
+  it('renderiza círculo de cor verde quando status_cor for VERDE', () => {
+    const { container } = render(<ProductCard product={makeProduct({ status_cor: 'VERDE' })} />)
+    expect(container.querySelector('.bg-status-green')).not.toBeNull()
+    expect(screen.getByText('🍅')).toBeInTheDocument()
+    expect(screen.getByText('TOMATE')).toBeInTheDocument()
   })
 
-  it('renderiza "Preço Normal" quando status_cor for AMARELO', () => {
-    render(<ProductCard product={makeProduct({ status_cor: 'AMARELO' })} />)
-    expect(screen.getByText('Preço Normal')).toBeInTheDocument()
+  it('renderiza círculo de cor amarelo quando status_cor for AMARELO', () => {
+    const { container } = render(<ProductCard product={makeProduct({ status_cor: 'AMARELO' })} />)
+    expect(container.querySelector('.bg-status-yellow')).not.toBeNull()
+    expect(screen.getByText('🍅')).toBeInTheDocument()
   })
 
-  it('renderiza "Péssima Época" quando status_cor for VERMELHO', () => {
-    render(<ProductCard product={makeProduct({ status_cor: 'VERMELHO' })} />)
-    expect(screen.getByText('Péssima Época')).toBeInTheDocument()
+  it('renderiza círculo de cor vermelho quando status_cor for VERMELHO', () => {
+    const { container } = render(<ProductCard product={makeProduct({ status_cor: 'VERMELHO' })} />)
+    expect(container.querySelector('.bg-status-red')).not.toBeNull()
+    expect(screen.getByText('🍅')).toBeInTheDocument()
+  })
+
+  it('usa cor neutra de superfície para status desconhecido', () => {
+    const { container } = render(
+      <ProductCard
+        product={makeProduct({ status_cor: 'DESCONHECIDO' as ProdutoVarejo['status_cor'] })}
+      />,
+    )
+    expect(container.querySelector('.bg-status-green')).toBeNull()
+    expect(container.querySelector('.bg-status-yellow')).toBeNull()
+    expect(container.querySelector('.bg-status-red')).toBeNull()
+    expect(container.querySelector('.bg-surface-container-low')).not.toBeNull()
   })
 
   // Teste 2: Emoji de Fallback
@@ -69,32 +84,22 @@ describe('ProductCard', () => {
     expect(screen.queryByText(/R\$/)).not.toBeInTheDocument()
   })
 
-  // Transparência temporal (V17) — sem badges sintéticos 📊/🪄
-  it('exibe badge "Coleta Efetiva" quando tipo_dado for REAL_ATUAL', () => {
-    render(
-      <ProductCard
-        product={makeProduct({
-          ano_referencia: 2026,
-          tipo_dado: 'REAL_ATUAL',
-          is_dado_legado: false,
-        })}
-      />,
-    )
-    expect(screen.getAllByText(/Coleta Efetiva/).length).toBeGreaterThan(0)
-  })
-
-  it('exibe badge histórico + ano quando tipo_dado for HISTORICO_BASE', () => {
+  // Transparência temporal (V17) — card simplificado: sem badges de texto/dados
+  it('não exibe badges de transparência de dados no card simplificado', () => {
     render(
       <ProductCard
         product={makeProduct({
           ano_referencia: 2025,
           tipo_dado: 'HISTORICO_BASE',
           is_dado_legado: true,
+          usou_fallback_12m: true,
         })}
       />,
     )
-    expect(screen.getAllByText(/Histórico Real/).length).toBeGreaterThan(0)
-    expect(screen.getAllByText(/'25/).length).toBeGreaterThan(0)
+    expect(screen.queryByText(/Coleta Efetiva/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Histórico Real/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Ano de apuração/)).not.toBeInTheDocument()
+    expect(screen.queryByText('* Média 12 meses')).not.toBeInTheDocument()
   })
 
   it('não exibe badges sintéticos 📊 Estimativa / 🪄 Estimado', () => {
@@ -113,22 +118,16 @@ describe('ProductCard', () => {
     expect(screen.queryByText(/🪄 Estimado/)).not.toBeInTheDocument()
   })
 
-  it('exibe rodapé com ano de apuração quando há ano_referencia', () => {
-    render(
-      <ProductCard
-        product={makeProduct({
-          ano_referencia: 2025,
-          tipo_dado: 'HISTORICO_BASE',
-          is_dado_legado: true,
-        })}
-      />,
+  // Seleção
+  it('exibe check de seleção quando isSelected e onToggle estão presentes', () => {
+    const { container } = render(
+      <ProductCard product={makeProduct({})} isSelected onToggle={() => {}} />,
     )
-    expect(screen.getByText(/Ano de apuração: 2025/)).toBeInTheDocument()
+    expect(container.querySelector('.lucide-check')).not.toBeNull()
   })
 
-  // Fallback 12m
-  it('exibe * Média 12 meses quando usou_fallback_12m for true', () => {
-    render(<ProductCard product={makeProduct({ usou_fallback_12m: true })} />)
-    expect(screen.getByText('* Média 12 meses')).toBeInTheDocument()
+  it('não exibe check de seleção quando não selecionado', () => {
+    const { container } = render(<ProductCard product={makeProduct({})} />)
+    expect(container.querySelector('.lucide-check')).toBeNull()
   })
 })

@@ -11,7 +11,7 @@ export function NavigationTabs({ activeTab, onTabChange }: NavigationTabsProps) 
   ]
 
   return (
-    <div className="hide-scrollbar mb-lg flex justify-center gap-sm overflow-x-auto pb-2">
+    <div className="hide-scrollbar mb-lg flex w-full justify-start gap-sm overflow-x-auto pb-2 md:justify-center">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id
         return (

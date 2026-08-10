@@ -142,10 +142,10 @@ export function SupermercadoView() {
 
       <OfflineBanner />
 
-      <main className="mx-auto mt-4 flex w-full max-w-7xl gap-lg px-margin-mobile pb-xl pt-sm">
+      <main className="mx-auto mt-4 flex w-full max-w-7xl flex-col gap-lg px-margin-mobile pb-xl pt-sm md:flex-row">
         {/* Side Navigation Filters */}
-        <nav className="scroll-snap-y-mandatory hide-scrollbar sticky top-24 hidden h-fit w-16 shrink-0 flex-col items-center gap-md overflow-y-auto rounded-full bg-surface-container py-lg shadow-clay-dark md:flex">
-          <div className="mb-2 mt-4 rotate-[-90deg] whitespace-nowrap text-center font-label-sm text-[10px] text-secondary">
+        <nav className="hide-scrollbar sticky top-16 z-30 flex h-auto w-full shrink-0 flex-row items-center gap-4 overflow-x-auto rounded-2xl bg-surface-container/90 px-4 py-3 shadow-clay-dark backdrop-blur-md md:top-24 md:h-fit md:w-16 md:flex-col md:overflow-y-auto md:rounded-full md:py-lg">
+          <div className="whitespace-nowrap text-center font-label-sm text-[10px] text-secondary md:mb-2 md:mt-4 md:rotate-[-90deg]">
             Filtros
           </div>
 
@@ -174,7 +174,7 @@ export function SupermercadoView() {
           </button>
 
           <button
-            className="scroll-snap-align-center clay-card mb-4 mt-auto flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-lowest text-outline transition-colors hover:bg-surface-bright active:scale-90"
+            className="scroll-snap-align-center clay-card flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-container-lowest text-outline transition-colors hover:bg-surface-bright active:scale-90 md:mb-4 md:mt-auto"
             title="Categorias"
             onClick={() => setCategoriesOpen(true)}
           >

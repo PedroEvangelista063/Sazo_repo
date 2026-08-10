@@ -294,8 +294,8 @@ export function BrasilMap({
 
           // Nome do estado: embaixo por padrão; à direita (alinhado ao
           // círculo) em regiões densas onde os círculos ficam muito próximos.
-          const labelX = uf.labelRight ? uf.cx + labelRadius + 22 : uf.cx
-          const labelY = uf.labelRight ? uf.cy : uf.cy + labelRadius + 14
+          const labelX = uf.labelRight ? uf.cx + labelRadius + 14 : uf.cx
+          const labelY = uf.labelRight ? uf.cy : uf.cy + labelRadius + 18
           const labelAnchor = uf.labelRight ? 'start' : 'middle'
 
           return (
@@ -371,7 +371,7 @@ export function BrasilMap({
                   x={labelX}
                   y={labelY}
                   textAnchor={labelAnchor}
-                  dominantBaseline="central"
+                  dominantBaseline="middle"
                   fill={reg.cor}
                   className="pointer-events-none select-none"
                   fontSize={isUfActive ? 14 : 12}

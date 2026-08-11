@@ -1096,14 +1096,29 @@ async def _query_br_sazonalidade(
 ) -> SazonalidadeNacionalListResponse:
     if categoria:
         rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, $2, $3)",
+            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, $2, $3, $4, $5)",
+            ano,
+            categoria.upper(),
+            min_ufs,
+            por_pagina,
+            offset_val,
+        )
+        total_row = await fetchrow(
+            "SELECT COUNT(DISTINCT produto) FROM mart.fn_br_nacional_sazonalidade($1, $2, $3)",
             ano,
             categoria.upper(),
             min_ufs,
         )
     else:
         rows = await fetch(
-            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, NULL, $2)",
+            "SELECT * FROM mart.fn_br_nacional_sazonalidade($1, NULL, $2, $3, $4)",
+            ano,
+            min_ufs,
+            por_pagina,
+            offset_val,
+        )
+        total_row = await fetchrow(
+            "SELECT COUNT(DISTINCT produto) FROM mart.fn_br_nacional_sazonalidade($1, NULL, $2)",
             ano,
             min_ufs,
         )
@@ -1141,11 +1156,10 @@ async def _query_br_sazonalidade(
             )
         )
 
-    all_items = list(prod_map.values())
-    total = len(all_items)
-    page = all_items[offset_val : offset_val + por_pagina]
-
-    items = [SazonalidadeNacionalResponse(**item) for item in page]
+    # Paginação push-down na fn (p_limit/p_offset por PRODUTO); total vem de
+    # COUNT(DISTINCT produto) sobre a função sem limit (grade de 12 meses).
+    total = total_row[0] if total_row else 0
+    items = [SazonalidadeNacionalResponse(**item) for item in prod_map.values()]
     result = SazonalidadeNacionalListResponse(
         data=items, total=total, pagina=pagina, por_pagina=por_pagina
     )
@@ -1170,7 +1184,7 @@ async def listar_br_sazonalidade(
         json.dumps(
             {
                 "route": "br_sazonalidade",
-                "v": 4,
+                "v": 5,
                 "ano": ano,
                 "categoria": categoria,
                 "min_ufs": min_ufs,

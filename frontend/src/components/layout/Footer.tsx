@@ -1,3 +1,5 @@
+import { PainelTransparenciaRodape } from '@/components/PainelTransparenciaRodape'
+
 export function Footer() {
   return (
     <footer className="docked full-width fixed bottom-0 z-40 flex w-full flex-col border-t border-outline-variant bg-surface-container-lowest/80 opacity-100 backdrop-blur-md transition-opacity">
@@ -9,9 +11,6 @@ export function Footer() {
               Painel Transparência Ativo
             </span>
           </div>
-          <span className="hidden font-label-sm text-label-sm text-on-surface-variant sm:inline">
-            Dados atualizados: Hoje | Cache: OK
-          </span>
         </div>
         <div className="flex gap-4">
           <a className="font-label-sm text-label-sm text-outline hover:underline" href="#">
@@ -52,6 +51,7 @@ export function Footer() {
           ⓘ Histórico = último ano real CONAB
         </span>
       </div>
+      <PainelTransparenciaRodape />
     </footer>
   )
 }

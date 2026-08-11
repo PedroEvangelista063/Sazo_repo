@@ -35,6 +35,14 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 
 **Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
 
+## Mudanças Recentes (2026-08-11)
+
+### Memoização do X-Last-Refresh + Mensagens V22 (245c4155)
+
+- `app/api/v1/endpoints/produtos.py` (FASE 79, P1-2) — `_ultimo_refresh_mv_iso()` **memoizado**: valor em cache com TTL 30s (`saz:ultimo_refresh_mv`) + double-checked `asyncio.Lock`. Causa raiz do `ERR_ABORTED` (axios 10s) na 1ª carga do BR: a função era chamada até 2x por request, e CADA chamada fazia 2 round-trips ao Aiven (`pg_stat_file` + `audit.mv_refresh_log`, ~2,5-4s cada). TTL 30s < TTL do cache de dados (3600s) — o header X-Last-Refresh nunca fica desatualizado por mais de ~30s.
+- `_compor_mensagem_transparencia()` — novo branch para `tipo_dado = 'FALLBACK_DIMENSAO'` (Deep Fallback V22): prioridade 1) mensagem exata gravada no `metadado_transparencia` da MV; 2) derivação por `ano_referencia` ("Projecao sazonal baseada no historico de N"); 3) baseline de dimensão.
+- `frontend/src/services/api.ts` — timeout do axios no frontend ajustado (o commit trata o `ERR_ABORTED` que ocorria na 1ª carga do BR por causa da latência do refresh).
+
 ## Mudanças Recentes (2026-08-07)
 
 ### MV V20 — Expurgo de Produtos Fantasmas (banco; sem mudança de código)

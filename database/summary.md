@@ -110,6 +110,31 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
+## Mudanças Recentes (2026-08-11)
+
+### Deep Fallback Histórico — MV V22 (78_deep_fallback_historico.sql)
+
+- **Novo arquivo**: `database/78_deep_fallback_historico.sql` (commits `8d111df6` + runbook `docs/runbook_migration_78_local.md`). **✅ Aplicada (LOCAL + REMOTO/Aiven, validado 2026-08-11):** definição da MV contém `DEEP_FALLBACK`/`PROJECAO_HISTORICA` e `fn_br_nacional_sazonalidade` expõe `p_limit`/`p_offset` nos dois bancos (MV = 177.485 linhas). Auditoria E2E apontou meses futuros (set–dez 2026) da MV com linhas `FALLBACK_DIMENSAO` de `status_cor` fabricado (`AMARELO`) e `ano_referencia` NULL (m8-12 `REAL_ATUAL` = 0 linhas; m7 = 1.956 parcial; 9.055 linhas FALLBACK em m9-12). Decisão de arquitetura: **NO GRAY / NO NULL** — a grade permanece preenchida (VERDE/AMARELO/VERMELHO).
+- Para linhas `FALLBACK_DIMENSAO` do ano corrente com `mes >= mes corrente`, o Deep Fallback define:
+  - `status_cor` ← (1º) status do histórico real mais recente do mesmo `(id_produto, id_localidade, mes)` em anos anteriores (`tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE')`, `ORDER BY ano DESC LIMIT 1`); (2º) `mart.sazonalidade_baseline.status_cor_mode`; (3º) `VERDE`.
+  - `ano_referencia` ← ano histórico usado (NULL se caiu em baseline/VERDE); `metadado_transparencia` ← chaves originais + `PROJECAO_HISTORICA`/`DEEP_FALLBACK`/`mensagem_transparencia`.
+  - **Contrato da API NÃO muda** — `tipo_dado` continua `REAL_ATUAL/HISTORICO_BASE/FALLBACK_DIMENSAO`; a proveniência vai nos metadados. Quality Gate da FASE 76 preservado integralmente.
+- `fn_br_nacional_sazonalidade` ganha `p_limit`/`p_offset` — paginação push-down no nível de PRODUTO (grade de 12 meses), mantendo o contrato do endpoint `/br-sazonalidade`.
+
+### BR Sazonalidade Inclui Projeção (79_br_sazonalidade_inclui_projecao.sql)
+
+- **Novo arquivo**: `database/79_br_sazonalidade_inclui_projecao.sql` (commit `a84e6a76`, P1-1). **✅ Aplicada (validado 2026-08-11):** `fn_br_nacional_sazonalidade` referencia `FALLBACK_DIMENSAO` em LOCAL e REMOTO (mesma assinatura `p_ano, p_categoria, p_min_ufs, p_limit, p_offset`). Auditoria E2E real detectou que `fn_br_nacional_sazonalidade` filtrava `tipo_dado IN ('REAL_ATUAL','HISTORICO_BASE')` — as 9.055 linhas `FALLBACK_DIMENSAO` projetadas pelo V22 nunca chegavam ao endpoint (13/352 produtos com grade incompleta, ex.: Carapau = 2 meses reais).
+- Solução: incluir as linhas FALLBACK projetadas na saída nacional. **Precedência REAL > projeção**: agregação condicional (MODE que ignora NULL) — se QUALQUER localidade real existe na UF-mês, o status usa o MODE das linhas reais (`fonte_prioridade = 0`); a projeção só entra quando a UF-mês é 100% projetada. Mesma assinatura (5 args) e mesmo `RETURNS TABLE` (13 colunas).
+
+### Janela Histórica 2023+ no Deep Fallback — MV V23 (80_mv_fallback_janela_2023.sql)
+
+- **Novo arquivo**: `database/80_mv_fallback_janela_2023.sql` (commit `7f92c39f`, decisão do usuário). **⚠️ COMMITADA mas NÃO aplicada (validado 2026-08-11):** a definição real da MV (LOCAL e REMOTO) NÃO contém o piso `YEAR FROM CURRENT_DATE` — aplicar o DDL + `REFRESH MATERIALIZED VIEW` via psql (padrão 78: DDL só, refresh posterior) para subir a MV para V23. Sem piso de ano, o LATERAL `hh` do V22 (78:338-352) podia usar âncoras de 2021/2022 (defasagem elevada + inflação acumulada).
+- Piso deslizante em TODA subconsulta da MV que lê histórico com intenção de âncora de projeção: `AND ano >= EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER - 3` (hoje: âncoras 2023..2025, piso = Ano Atual − 3). Branches A/B/C e contrato INALTERADOS. DDL só (sem REFRESH — refresh posterior via psql); `fn_br_nacional_sazonalidade` NÃO é tocada (já alterada na 79).
+
+### Nomenclatura DBA-Friendly (77_refatoracao_nomenclatura_dba_friendly.sql)
+
+- **Novo arquivo (DRAFT — NÃO aplicado)**: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (commit `1d03d911` + `docs/auditoria_nomenclatura_2026-08.md`). Renomeia tabelas para nomes DBA-friendly (`raw.precos_uf → raw.preco_conab_uf`, `raw.precos_municipio → raw.preco_conab_municipio`, `staging.dim_conab_produto_mapping → staging.dim_mapeamento_produto_conab`, etc.) com views temporárias de 30 dias para compatibilidade. **Executar SOMENTE após backup completo + aprovação do time** — NÃO toca MV `vw_api_produtos_sazonalidade`, roles, `fact_precos_mensais` nem `sp_executar_carga_completa`.
+
 ## Mudanças Recentes (2026-08-07)
 
 ### Expurgo de Produtos Sem Preço — MV V20 (71_expurgo_produtos_sem_preco.sql)
@@ -310,6 +335,14 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `63_dado_historico_real_transparencia.sql` — Dado histórico real + transparência (ano âncora, MV V17)
 - `64_rollback_dado_historico.sql` — Rollback-ONLY da refatoração (desfaz 63 + 000021)
 - `65_limiares_cores_dinamicos_zscore.sql` — Limiares dinâmicos de cor (Z-Score ±1σ, MV V18)
+- `71_expurgo_produtos_sem_preco.sql` — Expurgo de fantasmas + MV V20
+- `74_quality_gate_12_meses.sql` — Quality gate de 12 meses (expurgo físico)
+- `75_restaura_sazonalidade_baseline.sql` — Restaura `sazonalidade_baseline` (fix 500 prod)
+- `76_quality_gate_completude_serie.sql` — Quality gate de completude de série (MV V21)
+- `77_refatoracao_nomenclatura_dba_friendly.sql` — Nomenclatura DBA-friendly (DRAFT, não aplicado)
+- `78_deep_fallback_historico.sql` — Deep Fallback histórico (MV V22, NO GRAY/NO NULL)
+- `79_br_sazonalidade_inclui_projecao.sql` — /br-sazonalidade inclui projeção FALLBACK (P1-1)
+- `80_mv_fallback_janela_2023.sql` — Deep Fallback janela 2023+ (MV V23)
 
 ## Mapa Rápido
 
@@ -334,6 +367,14 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `63_dado_historico_real_transparencia.sql` — Dado histórico real + transparência temporal (ano âncora, MV V17)
 - `64_rollback_dado_historico.sql` — Rollback-ONLY do dado histórico (desfaz 63 + 000021)
 - `65_limiares_cores_dinamicos_zscore.sql` — Limiares dinâmicos de cor (Z-Score ±1σ, MV V18)
+- `71_expurgo_produtos_sem_preco.sql` — Expurgo de fantasmas + MV V20
+- `74_quality_gate_12_meses.sql` — Quality gate 12 meses
+- `75_restaura_sazonalidade_baseline.sql` — Restaura baseline (fix 500)
+- `76_quality_gate_completude_serie.sql` — Completude de série (MV V21)
+- `77_refatoracao_nomenclatura_dba_friendly.sql` — Nomenclatura DBA-friendly (DRAFT)
+- `78_deep_fallback_historico.sql` — Deep Fallback (MV V22)
+- `79_br_sazonalidade_inclui_projecao.sql` — BR inclui projeção (P1-1)
+- `80_mv_fallback_janela_2023.sql` — Janela 2023+ (MV V23)
 
 ## Migração Supabase (2026-07-17)
 

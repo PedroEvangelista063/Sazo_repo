@@ -79,6 +79,25 @@ A aba "Mapa Regional" implementa:
   - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-08-11)
+
+### Grade Sazonal — Círculos Claymorphism + remoção do (i) (não commitado)
+
+- `SazonalidadeNacional.tsx` — células da grade BR deixam de ser retângulos `rounded-md` full-width e viram **círculos claymorphism** (`h-8 w-8 rounded-full`, centralizados com `mx-auto`, `shadow-clay-press dark:shadow-clay-dark` + cores sazonais existentes). O badge de ano âncora (`'26`/`'25`/`'24`) segue dentro do círculo; célula sem dado virou círculo muted.
+- Ícone `(i)` (`DataTransparencyInfo`) **removido** de dentro das células (proveniência segue no badge de ano + rodapé/legenda). O componente `DataTransparencyInfo.tsx` permanece no código — sem uso em produção (mantido p/ referência + testes).
+- **thead** ganhou fundo sólido (`bg-[var(--bg-header)] dark:bg-gray-800`) em todas as colunas e mais respiro vertical (`pb-3 pt-2.5`) — o cabeçalho não cola/sobrepõe os ícones sazonais.
+- `GradeSazonalAcordeao.tsx` — fix do sticky do header de categoria: `section` troca `overflow-hidden` → `overflow-clip` (overflow-hidden criava scroll container e quebrava o `position: sticky`, fazendo o conteúdo da tabela sobrepor o botão em ~56px) e o header fixa em `top-[7.5rem]` (120px, logo abaixo do app bar de 116px; antes `top-14`=56px o escondia atrás dele). Header agora opaco (sem blur) — os ícones não borram através dele ao rolar.
+- `SupermercadoView.tsx` — container de abas com espaçamento interno maior (`gap-4` + `pb-4`).
+- `NavigationTabs.tsx` — abas reordenadas: **📄 Cards → 🗺️ Mapa → 📊 Tabela** (grade BR por último).
+
+### Claymorphism UI completo + A2HS + paginação híbrida (42f315b3)
+
+- Lote `42f315b3` (18 arquivos, +1.134/−363): SupermercadoView refatorada (718 linhas), `TopAppBar`, `NavigationTabs` (abas emoji+texto sempre visíveis, touch >= 48px), `InstallPWABanner` + `usePWAInstall` (A2HS), `SkeletonCard`, `OfflineBanner`, `haptics.ts`, utils `gradeCompleta.ts`/`nomeProduto.ts` (grade de 12 meses, nomes limpos), testes novos (`gradeCompleta`, `nomeProduto`).
+
+### PWA Manifest (f2c0ebac, 96ab8fdb)
+
+- `vite.config.ts` — corrige caminhos dos ícones do manifest PWA, remove screenshot inexistente e link inválido (usa `manifest.webmanifest`).
+
 ## Mudanças Recentes (2026-08-07)
 
 ### MV V20 — Fim das Grades 12 Meses CINZA (dados; sem mudança de código)
@@ -89,6 +108,8 @@ A aba "Mapa Regional" implementa:
 ## Mudanças Recentes (2026-08-03)
 
 ### Transparência de Dados Históricos (2026-08-03)
+
+> Nota (2026-08-11): o ícone `(i)` foi **removido das células da grade sazonal** e o `DataTransparencyInfo` não é mais usado em produção (ver seção 2026-08-11) — a transparência temporal segue no badge de ano âncora, nos badges do `ProductCard` e no rodapé/legenda.
 
 UI de transparência temporal (dado histórico real vs referência), acompanhando a MV V17 do banco (ano âncora N → N-1 → N-2):
 
@@ -167,7 +188,7 @@ Observações:
 - `src/App.tsx` — root, inicializa useTheme + useDataStream
 - `src/main.tsx` — entry point Vite + PWA registration + QueryClientProvider
 - `src/components/ProductCard.tsx` — card de produto (emoji + semáforo + badges de tipo de dado + DataTransparencyInfo + SpotlightCard)
-- `src/components/DataTransparencyInfo.tsx` — ícone (i) de transparência temporal (ano âncora / tipo_dado / defasagem)
+- `src/components/DataTransparencyInfo.tsx` — ícone (i) de transparência temporal (ano âncora / tipo_dado / defasagem) — sem uso em produção desde 2026-08-11 (removido das células da grade)
 - `src/components/GameCard.tsx` — card animado com Framer Motion + confetti
 - `src/components/GameButton.tsx` — botão com springs Framer Motion
 - `src/components/LivingStatus.tsx` — indicador pulsante de status
@@ -175,7 +196,7 @@ Observações:
 - `src/components/GraficosView.tsx` — Recharts (gráficos de linha/barras)
 - `src/components/BrasilMap.tsx` — mapa do Brasil com 27 dots SVG (um por UF), interativo por região
 - `src/components/RegiaoPanel.tsx` — painel lateral do mapa regional (SpotlightCard)
-- `src/components/SazonalidadeNacional.tsx` — grid sazonal BR (12 meses x produtos) com badge de ano âncora + DataTransparencyInfo
+- `src/components/SazonalidadeNacional.tsx` — grid sazonal BR (12 meses x produtos) com células circulares claymorphism + badge de ano âncora (ícone (i) removido em 2026-08-11)
 - `src/components/CategoriesModal.tsx` — modal de categorias (shadcn Dialog)
 - `src/components/SkeletonCard.tsx` — loading state (shadcn Skeleton)
 - `src/components/ThemeToggle.tsx` — dark/light toggle
@@ -219,7 +240,7 @@ Frontend (Vite) ─── VITE_API_URL ───→ Backend FastAPI ─── as
 - `src/vite-env.d.ts` — tipos Vite (import.meta.env)
 - `src/test/ProductCard.test.tsx` — 12 testes unitários (Vitest + RTL, inclui badges de tipo de dado)
 - `src/test/DataTransparencyInfo.test.tsx` — 4 testes de transparência temporal (contrato aditivo, badges, sem R$)
-- `src/test/SazonalidadeNacional.test.tsx` — 4 testes da grade sazonal (badge ano âncora, ícone (i), sem gaps/R$)
+- `src/test/SazonalidadeNacional.test.tsx` — 4 testes da grade sazonal (badge ano âncora, ausência do (i), sem gaps/R$)
 - `src/test/smoke_e2e.mjs` — smoke E2E headless (Playwright) contra o dev server (transparência + sem R$)
 - `vite.config.ts` — configuração Vite + PWA + proxy dev + vitest
 - `tailwind.config.js` — Tailwind com cores sazonais + tailwindcss-animate

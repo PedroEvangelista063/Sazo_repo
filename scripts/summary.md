@@ -6,6 +6,12 @@
 
 Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Quero Comprar VG.
 
+## Mudanças Recentes (2026-08-11)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-11` concentrado em `database/`, `frontend/` e `backend/` (deep fallback V22/V23, quality gates, claymorphism UI, PWA). /scripts inalterado.
+
 ## Mudanças Recentes (2026-08-07)
 
 ### Nenhuma mudança neste lote (FASE 1/2)

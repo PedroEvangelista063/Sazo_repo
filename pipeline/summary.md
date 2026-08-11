@@ -25,6 +25,12 @@ Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focad
 9. **Orquestrador**: cascata CEASA direta → Agregadores → Discovery. Log `[AUDIT]` a cada pivotagem.
 10. **Fontes**: centralizadas em `config/sources_matrix.json` — configuration over code.
 
+## Mudanças Recentes (2026-08-11)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-11` concentrado em `database/` (migrations 74-80: deep fallback V22/V23, quality gates, nomenclatura), `frontend/` (claymorphism UI, manifest PWA, círculos na grade, abas reordenadas) e `backend/` (memoização do refresh da MV + mensagens V22). /pipeline inalterado — coleta e ciclo medalhão seguem como documentado.
+
 ## Mudanças Recentes (2026-08-07) — FASE 1/2 (Qualidade > Quantidade)
 
 ### Malha Fina de Preço — defesa em profundidade (FASE 1)

@@ -25,6 +25,12 @@ JSON puro, sem schema validation runtime (consumido via `json.load()` no pipelin
 - `flows.json` — 166 fluxos de abastecimento entre UFs (v2.0). Todas as 27 UFs aparecem como origem E destino com dados reais de CEASA/CONAB. Estrutura: `{id, item, categoria, origem_uf, origem_polo, destino_uf, destino_regiao_id, meses, sazonalidade, preco_referencial, cor_indicadora, tipo("exportado"/"importado"/"autossuficiente"), ano_referencia}`. Consumido por `BrasilMap.tsx` para desenhar arcos de recebimento (azul) e envio (verde) por UF.
 - `flows.json` — o tipo `autossuficiente` representa produção local (origem_uf == destino_uf, ex.: Carne Bovina TO→TO). Na UI, aparece como painel "Produção local" no `RegiaoPanel`, sem arco de Recebe/Envia.
 
+## Mudanças Recentes (2026-08-11)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-11` concentrado em `database/`, `frontend/` e `backend/` (deep fallback V22/V23, quality gates, claymorphism UI, PWA). /config inalterado — JSONs de roteamento seguem os mesmos.
+
 ## Mudanças Recentes (2026-08-07)
 
 ### Nenhuma mudança neste lote (FASE 1/2)

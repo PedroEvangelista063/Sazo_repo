@@ -15,25 +15,45 @@ Kit de queries e scripts **read-only** para o DBA monitorar o PostgreSQL local (
 
 ## Estrutura
 
-| Arquivo                        | O que responde                                                                         |
-| ------------------------------ | -------------------------------------------------------------------------------------- |
-| `01_health_visao_geral.sql`    | 🩺 Banco saudável? Contagens por camada (raw → staging → mart → ops) + período coberto |
-| `02_cargas_etl.sql`            | 🚚 Cargas ETL acontecendo? Últimas coletas, status, erros                              |
-| `03_qualidade_dados.sql`       | 🔍 Gaps por produto/localidade, órfãos, duplicatas, produtos sem coleta                |
-| `04_sazonalidade.sql`          | 🟢🟡🔴 Distribuição de status, forecast, transparência de dados históricos             |
-| `05_audit_observabilidade.sql` | 🕵️ Auditoria: mudanças de status, quarentena, erros DDL                                |
-| `06_performance_conexoes.sql`  | ⚡ Conexões ativas, locks, queries pesadas em execução                                 |
-| `07_migrations.sql`            | 📜 Migrations aplicadas, objetos por schema, funções/views materializadas              |
-| `08_mapa_fluxos.sql`           | 🗺️ Mapa regional, fluxos de abastecimento e relatório por UF                           |
-| `09_volatilidade_forecast.sql` | 📊 Limiares Z-Score ±1σ, baselines, confiança e tipo de dado                           |
-| `conectar_dba.sh`              | 🔌 Conexão segura (lê `backend/.env`, não expõe senha)                                 |
-| `LEIA_ME.md`                   | 📖 Esquema medalhão, tabelas-chave e dicas de uso                                      |
+| Arquivo                                                                                               | O que responde                                                                         |
+| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `01_health_visao_geral.sql`                                                                           | 🩺 Banco saudável? Contagens por camada (raw → staging → mart → ops) + período coberto |
+| `02_cargas_etl.sql`                                                                                   | 🚚 Cargas ETL acontecendo? Últimas coletas, status, erros                              |
+| `03_qualidade_dados.sql`                                                                              | 🔍 Gaps por produto/localidade, órfãos, duplicatas, produtos sem coleta                |
+| `04_sazonalidade.sql`                                                                                 | 🟢🟡🔴 Distribuição de status, forecast, transparência de dados históricos             |
+| `05_audit_observabilidade.sql`                                                                        | 🕵️ Auditoria: mudanças de status, quarentena, erros DDL                                |
+| `06_performance_conexoes.sql`                                                                         | ⚡ Conexões ativas, locks, queries pesadas em execução                                 |
+| ~~`07_migrations.sql`~~ — removido em `8f7ea7de` (dependia de `supabase_migrations`, legado Supabase) | Versão/estado da MV: validar via `04_sazonalidade.sql` ou a query de V23 acima         |
+| `08_mapa_fluxos.sql`                                                                                  | 🗺️ Mapa regional, fluxos de abastecimento e relatório por UF                           |
+| `09_volatilidade_forecast.sql`                                                                        | 📊 Limiares Z-Score ±1σ, baselines, confiança e tipo de dado                           |
+| `conectar_dba.sh`                                                                                     | 🔌 Conexão segura (lê `backend/.env`, não expõe senha)                                 |
+| `LEIA_ME.md`                                                                                          | 📖 Esquema medalhão, tabelas-chave e dicas de uso                                      |
 
 ## Uso
 
 ```bash
 ./conectar_dba.sh "SELECT version();"          # query direta
 ./conectar_dba.sh -f 01_health_visao_geral.sql # arquivo inteiro
+```
+
+## Mudanças Recentes (2026-08-11)
+
+O kit foi validado contra o banco em 2026-08-06 e **continua válido para monitorar o estado atual**. Estado real validado em 2026-08-11 (LOCAL e REMOTO/Aiven idênticos):
+
+- **MV `mart.vw_api_produtos_sazonalidade` aplicada = V22** (Deep Fallback da migration `78` — definição contém `DEEP_FALLBACK`/`PROJECAO_HISTORICA`) com **177.485 linhas** (pós quality-gate 76).
+- **Migration 79 aplicada** — `fn_br_nacional_sazonalidade` com `p_limit`/`p_offset` (paginação push-down, FASE 78) e referenciando `FALLBACK_DIMENSAO` (inclui projeção, P1-1) em local + remoto.
+- **Migration 80 (V23, janela 2023+) COMMITADA mas NÃO aplicada** — a definição real da MV NÃO contém o piso `YEAR FROM CURRENT_DATE` (`AND h.ano >= EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER - 3`). Aplicação pendente: rodar o DDL + `REFRESH MATERIALIZED VIEW` via psql (padrão da FASE 78: DDL só, refresh posterior).
+- **Quality gates antes do fallback**: `74` (12 meses), `75` (restaura `sazonalidade_baseline`) e `76` (completude de série, MV V21 — 358 produtos).
+
+**Para validar o estado atual com o kit:**
+
+```bash
+bash conectar_dba.sh -f 01_health_visao_geral.sql  # contagens por camada (esperado MV 177.485)
+bash conectar_dba.sh -f 04_sazonalidade.sql        # distribuição de status + tipo_dado
+bash conectar_dba.sh -f 03_qualidade_dados.sql     # órfãos/duplicatas pós-expurgo
+
+# Checar se a migration 80 (V23) já foi aplicada (esperado: 0 → pendente):
+bash conectar_dba.sh "SELECT position('YEAR FROM CURRENT_DATE' in definition) AS v23_piso FROM pg_matviews WHERE matviewname='vw_api_produtos_sazonalidade'"
 ```
 
 ## Números de Referência (2026-08-06)
@@ -49,7 +69,7 @@ Kit de queries e scripts **read-only** para o DBA monitorar o PostgreSQL local (
 | OPS     | `ops.audit_logs`              | 318.620   |
 | OPS     | `ops.quarentena_coleta`       | 9         |
 
-> ⚠️ Baseline pré-expurgo da migration 71 (que remove ~627 produtos sem preço da `dim_produto`) — ver `database/summary.md` para o pós-expurgo.
+> ⚠️ Números pré-expurgo (migration 71 removeu ~627 produtos sem preço de `dim_produto`) e pré-quality-gate 76. Pós-expurgo + V21: MV com **177.485 linhas / 358 produtos**; após o Deep Fallback (V22/V23) a grade de meses futuros volta preenchida (ex.: 9.055 linhas FALLBACK projetadas em m9-12). Contagens atuais em `database/summary.md`.
 
 ## Mapa Rápido
 

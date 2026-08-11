@@ -16,6 +16,12 @@ Python 3.13+, asyncpg, httpx, argparse (ou entrada via env vars).
 2. **Diagnóstico, não Produção**: esses scripts NUNCA são chamados pelo pipeline ou pela API. Exclusivamente para uso manual em CLI.
 3. **Sem Side Effects Permanentes**: scripts de `_check_*`, `validate_*`, `audit_*` devem ser read-only por padrão. Qualquer escrita deve ser explícita via flag `--apply`.
 
+## Mudanças Recentes (2026-08-11)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-11` concentrado em `database/`, `frontend/` e `backend/` (deep fallback V22/V23, quality gates, claymorphism UI, PWA). /utilities inalterado — scripts de auditoria seguem válidos (ex.: `audit_full_stack.py` para validar MV V23 + API + vitest).
+
 ## Mudanças Recentes (2026-08-07)
 
 ### Nenhuma mudança neste lote (FASE 1/2)

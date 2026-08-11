@@ -1,12 +1,15 @@
 # summary.md — /docs
 
 ## Propósito
+
 Fonte única da verdade (Single Source of Truth). Diagramas, prompts mestres, históricos de backfill, relatórios de auditoria, documentação arquitetural, regras para agentes AI e registro do modelo forecast.
 
 ## Stack
+
 Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 
 ## Regras de Ouro
+
 1. **Fonte Única**: qualquer decisão arquitetural relevante DEVE estar documentada aqui. Se não está em /docs, não aconteceu.
 2. **Prompts Mestres**: `PROMPT_AUDITORIA_ENRIQUECIMENTO.md` contém o prompt de engenharia reversa.
 3. **Histórico**: `HISTORICO_MELHORIAS_BACKFILL.md` rastreia todas as mudanças no pipeline de backfill.
@@ -16,17 +19,29 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 ## Conteúdo
 
 ### Removidos (limpeza 2026-07-30)
+
 - ~~`AUDITORIA_SUPABASE_2026-07-18.md`~~ — obsoleto (dados já reconciliados)
 - ~~`MELHORIAS_SISTEMA_AGENTES.md`~~ — obsoleto (arquitetura híbrida implementada)
 - ~~`PROMPT_AUDITORIA_ENRIQUECIMENTO.md`~~ — obsoleto (prompts migrados)
 - ~~`plano_sync_supabase.md`~~ — obsoleto (sync completo)
 - ~~`sync_supabase_fase4_concluida.md`~~ — obsoleto (fase 4 concluída)
 
-### Novos
-- `CHECK_CONEXAO_SUPABASE.md` — script de verificação de conexão com Supabase (local e remoto)
+### Novos (lote 2026-08-11)
+
 - `QUERY_CONSULTA_BANCO.md` — queries de consulta e diagnóstico do banco
+- `runbook_migration_78_local.md` — runbook de execução e validação da migration 78 (deep fallback) no ambiente local
+- `auditoria_nomenclatura_2026-08.md` — auditoria de nomenclatura + draft da migration 77
+- `RELATORIO_AUDITORIA_RECONCILIACAO.md`, `RELATORIO_AUDITORIA_VALIDACAO_DADO_HISTORICO.md`, `RELATORIO_AUDITORIA_ANO_ANCORA_REAL.md` — auditorias do dado histórico real
+- `RELATORIO_IMPLEMENTACAO_DADO_HISTORICO.md`, `RELATORIO_TRANSPARENCIA_MATEMATICA.md`, `VALIDACAO_AUDITS_1_9.md`, `RELATORIO_PROGRESSO_LIMIARES_ZSCORE.md` — relatórios de implementação/validação
+- `RELATORIO_CLAYMORPHISM.md` — implementação do estilo claymorphism (tokens `shadow-clay-*`/`rounded-clay*`)
+- `AUDITORIA_E2E_SINCRONISMO.md`, `DIAGNOSTICO_SANDUICHE_SAZONAL.md`, `plano_contingencia_gaps.md`, `relatorio_investigacao_sp.md` — diagnósticos e planos de contingência
+- `FRONTEND_IMPROVEMENTS.md`, `GOOGLE-STUDIO-alinhamento-frontend.md`, `STICH-GOOGLE-frontend.md` — alinhamentos de UI/frontend
+- `HANDOFF_MIGRACAO_AIVEN.md`, `deploy.md` — migração Aiven e deploy
+- `PROMPT_HOUND_INTEGRACAO_SCRAPER.md`, `RELATORIO_ARQUIVOS_CHAVE.md`, `implementation_plan.md`, `implementation_plan2.md` — planos e integrações
+- ~~`CHECK_CONEXAO_SUPABASE.md`~~ — removido (legado Supabase eliminado em `8f7ea7de`)
 
 ### Ativos
+
 - `AGENTS.md` — regras da casa para agentes AI (stack, classificação, medalhão, frontend)
 - `HISTORICO_MELHORIAS_BACKFILL.md` — changelog de backfill (inclui diagnóstico gap 2024, proposta target-list e snapshot de validação CONAB)
 - `quero_comprar_plano_tecnico.md` — plano técnico geral
@@ -48,10 +63,19 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
   - `migracao-supabase-plano.md` — plano de migração Supabase
 
 ### Auditoria
+
 - `reports/auditoria_b2c_completa_2026-07-06.csv` — relatório de auditoria B2C
 - `reports/auditoria_padrao_ouro_b2c.csv` — padrão ouro B2C
 
+## Mudanças Recentes (2026-08-11)
+
+- **DB**: migrations `74`-`80` — quality gates (12 meses, baseline, completude de série MV V21), deep fallback histórico (**MV V22**, `78` — aplicada, validada em local+remoto) e /br-sazonalidade inclui projeção (**`79`**, P1-1 — aplicada); **`80` (V23, janela 2023+) COMMITADA mas NÃO aplicada** (piso ausente na MV real — aplicar DDL + refresh via psql); draft de nomenclatura DBA-friendly (`77`). Ver `database/summary.md`.
+- **Backend**: memoização do `X-Last-Refresh` (TTL 30s + lock) e mensagens de transparência V22 (`245c4155`). Ver `backend/summary.md`.
+- **Frontend**: claymorphism UI completo + A2HS + paginação híbrida (`42f315b3`), fixes do manifest PWA, e lote não commitado — círculos claymorphism na grade sazonal, remoção do (i), abas Cards→Mapa→Tabela e fix do sticky do acordeão (overflow-clip + top-[7.5rem]). Ver `frontend/summary.md`.
+- **query_DBA**: kit validado para o estado atual — MV **V22 aplicada** (177.485 linhas), V23 pendente; `07_migrations.sql` removido (legado Supabase) — ver `query_DBA/summary.md`.
+
 ## Forecast — Engine Preditiva (Fase 30, 100% SQL)
+
 - `database/26_forecast_baseline.sql` — migration original: baseline + is_forecast + MV V13
 - `database/29_focus_2025_2026.sql` — focus 2025-2026, baseline V12, exclusão B2B
 - `database/30_engine_preditiva_forecast_2026.sql` — **SP `sp_calcular_forecast_2026()`**, baseline_24_25, MV V14 com `baseline_confianca`, `forecast_method`

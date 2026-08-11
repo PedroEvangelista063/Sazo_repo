@@ -1,7 +1,9 @@
+import asyncio
 import hashlib
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, Query, Response
 
@@ -21,10 +23,22 @@ from backend.app.schemas.responses import (
 router = APIRouter(prefix="/sazonalidade", tags=["Sazonalidade"])
 
 
+# FASE 79 (P1-2) — Memoização do X-Last-Refresh.
+# Causa raiz de latência do ERR_ABORTED (axios 10s) na 1ª carga do BR:
+# _ultimo_refresh_mv_iso() era chamado até 2x por request (cache key + header)
+# e CADA chamada fazia 2 round-trips ao Aiven (pg_stat_file + audit.mv_refresh_log,
+# ~2,5-4s cada). Memoização com TTL curto via cache store + double-checked
+# asyncio.Lock: mesma request e requests próximas batem no cache.
+_MV_REFRESH_CACHE_KEY = "saz:ultimo_refresh_mv"
+_MV_REFRESH_TTL = 30.0  # segundos — MENOR que o TTL do cache de dados (3600s)
+_mv_refresh_lock = asyncio.Lock()
+
+
 def _compor_mensagem_transparencia(
     tipo_dado: str | None,
     ano_referencia: int | None,
     idade: int | None = None,
+    metadado: dict[str, Any] | None = None,
 ) -> str | None:
     """Composição pt-BR da mensagem de proveniência temporal (sem R$).
 
@@ -35,6 +49,10 @@ def _compor_mensagem_transparencia(
     (ex: saída da ``fn_br_nacional_sazonalidade``, que não projeta essa coluna),
     deriva de ``ANO_ATUAL - ano_referencia`` para nunca exibir "defasagem de
     None ano".
+
+    ``metadado`` (opcional) é o ``metadado_transparencia`` da MV quando a linha
+    o expõe: FASE 79 (P1-1) emite a mensagem exata do Deep Fallback (V22) a
+    partir de ``metadado.mensagem_transparencia`` quando presente.
     """
     if not tipo_dado:
         return None
@@ -48,6 +66,20 @@ def _compor_mensagem_transparencia(
             f"Dado histórico real — última cotação real da CONAB em {ano_referencia} "
             f"(defasagem de {idade} ano{suf}). Não é estimativa sintética."
         )
+    if tipo_dado == "FALLBACK_DIMENSAO":
+        # FASE 79 (P1-1): linhas de projeção do Deep Fallback (V22) agora entram
+        # na saída nacional — emitem a mensagem de projeção. Prioridade:
+        #   1) mensagem exata gravada no metadado_transparencia da MV (quando o
+        #      caller a expõe);
+        #   2) derivação pelo ano_referencia (histórico usado pela projeção) —
+        #      caso do /br-sazonalidade, cuja função não projeta metadado;
+        #   3) sem histórico real (baseline de dimensão).
+        msg = (metadado or {}).get("mensagem_transparencia")
+        if msg:
+            return msg
+        if ano_referencia is not None:
+            return f"Projecao sazonal baseada no historico de {ano_referencia}."
+        return "Projecao sazonal sem historico real (baseline de dimensao)."
     return "Sem histórico real para este período — valor de referência da dimensão (fallback)."
 
 
@@ -117,7 +149,7 @@ def _build_sazonalidade_cache_key(
 
 
 async def _ultimo_refresh_mv_iso() -> str:
-    """Modificação da MV em ISO8601 UTC (vazio se indisponível).
+    """Modificação da MV em ISO8601 UTC (vazio se indisponível) — MEMOIZADO.
 
     Fonte primária: mtime do arquivo físico (pg_stat_file) — mais preciso.
     Fallback permission-safe: tabela ``audit.mv_refresh_log`` gravada pela
@@ -125,35 +157,53 @@ async def _ultimo_refresh_mv_iso() -> str:
     ``pg_stat_file`` para avnadmin/postgres, o que deixava o header
     X-Last-Refresh sempre vazio em produção. Consulta assíncrona via pool da
     API; qualquer exceção retorna ``""`` sem quebrar a resposta.
+
+    FASE 79 (P1-2): valor memoizado por ``_MV_REFRESH_TTL`` (30s) no cache
+    store com double-checked ``asyncio.Lock`` — elimina os 2 round-trips ao
+    Aiven por chamada (pg_stat_file + audit.mv_refresh_log) dentro do mesmo
+    request e entre requests próximas. TTL 30s < TTL do cache de dados (3600s):
+    o header nunca fica desatualizado por mais de ~30s.
     """
+    cached = await cache.get(_MV_REFRESH_CACHE_KEY)
+    if cached is not None:
+        return cached
 
-    def _fmt(last) -> str:
-        if last is None:
-            return ""
-        if last.tzinfo is None:
-            last = last.replace(tzinfo=UTC)
-        return last.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    async with _mv_refresh_lock:
+        cached = await cache.get(_MV_REFRESH_CACHE_KEY)
+        if cached is not None:
+            return cached
 
-    try:
-        row = await fetchrow(
-            "SELECT (pg_stat_file("
-            "pg_relation_filepath('mart.vw_api_produtos_sazonalidade'::regclass)"
-            ")).modification AS last_refresh"
-        )
-        value = _fmt(row[0] if row else None)
-        if value:
-            return value
-    except Exception:  # noqa: BLE001, S110  # sem privilégio -> fallback deliberado
-        pass
+        def _fmt(last) -> str:
+            if last is None:
+                return ""
+            if last.tzinfo is None:
+                last = last.replace(tzinfo=UTC)
+            return last.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    try:
-        row = await fetchrow(
-            "SELECT refreshed_at FROM audit.mv_refresh_log "
-            "WHERE mv_name = 'vw_api_produtos_sazonalidade'"
-        )
-        return _fmt(row[0] if row else None)
-    except Exception:  # noqa: BLE001  # header de transparência nunca deve quebrar a resposta
-        return ""
+        try:
+            row = await fetchrow(
+                "SELECT (pg_stat_file("
+                "pg_relation_filepath('mart.vw_api_produtos_sazonalidade'::regclass)"
+                ")).modification AS last_refresh"
+            )
+            value = _fmt(row[0] if row else None)
+            if value:
+                await safe_set(_MV_REFRESH_CACHE_KEY, value, _MV_REFRESH_TTL)
+                return value
+        except Exception:  # noqa: BLE001, S110  # sem privilégio -> fallback deliberado
+            pass
+
+        try:
+            row = await fetchrow(
+                "SELECT refreshed_at FROM audit.mv_refresh_log "
+                "WHERE mv_name = 'vw_api_produtos_sazonalidade'"
+            )
+            value = _fmt(row[0] if row else None)
+        except Exception:  # noqa: BLE001  # header de transparência nunca deve quebrar a resposta
+            value = ""
+
+        await safe_set(_MV_REFRESH_CACHE_KEY, value, _MV_REFRESH_TTL)
+        return value
 
 
 async def _query_sazonalidade(
@@ -1184,7 +1234,9 @@ async def listar_br_sazonalidade(
         json.dumps(
             {
                 "route": "br_sazonalidade",
-                "v": 5,
+                # FASE 79 (P1-1): saída da fn muda (inclui projeção) → v6 invalida
+                # o cache v5 (que não tinha FALLBACK_DIMENSAO na grade).
+                "v": 6,
                 "ano": ano,
                 "categoria": categoria,
                 "min_ufs": min_ufs,

@@ -3,7 +3,11 @@ import { setTransparency } from './transparencyStore'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1',
-  timeout: 10000,
+  // FASE 79 (P1-2): 20s — a 1ª carga do BR podia levar 13-16s (2x
+  // _ultimo_refresh_mv_iso + agregacao pesada no Aiven), estourando o 10s
+  // antigo com ERR_ABORTED. O retry: 2 do TanStack Query (main.tsx) segue
+  // adequado para falhas transientes.
+  timeout: 20000,
   headers: { 'Content-Type': 'application/json' },
 })
 

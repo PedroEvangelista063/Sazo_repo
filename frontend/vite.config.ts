@@ -24,9 +24,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.svg',
-        'icons/icon-192x192.png',
-        'icons/icon-512x512.png',
-        'icons/icon-512x512-maskable.png',
+        'icon-192x192.png',
+        'icon-512x512.png',
+        'icon-192x192-maskable.png',
+        'icon-512x512-maskable.png',
       ],
       manifest: {
         name: 'Quero Comprar — Sazonalidade de Hortigranjeiros',
@@ -49,39 +50,30 @@ export default defineConfig({
             short_name: 'Buscar',
             description: 'Pesquisar sazonalidade de um produto',
             url: '/?search',
-            icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
-          },
-        ],
-        screenshots: [
-          {
-            src: '/screenshots/dashboard.webp',
-            sizes: '1080x1920',
-            type: 'image/webp',
-            form_factor: 'narrow',
-            label: 'Dashboard de Sazonalidade',
+            icons: [{ src: '/icon-192x192.png', sizes: '192x192' }],
           },
         ],
         icons: [
           {
-            src: '/icons/icon-192x192.png',
+            src: '/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/icons/icon-512x512.png',
+            src: '/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/icons/icon-192x192-maskable.png',
+            src: '/icon-192x192-maskable.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'maskable',
           },
           {
-            src: '/icons/icon-512x512-maskable.png',
+            src: '/icon-512x512-maskable.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',

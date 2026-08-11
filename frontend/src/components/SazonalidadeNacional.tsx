@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import { DataTransparencyInfo } from '@/components/DataTransparencyInfo'
 import { limparNomeProduto } from '@/utils/nomeProduto'
 import type { SazonalidadeNacionalItem, StatusCor } from '@/types/domain'
 
@@ -50,10 +49,6 @@ interface SazonalidadeNacionalProps {
   className?: string
 }
 
-function anoAtual(): number {
-  return new Date().getFullYear()
-}
-
 /** Badge de ano âncora: '26 (atual) / '25 / '24 — sem texto sintético. */
 function yearBadge(ano: number | null | undefined): string | null {
   if (ano == null) return null
@@ -68,18 +63,20 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th className="sticky left-0 z-10 min-w-[180px] bg-[var(--bg-header)] px-3 py-2 text-left font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+            <th className="sticky left-0 z-10 min-w-[180px] bg-[var(--bg-header)] px-3 pb-3 pt-2.5 text-left font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-300">
               Produto
             </th>
             {MONTHS_SHORT.map((name, idx) => (
               <th
                 key={idx}
-                className="min-w-[52px] px-1 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400"
+                className="min-w-[52px] bg-[var(--bg-header)] px-1 pb-3 pt-2.5 text-center text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400"
               >
                 {name}
               </th>
             ))}
-            <th className="px-2 py-2 text-center text-xs text-gray-400">UFs</th>
+            <th className="bg-[var(--bg-header)] px-2 pb-3 pt-2.5 text-center text-xs text-gray-400 dark:bg-gray-800 dark:text-gray-500">
+              UFs
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -96,9 +93,6 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
               </td>
               {Array.from({ length: 12 }, (_, i) => i + 1).map((mesNum) => {
                 const mesData = item.meses.find((m) => m.mes === mesNum)
-                const isLegado =
-                  Boolean(mesData?.is_dado_legado) ||
-                  (mesData?.ano_referencia != null && mesData.ano_referencia < anoAtual())
                 const badge = yearBadge(mesData?.ano_referencia)
 
                 if (!mesData) {
@@ -106,7 +100,7 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                   // preenche todos os meses do ano corrente com dado real/âncora).
                   return (
                     <td key={mesNum} className="px-1 py-1.5 text-center">
-                      <div className="h-8 w-full rounded border border-transparent bg-gray-50 dark:bg-gray-800/60" />
+                      <div className="mx-auto h-8 w-8 rounded-full border border-transparent bg-gray-50 dark:bg-gray-800/60" />
                     </td>
                   )
                 }
@@ -119,30 +113,17 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                 }
                 return (
                   <td key={mesNum} className="px-1 py-1.5 text-center">
-                    <div className="group relative flex h-8 w-full items-center justify-center gap-1 rounded-md border">
-                      <div
-                        className={cn(
-                          'shadow-clay-press flex h-full w-full cursor-default items-center justify-center rounded-md border dark:shadow-clay-dark',
-                          style.bg,
-                          style.text,
-                          style.border,
-                        )}
-                        aria-label={`${limparNomeProduto(item.produto)} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
-                      >
-                        {badge && (
-                          <span className="text-[9px] font-semibold opacity-80">{badge}</span>
-                        )}
-                      </div>
-                      {(isLegado || mesData.tipo_dado) && (
-                        <DataTransparencyInfo
-                          status_cor={mesData.status_cor}
-                          tipo_dado={mesData.tipo_dado}
-                          ano_referencia={mesData.ano_referencia}
-                          mensagem_transparencia={mesData.mensagem_transparencia}
-                          is_dado_legado={isLegado}
-                          size={11}
-                          className="absolute right-0.5 top-0.5"
-                        />
+                    <div
+                      className={cn(
+                        'shadow-clay-press mx-auto flex h-8 w-8 cursor-default items-center justify-center rounded-full border dark:shadow-clay-dark',
+                        style.bg,
+                        style.text,
+                        style.border,
+                      )}
+                      aria-label={`${limparNomeProduto(item.produto)} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
+                    >
+                      {badge && (
+                        <span className="text-[9px] font-semibold opacity-80">{badge}</span>
                       )}
                     </div>
                   </td>

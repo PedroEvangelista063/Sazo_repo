@@ -82,11 +82,11 @@ describe('GradeSazonalAcordeao', () => {
     expect(frutas.getAttribute('aria-expanded')).toBe('false')
   })
 
-  it('aplica sticky top-14 no header da categoria', () => {
+  it('aplica sticky abaixo do header do app (top-[7.5rem]) no header da categoria', () => {
     render(<GradeSazonalAcordeao data={DATA} />)
     const header = screen.getByRole('button', { name: /Frutas/i })
     expect(header.className).toContain('sticky')
-    expect(header.className).toContain('top-14')
+    expect(header.className).toContain('top-[7.5rem]')
   })
 
   it('com abrirDestaque=false tudo vem fechado', () => {

@@ -68,9 +68,9 @@ export function GradeSazonalAcordeao({
         return (
           <section
             key={grupo.id}
-            className="clay-card overflow-hidden border border-outline-variant/40"
+            className="clay-card overflow-clip border border-outline-variant/40"
           >
-            {/* Header sticky — gruda abaixo do header do app enquanto rola */}
+            {/* Header sticky — gruda logo abaixo do header do app (que tem ~116px) enquanto rola */}
             <button
               type="button"
               id={`acordeao-btn-${grupo.id}`}
@@ -78,8 +78,8 @@ export function GradeSazonalAcordeao({
               aria-expanded={aberto}
               aria-controls={`acordeao-${grupo.id}`}
               className={cn(
-                'rounded-clay sticky top-14 z-20 flex w-full items-center gap-3 border border-transparent px-4 py-3 text-left',
-                'border-b border-outline-variant/20 bg-surface-container-lowest/95 backdrop-blur-sm transition-all duration-150',
+                'rounded-clay sticky top-[7.5rem] z-20 flex w-full items-center gap-3 border border-transparent px-4 py-3 text-left',
+                'border-b border-outline-variant/20 bg-surface-container-lowest transition-all duration-150',
                 'active:shadow-clay-press hover:bg-surface-container/80 active:translate-y-[1px]',
               )}
             >

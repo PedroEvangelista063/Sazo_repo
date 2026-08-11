@@ -14,9 +14,9 @@ interface NavigationTabsProps {
  */
 export function NavigationTabs({ activeTab, onTabChange }: NavigationTabsProps) {
   const tabs = [
-    { id: 'grade-sazonal', label: '📊 Tabela' },
     { id: 'cards', label: '📄 Cards' },
     { id: 'mapa', label: '🗺️ Mapa' },
+    { id: 'grade-sazonal', label: '📊 Tabela' },
   ]
 
   return (

@@ -16,7 +16,7 @@ function makeItem(overrides: Partial<SazonalidadeNacionalItem>): SazonalidadeNac
 }
 
 describe('SazonalidadeNacional', () => {
-  it("renderiza badge de ano legado '25 + ícone (i) em célula histórica", () => {
+  it("renderiza badge de ano legado '25 na célula histórica", () => {
     render(
       <SazonalidadeNacional
         data={[
@@ -42,7 +42,7 @@ describe('SazonalidadeNacional', () => {
     expect(screen.getAllByText(/'25/).length).toBeGreaterThan(0)
   })
 
-  it('renderiza ícone (i) de transparência na célula histórica', () => {
+  it('não renderiza mais o ícone (i) de transparência dentro da célula', () => {
     render(
       <SazonalidadeNacional
         data={[
@@ -64,7 +64,9 @@ describe('SazonalidadeNacional', () => {
         ]}
       />,
     )
-    expect(screen.getAllByRole('button', { name: /informação/i }).length).toBeGreaterThan(0)
+    // Célula segue exibindo apenas o badge de ano âncora — sem overlay (i)
+    expect(screen.queryByRole('button', { name: /informação/i })).not.toBeInTheDocument()
+    expect(screen.getAllByText(/'24/).length).toBeGreaterThan(0)
   })
 
   it('célula sem dados é vazia (muted) — sem tooltip de gap estrutural', () => {

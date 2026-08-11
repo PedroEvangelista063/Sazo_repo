@@ -355,7 +355,7 @@ export function SupermercadoView() {
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-lg px-margin-mobile pb-[7rem] pt-[7.5rem]">
         {/* Abas + ano — superfície clay */}
-        <div className="flex flex-col gap-3 rounded-3xl bg-clay-surface p-3 shadow-clay-rest dark:bg-surface-container-low dark:shadow-clay-dark">
+        <div className="flex flex-col gap-4 rounded-3xl bg-clay-surface p-3 pb-4 shadow-clay-rest dark:bg-surface-container-low dark:shadow-clay-dark">
           <NavigationTabs activeTab={viewMode} onTabChange={handleTabChange} />
           <div className="flex items-center justify-between">
             <span className="font-label-sm text-on-surface-variant">📍 {ufLabel}</span>

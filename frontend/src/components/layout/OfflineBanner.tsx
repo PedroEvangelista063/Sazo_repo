@@ -17,7 +17,7 @@ export function OfflineBanner() {
   if (!isOffline) return null
 
   return (
-    <div className="bg-status-yellow fixed left-0 top-16 z-[45] flex w-full items-center justify-center gap-2 py-1 text-center font-label-sm text-on-secondary-container">
+    <div className="bg-status-yellow fixed left-0 top-[7rem] z-[45] flex w-full items-center justify-center gap-2 py-1 text-center font-label-sm text-on-secondary-container">
       <span className="material-symbols-outlined text-[16px]">wifi_off</span>
       <span>Modo offline. Mostrando dados em cache.</span>
     </div>

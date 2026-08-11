@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { DataTransparencyInfo } from '@/components/DataTransparencyInfo'
+import { limparNomeProduto } from '@/utils/nomeProduto'
 import type { SazonalidadeNacionalItem, StatusCor } from '@/types/domain'
 
 const MONTHS_SHORT = [
@@ -91,12 +92,7 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
               className="border-t border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"
             >
               <td className="sticky left-0 z-10 bg-white px-3 py-2 text-sm font-medium text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-                {item.produto}
-                {item.categoria && (
-                  <span className="ml-1 text-[10px] text-gray-400 dark:text-gray-500">
-                    {item.categoria}
-                  </span>
-                )}
+                {limparNomeProduto(item.produto)}
               </td>
               {Array.from({ length: 12 }, (_, i) => i + 1).map((mesNum) => {
                 const mesData = item.meses.find((m) => m.mes === mesNum)
@@ -131,7 +127,7 @@ export function SazonalidadeNacional({ data, className }: SazonalidadeNacionalPr
                           style.text,
                           style.border,
                         )}
-                        aria-label={`${item.produto} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
+                        aria-label={`${limparNomeProduto(item.produto)} — ${MONTHS_SHORT[mesNum - 1]}: ${style.label}`}
                       >
                         {badge && (
                           <span className="text-[9px] font-semibold opacity-80">{badge}</span>

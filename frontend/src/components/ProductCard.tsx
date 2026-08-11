@@ -1,6 +1,8 @@
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Check } from 'lucide-react'
+import { limparNomeProduto } from '@/utils/nomeProduto'
 import type { ProdutoVarejo } from '../types/domain'
 
 const PRODUTO_EMOJI: Record<string, string> = {
@@ -44,6 +46,49 @@ function getEmoji(name: string): string {
   return PRODUTO_EMOJI[key] ?? '🛒'
 }
 
+/**
+ * Semáforo linguístico: badge de TEXTO acoplado à cor (daltonismo + cognição).
+ *
+ * Fallback de segurança: qualquer `status_cor` fora de VERDE/AMARELO/VERMELHO
+ * (ou nulo/desconhecido) é tratado como AMARELO ("Estável — Preço Normal"),
+ * a opção mais neutra — NUNCA há estado vazio nem cor cinza.
+ */
+const STATUS_BADGES: Record<string, { label: string; badgeClass: string; circleClass: string }> = {
+  VERDE: {
+    label: '🟢 Época Boa — Barato',
+    badgeClass: 'bg-status-green text-white border border-status-green/50',
+    circleClass: 'bg-status-green text-on-primary shadow-clay-green border border-status-green/50',
+  },
+  AMARELO: {
+    label: '🟡 Estável — Preço Normal',
+    badgeClass: 'bg-status-yellow text-on-secondary-container border border-status-yellow/50',
+    circleClass:
+      'bg-status-yellow text-on-secondary-container shadow-clay-pressed border border-status-yellow/50',
+  },
+  VERMELHO: {
+    label: '🔴 Época Ruim — Caro',
+    badgeClass: 'bg-status-red text-white border border-status-red/50',
+    circleClass: 'bg-status-red text-on-error shadow-clay-pressed border border-status-red/50',
+  },
+}
+
+/**
+ * Detecta dado projetado (Deep Fallback / forecast) usando os campos reais
+ * que o hook recebe da API (`is_forecast`, `tipo_dado`, `mensagem_transparencia`).
+ */
+function isDadoProjetado(p: ProdutoVarejo): boolean {
+  if (p.is_forecast) return true
+  const tipo = (p.tipo_dado ?? '').toUpperCase()
+  if (tipo.includes('FALLBACK') || tipo.includes('PROJEC') || tipo.includes('FORECAST')) return true
+  if (
+    p.mensagem_transparencia &&
+    /proje[cç]|projetado|anos anteriores|fallback/i.test(p.mensagem_transparencia)
+  ) {
+    return true
+  }
+  return false
+}
+
 interface ProductCardProps {
   product: ProdutoVarejo
   isSelected?: boolean
@@ -51,20 +96,11 @@ interface ProductCardProps {
   origemUf?: string | null
 }
 
-export function ProductCard({ product, isSelected, onToggle }: ProductCardProps) {
-  const emoji = getEmoji(product.nome_produto)
-
-  const statusColors: Record<string, string> = {
-    VERDE: 'bg-status-green text-on-primary shadow-clay-green border border-status-green/50',
-    AMARELO:
-      'bg-status-yellow text-on-secondary-container shadow-clay-pressed border border-status-yellow/50',
-    VERMELHO: 'bg-status-red text-on-error shadow-clay-pressed border border-status-red/50',
-  }
-
-  const defaultColor =
-    'bg-surface-container-low text-on-surface-variant shadow-clay-dark border border-outline-variant/30'
-
-  const colorClass = statusColors[product.status_cor] || defaultColor
+function ProductCardInner({ product, isSelected, onToggle }: ProductCardProps) {
+  const nomeLimpo = limparNomeProduto(product.nome_produto)
+  const emoji = getEmoji(nomeLimpo)
+  const badge = STATUS_BADGES[product.status_cor] ?? STATUS_BADGES.AMARELO
+  const projetado = isDadoProjetado(product)
 
   return (
     <motion.div
@@ -73,8 +109,10 @@ export function ProductCard({ product, isSelected, onToggle }: ProductCardProps)
       whileTap={{ y: 1 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        'clay-card clay-card--interactive group relative flex cursor-pointer flex-col items-center justify-center p-md',
-        isSelected ? 'bg-primary/5 ring-2 ring-primary' : '',
+        'relative flex min-h-[204px] cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl p-4 text-center',
+        'bg-clay-surface shadow-clay-rest transition-all duration-150 active:scale-95',
+        'dark:bg-surface-container-low dark:shadow-clay-dark',
+        isSelected ? 'ring-2 ring-primary' : '',
       )}
     >
       {isSelected && onToggle && (
@@ -83,19 +121,38 @@ export function ProductCard({ product, isSelected, onToggle }: ProductCardProps)
         </div>
       )}
 
-      {/* Sazonalidade representada como o círculo de cor em formato claymorphism */}
+      {/* Badge de semáforo linguístico (texto + cor) */}
+      <span
+        className={cn(
+          'inline-flex max-w-full items-center rounded-full px-2.5 py-1 text-xs font-bold leading-tight',
+          badge.badgeClass,
+        )}
+      >
+        {badge.label}
+      </span>
+
+      {/* Círculo de cor em formato claymorphism */}
       <div
         className={cn(
-          'mb-3 flex h-14 w-14 items-center justify-center rounded-full text-3xl transition-transform group-hover:scale-110',
-          colorClass,
+          'flex h-12 w-12 items-center justify-center rounded-full text-2xl transition-transform',
+          badge.circleClass,
         )}
       >
         {emoji}
       </div>
 
-      <p className="font-display line-clamp-2 text-center text-sm font-bold leading-tight text-on-surface">
-        {product.nome_produto}
+      <p className="font-display line-clamp-2 text-lg font-bold leading-tight text-on-surface">
+        {nomeLimpo}
       </p>
+
+      {projetado && (
+        <p className="text-xs text-on-surface-variant opacity-70">
+          Projeção baseada em anos anteriores
+        </p>
+      )}
     </motion.div>
   )
 }
+
+/** Memoizado para evitar re-render de centenas de cards ao digitar na busca. */
+export const ProductCard = memo(ProductCardInner)

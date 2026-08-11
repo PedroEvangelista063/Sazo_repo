@@ -4,6 +4,7 @@ import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { Search, X, ChevronLeft } from 'lucide-react'
 import { useCategorias } from '../hooks/useCategorias'
+import { limparNomeProduto } from '../utils/nomeProduto'
 import type { Categoria, ProdutoVarejo } from '../types/domain'
 
 interface CategoriesModalProps {
@@ -108,7 +109,7 @@ export function CategoriesModal({
                   setSearchQuery('')
                 }}
                 variant="light"
-                className="h-auto justify-between rounded-2xl py-3 shadow-clay-btn hover:shadow-clay-btn-hover active:translate-y-[1px] active:shadow-clay-press"
+                className="shadow-clay-btn hover:shadow-clay-btn-hover active:shadow-clay-press h-auto justify-between rounded-2xl py-3 active:translate-y-[1px]"
               >
                 <span className="flex items-center gap-2">
                   <span className="text-xl">{cat.icone || '📆'}</span>
@@ -132,7 +133,7 @@ export function CategoriesModal({
                 placeholder="Buscar produto..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.currentTarget.value)}
-                className="h-9 w-full rounded-clay-sm border border-gray-300 bg-white pl-9 pr-3 text-sm shadow-clay-press outline-none focus:ring-2 focus:ring-sazonal-verde-600 dark:border-gray-600 dark:bg-gray-800"
+                className="rounded-clay-sm shadow-clay-press h-9 w-full border border-gray-300 bg-white pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-sazonal-verde-600 dark:border-gray-600 dark:bg-gray-800"
               />
             </div>
             {catMap[drillCategory]?.descricao && (
@@ -154,11 +155,11 @@ export function CategoriesModal({
                       onClick={() => onToggleProduct(prod)}
                       className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-sazonal-verde-600 text-white shadow-clay-btn'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-clay-btn-hover dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                          ? 'shadow-clay-btn bg-sazonal-verde-600 text-white'
+                          : 'hover:shadow-clay-btn-hover bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      {prod}
+                      {limparNomeProduto(prod)}
                       {isSelected && <X size={12} className="ml-1" />}
                     </button>
                   )

@@ -60,6 +60,7 @@ export default {
         'surface-variant': '#d4e4fa',
         'primary-fixed-dim': '#62df7d',
         'surface-container-low': '#eef4ff',
+        'clay-surface': '#e0e5ec',
         'on-surface': '#0d1c2d',
         'on-secondary-container': '#6f5900',
         'surface-bright': '#f8f9ff',
@@ -112,12 +113,13 @@ export default {
         'headline-md': ['24px', { lineHeight: '1.3', fontWeight: '700' }],
       },
       boxShadow: {
+        'clay-rest': '8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff',
+        'clay-pressed':
+          'inset 6px 6px 10px 0 rgba(0, 0, 0, 0.1), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8)',
         'clay-dark':
           'inset -6px -6px 12px rgba(255, 255, 255, 0.4), inset 6px 6px 12px rgba(0, 0, 0, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.05)',
         'clay-green':
           'inset -6px -6px 12px rgba(255, 255, 255, 0.3), inset 6px 6px 12px rgba(0, 107, 44, 0.2), 4px 4px 10px rgba(0, 107, 44, 0.15)',
-        'clay-pressed':
-          'inset 6px 6px 12px rgba(0, 0, 0, 0.1), inset -6px -6px 12px rgba(255, 255, 255, 0.4)',
       },
     },
   },

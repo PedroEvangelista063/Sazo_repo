@@ -49,16 +49,48 @@ describe('ProductCard', () => {
     expect(screen.getByText('🍅')).toBeInTheDocument()
   })
 
-  it('usa cor neutra de superfície para status desconhecido', () => {
+  it('trata status desconhecido como AMARELO (fallback neutro, sem cinza)', () => {
     const { container } = render(
       <ProductCard
         product={makeProduct({ status_cor: 'DESCONHECIDO' as ProdutoVarejo['status_cor'] })}
       />,
     )
+    // Fallback documentado: nunca cinza/vazio — usa o badge AMARELO neutro.
+    expect(container.querySelector('.bg-status-yellow')).not.toBeNull()
     expect(container.querySelector('.bg-status-green')).toBeNull()
-    expect(container.querySelector('.bg-status-yellow')).toBeNull()
     expect(container.querySelector('.bg-status-red')).toBeNull()
-    expect(container.querySelector('.bg-surface-container-low')).not.toBeNull()
+    expect(screen.getByText('🟡 Estável — Preço Normal')).toBeInTheDocument()
+  })
+
+  // Teste 1b: Badge de semáforo linguístico (texto + cor)
+  it('exibe badge linguístico VERDE "🟢 Época Boa — Barato"', () => {
+    render(<ProductCard product={makeProduct({ status_cor: 'VERDE' })} />)
+    expect(screen.getByText('🟢 Época Boa — Barato')).toBeInTheDocument()
+  })
+
+  it('exibe badge linguístico AMARELO "🟡 Estável — Preço Normal"', () => {
+    render(<ProductCard product={makeProduct({ status_cor: 'AMARELO' })} />)
+    expect(screen.getByText('🟡 Estável — Preço Normal')).toBeInTheDocument()
+  })
+
+  it('exibe badge linguístico VERMELHO "🔴 Época Ruim — Caro"', () => {
+    render(<ProductCard product={makeProduct({ status_cor: 'VERMELHO' })} />)
+    expect(screen.getByText('🔴 Época Ruim — Caro')).toBeInTheDocument()
+  })
+
+  it('mostra subtítulo de projeção quando is_forecast', () => {
+    render(<ProductCard product={makeProduct({ is_forecast: true })} />)
+    expect(screen.getByText('Projeção baseada em anos anteriores')).toBeInTheDocument()
+  })
+
+  it('mostra subtítulo de projeção para tipo_dado FALLBACK_DIMENSAO', () => {
+    render(<ProductCard product={makeProduct({ tipo_dado: 'FALLBACK_DIMENSAO' })} />)
+    expect(screen.getByText('Projeção baseada em anos anteriores')).toBeInTheDocument()
+  })
+
+  it('não mostra subtítulo de projeção para HISTORICO_BASE', () => {
+    render(<ProductCard product={makeProduct({ tipo_dado: 'HISTORICO_BASE' })} />)
+    expect(screen.queryByText('Projeção baseada em anos anteriores')).not.toBeInTheDocument()
   })
 
   // Teste 2: Emoji de Fallback

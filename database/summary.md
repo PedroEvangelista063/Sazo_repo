@@ -112,6 +112,18 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 
 ## Mudanças Recentes (2026-08-12, follow-ups)
 
+### Fase 2 (subconjunto seguro) — nomenclatura DBA-friendly (81_fase2_subconjunto_seguro.sql)
+
+- **Novo arquivo**: `database/81_fase2_subconjunto_seguro.sql` — **APLICADA em LOCAL + AIVEN (2026-08-12)** com backups `backup_schema_81_pre_aiven_*` (17 MB). Renomeia o subconjunto aprovado pelo usuário:
+  - **4 funções** (zero refs em código vivo — só SQL interno): `fn_normalizar_nome_produto` → `normalizar_nome_produto`, `fn_estatisticas_volatilidade_24m` → `estatisticas_volatilidade_24m`, `fn_status_cor_zscore` → `calcular_semaforo_preco`, `fn_encontrar_produto_pai` → `encontrar_produto_pai`.
+  - **1 tabela**: `staging.baseline_2025_interpolado` → `baseline_sazonal_interpolado` (0 dependentes).
+  - **1 view**: `staging.vw_fluxos_regionais` → `vw_abastecimento_logistico` (0 dependentes).
+  - **Corpos chamadores reescritos na mesma transação (BLOCO 5)**: 7 funções/procedures PL/pgSQL (`consolidar_produtos_duplicados`, `consolidar_produtos_por_lista`, `fn_importar_fluxos_json`, `injetar_dados_ufs_carentes`, `relatorio_normalizacao_produtos`, `sp_calcular_sazonalidade`, `sp_project_sandwich_prices_2026`) + 2 views do mart (`vw_abastecimento_regional_completo`, `vw_ancora_preco_referencia`) — gerados do catálogo vivo via `pg_get_functiondef`/`pg_get_viewdef` com substituição dirigida (**fidelidade 100%**, zero perda de lógica).
+  - **Wrappers de compat (30 dias) + views de compat** criados — remover em 2026-09-30 junto com a Fase 3 (`fase3_drop_compat_77.sql`).
+  - **Validação nos 2 bancos**: 4 nomes novos + 4 wrappers, MV 177.485, 0 nulo/CINZA, corpos sem nomes antigos (0), views mart sem nomes antigos (0), wrappers delegando (TOMATE/8395/AMARELO), views respondendo (fluxos 143, baseline 2.802, mart 95.374/5.589), **2ª execução no-op** (idempotência), smoke PASS, endpoint `/fluxos` total=143 (view renomeada).
+  - **Código vivo atualizado**: `fluxos.py:28` (view), `imputar_gaps_baseline.py` (tabela), `audit_full.py` (tabela), `responses.py:283` (docstring).
+  - **Pendente (não aprovado)**: `raw.coleta_bruta`/`controle_carga`, cadeia sandwich (`fn_fator_sazonal_mensal`, `fn_preco_base_2026`, `fn_sandwich_historical_price`, `fn_status_cor_regra_15/25`), `sp_calcular_sazonalidade` (rename exige recriar `sp_executar_carga_completa`), `mart.fator_kg_produto_uf` (rename exige recriar `sp_project_sandwich_prices_2026`).
+
 ### Migration 80 (V23) aplicada + sync Prod→Homologação + revisão da 77
 
 - **Migration 80 (V23, janela 2023+) APLICADA nos DOIS bancos** (local + Aiven, 2026-08-12) com backups `backup_*_80_pre_*`; validada funcionalmente: 0 âncoras FALLBACK `ano_referencia < 2023`, `min(ano_referencia)` set–dez 2026 = 2023, MV 177.485 linhas, 0 `status_cor` nulo/CINZA. `CREATE ... WITH DATA` já popula — refresh redundante.
@@ -356,6 +368,7 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `78_deep_fallback_historico.sql` — Deep Fallback histórico (MV V22, NO GRAY/NO NULL)
 - `79_br_sazonalidade_inclui_projecao.sql` — /br-sazonalidade inclui projeção FALLBACK (P1-1)
 - `80_mv_fallback_janela_2023.sql` — Deep Fallback janela 2023+ (MV V23)
+- `81_fase2_subconjunto_seguro.sql` — Fase 2 segura: 4 funções + baseline_2025_interpolado + vw_fluxos_regionais
 
 ## Mapa Rápido
 

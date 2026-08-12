@@ -280,7 +280,7 @@ class SazonalidadeNacionalListResponse(BaseModel):
 class FlowItem(BaseModel):
     """Um fluxo de abastecimento logístico entre origem e destino.
 
-    Lido da view ``staging.vw_fluxos_regionais``, que faz JOIN entre
+    Lido da view ``staging.vw_abastecimento_logistico``, que faz JOIN entre
     ``dim_fluxo_abastecimento`` e ``dim_produto`` para trazer o nome
     canônico do produto.
     """

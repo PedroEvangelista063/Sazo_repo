@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from fastapi import APIRouter
+
 from backend.app.db.session import fetch
 from backend.app.schemas.responses import FlowItem, FlowListResponse
 
@@ -25,7 +26,7 @@ SELECT
     f.descricao_tipo,
     f.periodicidade,
     f.regiao_destino_nome
-FROM staging.vw_fluxos_regionais f
+FROM staging.vw_abastecimento_logistico f
 ORDER BY f.destino_regiao_id, f.origem_uf, f.produto
 """
 
@@ -34,7 +35,7 @@ ORDER BY f.destino_regiao_id, f.origem_uf, f.produto
 async def listar_fluxos():
     try:
         rows = await fetch(SQL_FLUXOS)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 — endpoint tolerante: falha vira lista vazia
         logger.error("[fluxos] Erro ao consultar banco: %s", exc)
         return FlowListResponse(data=[], total=0)
 
@@ -64,8 +65,10 @@ async def listar_fluxos():
                     regiao_destino_nome=r.get("regiao_destino_nome"),
                 )
             )
-        except Exception as exc:
-            logger.warning("[fluxos] Erro ao montar FlowItem para id=%s: %s", r.get("id_fluxo"), exc)
+        except Exception as exc:  # noqa: BLE001 — linha defeituosa é pulada, não derruba o lote
+            logger.warning(
+                "[fluxos] Erro ao montar FlowItem para id=%s: %s", r.get("id_fluxo"), exc
+            )
             continue
 
     return FlowListResponse(data=fluxos, total=len(fluxos))

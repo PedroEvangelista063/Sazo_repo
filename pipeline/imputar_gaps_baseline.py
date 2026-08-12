@@ -8,7 +8,7 @@ Estratégia:
   2. Gera grid completo de 12 meses por (produto, localidade)
   3. Interpola gaps de 1-2 meses com Polars .interpolate() + fill_null
   4. Calcula peso_confianca = meses_reais / 12
-  5. Upsert em staging.baseline_2025_interpolado
+  5. Upsert em staging.baseline_sazonal_interpolado
 
 Uso:
     python pipeline/imputar_gaps_baseline.py
@@ -19,7 +19,7 @@ Variáveis de ambiente:
 
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import polars as pl
@@ -54,10 +54,9 @@ def extrair_fact_2025() -> pl.DataFrame:
           AND f.preco_medio IS NOT NULL
         ORDER BY f.id_produto, f.id_localidade, f.mes
     """
-    with conn:
-        with conn.cursor() as cur:
-            cur.execute(query)
-            rows = cur.fetchall()
+    with conn, conn.cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
     conn.close()
 
     schema = {
@@ -154,12 +153,12 @@ def calcular_confianca(df: pl.DataFrame) -> pl.DataFrame:
 
 def upsert_baseline(df: pl.DataFrame) -> int:
     """
-    Escreve resultados em staging.baseline_2025_interpolado com UPSERT.
+    Escreve resultados em staging.baseline_sazonal_interpolado com UPSERT.
     Retorna número de linhas afetadas.
     """
     import psycopg2
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     rows = [
         (
             int(r["id_produto"]),
@@ -178,7 +177,7 @@ def upsert_baseline(df: pl.DataFrame) -> int:
         return 0
 
     sql = """
-        INSERT INTO staging.baseline_2025_interpolado
+        INSERT INTO staging.baseline_sazonal_interpolado
             (id_produto, id_localidade, media_interpolada,
              peso_confianca, qtd_meses_reais, qtd_meses_grid, calculado_em)
         VALUES %s
@@ -192,10 +191,9 @@ def upsert_baseline(df: pl.DataFrame) -> int:
 
     conn = psycopg2.connect(DATABASE_URL, options="-c timezone=UTC")
     try:
-        with conn:
-            with conn.cursor() as cur:
-                execute_values(cur, sql, rows, page_size=COPY_BATCH_SIZE)
-                affected = cur.rowcount
+        with conn, conn.cursor() as cur:
+            execute_values(cur, sql, rows, page_size=COPY_BATCH_SIZE)
+            affected = cur.rowcount
         return affected
     finally:
         conn.close()
@@ -237,7 +235,7 @@ def log_summary(df: pl.DataFrame):
 
 
 def main():
-    t0 = datetime.now()
+    t0 = datetime.now(UTC)
 
     print("[imputar_gaps_baseline] Extraindo fact_precos_mensais (ano=2025)...")
     df_raw = extrair_fact_2025()
@@ -259,11 +257,11 @@ def main():
 
     log_summary(df_result)
 
-    print("[imputar_gaps_baseline] Upsertindo em staging.baseline_2025_interpolado...")
+    print("[imputar_gaps_baseline] Upsertindo em staging.baseline_sazonal_interpolado...")
     affected = upsert_baseline(df_result)
     print(f"  Linhas afetadas: {affected}")
 
-    elapsed = (datetime.now() - t0).total_seconds()
+    elapsed = (datetime.now(UTC) - t0).total_seconds()
     print(f"\n[imputar_gaps_baseline] Concluído em {elapsed:.1f}s")
 
 

@@ -64,7 +64,11 @@
 | staging | FUNÇÃO     | `fn_classificar_preco_anomalia(...)`    | `classificar_preco_anomalia(...)`      | idem                                                                  | nenhuma                 |
 | staging | TRIGGER FN | `trg_valida_anomalia_preco()`           | `validar_anomalia_preco()`             | Trigger referencia função por OID — rename não quebra o trigger       | nenhuma                 |
 
-### ⚠️ FASE 2 — Requer script/atualização de código
+### ✅ FASE 2 — SUBCONJUNTO SEGURO APLICADO (2026-08-12, migration 81)
+
+> **Status (2026-08-12)**: a migration `81_fase2_subconjunto_seguro.sql` foi **APLICADA em LOCAL + AIVEN** (backups `backup_schema_81_pre_aiven_*`). Renomeou o subconjunto seguro aprovado pelo usuário: as **4 funções com zero referências em código vivo** (`fn_normalizar_nome_produto` → `normalizar_nome_produto`, `fn_estatisticas_volatilidade_24m` → `estatisticas_volatilidade_24m`, `fn_status_cor_zscore` → `calcular_semaforo_preco`, `fn_encontrar_produto_pai` → `encontrar_produto_pai`) + a tabela `staging.baseline_2025_interpolado` → `baseline_sazonal_interpolado` + a view `staging.vw_fluxos_regionais` → `vw_abastecimento_logistico`. **Todos os 7 corpos chamadores PL/pgSQL + 2 views do mart foram reescritos na mesma transação** (gerados do catálogo via `pg_get_functiondef` com substituição dirigida — fidelidade 100%). Wrappers (30 dias) + views de compat criados; **2ª execução no-op** (idempotente). Validado: MV 177.485, 0 nulo/CINZA, smoke PASS, endpoint `/fluxos` total=143. **Pendente (não aprovado)**: `raw.coleta_bruta`/`controle_carga` (8+ refs em código), cadeia sandwich (`fn_fator_sazonal_mensal`, `fn_preco_base_2026`, `fn_sandwich_historical_price`, `fn_status_cor_regra_15/25`), `sp_calcular_sazonalidade` (recriar `sp_executar_carga_completa`), `mart.fator_kg_produto_uf` — exigem recriação de procedures de produção.
+
+### ⚠️ FASE 2 — Requer script/atualização de código (RESTANTE)
 
 | Schema  | Tipo    | Nome Atual                           | Nome Proposto                   | Rationale                           | O que quebra (ajustar)                                                                                                   |
 | ------- | ------- | ------------------------------------ | ------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -149,7 +153,7 @@
 
 ## 4. Script SQL (Fase 1 — objetos ✅ Seguros)
 
-Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (**APLICADA em LOCAL + AIVEN em 2026-08-12**; ver o arquivo para o script completo). Fase 3: `database/fase3_drop_compat_77.sql` (agendado 2026-09-30, guard temporal).
+Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (**APLICADA em LOCAL + AIVEN em 2026-08-12**; ver o arquivo para o script completo). **Fase 2 (subconjunto seguro): `database/81_fase2_subconjunto_seguro.sql` — APLICADA em LOCAL + AIVEN em 2026-08-12** (4 funções + 1 tabela + 1 view; ver §Fase 2). Fase 3: `database/fase3_drop_compat_77.sql` (agendado 2026-09-30, guard temporal).
 
 **Requisitos atendidos:** transacional · idempotente (`IF EXISTS`/`NOT EXISTS`) · views de compat por objeto renomeado · `COMMENT ON` · `RAISE NOTICE` por renomeação · **não toca** MV, roles, `fact_precos_mensais` nem `sp_executar_carga_completa`.
 
@@ -198,7 +202,7 @@ Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (**APLICADA em 
 1. ✅ `\dt mart.*` legível por analista sem doc extra
 2. ✅ Relatório ad-hoc em < 15 min com `SELECT * FROM mart.<nome>`
 3. ⬜ `COMMENT ON` em 100% de `mart.*` e `staging.*` (hoje: **51% sem comentário**)
-4. ✅ Zero objetos com versão/ano hardcoded no nome (após Fases 1–2; `_2026`/`_24_25` restritos às colunas legadas até Fase 3)
+4. ✅ Zero objetos com versão/ano hardcoded no nome (após Fases 1–2; `_2026`/`_24_25` restritos às colunas legadas até Fase 3) — parcial: 1 dos 2 com ano hardcoded renomeado (`baseline_2025_interpolado` ✅; `fn_preco_base_2026` pendente na Fase 2 restante)
 5. ✅ Views descrevem **o que mostram**, não **como foram implementadas**
 6. ✅ `\df staging.*` explica o papel de cada função
 

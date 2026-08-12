@@ -159,13 +159,13 @@ async def run():
         print(f"  (tabela nao existe: {e})")
 
     # CHECK 9: Baseline 2025 coverage (tabela por produto/localidade, sem coluna ano)
-    print("\n[1.9] COBERTURA BASELINE 2025 (baseline_2025_interpolado)")
+    print("\n[1.9] COBERTURA BASELINE 2025 (baseline_sazonal_interpolado)")
     try:
         r = await conn.fetchrow("""
             SELECT COUNT(*) as total,
                    COUNT(DISTINCT id_produto) as produtos,
                    COUNT(DISTINCT id_localidade) as localidades
-            FROM staging.baseline_2025_interpolado
+            FROM staging.baseline_sazonal_interpolado
         """)
         print(
             f"  total: {r['total']} | produtos: {r['produtos']} | localidades: {r['localidades']}"

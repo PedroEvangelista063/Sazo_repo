@@ -36,6 +36,11 @@ Kit de queries e scripts **read-only** para o DBA monitorar o PostgreSQL local (
 ./conectar_dba.sh -f 01_health_visao_geral.sql # arquivo inteiro
 ```
 
+## Mudanças Recentes (2026-08-12)
+
+- **Migration 80 (V23) APLICADA** em LOCAL e AIVEN (2026-08-12) — piso 2023+ ativo (0 âncoras `ano_referencia < 2023`; `min(ano_referencia)` set–dez 2026 = 2023; MV 177.485).
+- ⚠️ **Marcador antigo do V23 quebrado**: `position('YEAR FROM CURRENT_DATE' in definition)` retorna 0 mesmo com V23 aplicada (deparser normaliza para `EXTRACT(year FROM CURRENT_DATE)` — case-sensitive). **Validar por funcional**: `SELECT count(*) ... WHERE tipo_dado='FALLBACK_DIMENSAO' AND ano_referencia < 2023` → 0. Ver `docs/runbook_migration_80_local.md` §5.
+
 ## Mudanças Recentes (2026-08-11)
 
 O kit foi validado contra o banco em 2026-08-06 e **continua válido para monitorar o estado atual**. Estado real validado em 2026-08-11 (LOCAL e REMOTO/Aiven idênticos):

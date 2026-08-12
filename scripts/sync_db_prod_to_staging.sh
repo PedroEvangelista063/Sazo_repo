@@ -186,7 +186,7 @@ EXCLUDE_SCHEMAS=(
     --exclude-schema='pgsodium' --exclude-schema='vault' --exclude-schema='extensions'
     --exclude-schema='graphql' --exclude-schema='graphql_public'
     --exclude-schema='pgbouncer' --exclude-schema='pgsodium_masks'
-    --exclude-schema='raw' --exclude-schema='ops'
+    --exclude-schema='raw' --exclude-schema='ops' --exclude-schema='audit'
 )
 
 if $DO_DUMP; then
@@ -203,7 +203,8 @@ if $DO_DUMP; then
             echo -e "${RED}❌ Falha no dump de schema.${NC}"; exit 1; }
 
     BUILD_EXCLUDE=""
-    for tbl in ops.audit_logs ops.audit_llm_queries ops.quarentena_coleta ops.config_agente raw.coleta_bruta; do
+    for tbl in ops.audit_logs ops.audit_llm_queries ops.quarentena_coleta ops.config_agente \
+               audit.mv_refresh_log raw.coleta_bruta; do
         BUILD_EXCLUDE+=" --exclude-table-data=${tbl}"
     done
     # shellcheck disable=SC2086
@@ -263,15 +264,37 @@ else
         >/dev/null 2>&1 || { echo -e "${RED}❌ Falha no DROP dos schemas do destino.${NC}"; exit 1; }
 fi
 
-echo -e "  ${YELLOW}Aplicando schema (DDL)...${NC}"
-psql "$STAGING_URL" -v ON_ERROR_STOP=1 -f "$SCHEMA_FILE" >/dev/null 2>&1 || {
-    echo -e "${RED}❌ Falha ao aplicar schema no destino.${NC}"; exit 1; }
+# Event trigger ensure_rls bloqueia o DROP --clean da sua função
+# (public.rls_auto_enable — dependência normal). Remove-o ANTES do restore:
+# o dump recria função + event trigger na ordem correta (quirks conhecidos
+# de pg_restore). Se o nome mudar no futuro, esta linha é o único ajuste.
+psql "$STAGING_URL" -c "DROP EVENT TRIGGER IF EXISTS ensure_rls;" >/dev/null 2>&1 || true
 
-echo -e "  ${YELLOW}Restaurando dados...${NC}"
+# Schema + dados num ÚNICO pg_restore --clean --if-exists (o dump custom
+# contém ambos). O --clean derruba objetos já existentes no destino (ex.:
+# funções public.*) e os recria a partir da produção; schemas excluídos
+# (ops/raw/audit) não estão no dump e permanecem intactos no destino.
+# Sem --jobs: com --clean a ordem drop/create precisa ser determinística.
+echo -e "  ${YELLOW}Restaurando schema + dados (pg_restore --clean)...${NC}"
+RESTORE_LOG=$(mktemp)
 pg_restore --dbname="$STAGING_URL" --format=custom --no-owner --no-acl \
-    --clean --if-exists --jobs="$(nproc 2>/dev/null || echo 2)" \
-    "$DATA_FILE" >/dev/null 2>&1 || {
-        echo -e "${YELLOW}⚠️  pg_restore terminou com avisos (comuns: objetos já existentes). Verifique contagens na validação.${NC}"; }
+    --clean --if-exists \
+    "$DATA_FILE" >"$RESTORE_LOG" 2>&1
+rc=$?
+if [ $rc -ne 0 ]; then
+    echo -e "${YELLOW}⚠️  pg_restore exit=$rc. Erros relevantes:${NC}"
+    # pg_restore prefixa erros com "pg_restore: error:" (minúsculo);
+    # 'already exists' é quase sempre benigno com --clean, mas a contagem é
+    # logada para não mascarar conflito real (DROP silenciosamente falho).
+    BENIGN=$(grep -icE 'already exists' "$RESTORE_LOG" || true)
+    grep -iE 'error:' "$RESTORE_LOG" | grep -viE 'does not exist|no matching|already exists' \
+        | head -15 || true
+    [ "${BENIGN:-0}" -gt 0 ] && echo -e "${YELLOW}⚠️  ($BENIGN erros benignos 'already exists' — esperados com --clean)${NC}"
+    rm -f "$RESTORE_LOG"
+    echo -e "${RED}❌ pg_restore falhou — valide e reexecute o sync.${NC}"
+    exit 1
+fi
+rm -f "$RESTORE_LOG"
 
 if $REFRESH_MV; then
     echo -e "  ${YELLOW}REFRESH MV (destino)...${NC}"

@@ -74,6 +74,13 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 - **Frontend**: claymorphism UI completo + A2HS + paginação híbrida (`42f315b3`), fixes do manifest PWA, e lote não commitado — círculos claymorphism na grade sazonal, remoção do (i), abas Cards→Mapa→Tabela e fix do sticky do acordeão (overflow-clip + top-[7.5rem]). Ver `frontend/summary.md`.
 - **query_DBA**: kit validado para o estado atual — MV **V22 aplicada** (177.485 linhas), V23 pendente; `07_migrations.sql` removido (legado Supabase) — ver `query_DBA/summary.md`.
 
+## Mudanças Recentes (2026-08-12, follow-ups)
+
+- **Migration 80 (V23) APLICADA nos 2 bancos** (local + Aiven) com backup + validação funcional: 0 âncoras FALLBACK < 2023, `min(ano_referencia)` set–dez 2026 = 2023, MV 177.485, 0 nulo/CINZA. Correção de marcador: `position('YEAR FROM CURRENT_DATE')` é case-sensitive quebrado (deparser normaliza) — validar por funcional. Runbook dedicado: `docs/runbook_migration_80_local.md`.
+- **Sync Produção ➔ Homologação executado** (`scripts/sync_db_prod_to_staging.sh`): local espelha o Aiven (fact 245.362, MV 177.485, sazonalidade 346.961), `ops.*`/`raw.*` preservados; restore reescrito para **um único `pg_restore --clean --if-exists`** (psql schema conflitava com schemas preservados) + exclusão de `audit` do dump + pre-drop do event trigger `ensure_rls` (legado Supabase, ausente no Aiven — local agora idêntico ao Aiven).
+- **Fast-path no guardião do commit** (`scripts/guard_commit.sh`): só docs/JSON/yml staged → smoke pulado; sem TS/TSX staged → tsc pulado (commit de docs libera instantâneo).
+- **Migration 77 (nomenclatura)**: revisada → **HOLD** com evidência (trigger `trg_valida_anomalia_preco` chama `fn_classificar_preco_anomalia` por nome; a 77 não cria wrapper de funções). Correção proposta: wrappers de 30 dias também para funções chamadas em runtime.
+
 ## Arquitetura de Ambientes e CI/CD
 
 > FASE 2–6 (2026-08-12) — ver documento completo: `docs/ARQUITETURA_AMBIENTES_CI_CD.md`

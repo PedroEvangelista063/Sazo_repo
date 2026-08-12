@@ -110,7 +110,13 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
-## Mudanças Recentes (2026-08-12)
+## Mudanças Recentes (2026-08-12, follow-ups)
+
+### Migration 80 (V23) aplicada + sync Prod→Homologação + revisão da 77
+
+- **Migration 80 (V23, janela 2023+) APLICADA nos DOIS bancos** (local + Aiven, 2026-08-12) com backups `backup_*_80_pre_*`; validada funcionalmente: 0 âncoras FALLBACK `ano_referencia < 2023`, `min(ano_referencia)` set–dez 2026 = 2023, MV 177.485 linhas, 0 `status_cor` nulo/CINZA. `CREATE ... WITH DATA` já popula — refresh redundante.
+- **Sync Produção ➔ Homologação** executado: local espelha o Aiven (V23) — `ops.*`/`raw.*` preservados; event trigger `ensure_rls` (legado Supabase, ausente no Aiven) removido do local = topologia idêntica ao Aiven.
+- **Migration 77 (nomenclatura DBA-friendly): DECISÃO HOLD** — defeito: `staging.trg_valida_anomalia_preco` chama `staging.fn_classificar_preco_anomalia` por nome no corpo (58:320); a 77 renomeia ambas sem wrapper de compatibilidade → trigger quebraria em runtime. Correção proposta: wrappers de 30 dias para funções chamadas em runtime (padrão das views temporárias).
 
 ### Dual-Environment (FASE 2/4) — banco de homologação e sync de dados
 

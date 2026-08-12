@@ -111,6 +111,23 @@ Vercel/Render):
 1. Guardião do commit (typecheck + smoke);
 2. **Suíte de testes integrados**: `pytest backend/tests` + `vitest` (frontend).
 
+### 3.2.1 Fast-path (evita atrito em commits que não tocam código)
+
+O `guard_commit.sh` detecta o **escopo dos arquivos STAGED** (o commit é
+definido pelo index; o lint-staged re-stage os fixes antes do guard):
+
+- Só `*.md`/`*.json`/`*.yml`/READMEs/`.gitignore` staged → **smoke pulado**;
+- Nenhum `*.ts`/`*.tsx` do frontend staged → **tsc pulado**;
+- Qualquer arquivo de código staged (`.py`, `.sh`, `.ts`, `.tsx`, `.sql`, …)
+  → guard completo (tsc + smoke + testes no push).
+
+```
+# commit só de docs → libera instantâneo:
+[guarda] fast-path: sem código TS/TSX alterado — tsc pulado.
+[guarda] fast-path: só docs/JSON/yml mudaram — smoke de homologação pulado.
+[guarda] ✓ PORTÃO ABERTO — commit liberado.
+```
+
 ### 3.3 Bypasses de emergência (documentados — usar com critério)
 
 ```bash
@@ -151,9 +168,13 @@ npm run db:sync:staging            # ou: bash scripts/sync_db_prod_to_staging.sh
 
 **Segurança Zero-Waste:**
 
-- **Nunca toca em `ops.*`** (ex.: `ops.config_agente`, auditoria) nem em
-  `raw.*` (landing zone) do destino — usuários/senhas/configurações locais
-  preservados;
+- **Nunca toca em `ops.*`** (ex.: `ops.config_agente`, auditoria), **`raw.*`**
+  (landing zone) nem **`audit.*`** (runtime log) do destino — usuários/
+  senhas/configurações locais preservados;
+- **Restore = um único `pg_restore --clean --if-exists`** (o dump custom contém
+  schema+dados): recria o que existe no destino a partir da produção (ex.:
+  funções `public.*`) e remove objetos que não existem na produção (ex.:
+  event trigger `ensure_rls`, legado Supabase — ver `docs/HANDOFF_MIGRACAO_AIVEN.md`);
 - **Recusa sobrescrever um destino que não seja local/físico** (host !=
   localhost → aborta; use `--force` só com consciência);
 - `--dry-run` valida conectividade e imprime o plano completo sem alterar nada.

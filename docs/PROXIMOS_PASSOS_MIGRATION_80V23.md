@@ -9,15 +9,15 @@
 
 A migration **80 (V23)** está **commitada no repositório, mas NÃO aplicada em nenhum banco** (validado em 2026-08-11 em LOCAL `localhost:5432` e REMOTO/Aiven `sazo-db001-pedroedu0-a833.h.aivencloud.com:26536`). As migrations 78 (V22, Deep Fallback) e 79 (BR inclui projeção) **já estão aplicadas** nos dois bancos.
 
-**O que falta (checklist de 1 linha):**
+**Checklist (status em 2026-08-12):**
 
-| #   | Item                                                                                        | Status      |
-| --- | ------------------------------------------------------------------------------------------- | ----------- |
-| 1   | Aplicar `database/80_mv_fallback_janela_2023.sql` no banco **LOCAL**                        | ⏳ pendente |
-| 2   | Aplicar a mesma migration no **AIVEN (PRIMARY)**                                            | ⏳ pendente |
-| 3   | Validar o piso 2023+ na definição real da MV (local + remoto)                               | ⏳ pendente |
-| 4   | Purge de cache da API após o refresh (para o frontend ver a V23)                            | ⏳ pendente |
-| 5   | (Recomendado) Criar runbook dedicado da 80 ou estender `docs/runbook_migration_78_local.md` | ⏳ pendente |
+| #   | Item                                                                                        | Status                                    |
+| --- | ------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| 1   | Aplicar `database/80_mv_fallback_janela_2023.sql` no banco **LOCAL**                        | ✅ aplicada                               |
+| 2   | Aplicar a mesma migration no **AIVEN (PRIMARY)**                                            | ✅ aplicada                               |
+| 3   | Validar o piso 2023+ (funcional) local + remoto                                             | ✅ validado                               |
+| 4   | Purge de cache da API após o refresh (para o frontend ver a V23)                            | ✅ backend in-memory (ver nota seção 3.6) |
+| 5   | (Recomendado) Criar runbook dedicado da 80 ou estender `docs/runbook_migration_78_local.md` | ✅ `docs/runbook_migration_80_local.md`   |
 
 ---
 
@@ -159,6 +159,36 @@ bash query_DBA/conectar_dba.sh "SELECT position('YEAR FROM CURRENT_DATE' in defi
 
 ---
 
-## 6. Conclusão
+## 6. Resultado da aplicação (2026-08-12)
+
+Migration 80 **aplicada e validada nos DOIS bancos** seguindo o checklist 3.2–3.8 (backups `backup_*_80_pre_*` em `database/backups/`; checksum `2c5eb33f…7e6a` confere). Validação **funcional** (a correta):
+
+| Checagem                                     | LOCAL   | AIVEN   |
+| -------------------------------------------- | ------- | ------- |
+| Âncoras FALLBACK `ano_referencia < 2023`     | **0**   | **0**   |
+| `min(ano_referencia)` projeções set–dez 2026 | 2023    | 2023    |
+| `status_cor` nulo/CINZA                      | 0       | 0       |
+| MV count                                     | 177.485 | 177.485 |
+
+> ⚠️ **Correção de marcador**: `position('YEAR FROM CURRENT_DATE' in definition)`
+> retorna 0 mesmo com V23 aplicada — o deparser normaliza para `EXTRACT(year
+FROM CURRENT_DATE)` (case-sensitive quebrado). **Usar a validação funcional**
+> (âncoras < 2023 = 0) — documentado no `docs/runbook_migration_80_local.md` §5.
+
+Pós-aplicação: **sync Produção ➔ Homologação executado** (`scripts/sync_db_prod_to_staging.sh`)
+— local espelha o Aiven (MV V23, fact 245.362, sazonalidade 346.961) com
+`ops.*`/`raw.*` preservados; smoke do guard PASS pós-sync.
+
+---
+
+## 7. Conclusão
 
 A pendência crítica é **uma**: aplicar a migration 80 nos dois bancos (LOCAL + AIVEN) e validar o piso 2023+. As demais pendências são documentais (runbook da 80) ou de governança (migration 77 aguardando aprovação). Nenhuma mudança de código é necessária — o backend já está alinhado (fn de 5 args + mensagens V22 em produção).
+
+---
+
+## 8. Próximos passos sugeridos (follow-ups)
+
+- [x] **Aplicar a migration 80 (V23)** seguindo o checklist deste relatório (seções 3.2–3.7) — banco **local** e **Aiven**, com backup + validação do piso 2023+ e purge de cache da API. **FEITO em 2026-08-12** (ver seção 6).
+- [x] **Criar `docs/runbook_migration_80_local.md`** seguindo o padrão do runbook da 78 (backup, DDL, refresh, validação, rollback). **FEITO** (inclui gotchas: marcador case-sensitive, CREATE WITH DATA no Aiven free).
+- [x] **Revisar a migration 77** (nomenclatura DBA-friendly) — **DECISÃO: NÃO aplicar como está** (HOLD). **Evidência**: `staging.trg_valida_anomalia_preco` chama `staging.fn_classificar_preco_anomalia(...)` **por nome no corpo** (def de `58_hotfix_pipeline_outliers.sql:320,381,387`); a 77 renomeia as DUAS funções sem criar wrapper de compatibilidade (só tabelas/views ganham views temporárias de 30 dias) → o trigger quebraria em runtime no próximo INSERT em `fact_precos_mensais`. **Correção proposta**: adicionar wrappers de 30 dias também para as funções chamadas em runtime (`fn_classificar_preco_anomalia`, `fn_calcular_status_cor_por_preco`, `_parse_conab_price`, `_gerar_batch_id`) replicando o padrão das views — após isso, aplicar local primeiro (gate de homologação) e só então Aiven com backup.

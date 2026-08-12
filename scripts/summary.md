@@ -6,7 +6,12 @@
 
 Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Quero Comprar VG.
 
-## Mudanças Recentes (2026-08-12)
+## Mudanças Recentes (2026-08-12, follow-ups)
+
+### Fast-path do guard + sync executado (com fixes reais)
+
+- `guard_commit.sh` — **fast-path**: commit só com docs/JSON/yml staged → smoke pulado; sem TS/TSX staged → tsc pulado (escopo = arquivos STAGED, pois o lint-staged re-stage antes do guard).
+- `sync_db_prod_to_staging.sh` — **executado com sucesso** após 3 fixes reais de produção: (1) restore reescrito para **um único `pg_restore --clean --if-exists`** (o psql do schema conflitava com schemas preservados — `audit` já existia; `public.fn_*` plain CREATE conflitavam); (2) schema `audit` adicionado ao `--exclude-schema` (runtime log local); (3) pre-drop do event trigger **`ensure_rls`** (nome real — não `rls_auto_enable`) antes do restore, e filtro de erro do pg_restore corrigido para `pg_restore: error:` (minúsculo). Resultado pós-sync: local idêntico ao Aiven (MV V23), `ops.config_agente` preservado (8), smoke PASS.
 
 ### Guardiões do Git + DB Sync CLI (FASE 3/4 — Dual-Environment)
 

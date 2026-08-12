@@ -79,6 +79,14 @@ A aba "Mapa Regional" implementa:
   - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-08-12)
+
+### Dual-Environment (FASE 2) — modos Vite por ambiente
+
+- `package.json` — scripts `dev:staging` (`vite --mode staging`) e `dev:production` (`vite --mode production`) carregam `frontend/.env.staging`/`.env.production` (VITE_API_URL).
+- `.env.example` (novo, versionado) documenta os modos; `.env.staging`/`.env.production` são gitignored.
+- **Dependência dos Git Hooks**: `tsc --noEmit` roda em TODO commit (`.husky/pre-commit` → `scripts/guard_commit.sh`) e `vitest` roda em TODO push (`.husky/pre-push` → `scripts/guard_push.sh`) — código com erro de tipagem/teste NÃO passa do ambiente físico.
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Grade Sazonal — Círculos Claymorphism + remoção do (i) (não commitado)

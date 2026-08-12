@@ -1,1 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+# ── Guardião do Portão (FASE 3 — Dual-Environment) ────────────────────────
+# 1) lint-staged: ruff + prettier apenas nos arquivos staged (rápido)
+# 2) guard_commit.sh: typecheck (tsc --noEmit) + smoke de homologação
+#    (backend /health + /br-sazonalidade sem 500 e sem CINZA/null)
+#
+# Bypass de emergência: SKIP_TSC=1 / SKIP_STAGING_SMOKE=1 (ver docs).
 npx lint-staged
+bash scripts/guard_commit.sh

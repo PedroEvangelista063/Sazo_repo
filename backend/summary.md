@@ -35,6 +35,16 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 
 **Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
 
+## Mudanças Recentes (2026-08-12)
+
+### Dual-Environment (FASE 2) — APP_ENV, pool dinâmico e banner de startup
+
+- `app/core/config.py` — `Settings` ganhou `app_env` (`staging` | `production`, lido do OS environment), resolução dinâmica do `.env` (`backend/.env.<app_env>` → `.env.staging` → `.env`), pool autotunado por ambiente (`effective_pool_min_size`/`effective_pool_max_size`; staging máx. 30, production máx. 8 com teto 10) e rótulos `environment_label`/`database_target_label` (FÍSICO/AIVEN derivado do hostname real da URL primária).
+- `app/db/session.py` — `_pool_params` passou a usar `effective_pool_*` (mantém failover primary/fallback intacto).
+- `app/main.py` — banner visível no startup: `[!] INICIANDO SISTEMA NO AMBIENTE DE: {STAGING|PRODUCTION} — CONECTADO AO BANCO: {FÍSICO|AIVEN} (MODO ATIVO: ...)`.
+- **Dependência dos Git Hooks**: commits/pushes neste repositório rodam `scripts/guard_commit.sh`/`guard_push.sh` (tsc, smoke de homologação `scripts/smoke_staging.sh`, pytest) — qualquer falha de tipagem/banco BLOQUEIA o commit. Bypass documentado via `SKIP_*` (ver `docs/ARQUITETURA_AMBIENTES_CI_CD.md`).
+- `tests/test_ambiente_config.py` (novo) — 8 testes de APP_ENV/pool/env file; `tests/test_transparencia_dado_historico.py` — fragmento da mensagem FALLBACK_DIMENSAO atualizado para "baseline de dimensao" (V22).
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Memoização do X-Last-Refresh + Mensagens V22 (245c4155)

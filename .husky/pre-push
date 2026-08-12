@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+# ── Garantia Final (FASE 3 — Dual-Environment) ─────────────────────────────
+# Nada chega ao remoto (GitHub → Vercel/Render) sem:
+#   typecheck + smoke de homologação + suíte de testes (pytest + vitest).
+#
+# Bypass de emergência: SKIP_PUSH_TESTS=1 (ver docs/ARQUITETURA_AMBIENTES_CI_CD.md).
+bash scripts/guard_push.sh

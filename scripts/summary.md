@@ -6,6 +6,16 @@
 
 Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Quero Comprar VG.
 
+## Mudanças Recentes (2026-08-12)
+
+### Guardiões do Git + DB Sync CLI (FASE 3/4 — Dual-Environment)
+
+- `guard_commit.sh` (novo) — guardião do pre-commit: `tsc --noEmit` + smoke de homologação.
+- `smoke_staging.sh` (novo) — smoke: backend `/health` (sobe uvicorn temporário se offline), `/br-sazonalidade` sem 500 e sem `status_cor` nulo/CINZA (NO GRAY/NO NULL).
+- `guard_push.sh` (novo) — garantia final do pre-push: guard_commit + pytest (backend) + vitest (frontend).
+- `sync_db_prod_to_staging.sh` (novo) — Produção (Aiven) ➔ Homologação (físico/local): dump seletivo (exclui `ops.*`/`raw.*`), `--dry-run`, `--truncate-only`, `--no-dump`, `--refresh-mv`, `--force`; recusa destino não-local.
+- Hooks `.husky/pre-commit` (atualizado) e `.husky/pre-push` (novo) chamam os guards. Bypasses: `SKIP_TSC`, `SKIP_STAGING_SMOKE`, `SKIP_PUSH_TESTS`, `SKIP_GUARD_COMMIT/PUSH`.
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Nenhuma mudança neste lote

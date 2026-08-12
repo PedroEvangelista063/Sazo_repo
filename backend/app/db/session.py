@@ -109,9 +109,12 @@ async def _create_verified_pool(
 
 
 def _pool_params(kind: str) -> tuple[int, int]:
+    # FASE 2 (Dual-Environment): pool autotunado por APP_ENV via Settings.
+    #   staging: pool folgado (padrão máx. 30) p/ testes de carga no físico;
+    #   production: pool estrito (padrão máx. 8) p/ Aiven free/basic.
     s = get_settings()
-    max_c = min(s.pool_max_size, 50)
-    min_c = min(s.pool_min_size, max_c // 2)
+    max_c = s.effective_pool_max_size
+    min_c = max(1, min(s.effective_pool_min_size, max_c // 2))
     return max_c, min_c
 
 

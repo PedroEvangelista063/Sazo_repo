@@ -73,6 +73,17 @@ async def lifespan(app: FastAPI):
     await _connect_pool_with_retry(get_etl_pool, "etl")
 
     mode = get_active_mode()
+    # FASE 2 (Dual-Environment): banner visível no terminal deixando explícita
+    # a fronteira entre o servidor físico (homologação) e a nuvem (Aiven).
+    # logger.warning garante visibilidade mesmo com nível INFO configurado.
+    logger.warning(
+        "[!] INICIANDO SISTEMA NO AMBIENTE DE: %s — CONECTADO AO BANCO: %s "
+        "(MODO ATIVO: %s, APP_ENV=%s)",
+        settings.environment_label,
+        settings.database_target_label,
+        mode,
+        settings.app_env,
+    )
     if mode == "fallback":
         logger.info("Banco ativo: fallback (local)")
         # Garante o schema mínimo no banco local (bootstrap no máximo 1x/processo).

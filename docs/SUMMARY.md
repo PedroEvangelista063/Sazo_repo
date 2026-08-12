@@ -74,6 +74,21 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 - **Frontend**: claymorphism UI completo + A2HS + paginação híbrida (`42f315b3`), fixes do manifest PWA, e lote não commitado — círculos claymorphism na grade sazonal, remoção do (i), abas Cards→Mapa→Tabela e fix do sticky do acordeão (overflow-clip + top-[7.5rem]). Ver `frontend/summary.md`.
 - **query_DBA**: kit validado para o estado atual — MV **V22 aplicada** (177.485 linhas), V23 pendente; `07_migrations.sql` removido (legado Supabase) — ver `query_DBA/summary.md`.
 
+## Arquitetura de Ambientes e CI/CD
+
+> FASE 2–6 (2026-08-12) — ver documento completo: `docs/ARQUITETURA_AMBIENTES_CI_CD.md`
+
+Separação estrita entre **Homologação (servidor FÍSICO/local)** e **Produção (nuvem Aiven)** com fail-fast via Git Hooks:
+
+- **Fronteira = `APP_ENV`** (`staging` | `production`): o backend (pydantic-settings, `backend/app/core/config.py`) carrega `backend/.env.staging` ou `backend/.env.production` dinamicamente; fallback para `backend/.env` legado.
+- **Pool dinâmico**: staging min 2/max 30 (testes de carga); production min 2/max 8 com teto 10 (Aiven free/basic). `POOL_*` explícito vence o autotuning (`backend/app/db/session.py`).
+- **Banner de startup** no lifespan (`backend/app/main.py`): `[!] INICIANDO SISTEMA NO AMBIENTE DE: {STAGING|PRODUCTION} — CONECTADO AO BANCO: {FÍSICO|AIVEN}` (rótulo derivado do hostname real da URL primária).
+- **Guardiões do Git**: `.husky/pre-commit` → `lint-staged` + `scripts/guard_commit.sh` (tsc --noEmit + `scripts/smoke_staging.sh`: /health + /br-sazonalidade sem 500 e sem status_cor null/CINZA); `.husky/pre-push` → `scripts/guard_push.sh` (+ pytest backend/tests + vitest frontend). Bypasses: `SKIP_TSC`, `SKIP_STAGING_SMOKE`, `SKIP_PUSH_TESTS`, `SKIP_GUARD_COMMIT/PUSH`.
+- **DB Sync CLI**: `scripts/sync_db_prod_to_staging.sh` (Produção ➔ Homologação) com `--dry-run`, proteção de `ops.*`/`raw.*` no destino e recusa de destino não-local (npm: `db:sync:staging` / `db:sync:staging:dry`).
+- **Frontend**: modos Vite `dev:staging`/`dev:production` carregam `frontend/.env.staging`/`.env.production` (VITE_API_URL).
+- **Regra de Ouro mantida**: NO GRAY / NO NULL — o smoke valida `0 status_cor nulo/CINZA` na grade a cada commit; Deep Fallback V22/V23 intacto.
+- **Arquivos**: `.gitignore` ganhou `.env.staging`/`.env.production`; `render.yaml` declara `APP_ENV=production`; `backend/.env.example` reescrito (seções staging/production).
+
 ## Forecast — Engine Preditiva (Fase 30, 100% SQL)
 
 - `database/26_forecast_baseline.sql` — migration original: baseline + is_forecast + MV V13

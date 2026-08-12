@@ -110,6 +110,13 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
+## Mudanças Recentes (2026-08-12)
+
+### Dual-Environment (FASE 2/4) — banco de homologação e sync de dados
+
+- **Dependência dos Git Hooks**: o smoke de homologação (`scripts/smoke_staging.sh`, rodado no pre-commit) valida `/br-sazonalidade` sem HTTP 500 e com **0 status_cor nulo/CINZA** — a Regra de Ouro NO GRAY/NO NULL do Deep Fallback V22/V23 virou gate de commit.
+- `scripts/sync_db_prod_to_staging.sh` (novo) — Produção (Aiven) ➔ Homologação (local) com `--dry-run`, preservando `ops.*` (ex.: `ops.config_agente`) e `raw.*` no destino; recusa destino não-local. NPM: `db:sync:staging` / `db:sync:staging:dry`.
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Deep Fallback Histórico — MV V22 (78_deep_fallback_historico.sql)

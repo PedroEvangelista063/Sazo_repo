@@ -17,6 +17,10 @@ services:
     buildCommand: pip install -r backend/requirements.txt
     startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      # ── Fronteira de ambiente (FASE 2) ───────────────────────
+      # PRODUCTION força pool estrito + logs WARNING/ERROR + banner AIVEN.
+      - key: APP_ENV
+        value: "production"
       # ── Aiven PostgreSQL (única fonte da verdade) ─────────────
       # Conexão do Aiven: postgresql://USER:PASS@HOST:26536/defaultdb?sslmode=require
       # Preencher no dashboard do Render (não usar banco interno do Render).

@@ -43,6 +43,11 @@
     "db:backup:restore": "bash scripts/sync_db_remote_to_local.sh --restore",
     "db:backup:schema": "bash scripts/sync_db_remote_to_local.sh --schema-only",
     "db:backup:data": "bash scripts/sync_db_remote_to_local.sh --data-only",
+    "db:sync:staging": "bash scripts/sync_db_prod_to_staging.sh",
+    "db:sync:staging:dry": "bash scripts/sync_db_prod_to_staging.sh --dry-run",
+    "guard:commit": "bash scripts/guard_commit.sh",
+    "guard:push": "bash scripts/guard_push.sh",
+    "smoke:staging": "bash scripts/smoke_staging.sh",
     "db:test:local": "DATABASE_URL=$DATABASE_URL_LOCAL_BACKUP python -m pytest tests/ -v",
     "db:test:remote": "DATABASE_URL=$DATABASE_URL python -m pytest tests/ -v"
   }

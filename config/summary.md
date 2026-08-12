@@ -25,6 +25,13 @@ JSON puro, sem schema validation runtime (consumido via `json.load()` no pipelin
 - `flows.json` — 166 fluxos de abastecimento entre UFs (v2.0). Todas as 27 UFs aparecem como origem E destino com dados reais de CEASA/CONAB. Estrutura: `{id, item, categoria, origem_uf, origem_polo, destino_uf, destino_regiao_id, meses, sazonalidade, preco_referencial, cor_indicadora, tipo("exportado"/"importado"/"autossuficiente"), ano_referencia}`. Consumido por `BrasilMap.tsx` para desenhar arcos de recebimento (azul) e envio (verde) por UF.
 - `flows.json` — o tipo `autossuficiente` representa produção local (origem_uf == destino_uf, ex.: Carne Bovina TO→TO). Na UI, aparece como painel "Produção local" no `RegiaoPanel`, sem arco de Recebe/Envia.
 
+## Mudanças Recentes (2026-08-12)
+
+### Dual-Environment (FASE 2) — .gitignore
+
+- `.gitignore` ganhou `.env.staging`/`.env.production` (backend/frontend) — segredos por ambiente NUNCA são versionados; apenas `.env.example` é commitado.
+- **Dependência dos Git Hooks**: o guardião do commit valida typecheck + smoke a cada commit — mudanças de configuração que quebrem o backend bloqueiam o commit (ver `docs/ARQUITETURA_AMBIENTES_CI_CD.md`).
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Nenhuma mudança neste lote

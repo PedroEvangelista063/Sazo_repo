@@ -149,7 +149,7 @@
 
 ## 4. Script SQL (Fase 1 — objetos ✅ Seguros)
 
-Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (draft, ver o arquivo para o script completo).
+Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (**APLICADA em LOCAL + AIVEN em 2026-08-12**; ver o arquivo para o script completo). Fase 3: `database/fase3_drop_compat_77.sql` (agendado 2026-09-30, guard temporal).
 
 **Requisitos atendidos:** transacional · idempotente (`IF EXISTS`/`NOT EXISTS`) · views de compat por objeto renomeado · `COMMENT ON` · `RAISE NOTICE` por renomeação · **não toca** MV, roles, `fact_precos_mensais` nem `sp_executar_carga_completa`.
 
@@ -183,12 +183,13 @@ Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (draft, ver o a
 
 ### Fase 3 — Semana 4 (3–4 h) — limpeza
 
-1. **Atualizar os corpos chamadores ANTES do drop dos wrappers de função**: a trigger function `validar_anomalia_preco` (ex-`trg_valida_anomalia_preco`) ainda chama `fn_classificar_preco_anomalia` por nome, e `consolidar_produtos_duplicados`/sua chamadora ainda chamam `fn_relatorio_normalizacao` — reescrever esses corpos (CREATE OR REPLACE) apontando para os nomes novos. **Sem isso, dropar os wrappers (2026-09-30) quebra o trigger em runtime de novo.**
-2. DROP das views de compat da Fase 1 e dos **wrappers de função do BLOCO 4.5** (após 2026-09-30 e `rg` provar zero referências, exceto os corpos atualizados no passo 1).
-3. DROP dos legados: `fn_importar_fluxos_json`, `fato_cotacao_regional`, `test_show_timeout*`, `sp_calcular_forecast_2026` (duplicata).
-4. Colunas ⚠️ (opcional, alta cautela): `preco_medio`/`fonte`/`is_forecast`/`calculado_em` em `sazonalidade_produto` + **redefinição da MV** em manutenção; typo `classificao_produto` com alias Pydantic em `responses.py:260`.
-5. `COMMENT ON` em 100% de `mart.*` e `staging.*`; verificação final `rg` dos nomes antigos = zero no codebase.
-6. Commit final + tag de versão de schema (ex.: `schema-v21`).
+> **Status (2026-08-12)**: os corpos chamadores JÁ foram atualizados para os nomes novos no **BLOCO 4.6 da própria 77** (validar_anomalia_preco → classificar_preco_anomalia; consolidar_produtos_duplicados → relatorio_normalizacao_produtos) — os wrappers são puramente vestigiais e a Fase 3 é segura sem pré-requisito de código.
+
+1. **Executar `database/fase3_drop_compat_77.sql` (AGENDADO 2026-09-30)**: DROP dos 9 wrappers de função (BLOCO 4.5) + 6 views de compat (BLOCO 5). O script tem **guard temporal** (aborta antes de 2026-09-30 — validado: hoje aborta com mensagem clara), validação pré-drop (nomes novos presentes) e verificação pós-drop (0 wrappers restantes).
+2. DROP dos legados: `fn_importar_fluxos_json`, `fato_cotacao_regional`, `test_show_timeout*`, `sp_calcular_forecast_2026` (duplicata).
+3. Colunas ⚠️ (opcional, alta cautela): `preco_medio`/`fonte`/`is_forecast`/`calculado_em` em `sazonalidade_produto` + **redefinição da MV** em manutenção; typo `classificao_produto` com alias Pydantic em `responses.py:260`.
+4. `COMMENT ON` em 100% de `mart.*` e `staging.*`; verificação final `rg` dos nomes antigos = zero no codebase.
+5. Commit final + tag de versão de schema (ex.: `schema-v21`).
 
 ---
 

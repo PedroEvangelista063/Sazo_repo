@@ -162,17 +162,15 @@ END $$;
 --
 -- Idempotência: CREATE OR REPLACE — reexecução é segura.
 --
--- ⚠️ LIMITAÇÃO/PRÉ-REQUISITO DO DROP (2026-09-30): os wrappers NÃO
--- reescrevem o corpo dos chamadores — validar_anomalia_preco (ex-trigger)
--- continua chamando fn_classificar_preco_anomalia por nome, e
--- fn_consolidar_produtos_duplicados continua chamando fn_relatorio_normalizacao.
--- ANTES de dropar os wrappers na Fase 3, atualizar os corpos chamadores para
--- os nomes novos (CREATE OR REPLACE) — senão o trigger volta a quebrar.
---
 -- ⚠️ GUARD DE IDEMPOTÊNCIA: o BLOCO 4 usa pg_get_function_identity_arguments,
 -- que INCLUI nomes de parâmetros IN. Todo wrapper DEVE replicar os nomes de
 -- parâmetros do original exatamente (caso real: p_force → p_dry_run), senão
 -- a 2ª execução tenta renomear o wrapper e falha com 'already exists'.
+--
+-- ✅ Os corpos chamadores são REEESCRITOS no BLOCO 4.6 para os nomes novos
+-- (validar_anomalia_preco e consolidar_produtos_duplicados) — os wrappers
+-- ficam puramente vestigiais e a Fase 3 (drop em 2026-09-30) é segura sem
+-- pré-requisito futuro.
 -- ────────────────────────────────────────────────────────────
 
 CREATE OR REPLACE FUNCTION staging._parse_conab_price(p_texto TEXT)
@@ -195,7 +193,7 @@ $$;
 COMMENT ON FUNCTION staging._gerar_batch_id() IS
     'DEPRECATED 2026-08: use staging.gerar_id_lote(). Removida em 2026-09-30.';
 
-CREATE OR REPLACE FUNCTION staging.fn_relatorio_mapa_regional(p_uf TEXT)
+CREATE OR REPLACE FUNCTION staging.fn_relatorio_mapa_regional(p_uf TEXT DEFAULT NULL)
 RETURNS TABLE(
     uf text, produtos_total bigint, com_preco_real bigint, com_preco_proxy bigint,
     sem_preco bigint, com_fluxo bigint, com_sazonalidade bigint, status_verde bigint,
@@ -222,7 +220,7 @@ $$;
 COMMENT ON FUNCTION staging.fn_relatorio_normalizacao() IS
     'DEPRECATED 2026-08: use staging.relatorio_normalizacao_produtos(). Removida em 2026-09-30.';
 
-CREATE OR REPLACE FUNCTION staging.fn_consolidar_produtos_duplicados(p_dry_run BOOLEAN)
+CREATE OR REPLACE FUNCTION staging.fn_consolidar_produtos_duplicados(p_dry_run BOOLEAN DEFAULT TRUE)
 RETURNS TABLE(
     acao text, nome_grupo text, id_afetado integer, nome_afetado text, detalhe text
 )
@@ -234,7 +232,7 @@ $$;
 COMMENT ON FUNCTION staging.fn_consolidar_produtos_duplicados(BOOLEAN) IS
     'DEPRECATED 2026-08: use staging.consolidar_produtos_duplicados(BOOLEAN). Removida em 2026-09-30.';
 
-CREATE OR REPLACE FUNCTION staging.fn_consolidar_produtos_por_lista(p_produtos TEXT[], p_dry_run BOOLEAN)
+CREATE OR REPLACE FUNCTION staging.fn_consolidar_produtos_por_lista(p_produtos TEXT[], p_dry_run BOOLEAN DEFAULT TRUE)
 RETURNS TABLE(
     acao text, nome_grupo text, id_afetado integer, nome_afetado text, detalhe text
 )
@@ -246,7 +244,7 @@ $$;
 COMMENT ON FUNCTION staging.fn_consolidar_produtos_por_lista(TEXT[], BOOLEAN) IS
     'DEPRECATED 2026-08: use staging.consolidar_produtos_por_lista(TEXT[], BOOLEAN). Removida em 2026-09-30.';
 
-CREATE OR REPLACE FUNCTION staging.fn_injetar_dados_ufs_carentes(p_dry_run BOOLEAN)
+CREATE OR REPLACE FUNCTION staging.fn_injetar_dados_ufs_carentes(p_dry_run BOOLEAN DEFAULT TRUE)
 RETURNS TABLE(
     acao text, uf_destino text, produto text, fornecedor text, qtd_meses integer, detalhe text
 )
@@ -281,6 +279,291 @@ AS $$
 $$;
 COMMENT ON FUNCTION staging.fn_classificar_preco_anomalia(INTEGER, INTEGER, SMALLINT, SMALLINT, NUMERIC) IS
     'DEPRECATED 2026-08: use staging.classificar_preco_anomalia(INTEGER, INTEGER, SMALLINT, SMALLINT, NUMERIC). Removida em 2026-09-30.';
+
+-- ────────────────────────────────────────────────────────────
+-- BLOCO 4.6: REESCREVER CORPOS CHAMADORES (nomes NOVOS)
+-- As funções abaixo referenciam POR NOME as funções renomeadas no
+-- BLOCO 4 (PL/pgSQL resolve em runtime):
+--   1. validar_anomalia_preco (ex-trg_valida_anomalia_preco) chama
+--      fn_classificar_preco_anomalia → agora chama classificar_preco_anomalia
+--   2. consolidar_produtos_duplicados (ex-fn_consolidar_produtos_duplicados)
+--      chama fn_relatorio_normalizacao → agora chama relatorio_normalizacao_produtos
+-- Recriar com CREATE OR REPLACE (mantém OID + ACLs + o trigger segue via OID)
+-- torna os wrappers do BLOCO 4.5 puramente vestigiais: a Fase 3 pode dropar
+-- wrappers/views em 2026-09-30 sem quebrar nada em runtime.
+-- ────────────────────────────────────────────────────────────
+
+-- 4.6.1 — Trigger function (fiel ao 58_hotfix_pipeline_outliers.sql, só o nome da chamada muda)
+CREATE OR REPLACE FUNCTION staging.validar_anomalia_preco()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_razao      TEXT;
+    v_motivo     TEXT;
+    v_dados_brutos JSONB;
+    v_uf         CHAR(2);
+BEGIN
+    SELECT uf INTO v_uf
+    FROM staging.dim_localidade
+    WHERE id_localidade = NEW.id_localidade;
+
+    v_razao := staging.classificar_preco_anomalia(
+        NEW.id_produto,
+        NEW.id_localidade,
+        NEW.ano,
+        NEW.mes,
+        NEW.preco_medio
+    );
+
+    IF v_razao IS NULL THEN
+        RETURN NEW;
+    END IF;
+
+    v_motivo := CASE v_razao
+        WHEN 'EXCEDE_500PCT_MEDIA_UF'
+            THEN 'Preço excede 500% da média histórica do mesmo produto na mesma UF'
+        WHEN 'HARD_CAP_50_SEM_HISTORICO'
+            THEN 'ANOMALIA_PARSING: preço > R$50 sem histórico sólido que justifique'
+        ELSE 'Preço anômalo (' || v_razao || ')'
+    END;
+
+    v_dados_brutos := jsonb_build_object(
+        'produto_id',      NEW.id_produto,
+        'localidade_id',   NEW.id_localidade,
+        'uf',              v_uf,
+        'ano',             NEW.ano,
+        'mes',             NEW.mes,
+        'preco_enviado',   NEW.preco_medio,
+        'razao_codigo',    v_razao
+    );
+
+    INSERT INTO staging.precos_rejeitados (
+        id_produto, id_localidade, ano, mes,
+        preco_medio, preco_medio_historico, razao,
+        dados_brutos, batch_id
+    ) VALUES (
+        NEW.id_produto, NEW.id_localidade, NEW.ano, NEW.mes,
+        NEW.preco_medio, NULL,
+        v_motivo,
+        v_dados_brutos, NEW.batch_id
+    );
+
+    RETURN NULL;  -- aborta esta linha, mas não a transação
+END;
+$function$;
+
+-- 4.6.2 — Consolidador (fiel ao 43_normalizacao_produtos.sql, só o nome da chamada muda)
+CREATE OR REPLACE FUNCTION staging.consolidar_produtos_duplicados(
+    p_dry_run BOOLEAN DEFAULT TRUE
+)
+RETURNS TABLE(
+    acao            TEXT,
+    nome_grupo      TEXT,
+    id_afetado      INTEGER,
+    nome_afetado    TEXT,
+    detalhe         TEXT
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_count        INTEGER;
+    v_total_precos INTEGER := 0;
+    v_total_sfp    INTEGER := 0;
+    v_canonico     INTEGER;
+    v_grupo_nome   TEXT;
+BEGIN
+    -- ============================================================
+    -- Passo 1: DRY-RUN — apenas mostra o relatório
+    -- ============================================================
+    IF p_dry_run THEN
+        RETURN QUERY
+        SELECT
+            'DRY-RUN'::TEXT,
+            r.grupo_normalizado,
+            r.id_canonico,
+            r.nome_canonico,
+            format('%s duplicatas, %s registros de preço afetados',
+                r.total_duplicatas, r.qtd_precos_afetados)
+        FROM staging.relatorio_normalizacao_produtos() r
+        ORDER BY r.qtd_precos_afetados DESC;
+        RETURN;
+    END IF;
+
+    -- ============================================================
+    -- Passo 2: Executa a consolidação
+    -- ============================================================
+    RAISE NOTICE '[normalizacao] INICIANDO consolidação de produtos duplicados...';
+
+    -- Temp table com grupos de produtos duplicados
+    CREATE TEMP TABLE IF NOT EXISTS tmp_grupos_normalizacao ON COMMIT DROP AS
+    WITH normalizados AS (
+        SELECT
+            p.id_produto,
+            p.nome_produto,
+            staging.fn_normalizar_nome_produto(p.nome_produto) AS nome_normalizado,
+            (SELECT COUNT(*) FROM staging.fact_precos_mensais fp WHERE fp.id_produto = p.id_produto) AS qtd_precos
+        FROM staging.dim_produto p
+    ),
+    grupos AS (
+        SELECT
+            nome_normalizado,
+            COUNT(*) AS qtd_produtos
+        FROM normalizados
+        GROUP BY nome_normalizado
+        HAVING COUNT(*) > 1
+    ),
+    canonical AS (
+        SELECT DISTINCT ON (n.nome_normalizado)
+            n.nome_normalizado,
+            n.id_produto AS id_canonico,
+            n.nome_produto AS nome_canonico,
+            n.qtd_precos
+        FROM normalizados n
+        JOIN grupos g ON g.nome_normalizado = n.nome_normalizado
+        ORDER BY n.nome_normalizado, n.qtd_precos DESC NULLS LAST, n.id_produto ASC
+    ),
+    duplicatas AS (
+        SELECT n.*
+        FROM normalizados n
+        JOIN grupos g ON g.nome_normalizado = n.nome_normalizado
+    )
+    SELECT
+        d.id_produto,
+        d.nome_produto,
+        d.nome_normalizado,
+        c.id_canonico,
+        c.nome_canonico,
+        d.qtd_precos
+    FROM duplicatas d
+    JOIN canonical c ON c.nome_normalizado = d.nome_normalizado;
+
+    GET DIAGNOSTICS v_count = ROW_COUNT;
+    RAISE NOTICE '[normalizacao] % linhas na temp table de grupos', v_count;
+
+    -- Reporta grupos encontrados
+    RETURN QUERY
+    SELECT
+        'GRUPO'::TEXT,
+        tg.nome_normalizado,
+        tg.id_produto,
+        tg.nome_produto,
+        format('canônico=%s (%s), precos=%s',
+            tg.id_canonico, tg.nome_canonico, tg.qtd_precos)
+    FROM tmp_grupos_normalizacao tg
+    ORDER BY tg.nome_normalizado, tg.id_produto;
+
+    -- Para cada canônico, processa suas duplicatas
+    FOR v_canonico, v_grupo_nome IN
+        SELECT DISTINCT id_canonico, nome_normalizado FROM tmp_grupos_normalizacao
+    LOOP
+        -- 3a. Atualiza fact_precos_mensais: redireciona FKs das duplicatas para o canônico
+        WITH dups AS (
+            SELECT id_produto FROM tmp_grupos_normalizacao
+            WHERE id_canonico = v_canonico AND id_produto != v_canonico
+        ),
+        updated AS (
+            UPDATE staging.fact_precos_mensais fp
+            SET id_produto = v_canonico
+            FROM dups d
+            WHERE fp.id_produto = d.id_produto
+            RETURNING fp.id_produto
+        )
+        SELECT COUNT(*) INTO v_count FROM updated;
+
+        IF v_count > 0 THEN
+            v_total_precos := v_total_precos + v_count;
+            RETURN QUERY
+            SELECT
+                'FK-PRECOS'::TEXT,
+                v_grupo_nome,
+                v_canonico,
+                (SELECT nome_canonico FROM tmp_grupos_normalizacao WHERE id_canonico = v_canonico LIMIT 1),
+                format('%s registros em fact_precos_mensais redirecionados', v_count);
+        END IF;
+
+        -- 3b. Atualiza status_fonte_produto: redireciona FKs das duplicatas para o canônico
+        WITH dups AS (
+            SELECT id_produto FROM tmp_grupos_normalizacao
+            WHERE id_canonico = v_canonico AND id_produto != v_canonico
+        ),
+        updated AS (
+            UPDATE staging.status_fonte_produto sfp
+            SET id_produto = v_canonico
+            FROM dups d
+            WHERE sfp.id_produto = d.id_produto
+            RETURNING sfp.id_produto
+        )
+        SELECT COUNT(*) INTO v_count FROM updated;
+
+        IF v_count > 0 THEN
+            v_total_sfp := v_total_sfp + v_count;
+            RETURN QUERY
+            SELECT
+                'FK-STATUS_FONTE'::TEXT,
+                v_grupo_nome,
+                v_canonico,
+                (SELECT nome_canonico FROM tmp_grupos_normalizacao WHERE id_canonico = v_canonico LIMIT 1),
+                format('%s registros em status_fonte_produto redirecionados', v_count);
+        END IF;
+
+        -- 4. Remove duplicatas (exceto canônico)
+        WITH dups AS (
+            SELECT id_produto FROM tmp_grupos_normalizacao
+            WHERE id_canonico = v_canonico AND id_produto != v_canonico
+        ),
+        deleted AS (
+            DELETE FROM staging.dim_produto dp
+            USING dups d
+            WHERE dp.id_produto = d.id_produto
+            RETURNING dp.id_produto, dp.nome_produto
+        )
+        SELECT COUNT(*) INTO v_count FROM deleted;
+
+        IF v_count > 0 THEN
+            RETURN QUERY
+            SELECT
+                'DELETE'::TEXT,
+                v_grupo_nome,
+                v_canonico,
+                (SELECT nome_canonico FROM tmp_grupos_normalizacao WHERE id_canonico = v_canonico LIMIT 1),
+                format('%s produtos duplicados removidos', v_count);
+        END IF;
+
+        -- 5. Atualiza nome do canônico para o nome normalizado (se diferente)
+        UPDATE staging.dim_produto dp
+        SET nome_produto = v_grupo_nome
+        WHERE dp.id_produto = v_canonico
+          AND dp.nome_produto != v_grupo_nome;
+
+        GET DIAGNOSTICS v_count = ROW_COUNT;
+        IF v_count > 0 THEN
+            RETURN QUERY
+            SELECT
+                'RENAME'::TEXT,
+                v_grupo_nome,
+                v_canonico,
+                (SELECT nome_canonico FROM tmp_grupos_normalizacao WHERE id_canonico = v_canonico LIMIT 1),
+                'nome atualizado para o normalizado';
+        END IF;
+    END LOOP;
+
+    -- Limpa temp table
+    DROP TABLE IF EXISTS tmp_grupos_normalizacao;
+
+    -- Totais finais
+    RETURN QUERY
+    SELECT 'FIM'::TEXT,
+        format('%s preços + %s status_fonte consolidados',
+            v_total_precos, v_total_sfp)::TEXT,
+        NULL::INTEGER,
+        NULL::TEXT,
+        'consolidação concluída'::TEXT;
+
+    RAISE NOTICE '[normalizacao] CONCLUÍDO: % preços + % status_fonte_produto consolidados',
+        v_total_precos, v_total_sfp;
+END;
+$$;
 
 -- ────────────────────────────────────────────────────────────
 -- BLOCO 5: Views de compatibilidade (30 dias — remover em 2026-09-30)

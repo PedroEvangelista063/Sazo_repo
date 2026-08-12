@@ -153,7 +153,7 @@ Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (draft, ver o a
 
 **Requisitos atendidos:** transacional · idempotente (`IF EXISTS`/`NOT EXISTS`) · views de compat por objeto renomeado · `COMMENT ON` · `RAISE NOTICE` por renomeação · **não toca** MV, roles, `fact_precos_mensais` nem `sp_executar_carga_completa`.
 
-> ⚠️ Nota de segurança: funções SQL renomeadas que forem **chamadas por outras funções SQL** criam dependência em `pg_depend` e o `ALTER FUNCTION` falhará com erro de dependência — se isso ocorrer para algum dos itens acima (ex.: `fn_calcular_status_cor_por_preco` chamada dentro de trigger), recrie o chamador na mesma transação. O script cobre os objetos órfãos; o BLOCO 4 protege contra sobrecarga.
+> ⚠️ Nota de segurança: funções SQL renomeadas que forem **chamadas por outras funções SQL** criam dependência em `pg_depend` e o `ALTER FUNCTION` falhará com erro de dependência — se isso ocorrer para algum dos itens acima (ex.: `fn_calcular_status_cor_por_preco` chamada dentro de trigger), recrie o chamador na mesma transação. **RESOLVIDO (2026-08-12)**: a migration 77 agora cria **wrappers de compatibilidade de 30 dias (BLOCO 4.5)** para as 9 funções renomeadas, preservando assinatura exata + volatility e delegando ao novo nome — nenhuma chamada por nome quebra em runtime. Wrappers verificados: `trg_valida_anomalia_preco` → chama `fn_classificar_preco_anomalia` (wrapper cobre); `fn_consolidar_produtos_duplicados` → chama `fn_relatorio_normalizacao` (wrapper cobre). O BLOCO 4 ganhou guard de idempotência (novo nome já existente com mesma identidade → skip) para a 2ª execução não renomear os próprios wrappers. Validado em transação ROLLBACK.
 
 ---
 
@@ -183,11 +183,12 @@ Arquivo: `database/77_refatoracao_nomenclatura_dba_friendly.sql` (draft, ver o a
 
 ### Fase 3 — Semana 4 (3–4 h) — limpeza
 
-1. DROP das views de compat da Fase 1 (após 2026-09-30 e `rg` provar zero referências).
-2. DROP dos legados: `fn_importar_fluxos_json`, `fato_cotacao_regional`, `test_show_timeout*`, `sp_calcular_forecast_2026` (duplicata).
-3. Colunas ⚠️ (opcional, alta cautela): `preco_medio`/`fonte`/`is_forecast`/`calculado_em` em `sazonalidade_produto` + **redefinição da MV** em manutenção; typo `classificao_produto` com alias Pydantic em `responses.py:260`.
-4. `COMMENT ON` em 100% de `mart.*` e `staging.*`; verificação final `rg` dos nomes antigos = zero no codebase.
-5. Commit final + tag de versão de schema (ex.: `schema-v21`).
+1. **Atualizar os corpos chamadores ANTES do drop dos wrappers de função**: a trigger function `validar_anomalia_preco` (ex-`trg_valida_anomalia_preco`) ainda chama `fn_classificar_preco_anomalia` por nome, e `consolidar_produtos_duplicados`/sua chamadora ainda chamam `fn_relatorio_normalizacao` — reescrever esses corpos (CREATE OR REPLACE) apontando para os nomes novos. **Sem isso, dropar os wrappers (2026-09-30) quebra o trigger em runtime de novo.**
+2. DROP das views de compat da Fase 1 e dos **wrappers de função do BLOCO 4.5** (após 2026-09-30 e `rg` provar zero referências, exceto os corpos atualizados no passo 1).
+3. DROP dos legados: `fn_importar_fluxos_json`, `fato_cotacao_regional`, `test_show_timeout*`, `sp_calcular_forecast_2026` (duplicata).
+4. Colunas ⚠️ (opcional, alta cautela): `preco_medio`/`fonte`/`is_forecast`/`calculado_em` em `sazonalidade_produto` + **redefinição da MV** em manutenção; typo `classificao_produto` com alias Pydantic em `responses.py:260`.
+5. `COMMENT ON` em 100% de `mart.*` e `staging.*`; verificação final `rg` dos nomes antigos = zero no codebase.
+6. Commit final + tag de versão de schema (ex.: `schema-v21`).
 
 ---
 

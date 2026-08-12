@@ -18,7 +18,7 @@ Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do 
 - `guard_commit.sh` (novo) — guardião do pre-commit: `tsc --noEmit` + smoke de homologação.
 - `smoke_staging.sh` (novo) — smoke: backend `/health` (sobe uvicorn temporário se offline), `/br-sazonalidade` sem 500 e sem `status_cor` nulo/CINZA (NO GRAY/NO NULL).
 - `guard_push.sh` (novo) — garantia final do pre-push: guard_commit + pytest (backend) + vitest (frontend).
-- `sync_db_prod_to_staging.sh` (novo) — Produção (Aiven) ➔ Homologação (físico/local): dump seletivo (exclui `ops.*`/`raw.*`), `--dry-run`, `--truncate-only`, `--no-dump`, `--refresh-mv`, `--force`; recusa destino não-local.
+- `sync_db_prod_to_staging.sh` (novo) — Produção (Aiven) ➔ Homologação (físico/local): dump seletivo (exclui `ops.*`/`raw.*`), `--dry-run`, `--truncate-only`, `--no-dump`, `--refresh-mv`, `--force`; recusa destino não-local; **snapshot de segurança do destino antes do wipe** (`backup_staging_pre_sync_*.dump`) — artefato de rollback (runbook: `docs/runbook_rollback_sync_prod_staging.md`).
 - Hooks `.husky/pre-commit` (atualizado) e `.husky/pre-push` (novo) chamam os guards. Bypasses: `SKIP_TSC`, `SKIP_STAGING_SMOKE`, `SKIP_PUSH_TESTS`, `SKIP_GUARD_COMMIT/PUSH`.
 
 ## Mudanças Recentes (2026-08-11)

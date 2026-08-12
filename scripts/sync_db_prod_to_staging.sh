@@ -15,9 +15,10 @@
 #   3. Destino: verifica conectividade → DROP de staging+mart (ou TRUNCATE com
 #      --truncate-only) → aplica schema → restaura dados
 #   4. Validação pós-restore (contagens + SELECT 1)
-#
-# SEGURANÇA (Zero-Waste):
+##   SEGURANÇA (Zero-Waste):
 #   - Nunca toca nos schemas ops.* e raw.* do destino (config/auditoria preservados)
+#   - Snapshot de segurança do DESTINO antes do wipe (backup_staging_pre_sync_*.dump)
+#     — usado no rollback (docs/runbook_rollback_sync_prod_staging.md)
 #   - Recusa sobrescrever um destino que NÃO seja local/físico (proteção contra
 #     apagar a produção por engano) — use --force só com consciência
 #   - --dry-run: valida conectividade e imprime o plano SEM alterar nada
@@ -244,6 +245,22 @@ if ! psql "$STAGING_URL" -tAc "SELECT 1" &>/dev/null; then
     exit 1
 fi
 
+# Snapshot de SEGURANÇA do destino ANTES do wipe (artefato de rollback).
+# Sem ele, um sync mal-sucedido não teria como restaurar a homologação
+# anterior — ver docs/runbook_rollback_sync_prod_staging.md (seção 3).
+DEST_SNAPSHOT="${BACKUP_DIR}/backup_staging_pre_sync_${TIMESTAMP}.dump"
+echo -e "  ${YELLOW}Snapshot de segurança do destino (rollback): $(basename "$DEST_SNAPSHOT")...${NC}"
+if ! pg_dump "$STAGING_URL" --format=custom --compress=9 --no-owner --no-acl \
+        --file="$DEST_SNAPSHOT" 2>/dev/null; then
+    echo -e "${RED}❌ Falha no snapshot de segurança do destino — abortando (nada foi alterado).${NC}"
+    exit 1
+fi
+# Hardening (padrão do dump de produção): nunca prosseguir com snapshot vazio
+if [ ! -s "$DEST_SNAPSHOT" ]; then
+    echo -e "${RED}❌ Snapshot do destino veio VAZIO — abortando antes de tocar nos dados.${NC}"
+    exit 1
+fi
+
 if $TRUNCATE_ONLY; then
     echo -e "  ${YELLOW}TRUNCATE de staging.* e mart.* (preserva schema)...${NC}"
     # fix: %I.%I recebe (schemaname, tablename) — antes usava o tablename nos
@@ -320,6 +337,7 @@ echo -e "${GREEN}║  ✅ Sync Produção ➔ Homologação concluído com suces
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
 echo -e "  Homologação agora com dados frescos de produção."
 echo -e "  Schemas preservados no destino: ops.* (config/auditoria) e raw.*"
+echo -e "  Snapshot de rollback do destino: $(basename "$DEST_SNAPSHOT")"
 echo -e "  Backups: ${BACKUP_DIR}/prod2staging_*_${TIMESTAMP}.*"
 echo -e "  Próximo passo: purge do cache da API (POST /api/v1/admin/cache/clear)"
 echo ""

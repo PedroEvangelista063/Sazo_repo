@@ -216,7 +216,7 @@ def upsert_fact(df_healed: pl.DataFrame) -> tuple[int, int]:
                         INSERT INTO staging.fact_precos_mensais
                             (id_produto, id_localidade, ano, mes, preco_medio, preco_curado, is_interpolado, batch_id)
                         VALUES %s
-                        ON CONFLICT (id_produto, id_localidade, ano, mes) DO UPDATE SET
+                        ON CONFLICT (id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg'))) DO UPDATE SET
                             preco_medio    = EXCLUDED.preco_medio,
                             preco_curado   = EXCLUDED.preco_curado,
                             is_interpolado = EXCLUDED.is_interpolado,

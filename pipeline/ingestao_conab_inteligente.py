@@ -369,6 +369,13 @@ class CarregadorMedalhao:
 
         municipio_field = "municipio_id" in df.columns
 
+        # Colunas de unidade (Migration 82): presentes no ETL diário CONAB
+        # (transform per-unidade) e ausentes nos demais caminhos — usa None.
+        cols = df.columns
+        unidade_idx = cols.index("unidade_canonica") if "unidade_canonica" in cols else None
+        fator_idx = cols.index("fator_kg") if "fator_kg" in cols else None
+        fluxo_idx = cols.index("fluxo_unidade") if "fluxo_unidade" in cols else None
+
         for row in df.iter_rows():
             produto = row[0]
             uf = row[1] if not municipio_field else row[3]
@@ -377,26 +384,34 @@ class CarregadorMedalhao:
             preco = row[4] if not municipio_field else row[6]
             mun_id = None if not municipio_field else (row[1] if row[1] else None)
 
+            unidade = row[unidade_idx] if unidade_idx is not None else None
+            fator = row[fator_idx] if fator_idx is not None else None
+            fluxo = row[fluxo_idx] if fluxo_idx is not None else None
+
             loc_key = (uf, None) if mun_id is None else (uf, mun_id)
             id_prod = prod_map.get(produto)
             id_loc = loc_map.get(loc_key)
             if id_prod is None or id_loc is None:
                 continue
 
-            chave = (id_prod, id_loc, ano, mes)
+            # Chave de dedup inclui a unidade: kg e cx do mesmo (produto, UF,
+            # ano, mes) coexistem como linhas distintas (Migration 82).
+            chave = (id_prod, id_loc, ano, mes, unidade)
             if chave in vistos:
                 continue
             vistos.add(chave)
-            rows.append((id_prod, id_loc, ano, mes, preco, batch_id))
+            rows.append((id_prod, id_loc, ano, mes, preco, unidade, fator, fluxo, batch_id))
 
         if not rows:
             return 0
 
         sql = """
             INSERT INTO staging.fact_precos_mensais
-                (id_produto, id_localidade, ano, mes, preco_medio, batch_id)
+                (id_produto, id_localidade, ano, mes, preco_medio,
+                 unidade_canonica, fator_kg, fluxo_unidade, batch_id)
             VALUES %s
-            ON CONFLICT (id_produto, id_localidade, ano, mes)
+            ON CONFLICT (id_produto, id_localidade, ano, mes,
+                         (COALESCE(unidade_canonica, 'kg')))
             DO UPDATE SET
                 preco_medio = EXCLUDED.preco_medio,
                 batch_id    = EXCLUDED.batch_id,

@@ -369,6 +369,7 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `79_br_sazonalidade_inclui_projecao.sql` — /br-sazonalidade inclui projeção FALLBACK (P1-1)
 - `80_mv_fallback_janela_2023.sql` — Deep Fallback janela 2023+ (MV V23)
 - `81_fase2_subconjunto_seguro.sql` — Fase 2 segura: 4 funções + baseline_2025_interpolado + vw_fluxos_regionais
+- `82_normalizacao_unidade_sensibilidade_cv.sql` — Normalização de grandezas (unidade_canonica/fator_kg na fact, UNIQUE por unidade) + semáforo sensível por CV + backfill + validation gate
 
 ## Mapa Rápido
 

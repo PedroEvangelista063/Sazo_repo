@@ -18,6 +18,12 @@ RE_UNIDADE_EMBALAGEM = re.compile(
     r"(?P<quantidade>\d+\.?\d*)\s*(?P<unidade>cx|saco|sc|fardo|pc|pto|dz|duzia|kg|g|ton|un)"
 )
 
+# Unidades com fator de conversão DEFINITIVO para R$/kg. Apenas estas podem
+# ser convertidas com confiança pelo scraper — as demais (cx/saco/dz/un/maço)
+# são AMBÍGUAS: o fator real depende do item (uma "caixa" de pitaya não pesa o
+# mesmo que uma de batata). Para as ambíguas, a conversão é DECIDIDA PELO BANCO
+# (mart.dim_unidade_medida + staging.normalizar_unidade_sql / backfill da
+# migration 82), nunca hardcoded aqui com fator 1.0.
 UNIDADES_PADRAO: dict[str, float] = {
     "kg": 1.0,
     "quilograma": 1.0,
@@ -30,24 +36,60 @@ UNIDADES_PADRAO: dict[str, float] = {
     "cx 22kg": 22.0,
     "cx 25kg": 25.0,
     "cx 30kg": 30.0,
-    "cx": 1.0,
-    "caixa": 1.0,
     "saco 25 kg": 25.0,
     "saco 25kg": 25.0,
     "saco 50 kg": 50.0,
     "saco 50kg": 50.0,
-    "saco": 1.0,
-    "sacaria": 1.0,
-    "fardo": 1.0,
-    "dz": 1.0,
-    "duzia": 1.0,
-    "dúzia": 1.0,
-    "pc": 1.0,
-    "pto": 1.0,
-    "un": 1.0,
-    "und": 1.0,
-    "unidade": 1.0,
 }
+
+# Nome canônico por chave de UNIDADES_PADRAO — espelha
+# mart.dim_unidade_medida.unidade_canonica (migration 82).
+UNIDADES_CANONICAS: dict[str, str] = {
+    "kg": "kg",
+    "quilograma": "kg",
+    "quilo": "kg",
+    "g": "g",
+    "grama": "g",
+    "ton": "ton",
+    "tonelada": "ton",
+    "cx 20kg": "cx20",
+    "cx 22kg": "cx22",
+    "cx 25kg": "cx25",
+    "cx 30kg": "cx30",
+    "saco 25 kg": "saco25",
+    "saco 25kg": "saco25",
+    "saco 50 kg": "saco50",
+    "saco 50kg": "saco50",
+}
+
+# Unidades AMBÍGUAS: NÃO recebem fator conversor definitivo (fator_kg = NULL
+# no banco). Recebem uma unidade canônica CRUA (espelho do dim_unidade_medida)
+# para que a agregação NÃO misture grandezas e a conversão real seja decidida
+# pelo banco (mart.fator_kg_produto_uf / normalizar_unidade_sql / backfill 82).
+UNIDADES_AMBIGUAS: dict[str, str] = {
+    "cx": "caixa_generica",
+    "caixa": "caixa_generica",
+    "cxa": "caixa_generica",
+    "saco": "saco_generico",
+    "sacaria": "saco_generico",
+    "sc": "saco_generico",
+    "fardo": "fardo",
+    "dz": "dz",
+    "duzia": "dz",
+    "dúzia": "dz",
+    "maço": "maço",
+    "maco": "maço",
+    "un": "un",
+    "und": "un",
+    "unidade": "un",
+    "pc": "un",
+    "pto": "un",
+}
+
+# Placeholder de unidade ambígua retornado por normalizar_unidade() para NÃO
+# quebrar o contrato float das chamadas existentes (prohort.py/ceasa_standard).
+# NÃO é conversão real para kg — apenas marca que a grandeza é desconhecida.
+FATOR_AMBIGUO = 1.0
 
 
 def validar_cotacao(cotacao: CotacaoRegional) -> CotacaoRegional | None:
@@ -111,24 +153,78 @@ class BaseAdapter(ABC):
         return validar_cotacao(cotacao)
 
     def normalizar_unidade(self, descricao: str) -> float:
+        """Fator de conversão para R$/kg (float — contrato das chamadas legadas).
+
+        Unidades DEFINITIVAS (kg, g, ton, cx 20kg, saco 50kg...) → fator real.
+        Unidades AMBÍGUAS (cx, saco, dz, un, maço...) → 1.0 (placeholder
+        marcado, ver FATOR_AMBIGUO): a conversão real depende do item e é
+        decidida pelo banco (mart.dim_unidade_medida / normalizar_unidade_sql).
+        """
         if not descricao:
-            return 1.0
+            return FATOR_AMBIGUO
         tl = descricao.lower().strip()
         for chave, fator in sorted(UNIDADES_PADRAO.items(), key=lambda x: -len(x[0])):
             if chave in tl:
                 return fator
+        for token in sorted(UNIDADES_AMBIGUAS, key=lambda x: -len(x)):
+            if token in tl:
+                return FATOR_AMBIGUO
         m = RE_UNIDADE_EMBALAGEM.search(tl)
         if m:
-            qtd = float(m.group("quantidade"))
             un = m.group("unidade")
-            for chave in [f"{un} {qtd}kg", f"{qtd}kg", f"{un}"]:
+            if un in UNIDADES_PADRAO:
+                return UNIDADES_PADRAO[un]
+            qtd = float(m.group("quantidade"))
+            for chave in [f"{un} {qtd}kg", f"{qtd}kg"]:
                 if chave in UNIDADES_PADRAO:
                     return UNIDADES_PADRAO[chave]
-            return qtd
+            # 'N cx/saco/dz/...' → contagem de embalagens, NÃO conversão em kg.
+            return FATOR_AMBIGUO
         m2 = re.search(r"(\d+)\s*(kg|k)", tl)
         if m2:
             return float(m2.group(1))
-        return 1.0
+        return FATOR_AMBIGUO
+
+    def normalizar_unidade_canonica(self, descricao: str) -> str:
+        """Classifica a unidade em um nome canônico CRU para persistência.
+
+        Definitivas → 'kg', 'g', 'ton', 'cx20', 'cx22', 'cx25', 'cx30',
+        'saco25', 'saco50'. Ambíguas → 'caixa_generica', 'saco_generico',
+        'fardo', 'dz', 'maço', 'un' (espelho de mart.dim_unidade_medida).
+        Fallback → texto cru normalizado.
+        """
+        if not descricao:
+            return ""
+        tl = descricao.lower().strip()
+        for chave, canon in sorted(UNIDADES_CANONICAS.items(), key=lambda x: -len(x[0])):
+            if chave in tl:
+                return canon
+        for token, canon in sorted(UNIDADES_AMBIGUAS.items(), key=lambda x: -len(x[0])):
+            if token in tl:
+                return canon
+        m = RE_UNIDADE_EMBALAGEM.search(tl)
+        if m:
+            un = m.group("unidade")
+            canon = {
+                "kg": "kg",
+                "g": "g",
+                "ton": "ton",
+                "cx": "caixa_generica",
+                "saco": "saco_generico",
+                "sc": "saco_generico",
+                "fardo": "fardo",
+                "dz": "dz",
+                "duzia": "dz",
+                "pc": "un",
+                "pto": "un",
+                "un": "un",
+            }.get(un)
+            if canon:
+                return canon
+        m2 = re.search(r"(\d+)\s*(kg|k)", tl)
+        if m2:
+            return "kg"
+        return tl
 
     def limpar_valor(self, valor: str) -> float | None:
         if not valor:

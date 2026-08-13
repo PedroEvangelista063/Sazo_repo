@@ -1105,7 +1105,7 @@ def _copy_to_fact(
     INSERT INTO staging.fact_precos_mensais
         (id_produto, id_localidade, ano, mes, preco_medio, batch_id, _qualidade)
     VALUES %s
-    ON CONFLICT (id_produto, id_localidade, ano, mes)
+    ON CONFLICT (id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg')))
     DO UPDATE SET
         preco_medio = EXCLUDED.preco_medio,
         batch_id    = EXCLUDED.batch_id,

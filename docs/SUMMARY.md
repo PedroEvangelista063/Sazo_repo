@@ -76,6 +76,20 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 
 ## Mudanças Recentes (2026-08-12, follow-ups)
 
+- **Migration 82 (Normalização de Grandezas + Semáforo Sensível por CV)**: em desenvolvimento — transform per-unidade no ETL diário CONAB (`pipeline/etl_conab_diario.py`, Fase 1 concluída) + arquivo `database/82_normalizacao_unidade_sensibilidade_cv.sql` (Fases 2-6: `mart.dim_unidade_medida` com fatores, colunas `unidade_canonica`/`fator_kg`/`fluxo_unidade` na fact, UNIQUE com unidade via `COALESCE`, funções `estatisticas_volatilidade_24m_cv()` e `calcular_semaforo_preco_sensivel()`, backfill heurístico, `sp_calcular_sazonalidade` kg-first com CV, validation gate `ops.simulacao_semaforo_v82`). NÃO executado/commitado ainda. Ver seção abaixo.
+
+### Semáforo Sensível por Coeficiente de Variação (Migration 82)
+
+**Problema**: preços de grandezas diferentes poluem a fact (ex.: PITAYA variando de R$ 0,01 a R$ 108 conforme a unidade da coleta — caixa, kg, unidade). O semáforo clássico ±desvio absoluto (migration 65/68) vira VERDE/VERMELHO espúrio porque o desvio fica inflado.
+
+**Solução** (3 frentes):
+1. **Granularidade na fact**: `staging.fact_precos_mensais` ganha `unidade_canonica`, `fator_kg`, `fluxo_unidade`; o UNIQUE passa a incluir a unidade (`COALESCE(unidade_canonica, 'kg')`) — o ETL diário agrega POR unidade (`group_by` inclui unidade).
+2. **Sazonalidade escolhe kg**: `mart.sazonalidade_produto` mantém 1 linha/mês; a SP usa `DISTINCT ON` com prioridade kg → fator_kg conhecido → genérico, ANTES da média móvel.
+3. **Semáforo por CV**: banda proporcional `ref * (1 ± cv_efetivo)`, onde `cv_efetivo = GREATEST(cv_serie, piso_da_faixa)` com piso por magnitude (≤5 → 2%; ≤20 → 5%; >20 → 8%); `cv > 0.40` → AMARELO defensivo (`contam_unidade`).
+
+**Fluxo Python**: `normalizar_unidade_sig()` + `_aplicar_unidade()` no `etl_conab_diario.py` normalizam `sig_unidade_medida` em `(unidade_canonica, fator_kg)` com `_UNIDADES_MERGE` (definitivas com fator) e `UNIDADES_CONAB_AMBIGUAS` (cx/saco/dz/un/maço → fator NULL, conversão decidida no banco).
+
+
 - **Migration 80 (V23) APLICADA nos 2 bancos** (local + Aiven) com backup + validação funcional: 0 âncoras FALLBACK < 2023, `min(ano_referencia)` set–dez 2026 = 2023, MV 177.485, 0 nulo/CINZA. Correção de marcador: `position('YEAR FROM CURRENT_DATE')` é case-sensitive quebrado (deparser normaliza) — validar por funcional. Runbook dedicado: `docs/runbook_migration_80_local.md`.
 - **Sync Produção ➔ Homologação executado** (`scripts/sync_db_prod_to_staging.sh`): local espelha o Aiven (fact 245.362, MV 177.485, sazonalidade 346.961), `ops.*`/`raw.*` preservados; restore reescrito para **um único `pg_restore --clean --if-exists`** (psql schema conflitava com schemas preservados) + exclusão de `audit` do dump + pre-drop do event trigger `ensure_rls` (legado Supabase, ausente no Aiven — local agora idêntico ao Aiven). **Rollback documentado**: `docs/runbook_rollback_sync_prod_staging.md`; o sync agora gera **snapshot de segurança do destino** (`backup_staging_pre_sync_*.dump`) antes do wipe.
 - **Fast-path no guardião do commit** (`scripts/guard_commit.sh`): só docs/JSON/yml staged → smoke pulado; sem TS/TSX staged → tsc pulado (commit de docs libera instantâneo).

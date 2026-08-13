@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import io
 import logging
+import re
 import sys
 import time
 from pathlib import Path
@@ -64,6 +65,94 @@ TODAS_UFS = {
     "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR",
     "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO",
 }
+
+# ──────────────────────────────────────────────────────────────────────
+# Unidade de medida (Migration 82) — Normalização de grandezas
+# ──────────────────────────────────────────────────────────────────────
+# A coluna CONAB sig_unidade_medida é LIDA mas era DESCARTADA na agregação,
+# misturando kg/cx/un na mesma série (PITAYA/RJ 0,01..108). Agora ela é
+# PRESERVADA: cada agregação mensal fica restrita a UMA unidade canônica.
+#
+# Unidades DEFINITIVAS → (unidade_canonica, fator_kg) com conversão confiável.
+# Unidades AMBÍGUAS (cx/saco/dz/un/maço) → fator_kg = None: a conversão real
+# é decidida pelo banco (mart.dim_unidade_medida / normalizar_unidade_sql).
+UNIDADES_CONAB: dict[str, tuple[str, float | None]] = {
+    "kg": ("kg", 1.0),
+    "g": ("g", 0.001),
+    "ton": ("ton", 1000.0),
+    "cx 20 kg": ("cx20", 20.0),
+    "cx 20kg": ("cx20", 20.0),
+    "cx 22 kg": ("cx22", 22.0),
+    "cx 22kg": ("cx22", 22.0),
+    "cx 25 kg": ("cx25", 25.0),
+    "cx 25kg": ("cx25", 25.0),
+    "cx 30 kg": ("cx30", 30.0),
+    "cx 30kg": ("cx30", 30.0),
+    "saco 50 kg": ("saco50", 50.0),
+    "saco 50kg": ("saco50", 50.0),
+    "saco 25 kg": ("saco25", 25.0),
+    "saco 25kg": ("saco25", 25.0),
+}
+
+UNIDADES_CONAB_AMBIGUAS: dict[str, tuple[str, float | None]] = {
+    "cx": ("caixa_generica", None),
+    "caixa": ("caixa_generica", None),
+    "saco": ("saco_generico", None),
+    "sacaria": ("saco_generico", None),
+    "sc": ("saco_generico", None),
+    "fardo": ("fardo", None),
+    "dz": ("dz", None),
+    "duzia": ("dz", None),
+    "dúzia": ("dz", None),
+    "maco": ("maço", None),
+    "maço": ("maço", None),
+    "un": ("un", None),
+    "und": ("un", None),
+    "unidade": ("un", None),
+    "pc": ("un", None),
+    "pto": ("un", None),
+}
+
+_UNIDADES_MERGE: dict[str, tuple[str, float | None]] = {
+    **UNIDADES_CONAB,
+    **UNIDADES_CONAB_AMBIGUAS,
+}
+
+
+def normalizar_unidade_sig(sig: str) -> tuple[str, float | None]:
+    """Normaliza ``sig_unidade_medida`` em (unidade_canonica, fator_kg).
+
+    - Match por chave mais longa primeiro ('saco 50 kg' antes de 'saco').
+    - Regex genérica ``N kg``/``N k`` cobre variantes 'cx 20kg' / 'saco 30kg'.
+    - Ambíguas retornam fator_kg = None (decisão do banco).
+    - Fallback: texto cru normalizado com fator None.
+    """
+    if not sig:
+        return "", None
+    tl = re.sub(r"\s+", " ", sig.strip().lower())
+    for chave, (canon, fator) in sorted(_UNIDADES_MERGE.items(), key=lambda x: -len(x[0])):
+        if chave in tl:
+            return canon, fator
+    m = re.search(r"(\d+)\s*(kg|k)\b", tl)
+    if m:
+        return "kg", float(m.group(1))
+    m2 = re.search(r"(\d+)\s*(cx|saco|sc)\b", tl)
+    if m2:
+        qtd = float(m2.group(1))
+        prefixo = "cx" if m2.group(2) == "cx" else "saco"
+        return f"{prefixo}{qtd:.0f}", qtd
+    return tl, None
+
+
+def _aplicar_unidade(row: dict[str, str]) -> dict[str, str | float | None]:
+    """Wrapper de ``normalizar_unidade_sig`` para ``map_elements`` (Fase 82).
+
+    Recebe a linha do struct (com a chave ``unidade_raw``) e devolve o par
+    ``(unidade_canonica, fator_kg)``. As unidades ambíguas (cx/saco/dz/un/maço)
+    ficam com ``fator_kg = None``: a conversão para R$/kg é decidida no banco.
+    """
+    canon, fator = normalizar_unidade_sig(row["unidade_raw"])
+    return {"unidade_canonica": canon, "fator_kg": fator}
 
 
 def download_csv() -> str:
@@ -124,6 +213,10 @@ def transform(df: pl.DataFrame) -> pl.DataFrame:
         pl.col("uf_ceasa").str.strip_chars().alias("uf"),
         pl.col("preco_diario").str.strip_chars().alias("preco_str"),
         pl.col("data_preco").str.strip_chars().alias("data_str"),
+        pl.col("sig_unidade_medida")
+        .str.strip_chars()
+        .str.to_lowercase()
+        .alias("unidade_raw"),
     ])
 
     df = df.with_columns(
@@ -143,6 +236,22 @@ def transform(df: pl.DataFrame) -> pl.DataFrame:
         pl.col("preco_str").cast(pl.Float64, strict=False).alias("preco"),
     )
 
+    # Unidade de medida PRESERVADA: (unidade_canonica, fator_kg). Ambíguas
+    # (cx/saco/dz/un/maço) vêm com fator_kg = None — a conversão real para
+    # R$/kg é decidida pelo banco (normalizar_unidade_sql / backfill 82).
+    df = df.with_columns(
+        pl.struct("unidade_raw")
+        .map_elements(
+            _aplicar_unidade,
+            return_dtype=pl.Struct({
+                "unidade_canonica": pl.Utf8,
+                "fator_kg": pl.Float64,
+            }),
+        )
+        .alias("unidades"),
+    )
+    df = df.unnest("unidades")
+
     df = df.drop_nulls("preco").filter(pl.col("preco") > 0)
 
     produtos_ok = pl.Series(list(PRODUTOS_HORTIFRUTI))
@@ -152,13 +261,24 @@ def transform(df: pl.DataFrame) -> pl.DataFrame:
 
     df = df.filter(pl.col("ano").is_between(2024, 2026))
 
-    df = df.group_by(["produto", "uf", "ano", "mes"]).agg(
+    # Agregação mensal agora é POR UNIDADE: kg e cx do mesmo (produto, UF, mês)
+    # geram DUAS linhas distintas (uma por unidade) — a média não mistura
+    # grandezas e o desvio padrão não é inflado (raiz do problema da Fase 82).
+    df = df.group_by([
+        "produto", "uf", "ano", "mes", "unidade_canonica", "fator_kg",
+    ]).agg(
         pl.col("preco").mean().alias("preco_medio"),
     )
 
-    df = df.with_columns(pl.col("preco_medio").round(4))
+    df = df.with_columns(
+        pl.col("preco_medio").round(4),
+        pl.lit("etl").alias("fluxo_unidade"),
+    )
 
-    df = df.select(["produto", "uf", "ano", "mes", "preco_medio"])
+    df = df.select([
+        "produto", "uf", "ano", "mes", "preco_medio",
+        "unidade_canonica", "fator_kg", "fluxo_unidade",
+    ])
 
     logger.info(
         "Transform: %d linhas (%.1fs)",

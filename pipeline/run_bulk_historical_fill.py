@@ -663,7 +663,7 @@ class BulkHistoricalFill:
                 INSERT INTO staging.fact_precos_mensais
                     (id_produto, id_localidade, ano, mes, preco_medio, is_interpolado, loaded_at, fonte, batch_id)
                 VALUES {", ".join(values_clauses)}
-                ON CONFLICT ON CONSTRAINT uq_fact_precos_mensais
+                ON CONFLICT (id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg')))
                 DO UPDATE SET preco_medio = EXCLUDED.preco_medio,
                               is_interpolado = EXCLUDED.is_interpolado,
                               loaded_at = EXCLUDED.loaded_at,

@@ -358,7 +358,7 @@ class SortingEngine:
             INSERT INTO staging.fact_precos_mensais
                 (id_produto, id_localidade, ano, mes, preco_medio, batch_id)
             VALUES ($1, $2, $3, $4, $5, $6)
-            ON CONFLICT (id_produto, id_localidade, ano, mes)
+            ON CONFLICT (id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg')))
             DO UPDATE SET preco_medio = EXCLUDED.preco_medio, batch_id = EXCLUDED.batch_id
             """,
             id_produto,

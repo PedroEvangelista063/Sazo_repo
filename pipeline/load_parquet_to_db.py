@@ -192,7 +192,7 @@ def _load_mes_into_fact(conn, df_mes: pl.DataFrame, mapping: dict) -> int:
                 INSERT INTO staging.fact_precos_mensais
                     (id_produto, id_localidade, ano, mes, preco_medio, batch_id)
                 VALUES %s
-                ON CONFLICT (id_produto, id_localidade, ano, mes)
+                ON CONFLICT (id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg')))
                 DO UPDATE SET
                     preco_medio = EXCLUDED.preco_medio,
                     batch_id    = EXCLUDED.batch_id,

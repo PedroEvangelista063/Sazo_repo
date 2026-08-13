@@ -101,6 +101,8 @@ function ProductCardInner({ product, isSelected, onToggle }: ProductCardProps) {
   const emoji = getEmoji(nomeLimpo)
   const badge = STATUS_BADGES[product.status_cor] ?? STATUS_BADGES.AMARELO
   const projetado = isDadoProjetado(product)
+  const mensagemProjecao =
+    product.mensagem_transparencia?.trim() || 'Projeção baseada em anos anteriores'
 
   return (
     <motion.div
@@ -146,8 +148,11 @@ function ProductCardInner({ product, isSelected, onToggle }: ProductCardProps) {
       </p>
 
       {projetado && (
-        <p className="text-xs text-on-surface-variant opacity-70">
-          Projeção baseada em anos anteriores
+        <p
+          className="line-clamp-2 text-xs text-on-surface-variant opacity-70"
+          title={mensagemProjecao}
+        >
+          {mensagemProjecao}
         </p>
       )}
     </motion.div>

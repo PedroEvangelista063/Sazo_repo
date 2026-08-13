@@ -92,7 +92,7 @@ function isDadoProjetado(p: ProdutoVarejo): boolean {
 interface ProductCardProps {
   product: ProdutoVarejo
   isSelected?: boolean
-  onToggle?: () => void
+  onToggle?: (nomeProduto: string) => void
   origemUf?: string | null
 }
 
@@ -104,7 +104,7 @@ function ProductCardInner({ product, isSelected, onToggle }: ProductCardProps) {
 
   return (
     <motion.div
-      onClick={onToggle}
+      onClick={() => onToggle?.(product.nome_produto)}
       whileHover={{ y: -2 }}
       whileTap={{ y: 1 }}
       transition={{ duration: 0.2 }}

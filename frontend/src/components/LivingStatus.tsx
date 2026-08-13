@@ -42,7 +42,7 @@ const STATUS_CONFIG: Record<
 }
 
 interface LivingStatusProps {
-  status: StatusCor
+  status: StatusCor | null | undefined
   size?: 'sm' | 'md' | 'lg'
   showLabel?: boolean
   className?: string
@@ -54,7 +54,7 @@ export function LivingStatus({
   showLabel = true,
   className,
 }: LivingStatusProps) {
-  const cfg = STATUS_CONFIG[status]
+  const cfg = STATUS_CONFIG[status as StatusCor] ?? STATUS_CONFIG.VERDE
 
   const sizeStyles = {
     sm: 'px-2 py-0.5 text-[10px] gap-1',

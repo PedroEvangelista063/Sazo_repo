@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useRef, type ChangeEvent } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback, type ChangeEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 // Hooks
@@ -109,6 +109,13 @@ export function SupermercadoView() {
   const [selectedYear] = useState<number>(() => new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
+
+  // Referência estável para preservar o React.memo do ProductCard
+  const handleToggle = useCallback((nomeProduto: string) => {
+    setSelectedProducts((prev) =>
+      prev.includes(nomeProduto) ? prev.filter((x) => x !== nomeProduto) : [...prev, nomeProduto],
+    )
+  }, [])
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<ViewMode>('grade-sazonal')
   const [search, setSearch] = useState('')
@@ -518,13 +525,7 @@ export function SupermercadoView() {
                     <ProductCard
                       product={p}
                       isSelected={selectedProducts.includes(p.nome_produto)}
-                      onToggle={() =>
-                        setSelectedProducts((prev) =>
-                          prev.includes(p.nome_produto)
-                            ? prev.filter((x) => x !== p.nome_produto)
-                            : [...prev, p.nome_produto],
-                        )
-                      }
+                      onToggle={handleToggle}
                       origemUf={origemPorProduto.get(
                         p.nome_produto
                           .normalize('NFD')

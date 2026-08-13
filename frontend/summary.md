@@ -79,6 +79,12 @@ A aba "Mapa Regional" implementa:
   - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-08-13)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-13` concentrado em `database/`/`pipeline/`/`docs/`/`utilities/` (migration 82 — Normalização de Grandezas + Semáforo Sensível por CV, **COMMITADA e PUSHADA** em `feature/migration-82-semaforo-sensivel` @ `f1692db5`, pending apply). /frontend inalterado.
+
 ## Mudanças Recentes (2026-08-12)
 
 ### Dual-Environment (FASE 2) — modos Vite por ambiente

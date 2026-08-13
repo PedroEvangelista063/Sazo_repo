@@ -25,6 +25,16 @@ Pipeline de coleta ELT (`Scrape Now, Parse Later`). Micro-motores burros e focad
 9. **Orquestrador**: cascata CEASA direta → Agregadores → Discovery. Log `[AUDIT]` a cada pivotagem.
 10. **Fontes**: centralizadas em `config/sources_matrix.json` — configuration over code.
 
+## Mudanças Recentes (2026-08-13)
+
+### Migration 82 — Fase 1 no ETL (normalização de unidade)
+
+- `etl_conab_diario.py` — `transform()` agora deriva `unidade_canonica`/`fator_kg` de `sig_unidade_medida` (helpers `normalizar_unidade_sig` + `_aplicar_unidade`); `group_by` INCLUI unidade (kg e cx do mesmo produto/UF/mês viram linhas separadas, sem misturar grandezas); `fluxo_unidade='etl'`. Fase 1 da migration 82.
+- `scraper/adapters/base.py` — `UNIDADES_PADRAO` refatorado: unidades ambíguas (cx/caixa/saco/dz/un/maço/fardo/pc/pto) NÃO recebem mais fator genérico 1.0; novos dicionários `UNIDADES_CANONICAS` (nomes canônicos kg/g/ton/cx20/cx22/cx25/cx30/saco25/saco50) e `UNIDADES_AMBIGUAS` (caixa_generica/saco_generico/fardo/dz/maço/un) + `FATOR_AMBIGUO=1.0` placeholder (conversão real decidida pelo banco via `mart.dim_unidade_medida`).
+- `ingestao_conab_inteligente.py` — `CarregadorMedalhao._inserir_fato`: INSERT inclui `unidade_canonica`/`fator_kg`/`fluxo_unidade` (lidas por nome, None quando ausentes); chave de deduplicação `vistos` inclui unidade; `ON CONFLICT` na forma de expressão 5-col.
+- `data_healer.py`, `ingestao_conab.py`, `load_parquet_to_db.py`, `run_bulk_historical_fill.py`, `run_scraper_historico.py`, `processor/sorting_engine.py` — `ON CONFLICT` migrado para a forma de expressão `(id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg')))` por causa do novo índice único com unidade (run_bulk trocou `ON CONFLICT ON CONSTRAINT uq_fact_precos_mensais` pela forma de expressão). SEM mudança de lógica.
+- Migration 82 (`database/82_normalizacao_unidade_sensibilidade_cv.sql`) **COMMITADA e PUSHADA** (commit `f1692db5`, branch `feature/migration-82-semaforo-sensivel`) mas **NÃO aplicada no banco (pending apply — Freeze Window)**.
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Nenhuma mudança neste lote

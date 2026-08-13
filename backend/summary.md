@@ -35,6 +35,12 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 
 **Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
 
+## Mudanças Recentes (2026-08-13)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-13` concentrado em `database/`/`pipeline/`/`docs/`/`utilities/` (migration 82 — Normalização de Grandezas + Semáforo Sensível por CV, **COMMITADA e PUSHADA** em `feature/migration-82-semaforo-sensivel` @ `f1692db5`, pending apply). /backend inalterado — API segue consultando as views/MV como documentado.
+
 ## Mudanças Recentes (2026-08-12)
 
 ### Dual-Environment (FASE 2) — APP_ENV, pool dinâmico e banner de startup

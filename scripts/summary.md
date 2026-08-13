@@ -6,6 +6,12 @@
 
 Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Quero Comprar VG.
 
+## Mudanças Recentes (2026-08-13)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-13` concentrado em `database/`/`pipeline/`/`docs/`/`utilities/` (migration 82 — Normalização de Grandezas + Semáforo Sensível por CV, **COMMITADA e PUSHADA** em `feature/migration-82-semaforo-sensivel` @ `f1692db5`, pending apply). /scripts inalterado.
+
 ## Mudanças Recentes (2026-08-12, follow-ups)
 
 ### Fast-path do guard + sync executado (com fixes reais)

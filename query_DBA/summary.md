@@ -36,6 +36,12 @@ Kit de queries e scripts **read-only** para o DBA monitorar o PostgreSQL local (
 ./conectar_dba.sh -f 01_health_visao_geral.sql # arquivo inteiro
 ```
 
+## Mudanças Recentes (2026-08-13)
+
+### Nenhuma mudança neste lote
+
+- Lote `2026-08-13` concentrado em `database/`/`pipeline/`/`docs/`/`utilities/` (migration 82 — Normalização de Grandezas + Semáforo Sensível por CV, **COMMITADA e PUSHADA** em `feature/migration-82-semaforo-sensivel` @ `f1692db5`, pending apply). /query_DBA inalterado — kit de queries segue válido.
+
 ## Mudanças Recentes (2026-08-12)
 
 - **Migration 80 (V23) APLICADA** em LOCAL e AIVEN (2026-08-12) — piso 2023+ ativo (0 âncoras `ano_referencia < 2023`; `min(ano_referencia)` set–dez 2026 = 2023; MV 177.485).

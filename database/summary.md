@@ -110,6 +110,19 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
+## Mudanças Recentes (2026-08-13)
+
+### Migration 82 — Normalização de Grandezas + Semáforo Sensível por CV (82_normalizacao_unidade_sensibilidade_cv.sql)
+
+- **Novo arquivo**: `database/82_normalizacao_unidade_sensibilidade_cv.sql` (808 linhas). **⚠️ COMMITADA e PUSHADA** em `feature/migration-82-semaforo-sensivel` (commit `f1692db5`, origin) — **NÃO aplicada no banco (pending apply — Freeze Window; deploy agendado para a próxima janela)**.
+- **Fase 2**: tabela `mart.dim_unidade_medida` (`id_unidade`, `unidade_canonica`, `sinonimos TEXT[]`, `fator_kg NUMERIC(12,6)`, `eh_confiavel BOOLEAN`) + seeds com `ON CONFLICT`; `ALTER staging.fact_precos_mensais` adiciona `unidade_canonica TEXT`, `fator_kg NUMERIC(12,6)`, `fluxo_unidade TEXT`; função `staging.normalizar_unidade_sql(TEXT)` (espelho do Python, `STABLE` pois lê a dim); GRANTs para `role_etl_writer`/`role_api_reader`.
+- **Fase 3**: `staging.estatisticas_volatilidade_24m_cv()` — janela 24m, IQR de Tukey, converte para preço por kg via `mart.fator_kg_produto_uf`, retorna `cv_serie` (CV=σ/μ) e flag `contam_unidade` (cv > 40%); `staging.calcular_semaforo_preco_sensivel(preco_exibido, preco_referencia, cv_serie, fator_kg)` — banda proporcional: `limite = μ×(1±max(CV, piso))`, piso por magnitude (ref ≤ R$5 → 2%, ≤ R$20 → 5%, > R$20 → 8%), AMARELO defensivo quando `contam_unidade` (cv > 40%); overload retrocompatível `staging.calcular_semaforo_preco` 3-arg delegando para a nova.
+- **Fase 4**: backfill heurístico DO — inferência `unidade_canonica` em 245.362 linhas (`preco_medio > 10× mediana_kg` → `'cx'`; < R$0,50 → `'un'`; senão `'kg'`; fluxo `'inferido_backfill'`), `RAISE NOTICE` com totais.
+- **Fase 5**: `sp_calcular_sazonalidade` refatorada — `fact_kg` com `DISTINCT ON` (kg → fator_kg conhecido → genérico) antes da média móvel; grava `cv_serie`, `contam_unidade` e `metadado_transparencia` JSONB (aviso de baixa confiabilidade estatística por mistura de grandezas); consome `estatisticas_volatilidade_24m_cv()` e `calcular_semaforo_preco_sensivel()`.
+- **Fase 6**: view `ops.simulacao_semaforo_v82` (A/B: `status_cor_antigo` vs `status_cor_novo`, `cv_real`, `unidade_inferida`, `contam_unidade`, `metadado`) para avaliação antes do deploy.
+- **Decisão arquitetural**: GRANULARIDADE NA FACT (UNIQUE passa a `(id_produto, id_localidade, ano, mes, COALESCE(unidade_canonica,'kg'))`) + SAZONALIDADE ESCOLHE KG (mantém UNIQUE 4-col com `DISTINCT ON`).
+- Rollback documentado ao final (drop do índice/funções/view).
+
 ## Mudanças Recentes (2026-08-12, follow-ups)
 
 ### Fase 2 (subconjunto seguro) — nomenclatura DBA-friendly (81_fase2_subconjunto_seguro.sql)
@@ -369,7 +382,7 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `79_br_sazonalidade_inclui_projecao.sql` — /br-sazonalidade inclui projeção FALLBACK (P1-1)
 - `80_mv_fallback_janela_2023.sql` — Deep Fallback janela 2023+ (MV V23)
 - `81_fase2_subconjunto_seguro.sql` — Fase 2 segura: 4 funções + baseline_2025_interpolado + vw_fluxos_regionais
-- `82_normalizacao_unidade_sensibilidade_cv.sql` — Normalização de grandezas (unidade_canonica/fator_kg na fact, UNIQUE por unidade) + semáforo sensível por CV + backfill + validation gate
+- `82_normalizacao_unidade_sensibilidade_cv.sql` — Normalização de grandezas (unidade_canonica/fator_kg na fact, UNIQUE por unidade) + semáforo sensível por CV + backfill + validation gate **⚠️ COMMITADA/PUSHADA (`f1692db5`) — NÃO aplicada (pending apply, Freeze Window)**
 
 ## Mapa Rápido
 

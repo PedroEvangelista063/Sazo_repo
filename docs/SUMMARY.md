@@ -67,6 +67,10 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 - `reports/auditoria_b2c_completa_2026-07-06.csv` — relatório de auditoria B2C
 - `reports/auditoria_padrao_ouro_b2c.csv` — padrão ouro B2C
 
+## Mudanças Recentes (2026-08-13)
+
+- **Migration 82 (Normalização de Grandezas + Semáforo Sensível por CV)**: **COMMITADA E PUSHADA** em `feature/migration-82-semaforo-sensivel` (commit `f1692db5`, origin) — **pending apply** (NÃO aplicada no banco por Freeze Window; deploy agendado para a próxima janela). Lote de 13 arquivos (+1.086/−32) concentrado em `database/` (migration 82, 808 linhas), `pipeline/` (ETL CONAB transform per-unidade + ON CONFLICT em forma de expressão), `docs/` e `utilities/` (ON CONFLICT 5-col). Backend/frontend/scripts/config/query_DBA inalterados. Ver `database/summary.md` e `pipeline/summary.md`.
+
 ## Mudanças Recentes (2026-08-11)
 
 - **DB**: migrations `74`-`80` — quality gates (12 meses, baseline, completude de série MV V21), deep fallback histórico (**MV V22**, `78` — aplicada, validada em local+remoto) e /br-sazonalidade inclui projeção (**`79`**, P1-1 — aplicada); **`80` (V23, janela 2023+) COMMITADA mas NÃO aplicada** (piso ausente na MV real — aplicar DDL + refresh via psql); draft de nomenclatura DBA-friendly (`77`). Ver `database/summary.md`.
@@ -76,7 +80,7 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 
 ## Mudanças Recentes (2026-08-12, follow-ups)
 
-- **Migration 82 (Normalização de Grandezas + Semáforo Sensível por CV)**: em desenvolvimento — transform per-unidade no ETL diário CONAB (`pipeline/etl_conab_diario.py`, Fase 1 concluída) + arquivo `database/82_normalizacao_unidade_sensibilidade_cv.sql` (Fases 2-6: `mart.dim_unidade_medida` com fatores, colunas `unidade_canonica`/`fator_kg`/`fluxo_unidade` na fact, UNIQUE com unidade via `COALESCE`, funções `estatisticas_volatilidade_24m_cv()` e `calcular_semaforo_preco_sensivel()`, backfill heurístico, `sp_calcular_sazonalidade` kg-first com CV, validation gate `ops.simulacao_semaforo_v82`). NÃO executado/commitado ainda. Ver seção abaixo.
+- **Migration 82 (Normalização de Grandezas + Semáforo Sensível por CV)**: em desenvolvimento — transform per-unidade no ETL diário CONAB (`pipeline/etl_conab_diario.py`, Fase 1 concluída) + arquivo `database/82_normalizacao_unidade_sensibilidade_cv.sql` (Fases 2-6: `mart.dim_unidade_medida` com fatores, colunas `unidade_canonica`/`fator_kg`/`fluxo_unidade` na fact, UNIQUE com unidade via `COALESCE`, funções `estatisticas_volatilidade_24m_cv()` e `calcular_semaforo_preco_sensivel()`, backfill heurístico, `sp_calcular_sazonalidade` kg-first com CV, validation gate `ops.simulacao_semaforo_v82`). **✅ COMMITADA E PUSHADA** em `feature/migration-82-semaforo-sensivel` (`f1692db5`), **pending apply** (não aplicada no banco por Freeze Window; deploy agendado para a próxima janela). Ver seção abaixo.
 
 ### Semáforo Sensível por Coeficiente de Variação (Migration 82)
 

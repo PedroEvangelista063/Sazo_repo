@@ -16,6 +16,13 @@ Python 3.13+, asyncpg, httpx, argparse (ou entrada via env vars).
 2. **Diagnóstico, não Produção**: esses scripts NUNCA são chamados pelo pipeline ou pela API. Exclusivamente para uso manual em CLI.
 3. **Sem Side Effects Permanentes**: scripts de `_check_*`, `validate_*`, `audit_*` devem ser read-only por padrão. Qualquer escrita deve ser explícita via flag `--apply`.
 
+## Mudanças Recentes (2026-08-13)
+
+### ON CONFLICT em forma de expressão (validate_e2e.py)
+
+- `utilities/validate_e2e.py` — `ON CONFLICT` migrado para a forma de expressão 5-col `(id_produto, id_localidade, ano, mes, (COALESCE(unidade_canonica, 'kg')))` — consistência com o novo índice único com unidade da migration 82. Sem mudança de lógica.
+- Migration 82 **COMMITADA e PUSHADA** (`f1692db5`, `feature/migration-82-semaforo-sensivel`) — pending apply (Freeze Window).
+
 ## Mudanças Recentes (2026-08-11)
 
 ### Nenhuma mudança neste lote

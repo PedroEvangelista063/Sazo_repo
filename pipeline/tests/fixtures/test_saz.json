@@ -1,3 +1,0 @@
-ERRO:  coluna "ano" não existe
-LINHA 1: ...ELECT id_sazonalidade, id_produto, id_localidade, ano, mes, ...
-                                                              ^

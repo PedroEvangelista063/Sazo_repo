@@ -4,6 +4,7 @@ import { X, MapPin, ShoppingBasket, Package, Truck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
 import type { RegiaoInfo, ProdutoVarejo, FlowItem } from '@/types/domain'
+import { normalizarStatusCor } from '@/utils/statusCor'
 
 function groupBy<T>(arr: T[], keyFn: (item: T) => string): Record<string, T[]> {
   return arr.reduce(
@@ -103,7 +104,9 @@ export function RegiaoPanel({
               <div className="mb-4 flex flex-wrap gap-1.5">
                 {(Object.entries(STATUS_CONFIG) as [string, (typeof STATUS_CONFIG)['VERDE']][]).map(
                   ([status, info]) => {
-                    const count = produtos.filter((p) => p.status_cor === status).length
+                    const count = produtos.filter(
+                      (p) => normalizarStatusCor(p.status_cor) === status,
+                    ).length
                     if (count === 0) return null
                     return (
                       <Badge
@@ -149,7 +152,7 @@ export function RegiaoPanel({
                   <span className="flex-1 truncate">{polo.nome}</span>
                   <span className="text-[10px] text-gray-400">{polo.uf}</span>
                   {polo.fonte_id ? (
-                    <ShoppingBasket size={12} className="text-sazonal-verde-500 shrink-0" />
+                    <ShoppingBasket size={12} className="shrink-0 text-sazonal-verde-500" />
                   ) : (
                     <span className="shrink-0 text-[9px] text-gray-400">sem dados</span>
                   )}

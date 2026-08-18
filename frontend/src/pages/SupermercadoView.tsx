@@ -11,6 +11,7 @@ import { useUfs } from '@/hooks/useUfs'
 import { useFluxos } from '@/hooks/useFluxos'
 import { hapticLight, hapticSuccess } from '@/utils/haptics'
 import { temGradeCompleta } from '@/utils/gradeCompleta'
+import { normalizarStatusCor } from '@/utils/statusCor'
 
 // Layout Components
 import { TopAppBar } from '@/components/layout/TopAppBar'
@@ -188,15 +189,14 @@ export function SupermercadoView() {
 
   const displayProducts = useMemo(() => {
     if (!selectedStatus) return searchFiltered
-    return searchFiltered.filter((p) => p.status_cor === selectedStatus)
+    const alvo = normalizarStatusCor(selectedStatus)
+    return searchFiltered.filter((p) => normalizarStatusCor(p.status_cor) === alvo)
   }, [searchFiltered, selectedStatus])
 
   const contadores = useMemo(() => {
     const c = { VERDE: 0, AMARELO: 0, VERMELHO: 0 }
     for (const p of searchFiltered) {
-      if (p.status_cor === 'VERDE' || p.status_cor === 'AMARELO' || p.status_cor === 'VERMELHO') {
-        c[p.status_cor]++
-      }
+      c[normalizarStatusCor(p.status_cor)]++
     }
     return c
   }, [searchFiltered])

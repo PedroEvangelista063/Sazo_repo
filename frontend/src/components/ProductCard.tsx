@@ -102,7 +102,10 @@ function ProductCardInner({ product, isSelected, onToggle }: ProductCardProps) {
   const badge = STATUS_BADGES[product.status_cor] ?? STATUS_BADGES.AMARELO
   const projetado = isDadoProjetado(product)
   const mensagemProjecao =
-    product.mensagem_transparencia?.trim() || 'Projeção baseada em anos anteriores'
+    product.mensagem_transparencia?.trim() ||
+    (product.ano_referencia != null
+      ? `Projeção baseada no histórico de ${product.ano_referencia}`
+      : 'Projeção baseada em anos anteriores')
 
   return (
     <motion.div

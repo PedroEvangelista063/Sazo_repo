@@ -1,20 +1,31 @@
-node_modules/
-frontend/node_modules/
+# ── Agentes, Inteligência e Configurações Internas ────────────────────
+.agents/
+.atl/
+.codex/
+.config/
+.gga
+.opencode/
+.mcp.json
+.mimocode/
+.playwright-mcp/
+.claude/
+.gemini/
+opencode.jsonc
+*.jsonc
+.hound_cache/
+.aider*
 
-# Ambiente
+# ── Segredos e Ambientes ──────────────────────────────────────────────
 .env
-.env.local
-.env.staging
-.env.production
-.env.test
-backend/.env
-backend/.env.staging
-backend/.env.production
-frontend/.env
-frontend/.env.staging
-frontend/.env.production
+.env.*
+!.env.example
+backend/.env*
+!backend/.env.example
+frontend/.env*
+!frontend/.env.example
+backend/.env.bak-*
 
-# Python
+# ── Python ────────────────────────────────────────────────────────────
 __pycache__/
 *.pyc
 .venv/
@@ -22,85 +33,51 @@ __pycache__/
 .ruff_cache/
 .coverage
 
-# Build
+# ── Node / Frontend ──────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
 frontend/dist/
 *.tsbuildinfo
 
-# Logs
+# ── Build / Logs ─────────────────────────────────────────────────────
 logs/
 *.log
 pg_start.log
 
-# Cache
-data/discovery_cache.json
+# ── Dados Locais ─────────────────────────────────────────────────────
+data/
+database/backups/
+database/backups_locais/
+database/logs_locais/
+.docker/
+.docker/pg_data/
 
-# IDE
+# ── IDE / OS ─────────────────────────────────────────────────────────
 .idea/
 *.swp
 *.swo
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Playwright MCP
-.playwright-mcp/
-
-# MiMoCode
-.mimocode/
-
-# Test artifacts
-*.png
-*.jpg
-*.jpeg
-
-# Claude (duplicata do .agents)
-.claude/
-
-# Caches de teste
+# ── Testes ───────────────────────────────────────────────────────────
+tests/
 .test_cache_*
 
-# Hound cache
-.hound_cache/
-
-# OpenCode auto-generated infra
-.config/opencode/skills/
-.config/opencode/.gentle-ai-*
-.config/opencode/plugins/
-.config/opencode/commands/skill-*
-
-# OpenSpec (snapshots + changes WIP)
-openspec/summary-snapshot-*
-openspec/changes/hound-master-fetch-integration/
-
-# Pipeline WIP (hound module, site maps)
+# ── Pipeline WIP ─────────────────────────────────────────────────────
 pipeline/scraper/site_maps/
 pipeline/scraper/config_fontes_descobertas.json
 pipeline/scraper/hound/
 pipeline/scraper/hunt_adapter.py
 
-# Testes avulsos (ainda nao integrados)
-tests/
+# ── OpenSpec (snapshots WIP) ─────────────────────────────────────────
+openspec/summary-snapshot-*
+openspec/changes/hound-master-fetch-integration/
 
-# Local AI runtime state
-.atl/
-
-# Database backups (FASE 2: sync_db_remote_to_local)
-database/backups/
-
-# Drenagem e backup local sob demanda (BYOB — FASE 1/2: nunca versionar gigabytes)
-database/backups_locais/
-database/logs_locais/
-.docker/pg_data/
-.aider*
-
-# Terminal artifacts (pipe redirection leftovers)
+# ── Terminal artifacts ───────────────────────────────────────────────
 ion |*
 backend/ion |*
 
-# Backups de .env (podem conter segredos)
-backend/.env.bak-*
-
-# MCP config (config local com segredos — token GitHub fica só na máquina)
-.mcp.json
-opencode.jsonc
+# ── Test artifacts ───────────────────────────────────────────────────
+*.png
+*.jpg
+*.jpeg

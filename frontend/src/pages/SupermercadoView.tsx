@@ -105,7 +105,7 @@ function normalizeBusca(s: string): string {
 }
 
 export function SupermercadoView() {
-  const [selectedUF, setSelectedUF] = useState<string>('BR')
+  const [selectedUF, setSelectedUF] = useState<string>('SP')
   const [selectedYear] = useState<number>(() => new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])

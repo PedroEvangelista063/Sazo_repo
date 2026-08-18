@@ -91,4 +91,4 @@ Propriedade intelectual. Código-fonte disponibilizado exclusivamente para fins 
 
 ---
 
-> _Desenvolvido com ❤️ para o mercado brasileiro de hortigranjeiros._
+> _Desenvolvido com ❤️._

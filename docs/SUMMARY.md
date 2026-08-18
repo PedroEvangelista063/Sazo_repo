@@ -44,7 +44,7 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 
 - `AGENTS.md` — regras da casa para agentes AI (stack, classificação, medalhão, frontend)
 - `HISTORICO_MELHORIAS_BACKFILL.md` — changelog de backfill (inclui diagnóstico gap 2024, proposta target-list e snapshot de validação CONAB)
-- `quero_comprar_plano_tecnico.md` — plano técnico geral
+- `sazo_brasil_plano_tecnico.md` — plano técnico geral
 - `AUDITORIA_BANCO_FRONTEND.md` — auditoria banco + frontend
 - `README.md` — visão geral do projeto (micro-monorepo, setup, deploy)
 - `PROJECT_RULES.md` — regras para desenvolvimento
@@ -87,12 +87,12 @@ Markdown, Mermaid (diagramas), Python (scripts de diagnóstico).
 **Problema**: preços de grandezas diferentes poluem a fact (ex.: PITAYA variando de R$ 0,01 a R$ 108 conforme a unidade da coleta — caixa, kg, unidade). O semáforo clássico ±desvio absoluto (migration 65/68) vira VERDE/VERMELHO espúrio porque o desvio fica inflado.
 
 **Solução** (3 frentes):
+
 1. **Granularidade na fact**: `staging.fact_precos_mensais` ganha `unidade_canonica`, `fator_kg`, `fluxo_unidade`; o UNIQUE passa a incluir a unidade (`COALESCE(unidade_canonica, 'kg')`) — o ETL diário agrega POR unidade (`group_by` inclui unidade).
 2. **Sazonalidade escolhe kg**: `mart.sazonalidade_produto` mantém 1 linha/mês; a SP usa `DISTINCT ON` com prioridade kg → fator_kg conhecido → genérico, ANTES da média móvel.
 3. **Semáforo por CV**: banda proporcional `ref * (1 ± cv_efetivo)`, onde `cv_efetivo = GREATEST(cv_serie, piso_da_faixa)` com piso por magnitude (≤5 → 2%; ≤20 → 5%; >20 → 8%); `cv > 0.40` → AMARELO defensivo (`contam_unidade`).
 
 **Fluxo Python**: `normalizar_unidade_sig()` + `_aplicar_unidade()` no `etl_conab_diario.py` normalizam `sig_unidade_medida` em `(unidade_canonica, fator_kg)` com `_UNIDADES_MERGE` (definitivas com fator) e `UNIDADES_CONAB_AMBIGUAS` (cx/saco/dz/un/maço → fator NULL, conversão decidida no banco).
-
 
 - **Migration 80 (V23) APLICADA nos 2 bancos** (local + Aiven) com backup + validação funcional: 0 âncoras FALLBACK < 2023, `min(ano_referencia)` set–dez 2026 = 2023, MV 177.485, 0 nulo/CINZA. Correção de marcador: `position('YEAR FROM CURRENT_DATE')` é case-sensitive quebrado (deparser normaliza) — validar por funcional. Runbook dedicado: `docs/runbook_migration_80_local.md`.
 - **Sync Produção ➔ Homologação executado** (`scripts/sync_db_prod_to_staging.sh`): local espelha o Aiven (fact 245.362, MV 177.485, sazonalidade 346.961), `ops.*`/`raw.*` preservados; restore reescrito para **um único `pg_restore --clean --if-exists`** (psql schema conflitava com schemas preservados) + exclusão de `audit` do dump + pre-drop do event trigger `ensure_rls` (legado Supabase, ausente no Aiven — local agora idêntico ao Aiven). **Rollback documentado**: `docs/runbook_rollback_sync_prod_staging.md`; o sync agora gera **snapshot de segurança do destino** (`backup_staging_pre_sync_*.dump`) antes do wipe.
@@ -135,7 +135,7 @@ Separação estrita entre **Homologação (servidor FÍSICO/local)** e **Produç
 ## Mapa completo do projeto (resumo dos summary.md)
 
 ```
-quero_comprar_vg/
+sazo_brasil/
 │
 ├── pipeline/          (Motor de Extração — ELT)
 │   ├── Propósito: Scrape Now, Parse Later. Micro-motores depositam na Landing Zone.
@@ -352,7 +352,7 @@ quero_comprar_vg/
         ├── AGENTS.md                       — regras da casa para AI
         ├── PROMPT_AUDITORIA_ENRIQUECIMENTO.md
         ├── HISTORICO_MELHORIAS_BACKFILL.md  — (inclui diagnóstico gap 2024 + proposta target-list)
-        ├── quero_comprar_plano_tecnico.md
+        ├── sazo_brasil_plano_tecnico.md
         ├── AUDITORIA_BANCO_FRONTEND.md
         ├── README.md                       — visão geral do projeto
         ├── scripts/                        — utilitários de diagnóstico

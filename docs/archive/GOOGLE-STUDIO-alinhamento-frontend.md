@@ -2,7 +2,7 @@
 
 > **Mega prompt sênior — refatorar/alinhar a versão "HortiSazonal" do frontend gerada no Google Studio
 > com o backend real do projeto: FastAPI + PostgreSQL remoto (Aiven) que alimenta todas as views.**
-> Projeto: `quero_comprar_vg` · Repositório: `PedroEvangelista063/Sazo_repo`
+> Projeto: `sazo_brasil` · Repositório: `PedroEvangelista063/Sazo_repo`
 > Fontes: `docs/STICH-GOOGLE-frontend.md` + exploração do código real verificada em 2026-08-10
 > (backend/app, frontend/src, database/*.sql, config/regions.json, render.yaml, vercel.json).
 
@@ -22,7 +22,7 @@ Endpoint Map" (§4), "Prohibited" (§5), "Stack" (§6) and "Verified File Tree" 
 truth**. Anything in the Google Studio version that is not backed by the real API or the Golden Rules must
 be adapted or removed. Do NOT invent backend fields or endpoints.
 
-**Product**: "HortiSazonal" (rebrand of "Quero Comprar") — a React **PWA** (offline-first, mobile-first)
+**Product**: "HortiSazonal" (rebrand of "Sazo Brasil") — a React **PWA** (offline-first, mobile-first)
 for Brazilian consumers of hortifrúti. It shows seasonal price **status** as a traffic-light color system
 (🟢 green = cheap/safra, 🟡 yellow = medium, 🔴 red = expensive/entressafra) for BR states and CEASA/CONAB
 supply flows. **The UI NEVER shows monetary values** — only colors derived from the API. Visual fallbacks

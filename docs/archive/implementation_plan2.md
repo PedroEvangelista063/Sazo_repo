@@ -63,7 +63,7 @@ O objetivo deste plano é **eliminar 100% dos espaços cinzas (gaps)** da Grade 
 
 ---
 
-#### [NEW] [000019_engine_forecast_2024_2025_v13.sql](file:///home/pedroeduardo/projetos/quero_comprar_vg/supabase/migrations/000019_engine_forecast_2024_2025_v13.sql)
+#### [NEW] [000019_engine_forecast_2024_2025_v13.sql](file:///home/pedroeduardo/projetos/sazo_brasil/supabase/migrations/000019_engine_forecast_2024_2025_v13.sql)
 
 Cria a nova Procedure de Forecast Preditivo `staging.sp_calcular_forecast_2026_v13()` e recalcula os baselines históricos:
 
@@ -104,7 +104,7 @@ Cria a nova Procedure de Forecast Preditivo `staging.sp_calcular_forecast_2026_v
 
 ---
 
-#### [MODIFY] [persistence.py](file:///home/pedroeduardo/projetos/quero_comprar_vg/pipeline/scraper/persistence.py)
+#### [MODIFY] [persistence.py](file:///home/pedroeduardo/projetos/sazo_brasil/pipeline/scraper/persistence.py)
 
 - Garantir que `executar_ciclo_medalhao()` invoque a `sp_executar_carga_completa()` após a ingestão de novos payloads do scraper, realizando o ciclo automático de sobrescrita.
 
@@ -114,7 +114,7 @@ Cria a nova Procedure de Forecast Preditivo `staging.sp_calcular_forecast_2026_v
 
 ---
 
-#### [MODIFY] [SazonalidadeNacional.tsx](file:///home/pedroeduardo/projetos/quero_comprar_vg/frontend/src/components/SazonalidadeNacional.tsx)
+#### [MODIFY] [SazonalidadeNacional.tsx](file:///home/pedroeduardo/projetos/sazo_brasil/frontend/src/components/SazonalidadeNacional.tsx)
 
 - Exibir indicação visual sutil (ex: um pequeno ponto ou borda estilizada) quando o mês for preenchido via forecast preditivo `2024+2025`, incluindo tooltip explicativo:
   - Dado Real: `"Coletado em 15/07/2026 via CEASA/CONAB"`

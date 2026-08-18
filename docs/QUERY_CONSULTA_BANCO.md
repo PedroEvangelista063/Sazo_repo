@@ -1,4 +1,4 @@
-# 🔍 Consultas SQL — Quero Comprar VG
+# 🔍 Consultas SQL — Sazo Brasil
 
 Conjunto de queries para diagnóstico de dados no Supabase remoto.
 Use no **SQL Editor** do dashboard: https://supabase.com/dashboard/project/kxsqrcccaaxplpktmutl/sql/new

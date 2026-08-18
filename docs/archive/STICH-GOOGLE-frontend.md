@@ -1,7 +1,7 @@
 # STICH-GOOGLE-frontend
 
 > **Mega resumo do frontend — prompt de refatoração para Google Stitch**
-> Projeto: `quero_comprar_vg` · Repositório: `PedroEvangelista063/Sazo_repo` (renomeado de `Quero_Comprar_ext`)
+> Projeto: `sazo_brasil` · Repositório: `PedroEvangelista063/Sazo_repo` (renomeado de `Sazo_repo`)
 > Fontes: `frontend/summary.md` (histórico e regras de produto, 2026-08-07) + estado real do código verificado em 2026-08-10 (package.json, src/, configs, testes).
 
 ---
@@ -16,7 +16,7 @@ You are a senior frontend engineer and refactoring specialist. Your mission is t
 
 ## 1. PRODUCT OVERVIEW
 
-- **What**: "Quero Comprar" — a React **PWA** (offline-first, mobile-first) for Brazilian consumers of horticultural products (hortifrúti). It displays seasonal price **status** as a traffic-light color system (🟢 green = cheap, 🟡 yellow = medium, 🔴 red = expensive) for BR states/municipalities and CEASA/CONAB supply flows.
+- **What**: "Sazo Brasil" — a React **PWA** (offline-first, mobile-first) for Brazilian consumers of horticultural products (hortifrúti). It displays seasonal price **status** as a traffic-light color system (🟢 green = cheap, 🟡 yellow = medium, 🔴 red = expensive) for BR states/municipalities and CEASA/CONAB supply flows.
 - **Critical product rule**: the UI **NEVER shows monetary values** (`R$`, `$`, numeric prices). Only colors derived from the API. Visual fallbacks use **emoji** (never images that can break layout).
 - **Audience**: B2C mobile users in Brazil; design must work from **320px** width, touch targets ≥ 44px.
 - **Status of data transparency**: the app must clearly distinguish real current data (`REAL_ATUAL`), historical anchor-year data (`HISTORICO_BASE`), and reference/fallback data (`FALLBACK_DIMENSAO`), including year-anchor badges and "(i)" transparency tooltips. Empty/unavailable months render as **gray (CINZA)** — with **null-safe frontend handling** (`?.`/`??`) because months without real data arrive with null fields.

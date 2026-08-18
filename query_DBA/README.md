@@ -93,4 +93,4 @@ query_DBA/
 
 ---
 
-**Feito para o DBA do Quero Comprar — dados abertos, transparência total.** 🥑
+**Feito para o DBA doSazo Brasil — dados abertos, transparência total.** 🥑

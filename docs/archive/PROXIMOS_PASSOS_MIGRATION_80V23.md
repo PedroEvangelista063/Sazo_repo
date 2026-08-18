@@ -54,7 +54,7 @@ Queries read-only executadas via `psql` (local) e `psql "$DATABASE_URL_PRIMARY"`
 ### 3.2 Pré-requisitos (antes de qualquer alteração)
 
 ```bash
-cd /home/pedroeduardo/projetos/quero_comprar_vg
+cd /home/pedroeduardo/projetos/sazo_brasil
 export DB_LOCAL="$(grep -E '^DATABASE_URL_LOCAL_BACKUP=' backend/.env | cut -d= -f2- | tr -d '"')"
 psql "$DB_LOCAL" -Atc 'SELECT 1;'   # prova de conectividade → deve imprimir 1
 

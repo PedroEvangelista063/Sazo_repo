@@ -2,7 +2,7 @@
 
 ## 1. O que é este banco
 
-O Quero Comprar usa um **PostgreSQL local** em `localhost:5432/quero_comprar` como fonte primária de desenvolvimento (o remoto Aiven/Supabase é fallback). Aqui ficam **os dados reais de sazonalidade** de hortifrúti — coletados do CONAB e CEASAs.
+O Sazo Brasil usa um **PostgreSQL local** em `localhost:5432/quero_comprar` como fonte primária de desenvolvimento (o remoto Aiven/Supabase é fallback). Aqui ficam **os dados reais de sazonalidade** de hortifrúti — coletados do CONAB e CEASAs.
 
 ## 2. Arquitetura Medalhão
 

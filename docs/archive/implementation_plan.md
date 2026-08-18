@@ -34,13 +34,13 @@ A solução eleva a resiliência da arquitetura em 3 níveis:
 
 ---
 
-#### [NEW] [000016_fix_grade_sazonal_min_ufs.sql](file:///home/pedroeduardo/projetos/quero_comprar_vg/supabase/migrations/000016_fix_grade_sazonal_min_ufs.sql)
+#### [NEW] [000016_fix_grade_sazonal_min_ufs.sql](file:///home/pedroeduardo/projetos/sazo_brasil/supabase/migrations/000016_fix_grade_sazonal_min_ufs.sql)
 
 - Criar migration SQL parametrizando `mart.fn_br_nacional_sazonalidade(p_ano, p_categoria, p_min_ufs DEFAULT 1)`.
 - Alterar a cláusula `HAVING COUNT(DISTINCT upm.uf) >= p_min_ufs`.
 - Atualizar permissões de `GRANT EXECUTE` para as roles do banco.
 
-#### [MODIFY] [31_remove_year_filter_mv.sql](file:///home/pedroeduardo/projetos/quero_comprar_vg/database/31_remove_year_filter_mv.sql)
+#### [MODIFY] [31_remove_year_filter_mv.sql](file:///home/pedroeduardo/projetos/sazo_brasil/database/31_remove_year_filter_mv.sql)
 
 - Atualizar a definição de referência da função `mart.fn_br_nacional_sazonalidade` para manter o repositório sincronizado.
 
@@ -50,11 +50,11 @@ A solução eleva a resiliência da arquitetura em 3 níveis:
 
 ---
 
-#### [MODIFY] [responses.py](file:///home/pedroeduardo/projetos/quero_comprar_vg/backend/app/schemas/responses.py)
+#### [MODIFY] [responses.py](file:///home/pedroeduardo/projetos/sazo_brasil/backend/app/schemas/responses.py)
 
 - Atualizar o schema `SazonalidadeNacionalItem` e `SazonalidadeNacionalResponse` se novos campos de metadados forem expostos.
 
-#### [MODIFY] [produtos.py](file:///home/pedroeduardo/projetos/quero_comprar_vg/backend/app/api/v1/endpoints/produtos.py)
+#### [MODIFY] [produtos.py](file:///home/pedroeduardo/projetos/sazo_brasil/backend/app/api/v1/endpoints/produtos.py)
 
 - Atualizar a rota `GET /api/v1/sazonalidade/br-sazonalidade` para receber o query param opcional `min_ufs: int = Query(1, ge=1, le=27)`.
 - Atualizar a chamada à função SQL `mart.fn_br_nacional_sazonalidade($1, $2, $3)` e compor a chave de cache MD5 considerando `min_ufs`.
@@ -65,15 +65,15 @@ A solução eleva a resiliência da arquitetura em 3 níveis:
 
 ---
 
-#### [MODIFY] [domain.ts](file:///home/pedroeduardo/projetos/quero_comprar_vg/frontend/src/types/domain.ts)
+#### [MODIFY] [domain.ts](file:///home/pedroeduardo/projetos/sazo_brasil/frontend/src/types/domain.ts)
 
 - Atualizar os tipos `SazonalidadeNacionalItem` e `MesSazonalidade` se aplicável.
 
-#### [MODIFY] [useHortifruti.ts](file:///home/pedroeduardo/projetos/quero_comprar_vg/frontend/src/hooks/useHortifruti.ts)
+#### [MODIFY] [useHortifruti.ts](file:///home/pedroeduardo/projetos/sazo_brasil/frontend/src/hooks/useHortifruti.ts)
 
 - Passar o parâmetro `min_ufs` na requisição `api.get('/sazonalidade/br-sazonalidade', ...)` se necessário.
 
-#### [MODIFY] [SazonalidadeNacional.tsx](file:///home/pedroeduardo/projetos/quero_comprar_vg/frontend/src/components/SazonalidadeNacional.tsx)
+#### [MODIFY] [SazonalidadeNacional.tsx](file:///home/pedroeduardo/projetos/sazo_brasil/frontend/src/components/SazonalidadeNacional.tsx)
 
 - Atualizar a renderização das células:
   - Células sem dados (`!mesData`): adicionar tooltip "Sem dados coletados para este mês".

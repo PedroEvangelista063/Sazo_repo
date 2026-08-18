@@ -1,6 +1,6 @@
 # 🏛️ Arquitetura Híbrida de Banco de Dados
 
-> **Projeto:** Quero Comprar VG
+> **Projeto:** Sazo Brasil
 > **Última atualização:** 2026-07-25
 > **Stack:** Supabase (PostgreSQL 17) + asyncpg + FastAPI + PostgreSQL 18 local
 
@@ -50,12 +50,12 @@
 
 ### Regra de Ouro
 
-| Direção | Permitido? | Como? |
-|---------|-----------|-------|
-| **Remote ➔ Local** | ✅ **Sim** — via `npm run db:backup` | `pg_dump` do Supabase → `pg_restore` no local |
-| **Local ➔ Remote** | ❌ **NUNCA** automaticamente | Apenas via **migrations formais** em `supabase/migrations/` |
-| **Dev diário** | ✅ Remote (padrão) | `npm run dev` sempre usa `DATABASE_URL_API` |
-| **Teste de query** | ✅ Local (com flag) | `DB_ENV=local npm run db:test:local` |
+| Direção            | Permitido?                           | Como?                                                       |
+| ------------------ | ------------------------------------ | ----------------------------------------------------------- |
+| **Remote ➔ Local** | ✅ **Sim** — via `npm run db:backup` | `pg_dump` do Supabase → `pg_restore` no local               |
+| **Local ➔ Remote** | ❌ **NUNCA** automaticamente         | Apenas via **migrations formais** em `supabase/migrations/` |
+| **Dev diário**     | ✅ Remote (padrão)                   | `npm run dev` sempre usa `DATABASE_URL_API`                 |
+| **Teste de query** | ✅ Local (com flag)                  | `DB_ENV=local npm run db:test:local`                        |
 
 ---
 
@@ -75,13 +75,13 @@ DATABASE_URL_LOCAL_BACKUP → localhost:5432/quero_comprar
 
 ### Arquivos de ambiente
 
-| Arquivo | Propósito | Gitignored? |
-|---------|-----------|-------------|
-| `backend/.env` | **Única fonte de verdade** para URLs de banco | ✅ Sim |
-| `backend/.env.example` | Template para novos devs | ❌ Não |
-| `.env` (raiz) | Configs GLOBAIS (CORS, cache, LLM) - **sem URLs de banco** | ✅ Sim |
-| `.env.example` | Template global público | ❌ Não |
-| `frontend/.env` | `VITE_API_URL` (aponta para backend) | ✅ Sim |
+| Arquivo                | Propósito                                                  | Gitignored? |
+| ---------------------- | ---------------------------------------------------------- | ----------- |
+| `backend/.env`         | **Única fonte de verdade** para URLs de banco              | ✅ Sim      |
+| `backend/.env.example` | Template para novos devs                                   | ❌ Não      |
+| `.env` (raiz)          | Configs GLOBAIS (CORS, cache, LLM) - **sem URLs de banco** | ✅ Sim      |
+| `.env.example`         | Template global público                                    | ❌ Não      |
+| `frontend/.env`        | `VITE_API_URL` (aponta para backend)                       | ✅ Sim      |
 
 ### Rotas de conexão no código
 
@@ -137,14 +137,14 @@ USAGE:
 
 Já instalado e configurado:
 
-| Item | Valor |
-|------|-------|
-| Host | `localhost` |
-| Porta | `5432` |
-| Database | `quero_comprar` |
-| Usuário | `postgres` |
-| Senha | `postgres_dev_local` |
-| Versão | PostgreSQL 18.4 |
+| Item     | Valor                |
+| -------- | -------------------- |
+| Host     | `localhost`          |
+| Porta    | `5432`               |
+| Database | `quero_comprar`      |
+| Usuário  | `postgres`           |
+| Senha    | `postgres_dev_local` |
+| Versão   | PostgreSQL 18.4      |
 
 ### Opção B: Docker (Alternativa)
 
@@ -218,11 +218,11 @@ Isso garante que o backend Python, o OpenCode e as migrations nunca sejam bloque
 
 ## 6. Migrations Aplicadas (Schema Drift Reconciliado)
 
-| Migration | Data | O que fez |
-|-----------|------|-----------|
+| Migration                              | Data       | O que fez                                                        |
+| -------------------------------------- | ---------- | ---------------------------------------------------------------- |
 | `000013_reconciliacao_drift_fase4.sql` | 2026-07-25 | Reconciliou 18 objetos entre scripts database/ e Supabase remoto |
-| `000014_triggers_anomalia_audit.sql` | 2026-07-25 | Trigger UF-based + audit trail (ops.audit_logs) |
-| `000015_rls_security_layer.sql` | 2026-07-25 | RLS + grants + default privileges |
+| `000014_triggers_anomalia_audit.sql`   | 2026-07-25 | Trigger UF-based + audit trail (ops.audit_logs)                  |
+| `000015_rls_security_layer.sql`        | 2026-07-25 | RLS + grants + default privileges                                |
 
 ---
 

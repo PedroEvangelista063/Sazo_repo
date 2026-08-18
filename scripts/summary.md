@@ -1,10 +1,10 @@
 # summary.md — /scripts (Automação)
 
-> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Sazo_repo` (a URL antiga redireciona).
 
 ## Propósito
 
-Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Quero Comprar VG.
+Scripts de automação do ambiente de desenvolvimento, deploy e manutenção do projeto Sazo Brasil.
 
 ## Mudanças Recentes (2026-08-13)
 

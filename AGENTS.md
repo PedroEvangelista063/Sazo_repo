@@ -1,4 +1,4 @@
-# Code Review Rules — quero_comprar_vg
+# Code Review Rules — Sazo Brasil
 
 Regras da casa para revisão de código por IA (GGA, OpenCode e demais agentes).
 Documentos completos: `docs/PROJECT_RULES.md` e `docs/CONVENTIONS.md`.

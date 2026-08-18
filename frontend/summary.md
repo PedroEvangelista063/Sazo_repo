@@ -1,6 +1,6 @@
 # summary.md — /frontend (Aplicativo B2C)
 
-> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Sazo_repo` (a URL antiga redireciona).
 
 ## Propósito
 

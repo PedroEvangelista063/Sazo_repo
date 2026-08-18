@@ -1,4 +1,4 @@
-# Relatório ETL — Quero Comprar
+# Relatório ETL — Sazo Brasil
 
 **Gerado em:** 2026-06-27T09:02:59.749054
 **Duração:** 4.29s
@@ -6,49 +6,49 @@
 
 ## Totais Gerais
 
-| Indicador | Valor |
-|---|---|
-| Arquivos processados | 20 |
-| Linhas lidas (RAW) | 52,661 |
-| Linhas limpas | 47,713 |
-| Linhas ALIMENTO_VAREJO (B2C) | 11,558 |
+| Indicador                     | Valor  |
+| ----------------------------- | ------ |
+| Arquivos processados          | 20     |
+| Linhas lidas (RAW)            | 52,661 |
+| Linhas limpas                 | 47,713 |
+| Linhas ALIMENTO_VAREJO (B2C)  | 11,558 |
 | Linhas B2B (excluídas do app) | 36,155 |
-| Linhas rejeitadas | 4,948 |
+| Linhas rejeitadas             | 4,948  |
 
 ## Por Arquivo
 
-| Arquivo | RAW | Limpas | B2C | B2B | Rejeitadas |
-|---|---|---|---|---|---|
-| LISTA1 23.06.26 | 4834 | 4432 | 1952 | 2480 | 402 |
-| LISTA10 23.06.26 | 1051 | 938 | 146 | 792 | 113 |
-| LISTA11 23.06.26 | 2083 | 1635 | 0 | 1635 | 448 |
-| LISTA12 23.06.26 | 2664 | 2575 | 1883 | 692 | 89 |
-| LISTA13 23.06.26 | 3313 | 3253 | 1128 | 2125 | 60 |
-| LISTA14 23.06.26 | 3749 | 2842 | 207 | 2635 | 907 |
-| LISTA15 23.06.26 | 2863 | 2672 | 1630 | 1042 | 191 |
-| LISTA16 23.06.26 | 2847 | 2519 | 146 | 2373 | 328 |
-| LISTA17 23.06.26 | 2973 | 2950 | 48 | 2902 | 23 |
-| LISTA18 23.06.26 | 2243 | 1974 | 315 | 1659 | 269 |
-| LISTA19 23.06.26 | 3196 | 2883 | 6 | 2877 | 313 |
-| LISTA2 23.06.26 | 2150 | 2099 | 833 | 1266 | 51 |
-| LISTA20 23.06.26 | 2973 | 2419 | 484 | 1935 | 554 |
-| LISTA3 23.06.26 | 2259 | 1796 | 343 | 1453 | 463 |
-| LISTA4 23.06.26 | 3008 | 2986 | 1458 | 1528 | 22 |
-| LISTA5 23.06.26 | 2764 | 2555 | 175 | 2380 | 209 |
-| LISTA6 23.06.26 | 2208 | 2111 | 45 | 2066 | 97 |
-| LISTA7 23.06.26 | 1696 | 1579 | 315 | 1264 | 117 |
-| LISTA8 23.06.26 | 2089 | 1936 | 6 | 1930 | 153 |
-| LISTA9 23.06.26 | 1698 | 1559 | 438 | 1121 | 139 |
+| Arquivo          | RAW  | Limpas | B2C  | B2B  | Rejeitadas |
+| ---------------- | ---- | ------ | ---- | ---- | ---------- |
+| LISTA1 23.06.26  | 4834 | 4432   | 1952 | 2480 | 402        |
+| LISTA10 23.06.26 | 1051 | 938    | 146  | 792  | 113        |
+| LISTA11 23.06.26 | 2083 | 1635   | 0    | 1635 | 448        |
+| LISTA12 23.06.26 | 2664 | 2575   | 1883 | 692  | 89         |
+| LISTA13 23.06.26 | 3313 | 3253   | 1128 | 2125 | 60         |
+| LISTA14 23.06.26 | 3749 | 2842   | 207  | 2635 | 907        |
+| LISTA15 23.06.26 | 2863 | 2672   | 1630 | 1042 | 191        |
+| LISTA16 23.06.26 | 2847 | 2519   | 146  | 2373 | 328        |
+| LISTA17 23.06.26 | 2973 | 2950   | 48   | 2902 | 23         |
+| LISTA18 23.06.26 | 2243 | 1974   | 315  | 1659 | 269        |
+| LISTA19 23.06.26 | 3196 | 2883   | 6    | 2877 | 313        |
+| LISTA2 23.06.26  | 2150 | 2099   | 833  | 1266 | 51         |
+| LISTA20 23.06.26 | 2973 | 2419   | 484  | 1935 | 554        |
+| LISTA3 23.06.26  | 2259 | 1796   | 343  | 1453 | 463        |
+| LISTA4 23.06.26  | 3008 | 2986   | 1458 | 1528 | 22         |
+| LISTA5 23.06.26  | 2764 | 2555   | 175  | 2380 | 209        |
+| LISTA6 23.06.26  | 2208 | 2111   | 45   | 2066 | 97         |
+| LISTA7 23.06.26  | 1696 | 1579   | 315  | 1264 | 117        |
+| LISTA8 23.06.26  | 2089 | 1936   | 6    | 1930 | 153        |
+| LISTA9 23.06.26  | 1698 | 1559   | 438  | 1121 | 139        |
 
 ## Sazonalidade Calculada
 
-| Indicador | Valor |
-|---|---|
-| Produtos com sazonalidade | 527 |
-| VERMELHO | 121 |
-| AMARELO | 332 |
-| VERDE | 74 |
-| Usaram fallback 12m | 23 |
+| Indicador                 | Valor |
+| ------------------------- | ----- |
+| Produtos com sazonalidade | 527   |
+| VERMELHO                  | 121   |
+| AMARELO                   | 332   |
+| VERDE                     | 74    |
+| Usaram fallback 12m       | 23    |
 
 ### Produtos 🟢 Baratos (Safra)
 
@@ -253,13 +253,13 @@
 
 ## Categorias de Produto
 
-| Categoria | Total |
-|---|---|
-| ALIMENTO_VAREJO | 19 |
-| INSUMO_AGRICOLA | 12 |
-| MAQUINARIO_FERRAMENTA | 11 |
-| MATERIA_PRIMA_B2B | 20 |
-| SERVICO_LOGISTICA | 4 |
+| Categoria             | Total |
+| --------------------- | ----- |
+| ALIMENTO_VAREJO       | 19    |
+| INSUMO_AGRICOLA       | 12    |
+| MAQUINARIO_FERRAMENTA | 11    |
+| MATERIA_PRIMA_B2B     | 20    |
+| SERVICO_LOGISTICA     | 4     |
 
 ## Produtos B2C Disponíveis
 
@@ -349,4 +349,5 @@
 AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO
 
 ---
-*Relatório gerado automaticamente pelo pipeline ETL offline*
+
+_Relatório gerado automaticamente pelo pipeline ETL offline_

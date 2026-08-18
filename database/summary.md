@@ -1,6 +1,6 @@
 # summary.md — /database (Pomar e Triagem)
 
-> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Quero_Comprar_ext` (a URL antiga redireciona).
+> 📦 **Repositório (2026-08-07):** `PedroEvangelista063/Sazo_repo` — renomeado de `Sazo_repo` (a URL antiga redireciona).
 
 ## Propósito
 
@@ -420,7 +420,7 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 
 ### Projeto
 
-- **Nome:** Quero_Comprar_ext
+- **Nome:** Sazo Brasil
 - **Ref:** kxsqrcccaaxplpktmutl
 - **Host:** db.kxsqrcccaaxplpktmutl.supabase.co
 - **PostgreSQL:** 17.6.1.127

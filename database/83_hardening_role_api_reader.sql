@@ -21,12 +21,17 @@ BEGIN
     END IF;
 
     -- 2. Bloquear acesso a pg_shadow (hashes de senha) (DB-2)
-    REVOKE SELECT ON pg_shadow FROM PUBLIC;
+    --    Aiven nega REVOKE em pg_shadow para avnadmin — usar BEGIN/EXCEPTION
+    BEGIN
+        REVOKE SELECT ON pg_shadow FROM PUBLIC;
 
-    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'role_api_reader') THEN
-        REVOKE SELECT ON pg_shadow FROM role_api_reader;
-        RAISE NOTICE 'DB-2: REVOKE SELECT ON pg_shadow para role_api_reader';
-    END IF;
+        IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'role_api_reader') THEN
+            REVOKE SELECT ON pg_shadow FROM role_api_reader;
+            RAISE NOTICE 'DB-2: REVOKE SELECT ON pg_shadow para role_api_reader';
+        END IF;
+    EXCEPTION WHEN insufficient_privilege THEN
+        RAISE NOTICE 'DB-2: REVOKE pg_shadow ignorado (Aiven nega para avnadmin)';
+    END;
 
     -- 3. Bloquear acesso ao schema raw / landing zone (DB-3)
     IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'raw') THEN
@@ -51,6 +56,16 @@ BEGIN
             -- Ignora se o schema raw não foi criado por um role que tenha default privileges
             RAISE NOTICE 'DB-3: Default privileges em raw ignoradas (schema não gerenciado)';
         END;
+    END IF;
+
+    -- 5. Garantir que role_api_reader pode LER o schema mart (API precisa)
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'role_api_reader') THEN
+        IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'mart') THEN
+            GRANT USAGE ON SCHEMA mart TO role_api_reader;
+            GRANT SELECT ON ALL TABLES IN SCHEMA mart TO role_api_reader;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA mart GRANT SELECT ON TABLES TO role_api_reader;
+            RAISE NOTICE 'Permissões de leitura em mart concedidas a role_api_reader';
+        END IF;
     END IF;
 
     RAISE NOTICE 'Migration 83: Hardening de segurança da role_api_reader concluído.';

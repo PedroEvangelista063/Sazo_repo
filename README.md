@@ -1,6 +1,6 @@
 # 🗺️ Sazo Brasil — Inteligência Sazonal de Hortifrúti
 
-> **Sazo Brasil** é uma aplicação web progressiva (PWA) desenvolvida para transformar a decisão de compra de alimentos hortigranjeiros no Brasil através de análises visuais de sazonalidade e fluxos de abastecimento inter-regionais.
+> **Sazo Brasil** é uma aplicação web (PWA) desenvolvida para transformar a decisão de compra de alimentos hortigranjeiros no Brasil através de análises visuais de sazonalidade e fluxos de abastecimento inter-regionais.
 
 ---
 
@@ -8,7 +8,7 @@
 
 - **🗺️ Pivot Mapa Regional Interativo**: Navegação geográfica tátil cobrindo as 27 UFs e 5 regiões do Brasil, integrando vetores animantes de recebimento e envio de alimentos.
 - **🔍 Busca Inteligente Glassmorphism**: Pesquisa fuzzy de produtos com tolerância a acentuação e digitação, apresentando resultados em modais flutuantes com agrupamento por estado.
-- **🟢 Semáforo Visual de Preços (Zero R$)**: A interface adota a regra de negócio B2C de nunca exibir valores monetários em R$, utilizando apenas uma classificação visual de oportunidade (_Barato_, _Normal_, _Caro_).
+- **🟢 Semáforo Visual de Preços (Zero - Valores)**: A interface adota a regra de negócio B2C de nunca exibir valores monetários em R$, utilizando apenas uma classificação visual de oportunidade (_Barato_, _Normal_, _Caro_).
 - **🎨 Design System Claymorphism & Dark Mode**: Experiência visual tátil com sombras tridimensionais, suporte completo a mobile-first (320px) e transições fluidas via Framer Motion.
 - **⚡ Arquitetura Offline-First PWA**: Service Workers otimizados para carregamento instantâneo e resiliência sem conexão à rede.
 

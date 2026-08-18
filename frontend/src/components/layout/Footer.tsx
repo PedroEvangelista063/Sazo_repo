@@ -3,7 +3,7 @@ import { PainelTransparenciaRodape } from '@/components/PainelTransparenciaRodap
 export function Footer() {
   return (
     <footer className="docked full-width fixed bottom-0 z-40 flex w-full flex-col border-t border-outline-variant bg-surface-container-lowest/80 opacity-100 backdrop-blur-md transition-opacity">
-      <div className="flex w-full items-center justify-between px-lg py-sm">
+      <div className="hidden w-full items-center justify-between px-lg py-sm">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1">
             <div className="h-2 w-2 animate-pulse rounded-full bg-primary"></div>
@@ -24,7 +24,7 @@ export function Footer() {
           Sazo Brasil
         </span>
       </div>
-      <div className="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t border-outline-variant/30 bg-surface-container/40 px-lg py-1.5">
+      <div className="hidden w-full flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t border-outline-variant/30 bg-surface-container/40 px-lg py-1.5">
         <span className="flex items-center gap-1 text-[10px] text-on-surface-variant">
           <span className="inline-block h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
           Melhor época

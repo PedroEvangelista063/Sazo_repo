@@ -37,7 +37,7 @@ export function PainelTransparenciaRodape() {
   const emCache = state.cacheStatus === 'HIT'
 
   return (
-    <div className="bg-[var(--bg-header)]/70 relative z-10 border-t border-gray-200/60 py-1.5 backdrop-blur-sm dark:border-gray-700/60">
+    <div className="bg-[var(--bg-header)]/70 relative z-10 hidden border-t border-gray-200/60 py-1.5 backdrop-blur-sm dark:border-gray-700/60">
       <div className="mx-auto flex max-w-5xl items-center justify-center gap-1.5 px-4">
         <span className="text-[10px] tracking-tight text-gray-400 dark:text-gray-500">
           Última atualização dos dados: {dataFormatada}

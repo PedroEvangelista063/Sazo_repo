@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const STORAGE_KEY = 'qcomprar-onboarding-dismissed'
+const STORAGE_KEY = 'sazo-brasil-onboarding-dismissed'
 
 interface FlyerExtra {
   emoji: string
@@ -36,9 +36,9 @@ const STEPS: FlyerStep[] = [
     title: 'Três jeitos de explorar',
     text: 'Use as abas no topo para mudar de visualização:',
     extra: [
-      { emoji: '📅', label: 'Grade Sazonal = os 12 meses de cada produto' },
-      { emoji: '🃏', label: 'Cards = produtos um a um, com status' },
-      { emoji: '🗺️', label: 'Mapa Regional = de onde vem cada alimento' },
+      { emoji: '📊', label: 'Tabela = os 12 meses de cada produto' },
+      { emoji: '📄', label: 'Cards = produtos um a um, com status' },
+      { emoji: '🗺️', label: 'Mapa = de onde vem cada alimento (padrão)' },
     ],
   },
   {

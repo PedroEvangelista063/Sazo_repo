@@ -1,7 +1,11 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../services/api'
-import type { ProdutoVarejo, SazonalidadeResponse, SazonalidadeNacionalResponse } from '../types/domain'
+import type {
+  ProdutoVarejo,
+  SazonalidadeResponse,
+  SazonalidadeNacionalResponse,
+} from '../types/domain'
 
 const STALE_TIME = 1000 * 60 * 5
 const GC_TIME = 1000 * 60 * 30
@@ -53,13 +57,28 @@ export function useHortifruti(uf: string = 'SP', ano?: number | null, mes?: numb
     queryFn: async ({ signal }) => {
       const params: Record<string, unknown> = { por_pagina: 1000 }
       if (hasUF) params.uf = uf
-      const { data } = await api.get<SazonalidadeResponse>(
-        '/sazonalidade',
-        { params, signal },
-      )
+      const { data } = await api.get<SazonalidadeResponse>('/sazonalidade', { params, signal })
       return data
     },
     enabled: !isBRFull,
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
+    retry: 2,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+  })
+
+  // Catálogo global (sem filtro de UF) — alimenta a busca do SearchResultsModal
+  // em qualquer estado, inclusive BR sem mês, onde a metaQuery fica desabilitada.
+  const allQuery = useQuery({
+    queryKey: ['hortifruti-all'],
+    queryFn: async ({ signal }) => {
+      const { data } = await api.get<SazonalidadeResponse>('/sazonalidade', {
+        params: { por_pagina: 1000 },
+        signal,
+      })
+      return data
+    },
     staleTime: STALE_TIME,
     gcTime: GC_TIME,
     retry: 2,
@@ -72,10 +91,7 @@ export function useHortifruti(uf: string = 'SP', ano?: number | null, mes?: numb
     queryFn: async ({ signal }) => {
       const params: Record<string, unknown> = { por_pagina: 1000, ano, mes }
       if (hasUF) params.uf = uf
-      const { data } = await api.get<SazonalidadeResponse>(
-        '/sazonalidade',
-        { params, signal },
-      )
+      const { data } = await api.get<SazonalidadeResponse>('/sazonalidade', { params, signal })
       return data
     },
     enabled: hasFilter,
@@ -93,10 +109,7 @@ export function useHortifruti(uf: string = 'SP', ano?: number | null, mes?: numb
   }, [hasFilter, isBRFull, filterQuery.data?.data, metaQuery.data?.data])
 
   const products = useMemo(() => sortByStatus(displayData), [displayData])
-  const allProducts = useMemo(
-    () => sortByStatus(metaQuery.data?.data ?? []),
-    [metaQuery.data?.data],
-  )
+  const allProducts = useMemo(() => sortByStatus(allQuery.data?.data ?? []), [allQuery.data?.data])
 
   const brSazonalidade = useMemo(() => {
     if (!isBRFull || !brSazonalidadeQuery.data?.data) return null
@@ -110,6 +123,9 @@ export function useHortifruti(uf: string = 'SP', ano?: number | null, mes?: numb
     allProducts,
     brSazonalidade,
     totalBR,
+    allIsLoading: allQuery.isLoading,
+    allIsError: allQuery.isError,
+    refetchAll: allQuery.refetch,
     isLoading: isBRFull
       ? brSazonalidadeQuery.isLoading
       : metaQuery.isLoading || (hasFilter && filterQuery.isLoading && !metaQuery.data),

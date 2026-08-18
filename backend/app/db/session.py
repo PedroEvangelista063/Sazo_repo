@@ -95,6 +95,10 @@ async def _init_pool(url: str, max_conn: int, min_conn: int, command_timeout: in
         max_size=max_conn,
         command_timeout=command_timeout,
         statement_cache_size=0,  # compatível com poolers em modo transaction (ex.: pgbouncer)
+        server_settings={
+            "statement_timeout": "29000",  # 29s timeout no nível da sessão postgres (DB-4)
+            "application_name": "sazo_api",
+        },
     )
 
 

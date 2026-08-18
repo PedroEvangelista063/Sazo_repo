@@ -5,6 +5,9 @@ from contextlib import asynccontextmanager
 import asyncpg
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
 
 from backend.app.api.v1.endpoints.admin import router as admin_router
 from backend.app.api.v1.endpoints.categorias import router as categorias_router
@@ -198,11 +201,25 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Adiciona cabeçalhos de segurança HTTP essenciais em todas as respostas (V4)."""
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        return response
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=False,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # Restringir métodos (V3)
     allow_headers=["*"],
     # Headers de transparência precisam ser legíveis pelo JS do navegador em
     # requisições cross-origin (ex.: frontend Vite -> API FastAPI). Sem
@@ -210,6 +227,8 @@ app.add_middleware(
     # rodapé de transparência (PainelTransparenciaRodape) nunca renderiza.
     expose_headers=["X-Cache-Status", "X-Last-Refresh"],
 )
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 app.add_middleware(
     TimeoutMiddleware,
@@ -235,4 +254,7 @@ app.include_router(fluxos_router, prefix=settings.api_v1_prefix)
 @app.get("/health")
 async def health():
     mode = get_active_mode()
+    # Em produção não vaza detalhes internos de infraestrutura (V7b)
+    if settings.app_env == "production":
+        return {"status": "ok"}
     return {"status": "ok", "db_mode": mode}

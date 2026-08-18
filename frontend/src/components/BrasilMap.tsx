@@ -10,6 +10,8 @@ interface BrasilMapProps {
   onUfClick: (uf: string) => void
   fluxos?: FlowItem[]
   className?: string
+  onUfNavigate?: (uf: string) => void
+  onTableNavigate?: () => void
 }
 
 interface UFDot {
@@ -115,6 +117,10 @@ const UFS: UFDot[] = [
 
 const REGIOES = Object.values(REGIOES_META)
 
+// Raio (unidades do viewBox) da área de toque transparente dos dots de UF.
+// A 320px de largura o mapa escala ~0.32, então r=69 => diâmetro ~44px na tela.
+const UF_HIT_RADIUS = 69
+
 function formatLabel(regiaoId: string): string {
   if (regiaoId === 'centro-oeste') return 'Centro-Oeste'
   return regiaoId.charAt(0).toUpperCase() + regiaoId.slice(1)
@@ -127,6 +133,8 @@ export function BrasilMap({
   onUfClick,
   fluxos,
   className,
+  onUfNavigate,
+  onTableNavigate,
 }: BrasilMapProps) {
   const [showFluxos, setShowFluxos] = useState(false)
   const hasFluxos = fluxos && fluxos.length > 0
@@ -156,7 +164,13 @@ export function BrasilMap({
       : []
 
   return (
-    <div className={cn('relative mx-auto w-full max-w-[420px]', className)}>
+    <div
+      className={cn(
+        'relative mx-auto w-full',
+        'max-w-[320px] sm:max-w-[420px] md:max-w-[560px] lg:max-w-[680px] xl:max-w-[800px]',
+        className,
+      )}
+    >
       <svg
         viewBox="0 0 1000 912"
         className="h-auto w-full"
@@ -194,8 +208,6 @@ export function BrasilMap({
           return (
             <motion.g
               key={reg.id}
-              className="cursor-pointer"
-              onClick={() => onRegionClick(reg.id)}
               initial={false}
               animate={{
                 opacity: selectedRegion && !isSelected ? 0.4 : 1,
@@ -301,14 +313,36 @@ export function BrasilMap({
           return (
             <motion.g
               key={uf.uf}
+              role="button"
+              tabIndex={0}
+              aria-label={`${uf.uf} — ${uf.nome}`}
+              aria-pressed={isUfActive}
               className="cursor-pointer"
               onClick={() => onUfClick(uf.uf)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onUfClick(uf.uf)
+                }
+              }}
               initial={false}
               animate={{
                 opacity: isDimmed ? 0.35 : 1,
               }}
               transition={{ duration: 0.3 }}
+              whileHover="hover"
+              whileTap="tap"
+              variants={{ hover: {}, tap: {} }}
             >
+              {/* Área de toque transparente — garante hit area >= 44px no menor breakpoint */}
+              <circle
+                cx={uf.cx}
+                cy={uf.cy}
+                r={UF_HIT_RADIUS}
+                fill="transparent"
+                pointerEvents="all"
+              />
+
               {/* Glow externo para UF selecionada */}
               {isUfActive && (
                 <motion.circle
@@ -320,6 +354,7 @@ export function BrasilMap({
                   initial={{ r: 30, fillOpacity: 0.3 }}
                   animate={{ r: outerGlow, fillOpacity: 0.15 }}
                   transition={{ duration: 0.3 }}
+                  pointerEvents="none"
                 />
               )}
 
@@ -341,12 +376,17 @@ export function BrasilMap({
                 fillOpacity={isUfActive ? 1 : isInRegion ? 1 : 0.75}
                 stroke={isUfActive ? reg.cor : isInRegion ? '#fff' : 'none'}
                 strokeWidth={isUfActive ? 6 : isInRegion ? 4 : 0}
+                initial={{
+                  r: dotRadius,
+                  fillOpacity: isUfActive ? 1 : isInRegion ? 1 : 0.75,
+                }}
                 animate={{
                   r: dotRadius,
                   fillOpacity: isUfActive ? 1 : isInRegion ? 1 : 0.75,
                 }}
                 transition={{ duration: 0.2 }}
-                whileHover={{ r: dotRadius + 4 }}
+                variants={{ hover: { r: dotRadius + 4 }, tap: { r: dotRadius + 1 } }}
+                pointerEvents="none"
               />
 
               {/* Label UF */}
@@ -390,6 +430,65 @@ export function BrasilMap({
         })}
       </svg>
 
+      {/* Badge flutuante — aparece ao selecionar uma UF */}
+      {selectedUF &&
+        onUfNavigate &&
+        (() => {
+          const ufData = UFS.find((u) => u.uf === selectedUF)
+          return (
+            <motion.button
+              key={selectedUF}
+              initial={{ opacity: 0, y: 8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 4, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => onUfNavigate(selectedUF)}
+              style={{
+                position: 'absolute',
+                bottom: 16,
+                left: '50%',
+                x: '-50%',
+              }}
+              className="z-10 flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full border border-outline-variant bg-surface-container/90 px-5 text-sm font-semibold text-on-surface shadow-clay-dark backdrop-blur-md transition-all duration-150 hover:shadow-clay-pressed active:scale-95"
+            >
+              <span>📄</span>
+              <span>Ver Cards de {ufData?.nome ?? selectedUF}</span>
+              <svg
+                className="h-3.5 w-3.5 text-primary"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </motion.button>
+          )
+        })()}
+
+      {/* Botão Bandeira 🇧🇷 → Tabela */}
+      {onTableNavigate && (
+        <button
+          onClick={onTableNavigate}
+          className="group absolute bottom-4 right-4 z-10 flex flex-col items-center gap-1 rounded-2xl border border-outline-variant bg-surface-container/90 p-3 shadow-clay-dark backdrop-blur-md transition-all duration-150 hover:shadow-clay-pressed active:scale-95"
+          title="Ver Tabela Nacional"
+        >
+          <span className="text-2xl">🇧🇷</span>
+          <span className="text-[10px] font-semibold text-on-surface-variant transition-colors group-hover:text-primary">
+            Tabela
+          </span>
+          <svg
+            className="h-3 w-3 text-primary"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+
       {/* Controles do mapa / info */}
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
         {hasUfSelection && (
@@ -408,7 +507,7 @@ export function BrasilMap({
           <motion.button
             onClick={() => setShowFluxos((v) => !v)}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors',
+              'inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-4 text-[11px] font-medium transition-colors',
               showFluxos
                 ? 'border-indigo-600 bg-indigo-600 text-white'
                 : 'border-indigo-400 text-indigo-500',
@@ -425,7 +524,7 @@ export function BrasilMap({
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-            {showFluxos ? 'Ocultar Fluxos' : `Fluxos (${fluxos!.length})`}
+            {showFluxos ? 'Ocultar Fluxos' : `Fluxos (${fluxos?.length ?? 0})`}
           </motion.button>
         )}
       </div>
@@ -439,7 +538,7 @@ export function BrasilMap({
               key={reg.id}
               onClick={() => onRegionClick(reg.id)}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium',
+                'inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-4 text-[11px] font-medium',
                 'border transition-colors',
               )}
               style={{

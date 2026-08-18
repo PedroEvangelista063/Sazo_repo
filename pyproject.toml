@@ -4,8 +4,11 @@ description = "Pipeline ETL CONAB → Índice de Sazonalidade → PostgreSQL"
 requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
-testpaths = ["pipeline/tests", "backend/tests"]
+testpaths = ["pipeline/tests", "backend/tests", "tests"]
 pythonpath = ["."]
+asyncio_mode = "auto"
+loop_scope = "session"
+timeout_method = "signal"
 addopts = "-v --cov=pipeline --cov-report=term-missing"
 
 [tool.ruff]

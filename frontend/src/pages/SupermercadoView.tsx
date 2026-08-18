@@ -26,10 +26,10 @@ import { ProductCard } from '@/components/ProductCard'
 import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
 import { GradeSazonalAcordeao } from '@/components/GradeSazonalAcordeao'
+import { SearchResultsModal } from '@/components/SearchResultsModal'
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/hooks/useTheme'
 
-type ViewMode = 'grade-sazonal' | 'cards' | 'mapa'
+type ViewMode = 'tabela' | 'cards' | 'mapa'
 
 const PAGE_SIZE = 20
 
@@ -79,9 +79,9 @@ const NOME_UF: Record<string, string> = {
 }
 
 const STATUS_CHIPS: Record<string, string> = {
-  VERDE: '🟢 Barato',
-  AMARELO: '🟡 Normal',
-  VERMELHO: '🔴 Caro',
+  VERDE: 'Barato',
+  AMARELO: 'Normal',
+  VERMELHO: 'Caro',
 }
 
 const CHIP_ATIVO: Record<string, string> = {
@@ -105,7 +105,6 @@ function normalizeBusca(s: string): string {
 }
 
 export function SupermercadoView() {
-  const { toggleTheme } = useTheme()
   const [selectedUF, setSelectedUF] = useState<string>('BR')
   const [selectedYear] = useState<number>(() => new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
@@ -118,12 +117,13 @@ export function SupermercadoView() {
     )
   }, [])
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<ViewMode>('grade-sazonal')
+  const [viewMode, setViewMode] = useState<ViewMode>('mapa')
   const [search, setSearch] = useState('')
 
   // Modal / Sidebar states
   const [isMonthModalOpen, setIsMonthModalOpen] = useState(false)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
+  const [searchModalOpen, setSearchModalOpen] = useState(false)
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
   const [selectedMapUF, setSelectedMapUF] = useState<string | null>(null)
 
@@ -192,14 +192,6 @@ export function SupermercadoView() {
     const alvo = normalizarStatusCor(selectedStatus)
     return searchFiltered.filter((p) => normalizarStatusCor(p.status_cor) === alvo)
   }, [searchFiltered, selectedStatus])
-
-  const contadores = useMemo(() => {
-    const c = { VERDE: 0, AMARELO: 0, VERMELHO: 0 }
-    for (const p of searchFiltered) {
-      c[normalizarStatusCor(p.status_cor)]++
-    }
-    return c
-  }, [searchFiltered])
 
   const paginatedProducts = useMemo(
     () => displayProducts.slice(0, visibleCount),
@@ -271,7 +263,7 @@ export function SupermercadoView() {
     hapticLight()
     // Pilar 6: Grade Sazonal exige BR — transiciona a UF automaticamente,
     // mantendo fluxo contínuo (sem erro/banner de ação).
-    if (tab === 'grade-sazonal' && selectedUF !== 'BR') {
+    if (tab === 'tabela' && selectedUF !== 'BR') {
       setSelectedUF('BR')
       setSelectedMonth(null)
     }
@@ -296,6 +288,17 @@ export function SupermercadoView() {
     hapticLight()
     setSearch('')
   }
+
+  const handleSearchResultSelect = useCallback((uf: string, nomeProduto: string) => {
+    hapticSuccess()
+    setSearch('')
+    setSearchModalOpen(false)
+    setSelectedUF(uf)
+    setSelectedProducts([nomeProduto])
+    setSelectedMonth(null)
+    setSelectedStatus(null)
+    setViewMode('cards')
+  }, [])
 
   const limparFiltros = () => {
     hapticLight()
@@ -348,25 +351,63 @@ export function SupermercadoView() {
 
   return (
     <>
-      <div className="opacity-8 pointer-events-none fixed inset-0 z-[-1]"></div>
-
       <TopAppBar
         search={search}
-        onSearchChange={setSearch}
-        onClearSearch={handleClearSearch}
+        onSearchChange={(val) => {
+          setSearch(val)
+          setSearchModalOpen(val.trim().length >= 2)
+        }}
+        onClearSearch={() => {
+          handleClearSearch()
+          setSearchModalOpen(false)
+        }}
         onCalendarClick={() => setIsMonthModalOpen(true)}
-        onThemeToggle={toggleTheme}
+      />
+
+      <SearchResultsModal
+        query={search}
+        produtos={allProducts}
+        onSelectResult={handleSearchResultSelect}
+        onClose={() => setSearchModalOpen(false)}
+        visible={searchModalOpen}
       />
 
       <OfflineBanner />
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-lg px-margin-mobile pb-[7rem] pt-[7.5rem]">
-        {/* Abas + ano — superfície clay */}
+        {/* Abas + selects — superfície clay */}
         <div className="flex flex-col gap-4 rounded-3xl bg-clay-surface p-3 pb-4 shadow-clay-rest dark:bg-surface-container-low dark:shadow-clay-dark">
-          <NavigationTabs activeTab={viewMode} onTabChange={handleTabChange} />
-          <div className="flex items-center justify-between">
-            <span className="font-label-sm text-on-surface-variant">📍 {ufLabel}</span>
-            <span className="font-headline-md text-primary">{selectedYear}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <NavigationTabs activeTab={viewMode} onTabChange={handleTabChange} />
+
+            {/* Select UF inline com as abas */}
+            <select
+              value={selectedUF}
+              onChange={handleUfChange}
+              aria-label="Selecionar UF"
+              className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+            >
+              {ufOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+
+            {/* Select Mês inline com as abas */}
+            <select
+              value={selectedMonth ?? ''}
+              onChange={handleMonthChange}
+              aria-label="Selecionar mês"
+              className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+            >
+              <option value="">📅 Mês: Todos</option>
+              {MESES_NOME.map((nome, idx) => (
+                <option key={nome} value={idx + 1}>
+                  📅 Mês: {nome}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -389,37 +430,10 @@ export function SupermercadoView() {
                       : 'bg-clay-surface text-on-surface-variant shadow-clay-rest hover:shadow-clay-pressed dark:bg-surface-container dark:shadow-clay-dark',
                   )}
                 >
-                  {STATUS_CHIPS[status]} ({contadores[status]})
+                  {STATUS_CHIPS[status]}
                 </button>
               )
             })}
-
-            <select
-              value={selectedUF}
-              onChange={handleUfChange}
-              aria-label="Selecionar UF"
-              className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
-            >
-              {ufOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedMonth ?? ''}
-              onChange={handleMonthChange}
-              aria-label="Selecionar mês"
-              className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
-            >
-              <option value="">📅 Mês: Todos</option>
-              {MESES_NOME.map((nome, idx) => (
-                <option key={nome} value={idx + 1}>
-                  📅 Mês: {nome}
-                </option>
-              ))}
-            </select>
 
             <button
               type="button"
@@ -440,7 +454,7 @@ export function SupermercadoView() {
               <button
                 type="button"
                 onClick={limparFiltros}
-                className="font-semibold text-primary underline underline-offset-2 transition-colors hover:text-primary/80"
+                className="inline-flex min-h-[44px] items-center px-1 font-semibold text-primary underline underline-offset-2 transition-colors hover:text-primary/80"
               >
                 Limpar Filtros
               </button>
@@ -479,7 +493,7 @@ export function SupermercadoView() {
           )}
         >
           <AnimatePresence mode="wait">
-            {viewMode === 'grade-sazonal' && !isLoading && (
+            {viewMode === 'tabela' && !isLoading && (
               <motion.div
                 key="grade"
                 initial={{ opacity: 0, y: 10 }}
@@ -561,9 +575,9 @@ export function SupermercadoView() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="flex flex-col gap-lg lg:flex-row"
+                className="flex flex-col gap-lg"
               >
-                <div className="clay-card relative flex min-h-[400px] flex-1 items-center justify-center overflow-hidden p-lg">
+                <div className="clay-card relative flex w-full flex-col items-center justify-center overflow-hidden p-2 sm:p-lg">
                   <BrasilMap
                     selectedRegion={selectedRegion}
                     onRegionClick={(id) => {
@@ -573,6 +587,12 @@ export function SupermercadoView() {
                     selectedUF={selectedMapUF}
                     onUfClick={handleUfClick}
                     fluxos={fluxos}
+                    onUfNavigate={handlePoloClick}
+                    onTableNavigate={() => {
+                      hapticLight()
+                      setViewMode('tabela')
+                      setSelectedUF('BR')
+                    }}
                   />
                   <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container/80 p-2 backdrop-blur-sm">
                     <div className="relative flex h-8 w-8 items-center justify-center rounded-full border border-primary/50 bg-primary/20 text-primary">
@@ -584,7 +604,7 @@ export function SupermercadoView() {
                   </div>
                 </div>
 
-                <div className="w-full shrink-0 lg:w-80">
+                <div className="w-full">
                   <RegiaoPanel
                     regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
                     selectedUF={selectedMapUF}
@@ -629,7 +649,7 @@ export function SupermercadoView() {
                   Selecionar Mês
                 </h2>
                 <button
-                  className="clay-card rounded-full p-2 text-outline transition-all hover:text-primary active:scale-90"
+                  className="clay-card flex h-11 w-11 items-center justify-center rounded-full text-outline transition-all hover:text-primary active:scale-90"
                   onClick={() => setIsMonthModalOpen(false)}
                 >
                   <span className="material-symbols-outlined">close</span>

@@ -5,7 +5,6 @@ interface TopAppBarProps {
   onSearchChange: (value: string) => void
   onClearSearch: () => void
   onCalendarClick?: () => void
-  onThemeToggle?: () => void
 }
 
 /**
@@ -17,7 +16,6 @@ export function TopAppBar({
   onSearchChange,
   onClearSearch,
   onCalendarClick,
-  onThemeToggle,
 }: TopAppBarProps) {
   return (
     <header className="docked fixed inset-x-0 top-0 z-50 w-full rounded-b-lg bg-surface-container-low shadow-clay-dark">
@@ -49,20 +47,6 @@ export function TopAppBar({
                 </span>
               </button>
             )}
-            {onThemeToggle && (
-              <button
-                className="clay-card flex min-h-11 w-11 items-center justify-center rounded-full p-2 text-on-surface-variant transition-transform duration-150 ease-out hover:scale-105 active:scale-95"
-                onClick={onThemeToggle}
-                title="Alternar Tema"
-              >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontVariationSettings: "'FILL' 0" }}
-                >
-                  dark_mode
-                </span>
-              </button>
-            )}
           </div>
         </div>
 
@@ -86,7 +70,7 @@ export function TopAppBar({
               type="button"
               onClick={onClearSearch}
               aria-label="Limpar busca"
-              className="absolute right-1.5 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface active:scale-90"
+              className="absolute right-1.5 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface active:scale-90"
             >
               <span className="material-symbols-outlined text-lg">close</span>
             </button>

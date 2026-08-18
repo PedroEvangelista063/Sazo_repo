@@ -2,7 +2,7 @@ import { PainelTransparenciaRodape } from '@/components/PainelTransparenciaRodap
 
 export function Footer() {
   return (
-    <footer className="docked full-width fixed bottom-0 z-40 flex w-full flex-col border-t border-outline-variant bg-surface-container-lowest/80 opacity-100 backdrop-blur-md transition-opacity">
+    <footer className="hidden">
       <div className="hidden w-full items-center justify-between px-lg py-sm">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1">

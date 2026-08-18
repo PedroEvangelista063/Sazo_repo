@@ -169,10 +169,11 @@ export function SupermercadoView() {
 
   const ufOptions = useMemo(() => {
     const base = ufsDisponiveis ?? ['SP', 'RS', 'PR', 'SC', 'MG', 'RJ', 'ES']
-    const withBR = base.includes('BR') ? base : ['BR', ...base]
-    return withBR.map((u: string) => ({
+    // Remove 'BR' das opções — seleção nacional é feita pelo botão 🇧🇷 no mapa
+    const filtered = base.filter((u: string) => u !== 'BR')
+    return filtered.map((u: string) => ({
       value: u,
-      label: u === 'BR' ? '📍 BR (Nacional)' : `📍 ${u} (${NOME_UF[u] ?? u})`,
+      label: `📍 ${u} (${NOME_UF[u] ?? u})`,
     }))
   }, [ufsDisponiveis])
 

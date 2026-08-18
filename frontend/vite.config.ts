@@ -24,6 +24,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.svg',
+        'favicon.ico',
         'icon-192x192.png',
         'icon-512x512.png',
         'icon-192x192-maskable.png',
@@ -50,7 +51,10 @@ export default defineConfig({
             short_name: 'Buscar',
             description: 'Pesquisar sazonalidade de um produto',
             url: '/?search',
-            icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }],
+            icons: [
+              { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+              { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+            ],
           },
         ],
         icons: [

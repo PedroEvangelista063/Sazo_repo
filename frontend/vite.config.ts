@@ -50,7 +50,7 @@ export default defineConfig({
             short_name: 'Buscar',
             description: 'Pesquisar sazonalidade de um produto',
             url: '/?search',
-            icons: [{ src: '/icon-192x192.png', sizes: '192x192' }],
+            icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }],
           },
         ],
         icons: [
@@ -59,6 +59,12 @@ export default defineConfig({
             sizes: 'any',
             type: 'image/svg+xml',
             purpose: 'any',
+          },
+          {
+            src: '/favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'maskable',
           },
           {
             src: '/icon-192x192.png',

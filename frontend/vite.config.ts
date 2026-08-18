@@ -30,10 +30,10 @@ export default defineConfig({
         'icon-512x512-maskable.png',
       ],
       manifest: {
-        name: 'Quero Comprar — Sazonalidade de Hortigranjeiros',
-        short_name: 'QComprar',
+        name: 'Sazo Brasil — Sazonalidade de Hortifrúti',
+        short_name: 'Sazo Brasil',
         description:
-          'Descubra a melhor época para comprar hortigranjeiros. ' +
+          'Descubra a melhor época para comprar hortifrúti. ' +
           'Análise de sazonalidade baseada em dados CONAB.',
         theme_color: '#16a34a',
         background_color: '#f0fdf4',
@@ -54,6 +54,12 @@ export default defineConfig({
           },
         ],
         icons: [
+          {
+            src: '/favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any',
+          },
           {
             src: '/icon-192x192.png',
             sizes: '192x192',

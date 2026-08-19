@@ -12,6 +12,7 @@ from starlette.responses import Response
 from backend.app.api.v1.endpoints.admin import router as admin_router
 from backend.app.api.v1.endpoints.categorias import router as categorias_router
 from backend.app.api.v1.endpoints.fluxos import router as fluxos_router
+from backend.app.api.v1.endpoints.fluxos_boletins import router as fluxos_boletins_router
 from backend.app.api.v1.endpoints.internal import router as internal_router
 from backend.app.api.v1.endpoints.municipios import router as municipios_router
 from backend.app.api.v1.endpoints.produtos import router as produtos_router
@@ -249,6 +250,7 @@ app.include_router(stream_router, prefix=settings.api_v1_prefix)
 app.include_router(admin_router, prefix=settings.api_v1_prefix)
 app.include_router(regioes_router, prefix=settings.api_v1_prefix)
 app.include_router(fluxos_router, prefix=settings.api_v1_prefix)
+app.include_router(fluxos_boletins_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/health")

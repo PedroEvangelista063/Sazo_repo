@@ -79,6 +79,19 @@ A aba "Mapa Regional" implementa:
   - Fluxos com `tipo="autossuficiente"` (origem == destino, ex.: Carne Bovina TO→TO) aparecem como painel "Produção local"
 - Clicar num polo navega para a UF correspondente na aba Cards
 
+## Mudanças Recentes (2026-08-19)
+
+### Boletins Logísticos CONAB — rotas de frete no mapa (toggle Fluxos / Boletins CONAB)
+
+- `types/domain.ts` — `FlowItem` estendido com campos opcionais (`produto`, `destino_polo`, `mes_referencia`, `fonte`) + novo `BoletimFlowItem`.
+- `services/api.ts` — `getFluxosBoletins()`; `hooks/useFluxosBoletins.ts` (TanStack Query, `staleTime` alto).
+- `utils/arcFlows.ts` (novo) — `buildArcs()` extraído de `BrasilMap` e reutilizado pelo caminho estático; `utils/boletimResumo.ts` — agregação de rotas por produto/UF para o painel.
+- `SupermercadoView.tsx` — **toggle "Fluxos / Boletins CONAB"** + filtros de produto/ano/mês na aba Mapa Regional.
+- `BrasilMap.tsx` — arcos UF→UF dos boletins com tooltip `produto • origem_polo → destino_polo • MM/AAAA`; caminho estático (Fluxos) sem regressão.
+- `RegiaoPanel.tsx` — bloco "Boletins Logísticos CONAB" com resumo de rotas por produto.
+- **Null safety E2E** (`?.`, `??`) para meses sem dados (status CINZA); Skeleton (sem spinner); mobile-first; sem R$ na tela (regra 1).
+- Testes: 22 novos (vitest 95 total, 14 arquivos) + `tsc --noEmit` limpo + prettier ok.
+
 ## Mudanças Recentes (2026-08-13)
 
 ### Nenhuma mudança neste lote

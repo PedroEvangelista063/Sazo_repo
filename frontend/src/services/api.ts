@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { setTransparency } from './transparencyStore'
+import type { BoletimFlowFilters, BoletimFlowListResponse } from '../types/domain'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1',
@@ -25,3 +26,26 @@ api.interceptors.response.use((response) => {
   }
   return response
 })
+
+/**
+ * Busca rotas dos Boletins Logísticos da CONAB (GET /api/v1/fluxos/boletins).
+ * Filtros opcionais aplicados no servidor (produto/UF/ano/mês) + paginação.
+ */
+export async function getFluxosBoletins(
+  params: BoletimFlowFilters = {},
+  signal?: AbortSignal,
+): Promise<BoletimFlowListResponse> {
+  const { data } = await api.get<BoletimFlowListResponse>('/fluxos/boletins', {
+    params: {
+      limit: params.limit ?? 200,
+      offset: params.offset ?? 0,
+      ...(params.produto ? { produto: params.produto } : {}),
+      ...(params.origemUf ? { origem_uf: params.origemUf.toUpperCase() } : {}),
+      ...(params.destinoUf ? { destino_uf: params.destinoUf.toUpperCase() } : {}),
+      ...(params.anoReferencia != null ? { ano_referencia: params.anoReferencia } : {}),
+      ...(params.mesReferencia != null ? { mes_referencia: params.mesReferencia } : {}),
+    },
+    signal,
+  })
+  return data
+}

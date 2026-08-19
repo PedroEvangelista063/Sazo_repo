@@ -110,6 +110,15 @@ A **MV `vw_api_produtos_sazonalidade`** é a view final que a API B2C consulta. 
 - `mart.vw_mapa_regional_completo` — view consolidada do mapa regional (originada em `46_mapa_regional_completo.sql`). Consolida produtos × localidades × fluxos de abastecimento (origem/destino), tipo de preço (real/proxy/ausente). Suporta filtro por UF ou lista de UFs: `SELECT * FROM mart.vw_mapa_regional_completo WHERE uf = 'TO'` ou `WHERE uf IN ('AC','AM','AP')`.
 - `staging.fn_relatorio_mapa_regional(p_uf TEXT)` — relatório consolidado do mapa regional por UF (originada em `46_mapa_regional_completo.sql`). Com `p_uf = NULL`, retorna todas as UFs (visão nacional). Uso: `SELECT * FROM staging.fn_relatorio_mapa_regional('AC')` ou `fn_relatorio_mapa_regional(NULL)`. Grants para `role_api_reader` e `role_etl_writer`.
 
+## Mudanças Recentes (2026-08-19)
+
+### Boletins Logísticos CONAB — fluxo logístico por rota de frete (migrations 84 e 85)
+
+- **`84_fact_fluxo_logistico_boletins.sql`** (aplicada no LOCAL) — nova tabela `staging.fact_fluxo_logistico`: `dedup_hash TEXT UNIQUE NOT NULL` (md5 de `produto|origem_uf|destino_uf|ano|mes`), `produto_nome TEXT NOT NULL`, `origem_uf CHAR(2) NOT NULL`, `origem_polo TEXT`, `destino_uf CHAR(2) NOT NULL`, `destino_polo TEXT`, `mes_referencia SMALLINT NOT NULL`, `ano_referencia SMALLINT NOT NULL`, `fonte TEXT`, `pagina INTEGER`, `criado_em`/`atualizado_em TIMESTAMPTZ DEFAULT now()`. CHECKs (`ano_referencia BETWEEN 2025 AND 2026`, `mes 1–12`, UF `^[A-Z]{2}$`), índices `ix_fact_fluxo_logistico_rotas (origem_uf,destino_uf)` e `ix_fact_fluxo_logistico_periodo (produto_nome,ano_referencia,mes_referencia)`, GRANTs `role_etl_writer` ALL / `role_api_reader` SELECT. **Quality Gate**: meses sem dado ficam NULL (nunca fallback 2023) → frontend CINZA.
+- **`85_vw_fluxo_logistico_boletins.sql`** (aplicada no LOCAL) — view `staging.vw_fluxo_logistico_boletins` sobre a fact: **788 rotas** (milho 442, soja 296, café 48, carnes 2); GRANT SELECT a `role_api_reader` + **fix `GRANT USAGE ON SCHEMA staging TO role_api_reader`** (gap pré-existente que tornava o GRANT SELECT inefetivo).
+- Modelo **aditivo**: `staging.dim_fluxo_abastecimento` (dimensão estática, 166 fluxos curados) permanece intacta — o boletim alimenta a fact nova, sem mesclar.
+- ⚠️ **Aplicadas SOMENTE no banco LOCAL** — o Aiven (via `DATABASE_URL_ETL` em `backend/.env`) NÃO tem as migrations 84/85 (rodar o pipeline com DSN Aiven → `UndefinedTable`). Runbook de promoção: `docs/BOLETIM_LOGISTICO_RUNBOOK.md`.
+
 ## Mudanças Recentes (2026-08-13)
 
 ### Migration 82 — Normalização de Grandezas + Semáforo Sensível por CV (82_normalizacao_unidade_sensibilidade_cv.sql)

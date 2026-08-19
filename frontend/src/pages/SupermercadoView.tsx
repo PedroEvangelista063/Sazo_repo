@@ -9,6 +9,7 @@ import { useRegiaoResumo } from '@/hooks/useRegiaoResumo'
 import { useHortifruti } from '@/hooks/useHortifruti'
 import { useUfs } from '@/hooks/useUfs'
 import { useFluxos } from '@/hooks/useFluxos'
+import { useFluxosBoletins } from '@/hooks/useFluxosBoletins'
 import { hapticLight, hapticSuccess } from '@/utils/haptics'
 import { temGradeCompleta } from '@/utils/gradeCompleta'
 import { normalizarStatusCor } from '@/utils/statusCor'
@@ -27,6 +28,7 @@ import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
 import { GradeSazonalAcordeao } from '@/components/GradeSazonalAcordeao'
 import { SearchResultsModal } from '@/components/SearchResultsModal'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 type ViewMode = 'tabela' | 'cards' | 'mapa'
@@ -127,6 +129,12 @@ export function SupermercadoView() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
   const [selectedMapUF, setSelectedMapUF] = useState<string | null>(null)
 
+  // Fase 5 — fonte de dados do mapa: fluxos históricos ou boletins CONAB
+  const [dataSource, setDataSource] = useState<'fluxos' | 'boletins'>('fluxos')
+  const [boletimProduto, setBoletimProduto] = useState('')
+  const [boletimMes, setBoletimMes] = useState<number | ''>('')
+  const [boletimAno, setBoletimAno] = useState<number | ''>(new Date().getFullYear())
+
   // Paginação híbrida (lote 20 + Carregar mais) sobre dados já obtidos
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const prevVisibleCountRef = useRef(visibleCount)
@@ -153,6 +161,31 @@ export function SupermercadoView() {
 
   const { data: ufsDisponiveis } = useUfs()
   const { data: fluxos } = useFluxos()
+
+  const {
+    data: boletins,
+    isLoading: boletinsLoading,
+    isError: boletinsError,
+  } = useFluxosBoletins({
+    produto: boletimProduto || undefined,
+    mesReferencia: boletimMes === '' ? undefined : Number(boletimMes),
+    anoReferencia: boletimAno === '' ? undefined : Number(boletimAno),
+    limit: 200,
+  })
+
+  const boletimFlows = useMemo(() => boletins?.data ?? [], [boletins])
+
+  const boletimProdutos = useMemo(() => {
+    const set = new Set<string>(['milho', 'soja', 'café', 'carnes'])
+    for (const f of boletimFlows) if (f.produto) set.add(f.produto)
+    return [...set].sort()
+  }, [boletimFlows])
+
+  const boletimAnos = useMemo(() => {
+    const set = new Set<number>([2025, 2026])
+    for (const f of boletimFlows) set.add(f.ano_referencia)
+    return [...set].sort()
+  }, [boletimFlows])
 
   // Quality Gate de grade (regra de apresentação): a grade BR Nacional exibe
   // SOMENTE produtos cujos dados cobrem os 12 meses. Produtos com gap
@@ -409,6 +442,32 @@ export function SupermercadoView() {
                 </option>
               ))}
             </select>
+
+            {/* Fase 5 — fonte de dados do mapa (Fluxos históricos vs Boletins CONAB) */}
+            <div className="flex shrink-0 items-center gap-1 rounded-full bg-clay-surface p-1 shadow-clay-rest dark:bg-surface-container dark:shadow-clay-dark">
+              <Button
+                variant={dataSource === 'fluxos' ? 'clay' : 'ghost'}
+                size="sm"
+                onClick={() => {
+                  hapticLight()
+                  setDataSource('fluxos')
+                }}
+                aria-pressed={dataSource === 'fluxos'}
+              >
+                Fluxos
+              </Button>
+              <Button
+                variant={dataSource === 'boletins' ? 'clay' : 'ghost'}
+                size="sm"
+                onClick={() => {
+                  hapticLight()
+                  setDataSource('boletins')
+                }}
+                aria-pressed={dataSource === 'boletins'}
+              >
+                Boletins CONAB
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -578,6 +637,57 @@ export function SupermercadoView() {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col gap-lg"
               >
+                {/* Fase 5 — filtros dos boletins CONAB (produto / ano / mês) */}
+                {dataSource === 'boletins' && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <select
+                      value={boletimProduto}
+                      onChange={(e) => setBoletimProduto(e.target.value)}
+                      aria-label="Produto do boletim"
+                      className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+                    >
+                      <option value="">📦 Produto: Todos</option>
+                      {boletimProdutos.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={boletimAno}
+                      onChange={(e) => setBoletimAno(e.target.value ? Number(e.target.value) : '')}
+                      aria-label="Ano do boletim"
+                      className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+                    >
+                      <option value="">🗓️ Ano: Todos</option>
+                      {boletimAnos.map((a) => (
+                        <option key={a} value={a}>
+                          {a}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={boletimMes}
+                      onChange={(e) => setBoletimMes(e.target.value ? Number(e.target.value) : '')}
+                      aria-label="Mês do boletim"
+                      className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+                    >
+                      <option value="">🗓️ Mês: Todos</option>
+                      {MESES_NOME.map((nome, idx) => (
+                        <option key={nome} value={idx + 1}>
+                          {nome}
+                        </option>
+                      ))}
+                    </select>
+                    {boletinsLoading && (
+                      <span className="text-xs text-on-surface-variant">Carregando boletins…</span>
+                    )}
+                    {boletinsError && (
+                      <span className="text-xs text-error">Erro ao carregar boletins.</span>
+                    )}
+                  </div>
+                )}
+
                 <div className="clay-card relative flex w-full flex-col items-center justify-center overflow-hidden p-2 sm:p-lg">
                   <BrasilMap
                     selectedRegion={selectedRegion}
@@ -587,7 +697,8 @@ export function SupermercadoView() {
                     }}
                     selectedUF={selectedMapUF}
                     onUfClick={handleUfClick}
-                    fluxos={fluxos}
+                    fluxos={dataSource === 'fluxos' ? fluxos : undefined}
+                    boletimFlows={dataSource === 'boletins' ? boletimFlows : undefined}
                     onUfNavigate={handlePoloClick}
                     onTableNavigate={() => {
                       hapticLight()
@@ -600,7 +711,7 @@ export function SupermercadoView() {
                       <span className="material-symbols-outlined text-sm">public</span>
                     </div>
                     <span className="font-label-sm text-label-sm text-on-surface">
-                      Visão Interativa
+                      {dataSource === 'boletins' ? 'Rotas dos Boletins CONAB' : 'Visão Interativa'}
                     </span>
                   </div>
                 </div>
@@ -610,7 +721,8 @@ export function SupermercadoView() {
                     regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
                     selectedUF={selectedMapUF}
                     produtos={regiaoResumo?.data ?? []}
-                    fluxos={fluxosRegiao}
+                    fluxos={dataSource === 'fluxos' ? fluxosRegiao : undefined}
+                    boletimFlows={dataSource === 'boletins' ? boletimFlows : undefined}
                     isLoading={regiaoLoading}
                     isError={regiaoError}
                     onClose={() => {

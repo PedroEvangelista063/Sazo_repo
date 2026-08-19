@@ -123,6 +123,37 @@ export interface FlowListResponse {
   total: number
 }
 
+// ── Fluxos dos Boletins Logísticos CONAB (Fase 5 — camada de sync) ──
+export interface BoletimFlowItem {
+  id: number
+  produto: string
+  origem_uf: string
+  origem_polo?: string | null
+  destino_uf: string
+  destino_polo?: string | null
+  mes_referencia: number
+  ano_referencia: number
+  fonte?: string | null
+  pagina?: number | null
+}
+
+export interface BoletimFlowListResponse {
+  data: BoletimFlowItem[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export interface BoletimFlowFilters {
+  produto?: string
+  origemUf?: string
+  destinoUf?: string
+  anoReferencia?: number
+  mesReferencia?: number
+  limit?: number
+  offset?: number
+}
+
 // ── Mapa ──
 export interface UFCoords {
   uf: string

@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
-import { X, MapPin, ShoppingBasket, Package, Truck } from 'lucide-react'
+import { X, MapPin, ShoppingBasket, Package, Truck, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
-import type { RegiaoInfo, ProdutoVarejo, FlowItem } from '@/types/domain'
+import type { RegiaoInfo, ProdutoVarejo, FlowItem, BoletimFlowItem } from '@/types/domain'
 import { normalizarStatusCor } from '@/utils/statusCor'
+import { buildBoletimResumo } from '@/utils/boletimResumo'
 
 function groupBy<T>(arr: T[], keyFn: (item: T) => string): Record<string, T[]> {
   return arr.reduce(
@@ -23,6 +24,7 @@ interface RegiaoPanelProps {
   selectedUF?: string | null
   produtos: ProdutoVarejo[]
   fluxos?: FlowItem[]
+  boletimFlows?: BoletimFlowItem[]
   isLoading: boolean
   isError: boolean
   onClose: () => void
@@ -47,6 +49,7 @@ export function RegiaoPanel({
   selectedUF,
   produtos,
   fluxos,
+  boletimFlows,
   isLoading,
   isError,
   onClose,
@@ -202,6 +205,15 @@ export function RegiaoPanel({
                   </div>
                 ))}
               </div>
+            )}
+
+            {/* Boletins Logísticos CONAB (Fase 5) */}
+            {boletimFlows && (
+              <BoletimResumoSecao
+                flows={boletimFlows}
+                regionUfs={regiao.ufs}
+                selectedUf={selectedUF}
+              />
             )}
 
             {regiao.id === 'sudeste' && totalUfsComDado < 4 && (
@@ -372,5 +384,80 @@ export function RegiaoPanel({
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+function BoletimResumoSecao({
+  flows,
+  regionUfs,
+  selectedUf,
+}: {
+  flows: BoletimFlowItem[]
+  regionUfs: string[]
+  selectedUf?: string | null
+}) {
+  const resumo = buildBoletimResumo(flows, regionUfs, selectedUf)
+
+  if (resumo.total === 0) {
+    return (
+      <div className="mt-4 space-y-1.5">
+        <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          <FileText size={12} />
+          Boletins Logísticos CONAB
+        </p>
+        <p className="rounded-lg bg-gray-100 px-2.5 py-2 text-[10px] text-gray-400 dark:bg-gray-700/30 dark:text-gray-500">
+          Sem rotas no período selecionado (CINZA).
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-4 space-y-1.5">
+      <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <FileText size={12} />
+        Boletins Logísticos CONAB
+        <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+          {resumo.total} rotas
+        </span>
+      </p>
+
+      {resumo.topProdutos.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {resumo.topProdutos.map((p) => (
+            <span
+              key={p.produto}
+              className="rounded bg-white px-1.5 py-0.5 text-[10px] text-gray-700 shadow-sm dark:bg-gray-700 dark:text-gray-300"
+            >
+              {p.produto || 'sem produto'} · {p.quantidade}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {resumo.origens.length > 0 && (
+        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] text-gray-500 dark:text-gray-400">
+          <span className="font-semibold">Origem:</span>
+          {resumo.origens.slice(0, 4).map((o) => (
+            <span key={o.uf}>
+              {o.uf} ({o.quantidade})
+            </span>
+          ))}
+          {resumo.origens.length > 4 && <span>…</span>}
+        </p>
+      )}
+
+      {resumo.destinos.length > 0 && (
+        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] text-gray-500 dark:text-gray-400">
+          <span className="font-semibold">Destino:</span>
+          {resumo.destinos.slice(0, 4).map((d) => (
+            <span key={d.uf}>
+              {d.uf} ({d.quantidade})
+            </span>
+          ))}
+          {resumo.destinos.length > 4 && <span>…</span>}
+        </p>
+      )}
+    </div>
   )
 }

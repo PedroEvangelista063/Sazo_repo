@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import type { FlowItem } from '@/types/domain'
+import { arcPath, buildArcs, formatBoletimTooltip } from '@/utils/arcFlows'
+import type { BuiltArc } from '@/utils/arcFlows'
+import type { BoletimFlowItem, FlowItem } from '@/types/domain'
 
 interface BrasilMapProps {
   selectedRegion: string | null
@@ -9,6 +11,7 @@ interface BrasilMapProps {
   selectedUF: string | null
   onUfClick: (uf: string) => void
   fluxos?: FlowItem[]
+  boletimFlows?: BoletimFlowItem[]
   className?: string
   onUfNavigate?: (uf: string) => void
   onTableNavigate?: () => void
@@ -132,35 +135,27 @@ export function BrasilMap({
   selectedUF,
   onUfClick,
   fluxos,
+  boletimFlows,
   className,
   onUfNavigate,
   onTableNavigate,
 }: BrasilMapProps) {
   const [showFluxos, setShowFluxos] = useState(false)
+  const [boletimTip, setBoletimTip] = useState<{ x: number; y: number; text: string } | null>(null)
   const hasFluxos = fluxos && fluxos.length > 0
 
   const ufMap = new Map(UFS.map((u) => [u.uf, u]))
 
   const hasUfSelection = selectedUF !== null && selectedUF !== undefined
 
-  const arcs =
+  const staticArcs =
     (hasUfSelection || showFluxos) && fluxos
-      ? fluxos
-          .filter((f) => {
-            if (hasUfSelection) {
-              // Mostra só fluxos que envolvem a UF selecionada
-              return f.origem_uf === selectedUF || f.destino_uf === selectedUF
-            }
-            return true
-          })
-          .map((f) => {
-            const from = ufMap.get(f.origem_uf)
-            const to = ufMap.get(f.destino_uf)
-            if (!from || !to || from.uf === to.uf) return null
-            const isIncoming = hasUfSelection && f.destino_uf === selectedUF
-            return { from, to, flow: f, isIncoming }
-          })
-          .filter(Boolean)
+      ? buildArcs(fluxos, ufMap, hasUfSelection ? selectedUF : null)
+      : []
+
+  const boletimArcs =
+    boletimFlows && boletimFlows.length > 0
+      ? buildArcs(boletimFlows, ufMap, hasUfSelection ? selectedUF : null)
       : []
 
   return (
@@ -251,47 +246,22 @@ export function BrasilMap({
           )
         })}
 
-        {/* Arcos de fluxo de abastecimento */}
-        {arcs.length > 0 && (
-          <g className="pointer-events-none">
-            {arcs.map((arc, idx) => {
-              if (!arc) return null
-              const { from, to, flow, isIncoming } = arc
-              const mx = (from.cx + to.cx) / 2
-              const my = (from.cy + to.cy) / 2 - 60
-              const d = `M ${from.cx} ${from.cy} Q ${mx} ${my} ${to.cx} ${to.cy}`
-              const cor =
-                (isIncoming ?? false)
-                  ? '#3B82F6' // azul — recebe
-                  : '#10B981' // verde — envia
-              const strokeWidth = hasUfSelection ? 6 : 4
-              return (
-                <g key={`arc-${flow.id}-${idx}`}>
-                  {/* Sombra do arco */}
-                  <path
-                    d={d}
-                    fill="none"
-                    stroke="rgba(0,0,0,0.15)"
-                    strokeWidth={strokeWidth + 1}
-                    transform="translate(0, 4)"
-                  />
-                  {/* Arco principal animado */}
-                  <motion.path
-                    d={d}
-                    fill="none"
-                    stroke={cor}
-                    strokeWidth={strokeWidth}
-                    strokeOpacity={hasUfSelection ? 0.9 : 0.7}
-                    strokeLinecap="round"
-                    strokeDasharray={hasUfSelection ? 'none' : '8 6'}
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.8, delay: idx * 0.08, ease: 'easeInOut' }}
-                  />
-                </g>
-              )
-            })}
-          </g>
+        {/* Arcos de fluxo de abastecimento (dados históricos do fluxos) */}
+        {staticArcs.length > 0 && (
+          <FluxArcs
+            arcs={staticArcs}
+            strokeWidth={hasUfSelection ? 6 : 4}
+            dashed={!hasUfSelection}
+          />
+        )}
+
+        {/* Arcos dos Boletins Logísticos CONAB (Fase 5) — com tooltip no hover */}
+        {boletimArcs.length > 0 && (
+          <FluxArcs
+            arcs={boletimArcs}
+            strokeWidth={hasUfSelection ? 6 : 4}
+            onHoverArc={setBoletimTip}
+          />
         )}
 
         {/* Dots individuais por UF */}
@@ -429,6 +399,16 @@ export function BrasilMap({
           )
         })}
       </svg>
+
+      {/* Tooltip das rotas dos boletins CONAB */}
+      {boletimTip && (
+        <div
+          className="pointer-events-none absolute z-20 max-w-[220px] rounded-lg border border-outline-variant bg-surface/95 px-3 py-1.5 text-[11px] font-medium text-on-surface shadow-clay-dark backdrop-blur-md"
+          style={{ left: Math.min(boletimTip.x, 240), top: boletimTip.y + 12 }}
+        >
+          {boletimTip.text}
+        </div>
+      )}
 
       {/* Badge flutuante — aparece ao selecionar uma UF */}
       {selectedUF &&
@@ -574,4 +554,84 @@ function buildRegionPath(ufs: UFDot[]): string {
   })
 
   return 'M' + sorted.map((u) => `${u.cx},${u.cy}`).join(' L') + ' Z'
+}
+
+interface ArcTip {
+  x: number
+  y: number
+  text: string
+}
+
+interface FluxArcsProps<T extends { origem_uf: string; destino_uf: string }> {
+  arcs: Array<BuiltArc<T>>
+  strokeWidth: number
+  dashed?: boolean
+  onHoverArc?: (tip: ArcTip | null) => void
+}
+
+/**
+ * Renderiza os arcos origem→destino do mapa (machinery compartilhada entre
+ * fluxos históricos e rotas dos boletins CONAB). `onHoverArc` ativa um path
+ * transparente de captura de hover (tooltip) apenas para os boletins.
+ */
+function FluxArcs<T extends { origem_uf: string; destino_uf: string }>({
+  arcs,
+  strokeWidth,
+  dashed = false,
+  onHoverArc,
+}: FluxArcsProps<T>) {
+  return (
+    <g className="pointer-events-none">
+      {arcs.map((arc, idx) => {
+        const { from, to, flow, isIncoming } = arc
+        const d = arcPath(from, to)
+        const cor = isIncoming ? '#3B82F6' : '#10B981' // azul — recebe / verde — envia
+        return (
+          <g key={`arc-${from.uf}-${to.uf}-${idx}`}>
+            {/* Sombra do arco */}
+            <path
+              d={d}
+              fill="none"
+              stroke="rgba(0,0,0,0.15)"
+              strokeWidth={strokeWidth + 1}
+              transform="translate(0, 4)"
+            />
+            {/* Arco principal animado */}
+            <motion.path
+              d={d}
+              fill="none"
+              stroke={cor}
+              strokeWidth={strokeWidth}
+              strokeOpacity={0.9}
+              strokeLinecap="round"
+              strokeDasharray={dashed ? '8 6' : 'none'}
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.8, delay: idx * 0.08, ease: 'easeInOut' }}
+            />
+            {/* Hit path transparente — hover/tooltip (somente boletins) */}
+            {onHoverArc && (
+              <path
+                d={d}
+                fill="none"
+                stroke="transparent"
+                strokeWidth={strokeWidth + 16}
+                style={{ pointerEvents: 'stroke', cursor: 'pointer' }}
+                onMouseEnter={(e) => {
+                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect()
+                  if (!rect) return
+                  onHoverArc({
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top,
+                    text: formatBoletimTooltip(flow as unknown as BoletimFlowItem),
+                  })
+                }}
+                onMouseLeave={() => onHoverArc(null)}
+              />
+            )}
+          </g>
+        )
+      })}
+    </g>
+  )
 }

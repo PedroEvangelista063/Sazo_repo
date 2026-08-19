@@ -320,3 +320,43 @@ class FlowListResponse(BaseModel):
     total: int
 
     model_config = ConfigDict(frozen=True)
+
+
+class BoletimFlowItem(BaseModel):
+    """Uma rota de fluxo logístico extraída dos Boletins Logísticos da CONAB.
+
+    Lida da view ``staging.vw_fluxo_logistico_boletins``. Cada linha representa
+    uma rota (produto, origem_uf → destino_uf) em um mês/ano, deduplicada.
+    QUALITY GATE: a view NÃO projeta meses futuros nem substitui meses ausentes
+    — campos de polo podem ser NULL quando o boletim não informa o polo.
+    """
+
+    id: int = Field(..., description="ID da rota (id da tabela fato)")
+    produto: str = Field(..., description="Nome do produto (ex: milho, soja, café)")
+    origem_uf: str = Field(..., min_length=2, max_length=2, description="UF de origem (BR-2)")
+    origem_polo: str | None = Field(
+        None, description="Polo de origem (ex: CEASA-GO). NULL se o boletim não informa"
+    )
+    destino_uf: str = Field(..., min_length=2, max_length=2, description="UF de destino (BR-2)")
+    destino_polo: str | None = Field(
+        None, description="Polo de destino (ex: SALVADOR). NULL se o boletim não informa"
+    )
+    mes_referencia: int = Field(..., ge=1, le=12, description="Mês de referência da rota (1-12)")
+    ano_referencia: int = Field(..., ge=2025, le=2026, description="Ano de referência da rota")
+    fonte: str | None = Field(
+        None, description="Fonte do boletim (ex: boletim-logistico-julho-2026)"
+    )
+    pagina: int | None = Field(None, description="Página do boletim onde a rota foi extraída")
+
+    model_config = ConfigDict(frozen=True)
+
+
+class BoletimFlowListResponse(BaseModel):
+    """Retorno do endpoint ``GET /api/v1/fluxos/boletins`` (paginado)."""
+
+    data: list[BoletimFlowItem]
+    total: int = Field(..., description="Total de rotas que atendem ao filtro (sem paginação)")
+    limit: int = Field(..., description="Tamanho da página retornada")
+    offset: int = Field(..., description="Deslocamento da página retornada")
+
+    model_config = ConfigDict(frozen=True)

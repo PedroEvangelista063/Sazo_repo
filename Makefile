@@ -1,4 +1,4 @@
-.PHONY: dev dev-all dev-backend dev-frontend build test test-backend test-frontend lint lint-python lint-ts clean install install-all install-backend install-frontend db-backup db-drain db-disk
+.PHONY: dev dev-all dev-backend dev-frontend build test test-backend test-frontend lint lint-python lint-ts clean install install-all install-backend install-frontend db-backup db-drain db-disk boletim
 
 dev:
 	npm run dev:all
@@ -65,3 +65,9 @@ db-drain:
 
 db-disk:
 	python3 ops/disk_report.py
+
+# ── Boletins Logísticos CONAB (pipeline idempotente) ────────────────────────
+# Encadeia scraper → extração → carga → validação via ops/run_boletim_pipeline.sh
+# (DSN por env: DATABASE_URL_ETL > DATABASE_URL_LOCAL_BACKUP > local fallback).
+boletim:
+	bash ops/run_boletim_pipeline.sh

@@ -35,6 +35,16 @@ A API consulta **exclusivamente** `mart.vw_api_produtos_sazonalidade` (Materiali
 
 **Migração de dados (2026-07-18)**: 14 tabelas migradas — 174.240 linhas, 100% idênticas local ↔ Supabase. Schema fix: `fact_precos_mensais` ganhou `preco_curado`, `is_interpolado`, `fonte`. Sequences corrigidas com `setval()`. Trigger `trg_valida_anomalia_preco` reativada após importação.
 
+## Mudanças Recentes (2026-08-19)
+
+### Boletins Logísticos CONAB — GET /api/v1/fluxos/boletins
+
+- `app/api/v1/endpoints/fluxos_boletins.py` (novo) — `GET /api/v1/fluxos/boletins` lê `staging.vw_fluxo_logistico_boletins` (rotas de frete por produto/UF/mês, originadas dos PDFs do Boletim Logístico CONAB — ver `database/84`/`85`). Filtros opcionais: `produto`, `origem_uf`, `destino_uf`, `ano_referencia`, `mes_referencia` + paginação (`limit`/`offset`); `mes_referencia` inválido → 422. Read-only (role_api_reader), timeout/rate-limit padrão da casa.
+- `app/schemas/responses.py` — novos `BoletimFlowItem` (`id`, `produto`, `origem_uf`, `origem_polo`, `destino_uf`, `destino_polo`, `mes_referencia`, `ano_referencia`, `fonte`, `pagina`) e `BoletimFlowListResponse` (`data`, `total`).
+- `app/main.py` — router `fluxos_boletins` registrado.
+- Smoke real: sem filtro → 788; `?ano_referencia=2026` → 294; `?produto=milho&origem_uf=MT` → 87; mês sem dado (2026-08) → 0 (gate CINZA).
+- Testes: 16 novos (total backend 44 passed) + ruff limpo nos arquivos da fase.
+
 ## Mudanças Recentes (2026-08-13)
 
 ### Nenhuma mudança neste lote

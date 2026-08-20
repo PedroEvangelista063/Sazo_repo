@@ -386,7 +386,12 @@ export function SupermercadoView() {
             <NavigationTabs activeTab={viewMode} onTabChange={handleTabChange} />
 
             {/* Select UF inline com as abas */}
-            <select value={selectedUF} onChange={handleUfChange} aria-label="Selecionar UF">
+            <select
+              value={selectedUF}
+              onChange={handleUfChange}
+              aria-label="Selecionar UF"
+              className="flex h-12 shrink-0 items-center rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface-variant shadow-clay-rest transition-all duration-150 hover:shadow-clay-pressed active:scale-95 dark:bg-surface-container dark:shadow-clay-dark"
+            >
               {ufOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -399,6 +404,7 @@ export function SupermercadoView() {
               value={selectedMonth ?? ''}
               onChange={handleMonthChange}
               aria-label="Selecionar mês"
+              className="flex h-12 shrink-0 items-center rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface-variant shadow-clay-rest transition-all duration-150 hover:shadow-clay-pressed active:scale-95 dark:bg-surface-container dark:shadow-clay-dark"
             >
               <option value="">📅 Mês: Todos</option>
               {MESES_NOME.map((nome, idx) => (

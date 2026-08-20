@@ -4,7 +4,8 @@ import asyncio
 import json
 import logging
 import time
-from typing import Any, Optional
+from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 try:
     import redis.asyncio as aioredis
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class _CacheEntry:
-    __slots__ = ("value", "expires_at")
+    __slots__ = ("expires_at", "value")
 
     def __init__(self, value: Any, ttl: float) -> None:
         self.value = value
@@ -30,7 +31,7 @@ class InMemoryCache:
         self._store: dict[str, _CacheEntry] = {}
         self._lock = asyncio.Lock()
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Any | None:
         entry = self._store.get(key)
         if entry is None:
             return None
@@ -64,7 +65,7 @@ class RedisCache:
     _KEY_PREFIX = "qc:"
 
     def __init__(self, redis_url: str) -> None:
-        self._redis: Optional[aioredis.Redis] = None
+        self._redis: aioredis.Redis | None = None
         self._redis_url = redis_url
         self._lock = asyncio.Lock()
 
@@ -78,7 +79,7 @@ class RedisCache:
                     )
         return self._redis
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Any | None:
         try:
             r = await self._client()
             raw = await r.get(f"{self._KEY_PREFIX}{key}")
@@ -118,9 +119,7 @@ class RedisCache:
             r = await self._client()
             cursor = 0
             while True:
-                cursor, keys = await r.scan(
-                    cursor=cursor, match=f"{self._KEY_PREFIX}{pattern}"
-                )
+                cursor, keys = await r.scan(cursor=cursor, match=f"{self._KEY_PREFIX}{pattern}")
                 if keys:
                     await r.delete(*keys)
                 if cursor == 0:
@@ -130,6 +129,21 @@ class RedisCache:
 
 
 cache: InMemoryCache | RedisCache = InMemoryCache()
+
+
+def _mask_redis_url_password(redis_url: str) -> str:
+    """Mascara apenas a senha de uma URL Redis no log (A1).
+
+    Host/porta permanecem visíveis para diagnóstico; a senha vira ``***``.
+    URLs sem senha são retornadas intactas.
+    """
+    p = urlsplit(redis_url)
+    if p.password is None:
+        return redis_url
+    netloc = f"{p.username or 'default'}:***@{p.hostname}" if p.hostname else ""
+    if p.port:
+        netloc += f":{p.port}"
+    return urlunsplit((p.scheme, netloc, p.path, p.query, p.fragment))
 
 
 def init_cache(redis_url: str) -> None:
@@ -146,7 +160,7 @@ def init_cache(redis_url: str) -> None:
         logger.warning("Cache: redis não instalado (pip install redis) — usando InMemoryCache")
         return
     cache = RedisCache(redis_url)
-    logger.info("Cache: RedisCache em %s", redis_url.replace(redis_url.split("@")[-1] if "@" in redis_url else redis_url, "***"))
+    logger.info("Cache: RedisCache em %s", _mask_redis_url_password(redis_url))
 
 
 async def clear_cache() -> bool:

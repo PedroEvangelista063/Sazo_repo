@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     # arquivo carregar — o valor dentro do arquivo é apenas informativo).
     app_env: Literal["staging", "production"] = "staging"
 
-    database_url: str = "postgresql://role_api_reader:senha@localhost:5432/quero_comprar"
+    database_url: str = ""
     database_url_api: str = ""
     database_url_etl: str = ""
     # ── Failover / Alta Disponibilidade ──────────────────────────────

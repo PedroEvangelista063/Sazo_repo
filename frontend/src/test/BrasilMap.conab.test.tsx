@@ -174,46 +174,55 @@ describe('BrasilMap — boletimFlows com selectedUF', () => {
 /* ── Arcos de fluxos estáticos ───────────────────────────────────────────── */
 
 describe('BrasilMap — staticArcs (fluxos históricos)', () => {
-  it('renderiza arcos estáticos quando fluxos presentes', () => {
+  it('não exibe arcos sem selectedUF', () => {
     const { container } = render(<BrasilMap {...baseProps} fluxos={[staticFlow()]} />)
-    // Arcos estáticos ficam ocultos até o toggle "Fluxos" ser pressionado
-    fireEvent.click(screen.getByText(/Fluxos/))
+    const flowPaths = container.querySelectorAll('path[d*="Q"]')
+    expect(flowPaths.length).toBe(0)
+  })
+
+  it('renderiza arcos estáticos quando selectedUF coincide com fluxo', () => {
+    const { container } = render(
+      <BrasilMap {...baseProps} selectedUF="GO" fluxos={[staticFlow()]} />,
+    )
     const flowPaths = container.querySelectorAll('path[d*="Q"]')
     expect(flowPaths.length).toBeGreaterThan(0)
   })
 
-  it('mostra botão "Fluxos" quando fluxos presentes e sem selectedUF', () => {
-    render(<BrasilMap {...baseProps} fluxos={[staticFlow()]} />)
-    expect(screen.getByText(/Fluxos/)).toBeTruthy()
-  })
-
-  it('não exibe botão Fluxos quando selectedUF ativo', () => {
-    render(<BrasilMap {...baseProps} selectedUF="GO" fluxos={[staticFlow()]} />)
-    expect(screen.queryByText(/Fluxos/)).toBeNull()
+  it('não exibe arcos quando selectedUF não está nos fluxos', () => {
+    const { container } = render(
+      <BrasilMap
+        {...baseProps}
+        selectedUF="SP"
+        fluxos={[staticFlow({ origem_uf: 'GO', destino_uf: 'PA' })]}
+      />,
+    )
+    const flowPaths = container.querySelectorAll('path[d*="Q"]')
+    expect(flowPaths.length).toBe(0)
   })
 })
 
-/* ── Interação: toggle Fluxos ─────────────────────────────────────────────── */
+/* ── Interação: clique em UF para mostrar arcos ──────────────────────────── */
 
-describe('BrasilMap — toggle showFluxos', () => {
-  it('alterna visibilidade dos arcos estáticos ao clicar no botão', () => {
-    const { container } = render(<BrasilMap {...baseProps} fluxos={[staticFlow()]} />)
-    // Initially arcs are hidden (showFluxos = false)
-    let flowPaths = container.querySelectorAll('g.pointer-events-none path[d*="Q"]')
+describe('BrasilMap — arcos só aparecem com selectedUF', () => {
+  it('arcos ficam ocultos sem selectedUF', () => {
+    const { container } = render(
+      <BrasilMap {...baseProps} fluxos={[staticFlow()]} boletimFlows={[boletimFlow()]} />,
+    )
+    let flowPaths = container.querySelectorAll('path[d*="Q"]')
     expect(flowPaths.length).toBe(0)
+  })
 
-    // Click toggle button
-    const toggle = screen.getByText(/Fluxos/)
-    fireEvent.click(toggle)
-
-    // Now arcs should be visible
-    flowPaths = container.querySelectorAll('g.pointer-events-none path[d*="Q"]')
+  it('arcos aparecem ao selecionar uma UF com fluxos', () => {
+    const { container } = render(
+      <BrasilMap
+        {...baseProps}
+        selectedUF="GO"
+        fluxos={[staticFlow()]}
+        boletimFlows={[boletimFlow({ origem_uf: 'MT', destino_uf: 'GO' })]}
+      />,
+    )
+    const flowPaths = container.querySelectorAll('path[d*="Q"]')
     expect(flowPaths.length).toBeGreaterThan(0)
-
-    // Click again to hide
-    fireEvent.click(screen.getByText(/Ocultar Fluxos/))
-    flowPaths = container.querySelectorAll('g.pointer-events-none path[d*="Q"]')
-    expect(flowPaths.length).toBe(0)
   })
 })
 
@@ -298,7 +307,21 @@ describe('BrasilMap — legendas das regiões', () => {
 /* ── Múltiplos boletimFlows (mega stress) ────────────────────────────────── */
 
 describe('BrasilMap — múltiplos boletimFlows', () => {
-  it('renderiza sem erros com 50 boletimFlows', () => {
+  it('renderiza sem erros com 50 boletimFlows e selectedUF', () => {
+    const flows = Array.from({ length: 50 }, (_, i) =>
+      boletimFlow({
+        id: i + 1,
+        origem_uf: ['MT', 'GO', 'MS', 'BA', 'SP'][i % 5],
+        destino_uf: ['PA', 'AM', 'CE', 'PE', 'RJ'][i % 5],
+      }),
+    )
+    const { container } = render(<BrasilMap {...baseProps} selectedUF="MT" boletimFlows={flows} />)
+    expect(container.querySelector('svg')).toBeTruthy()
+    const paths = container.querySelectorAll('path[d*="Q"]')
+    expect(paths.length).toBeGreaterThan(0)
+  })
+
+  it('renderiza sem erros com 50 boletimFlows sem selectedUF', () => {
     const flows = Array.from({ length: 50 }, (_, i) =>
       boletimFlow({
         id: i + 1,
@@ -309,6 +332,6 @@ describe('BrasilMap — múltiplos boletimFlows', () => {
     const { container } = render(<BrasilMap {...baseProps} boletimFlows={flows} />)
     expect(container.querySelector('svg')).toBeTruthy()
     const paths = container.querySelectorAll('path[d*="Q"]')
-    expect(paths.length).toBeGreaterThan(0)
+    expect(paths.length).toBe(0)
   })
 })

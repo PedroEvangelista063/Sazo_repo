@@ -169,15 +169,6 @@ export function BrasilMap({
         role="img"
         aria-label="Mapa do Brasil por estados"
       >
-        <defs>
-          {REGIOES.map((reg) => (
-            <radialGradient key={`glow-${reg.id}`} id={`glow-${reg.id}`} cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor={reg.cor} stopOpacity="0.35" />
-              <stop offset="100%" stopColor={reg.cor} stopOpacity="0" />
-            </radialGradient>
-          ))}
-        </defs>
-
         {/* Background - mapa geográfico do Brasil */}
         <image
           href="/br-map.svg"
@@ -190,11 +181,8 @@ export function BrasilMap({
           className="pointer-events-none"
         />
 
-        {/* Legendas das regiões */}
+        {/* Legendas das regiões — dimming */}
         {REGIOES.map((reg) => {
-          const ufs = UFS.filter((u) => u.regiao === reg.id)
-          const midX = ufs.reduce((s, u) => s + u.cx, 0) / ufs.length
-          const midY = ufs.reduce((s, u) => s + u.cy, 0) / ufs.length
           const isSelected = selectedRegion === reg.id
           return (
             <motion.g
@@ -204,18 +192,7 @@ export function BrasilMap({
                 opacity: selectedRegion && !isSelected ? 0.4 : 1,
               }}
               transition={{ duration: 0.3 }}
-            >
-              {/* Glow de fundo para região selecionada */}
-              {isSelected && (
-                <circle
-                  cx={midX}
-                  cy={midY}
-                  r={220}
-                  fill={`url(#glow-${reg.id})`}
-                  className="pointer-events-none"
-                />
-              )}
-            </motion.g>
+            ></motion.g>
           )
         })}
 
@@ -263,7 +240,6 @@ export function BrasilMap({
           const isUfActive = selectedUF === uf.uf
           const dotRadius = isUfActive ? 22 : isInRegion ? 18 : 12
           const labelRadius = isUfActive ? 30 : isInRegion ? 26 : 18
-          const outerGlow = isUfActive ? 35 : isInRegion ? 28 : 0
 
           const labelX = uf.labelRight ? uf.cx + labelRadius + 14 : uf.cx
           const labelY = uf.labelRight ? uf.cy : uf.cy + labelRadius + 18
@@ -289,9 +265,6 @@ export function BrasilMap({
                 opacity: isDimmed ? 0.35 : 1,
               }}
               transition={{ duration: 0.3 }}
-              whileHover="hover"
-              whileTap="tap"
-              variants={{ hover: {}, tap: {} }}
             >
               {/* Área de toque transparente */}
               <circle
@@ -301,21 +274,6 @@ export function BrasilMap({
                 fill="transparent"
                 pointerEvents="all"
               />
-
-              {/* Glow externo para UF selecionada */}
-              {isUfActive && (
-                <motion.circle
-                  cx={uf.cx}
-                  cy={uf.cy}
-                  r={outerGlow}
-                  fill={reg.cor}
-                  fillOpacity={0.15}
-                  initial={{ r: 30, fillOpacity: 0.3 }}
-                  animate={{ r: outerGlow, fillOpacity: 0.15 }}
-                  transition={{ duration: 0.3 }}
-                  pointerEvents="none"
-                />
-              )}
 
               {/* Sombra */}
               <circle
@@ -327,62 +285,43 @@ export function BrasilMap({
               />
 
               {/* Círculo principal */}
-              <motion.circle
+              <circle
                 cx={uf.cx}
                 cy={uf.cy}
                 r={dotRadius}
-                fill={isUfActive ? '#fff' : reg.cor}
-                fillOpacity={isUfActive ? 1 : isInRegion ? 1 : 0.75}
-                stroke={isUfActive ? reg.cor : isInRegion ? '#fff' : 'none'}
-                strokeWidth={isUfActive ? 6 : isInRegion ? 4 : 0}
-                initial={{
-                  r: dotRadius,
-                  fillOpacity: isUfActive ? 1 : isInRegion ? 1 : 0.75,
-                }}
-                animate={{
-                  r: dotRadius,
-                  fillOpacity: isUfActive ? 1 : isInRegion ? 1 : 0.75,
-                }}
-                transition={{ duration: 0.2 }}
-                variants={{ hover: { r: dotRadius + 4 }, tap: { r: dotRadius + 1 } }}
-                pointerEvents="none"
+                fill={reg.cor}
+                fillOpacity={isInRegion ? 1 : 0.75}
+                className="pointer-events-none"
               />
 
               {/* Label UF */}
-              <motion.text
+              <text
                 x={uf.cx}
                 y={uf.cy}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fill={isUfActive ? reg.cor : '#fff'}
-                fontSize={isUfActive ? 12 : isInRegion ? 10 : 8}
+                fill="#fff"
+                fontSize={isInRegion ? 10 : 8}
                 fontWeight={700}
                 className="pointer-events-none select-none"
-                animate={{ fontSize: isUfActive ? 12 : isInRegion ? 10 : 8 }}
-                transition={{ duration: 0.2 }}
               >
                 {uf.uf}
-              </motion.text>
+              </text>
 
               {/* Nome do estado */}
-              {(isUfActive || isInRegion || selectedRegion === null) && (
-                <motion.text
+              {(isInRegion || selectedRegion === null) && (
+                <text
                   x={labelX}
                   y={labelY}
                   textAnchor={labelAnchor}
                   dominantBaseline="middle"
                   fill={reg.cor}
                   className="pointer-events-none select-none"
-                  fontSize={isUfActive ? 14 : 12}
-                  fontWeight={isUfActive ? 700 : 500}
-                  initial={
-                    uf.labelRight ? { opacity: 0, x: labelX + 6 } : { opacity: 0, y: labelY - 4 }
-                  }
-                  animate={uf.labelRight ? { opacity: 1, x: labelX } : { opacity: 1, y: labelY }}
-                  transition={{ duration: 0.15 }}
+                  fontSize={12}
+                  fontWeight={500}
                 >
-                  {uf.uf === 'DF' ? 'DF' : isUfActive ? uf.nome : uf.nome.substring(0, 6)}
-                </motion.text>
+                  {uf.nome.substring(0, 6)}
+                </text>
               )}
             </motion.g>
           )
@@ -558,17 +497,10 @@ function buildRegionPath(ufs: UFDot[]): string {
   return 'M' + sorted.map((u) => `${u.cx},${u.cy}`).join(' L') + ' Z'
 }
 
-interface ArcTip {
-  x: number
-  y: number
-  text: string
-}
-
 interface FluxArcsProps<T extends { origem_uf: string; destino_uf: string }> {
   arcs: Array<BuiltArc<T>>
   strokeWidth: number
   dashed?: boolean
-  onHoverArc?: (tip: ArcTip | null) => void
 }
 
 /**

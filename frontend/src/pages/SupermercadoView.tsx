@@ -620,7 +620,6 @@ export function SupermercadoView() {
                   <select
                     value={boletimProduto}
                     onChange={(e) => setBoletimProduto(e.target.value)}
-                    aria-label="Produto do boletim"
                   >
                     <option value="">📦 Produto: Todos</option>
                     {boletimProdutos.map((p) => (
@@ -632,7 +631,6 @@ export function SupermercadoView() {
                   <select
                     value={boletimAno}
                     onChange={(e) => setBoletimAno(e.target.value ? Number(e.target.value) : '')}
-                    aria-label="Ano do boletim"
                   >
                     <option value="">🗓️ Ano: Todos</option>
                     {boletimAnos.map((a) => (
@@ -644,7 +642,6 @@ export function SupermercadoView() {
                   <select
                     value={boletimMes}
                     onChange={(e) => setBoletimMes(e.target.value ? Number(e.target.value) : '')}
-                    aria-label="Mês do boletim"
                   >
                     <option value="">🗓️ Mês: Todos</option>
                     {MESES_NOME.map((nome, idx) => (

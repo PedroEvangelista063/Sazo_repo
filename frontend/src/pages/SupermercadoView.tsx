@@ -386,33 +386,55 @@ export function SupermercadoView() {
             <NavigationTabs activeTab={viewMode} onTabChange={handleTabChange} />
 
             {/* Select UF inline com as abas */}
-            <select
-              value={selectedUF}
-              onChange={handleUfChange}
-              aria-label="Selecionar UF"
-              className="flex h-12 shrink-0 items-center rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface-variant shadow-clay-rest transition-all duration-150 hover:shadow-clay-pressed active:scale-95 dark:bg-surface-container dark:shadow-clay-dark"
-            >
-              {ufOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                value={selectedUF}
+                onChange={handleUfChange}
+                aria-label="Selecionar UF"
+                className="flex min-h-[48px] shrink-0 appearance-none items-center justify-center whitespace-nowrap rounded-full bg-clay-surface py-0 pl-4 pr-10 text-base font-semibold text-on-surface-variant shadow-clay-rest transition-all duration-150 hover:shadow-clay-pressed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:scale-95 dark:bg-surface-container dark:text-on-surface-variant dark:shadow-clay-dark dark:hover:bg-surface-container-high"
+              >
+                {ufOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <svg
+                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
 
             {/* Select Mês inline com as abas */}
-            <select
-              value={selectedMonth ?? ''}
-              onChange={handleMonthChange}
-              aria-label="Selecionar mês"
-              className="flex h-12 shrink-0 items-center rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface-variant shadow-clay-rest transition-all duration-150 hover:shadow-clay-pressed active:scale-95 dark:bg-surface-container dark:shadow-clay-dark"
-            >
-              <option value="">📅 Mês: Todos</option>
-              {MESES_NOME.map((nome, idx) => (
-                <option key={nome} value={idx + 1}>
-                  📅 Mês: {nome}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                value={selectedMonth ?? ''}
+                onChange={handleMonthChange}
+                aria-label="Selecionar mês"
+                className="flex min-h-[48px] shrink-0 appearance-none items-center justify-center whitespace-nowrap rounded-full bg-clay-surface py-0 pl-4 pr-10 text-base font-semibold text-on-surface-variant shadow-clay-rest transition-all duration-150 hover:shadow-clay-pressed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:scale-95 dark:bg-surface-container dark:text-on-surface-variant dark:shadow-clay-dark dark:hover:bg-surface-container-high"
+              >
+                <option value="">📅 Mês: Todos</option>
+                {MESES_NOME.map((nome, idx) => (
+                  <option key={nome} value={idx + 1}>
+                    📅 Mês: {nome}
+                  </option>
+                ))}
+              </select>
+              <svg
+                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
           </div>
         </div>
 

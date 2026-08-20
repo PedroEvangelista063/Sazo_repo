@@ -13,6 +13,8 @@ import { useFluxosBoletins } from '@/hooks/useFluxosBoletins'
 import { hapticLight, hapticSuccess } from '@/utils/haptics'
 import { temGradeCompleta } from '@/utils/gradeCompleta'
 import { normalizarStatusCor } from '@/utils/statusCor'
+import { buildBoletimResumo } from '@/utils/boletimResumo'
+import type { BoletimFlowItem } from '@/types/domain'
 
 // Layout Components
 import { TopAppBar } from '@/components/layout/TopAppBar'
@@ -28,7 +30,6 @@ import { SkeletonCard } from '@/components/SkeletonCard'
 import { CategoriesModal } from '@/components/CategoriesModal'
 import { GradeSazonalAcordeao } from '@/components/GradeSazonalAcordeao'
 import { SearchResultsModal } from '@/components/SearchResultsModal'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 type ViewMode = 'tabela' | 'cards' | 'mapa'
@@ -129,8 +130,6 @@ export function SupermercadoView() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
   const [selectedMapUF, setSelectedMapUF] = useState<string | null>(null)
 
-  // Fase 5 — fonte de dados do mapa: fluxos históricos ou boletins CONAB
-  const [dataSource, setDataSource] = useState<'fluxos' | 'boletins'>('fluxos')
   const [boletimProduto, setBoletimProduto] = useState('')
   const [boletimMes, setBoletimMes] = useState<number | ''>('')
   const [boletimAno, setBoletimAno] = useState<number | ''>(new Date().getFullYear())
@@ -174,6 +173,17 @@ export function SupermercadoView() {
   })
 
   const boletimFlows = useMemo(() => boletins?.data ?? [], [boletins])
+
+  // Rotas visíveis no detalhe: seguem a UF/região selecionada no mapa,
+  // mantendo a lista concisa (mesmos critérios do RegiaoPanel).
+  const boletimFlowsVisiveis = useMemo(() => {
+    if (!selectedMapUF && !selectedRegion) return boletimFlows
+    const ufs = selectedMapUF
+      ? [selectedMapUF]
+      : (regioes?.find((r) => r.id === selectedRegion)?.ufs ?? [])
+    const ufsSet = new Set(ufs)
+    return boletimFlows.filter((f) => ufsSet.has(f.origem_uf) || ufsSet.has(f.destino_uf))
+  }, [boletimFlows, selectedMapUF, selectedRegion, regioes])
 
   const boletimProdutos = useMemo(() => {
     const set = new Set<string>(['milho', 'soja', 'café', 'carnes'])
@@ -442,32 +452,6 @@ export function SupermercadoView() {
                 </option>
               ))}
             </select>
-
-            {/* Fase 5 — fonte de dados do mapa (Fluxos históricos vs Boletins CONAB) */}
-            <div className="flex shrink-0 items-center gap-1 rounded-full bg-clay-surface p-1 shadow-clay-rest dark:bg-surface-container dark:shadow-clay-dark">
-              <Button
-                variant={dataSource === 'fluxos' ? 'clay' : 'ghost'}
-                size="sm"
-                onClick={() => {
-                  hapticLight()
-                  setDataSource('fluxos')
-                }}
-                aria-pressed={dataSource === 'fluxos'}
-              >
-                Fluxos
-              </Button>
-              <Button
-                variant={dataSource === 'boletins' ? 'clay' : 'ghost'}
-                size="sm"
-                onClick={() => {
-                  hapticLight()
-                  setDataSource('boletins')
-                }}
-                aria-pressed={dataSource === 'boletins'}
-              >
-                Boletins CONAB
-              </Button>
-            </div>
           </div>
         </div>
 
@@ -637,56 +621,54 @@ export function SupermercadoView() {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col gap-lg"
               >
-                {/* Fase 5 — filtros dos boletins CONAB (produto / ano / mês) */}
-                {dataSource === 'boletins' && (
-                  <div className="flex flex-wrap items-center gap-2">
-                    <select
-                      value={boletimProduto}
-                      onChange={(e) => setBoletimProduto(e.target.value)}
-                      aria-label="Produto do boletim"
-                      className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
-                    >
-                      <option value="">📦 Produto: Todos</option>
-                      {boletimProdutos.map((p) => (
-                        <option key={p} value={p}>
-                          {p}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={boletimAno}
-                      onChange={(e) => setBoletimAno(e.target.value ? Number(e.target.value) : '')}
-                      aria-label="Ano do boletim"
-                      className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
-                    >
-                      <option value="">🗓️ Ano: Todos</option>
-                      {boletimAnos.map((a) => (
-                        <option key={a} value={a}>
-                          {a}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={boletimMes}
-                      onChange={(e) => setBoletimMes(e.target.value ? Number(e.target.value) : '')}
-                      aria-label="Mês do boletim"
-                      className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
-                    >
-                      <option value="">🗓️ Mês: Todos</option>
-                      {MESES_NOME.map((nome, idx) => (
-                        <option key={nome} value={idx + 1}>
-                          {nome}
-                        </option>
-                      ))}
-                    </select>
-                    {boletinsLoading && (
-                      <span className="text-xs text-on-surface-variant">Carregando boletins…</span>
-                    )}
-                    {boletinsError && (
-                      <span className="text-xs text-error">Erro ao carregar boletins.</span>
-                    )}
-                  </div>
-                )}
+                {/* Filtros dos boletins CONAB (produto / ano / mês) */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <select
+                    value={boletimProduto}
+                    onChange={(e) => setBoletimProduto(e.target.value)}
+                    aria-label="Produto do boletim"
+                    className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+                  >
+                    <option value="">📦 Produto: Todos</option>
+                    {boletimProdutos.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={boletimAno}
+                    onChange={(e) => setBoletimAno(e.target.value ? Number(e.target.value) : '')}
+                    aria-label="Ano do boletim"
+                    className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+                  >
+                    <option value="">🗓️ Ano: Todos</option>
+                    {boletimAnos.map((a) => (
+                      <option key={a} value={a}>
+                        {a}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={boletimMes}
+                    onChange={(e) => setBoletimMes(e.target.value ? Number(e.target.value) : '')}
+                    aria-label="Mês do boletim"
+                    className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
+                  >
+                    <option value="">🗓️ Mês: Todos</option>
+                    {MESES_NOME.map((nome, idx) => (
+                      <option key={nome} value={idx + 1}>
+                        {nome}
+                      </option>
+                    ))}
+                  </select>
+                  {boletinsLoading && (
+                    <span className="text-xs text-on-surface-variant">Carregando boletins…</span>
+                  )}
+                  {boletinsError && (
+                    <span className="text-xs text-error">Erro ao carregar boletins.</span>
+                  )}
+                </div>
 
                 <div className="clay-card relative flex w-full flex-col items-center justify-center overflow-hidden p-2 sm:p-lg">
                   <BrasilMap
@@ -697,8 +679,8 @@ export function SupermercadoView() {
                     }}
                     selectedUF={selectedMapUF}
                     onUfClick={handleUfClick}
-                    fluxos={dataSource === 'fluxos' ? fluxos : undefined}
-                    boletimFlows={dataSource === 'boletins' ? boletimFlows : undefined}
+                    fluxos={fluxos}
+                    boletimFlows={boletimFlows}
                     onUfNavigate={handlePoloClick}
                     onTableNavigate={() => {
                       hapticLight()
@@ -711,18 +693,24 @@ export function SupermercadoView() {
                       <span className="material-symbols-outlined text-sm">public</span>
                     </div>
                     <span className="font-label-sm text-label-sm text-on-surface">
-                      {dataSource === 'boletins' ? 'Rotas dos Boletins CONAB' : 'Visão Interativa'}
+                      Rotas dos Boletins CONAB
                     </span>
                   </div>
                 </div>
+
+                <BoletimFluxoDetalhe
+                  flows={boletimFlowsVisiveis}
+                  isLoading={boletinsLoading}
+                  isError={boletinsError}
+                />
 
                 <div className="w-full">
                   <RegiaoPanel
                     regiao={regioes?.find((r) => r.id === selectedRegion) ?? null}
                     selectedUF={selectedMapUF}
                     produtos={regiaoResumo?.data ?? []}
-                    fluxos={dataSource === 'fluxos' ? fluxosRegiao : undefined}
-                    boletimFlows={dataSource === 'boletins' ? boletimFlows : undefined}
+                    fluxos={fluxosRegiao}
+                    boletimFlows={boletimFlows}
                     isLoading={regiaoLoading}
                     isError={regiaoError}
                     onClose={() => {
@@ -809,5 +797,107 @@ export function SupermercadoView() {
         }
       />
     </>
+  )
+}
+
+/**
+ * Detalhe das rotas dos Boletins Logísticos CONAB (Fase 5 — view enriquecida).
+ * Exibe quem envia (UF/polo de origem), quem recebe (UF/polo de destino),
+ * produto e mês/ano de referência. Null-safe em todos os campos opcionais:
+ * polo ausente cai para a UF; sem dados, estado neutro (CINZA).
+ */
+function BoletimFluxoDetalhe({
+  flows,
+  isLoading,
+  isError,
+}: {
+  flows: BoletimFlowItem[]
+  isLoading: boolean
+  isError: boolean
+}) {
+  const resumo = buildBoletimResumo(flows)
+
+  return (
+    <div className="clay-card p-lg">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <span className="material-symbols-outlined text-sm text-primary">import_export</span>
+        <h3 className="font-label-sm text-label-sm text-on-surface">Fluxo dos Boletins CONAB</h3>
+        {!isLoading && !isError && flows.length > 0 && (
+          <span className="ml-auto rounded-full bg-surface-container px-2.5 py-1 text-xs font-semibold text-on-surface-variant">
+            {resumo.total} rotas
+          </span>
+        )}
+      </div>
+
+      {isLoading && (
+        <div
+          className="flex animate-pulse flex-col gap-2"
+          role="status"
+          aria-label="Carregando rotas dos boletins"
+        >
+          <div className="h-12 rounded-xl bg-surface-container" />
+          <div className="h-12 rounded-xl bg-surface-container" />
+          <div className="h-12 rounded-xl bg-surface-container" />
+        </div>
+      )}
+
+      {!isLoading && isError && (
+        <p className="text-sm text-error">Erro ao carregar as rotas do boletim.</p>
+      )}
+
+      {!isLoading && !isError && flows.length === 0 && (
+        <p className="text-sm text-on-surface-variant">
+          Sem rotas de fluxo para os filtros selecionados. (CINZA)
+        </p>
+      )}
+
+      {!isLoading && !isError && flows.length > 0 && (
+        <>
+          <p className="mb-2 text-xs text-on-surface-variant">
+            {resumo.produtosUnicos} produto{resumo.produtosUnicos === 1 ? '' : 's'} ·{' '}
+            {resumo.ufsEnvolvidas} UFs envolvidas
+          </p>
+          <ul className="flex max-h-72 flex-col gap-2 overflow-y-auto pr-1">
+            {flows.map((f) => (
+              <li key={f.id} className="rounded-2xl bg-surface-container p-3">
+                <div className="flex items-center gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-on-surface">
+                      {f.origem_polo || f.origem_uf}
+                    </p>
+                    <p className="text-[11px] text-on-surface-variant">
+                      {f.origem_polo ? `Envia · ${f.origem_uf}` : 'Envia (UF)'}
+                    </p>
+                  </div>
+                  <span
+                    className="material-symbols-outlined shrink-0 text-base text-outline"
+                    aria-hidden="true"
+                  >
+                    arrow_forward
+                  </span>
+                  <div className="min-w-0 flex-1 text-right">
+                    <p className="truncate text-sm font-semibold text-on-surface">
+                      {f.destino_polo || f.destino_uf}
+                    </p>
+                    <p className="text-[11px] text-on-surface-variant">
+                      {f.destino_polo ? `Recebe · ${f.destino_uf}` : 'Recebe (UF)'}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <span className="rounded-full bg-surface px-2 py-0.5 text-[11px] font-medium text-on-surface">
+                    {f.produto ?? 'Produto não informado'}
+                  </span>
+                  <span className="rounded-full bg-surface px-2 py-0.5 text-[11px] font-medium text-on-surface-variant">
+                    📅 {String(f.mes_referencia ?? '--').padStart(2, '0')}/
+                    {f.ano_referencia ?? '----'}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
   )
 }

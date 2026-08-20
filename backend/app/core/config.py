@@ -53,6 +53,7 @@ class Settings(BaseSettings):
         "http://localhost:5174",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
+        "https://sazo-repo.vercel.app",
     ]
     # Pool — None = autotuning por ambiente (ver effective_pool_*).
     #   staging:    pool folgado (máx. 30) para testes de carga no físico.

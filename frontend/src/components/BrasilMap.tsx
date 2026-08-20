@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { arcPath, buildArcs, formatBoletimTooltip } from '@/utils/arcFlows'
+import { arcPath, buildArcs } from '@/utils/arcFlows'
 import type { BuiltArc } from '@/utils/arcFlows'
 import type { BoletimFlowItem, FlowItem } from '@/types/domain'
 
@@ -23,11 +23,6 @@ interface UFDot {
   regiao: string
   cx: number
   cy: number
-  /**
-   * Nome à direita do círculo (alinhado verticalmente). Usado em regiões
-   * densas onde os círculos ficam muito próximos e o nome embaixo
-   * cobriria o ponto da capital vizinha.
-   */
   labelRight?: boolean
 }
 
@@ -141,7 +136,8 @@ export function BrasilMap({
   onTableNavigate,
 }: BrasilMapProps) {
   const [showFluxos, setShowFluxos] = useState(false)
-  const [boletimTip, setBoletimTip] = useState<{ x: number; y: number; text: string } | null>(null)
+
+  const [regionMenuOpen, setRegionMenuOpen] = useState(false)
   const hasFluxos = fluxos && fluxos.length > 0
 
   const ufMap = new Map(UFS.map((u) => [u.uf, u]))
@@ -162,7 +158,7 @@ export function BrasilMap({
     <div
       className={cn(
         'relative mx-auto w-full',
-        'max-w-[320px] sm:max-w-[420px] md:max-w-[560px] lg:max-w-[680px] xl:max-w-[800px]',
+        'max-w-[360px] sm:max-w-[480px] md:max-w-[620px] lg:max-w-[760px] xl:max-w-[900px]',
         className,
       )}
     >
@@ -228,7 +224,6 @@ export function BrasilMap({
           const ufs = UFS.filter((u) => u.regiao === reg.id)
           const isSelected = selectedRegion === reg.id || selectedRegion === null
           if (ufs.length < 2) return null
-          // Convex hull aproximado — conecta os dots da região
           return (
             <motion.path
               key={`line-${reg.id}`}
@@ -246,7 +241,7 @@ export function BrasilMap({
           )
         })}
 
-        {/* Arcos de fluxo de abastecimento (dados históricos do fluxos) */}
+        {/* Arcos de fluxo de abastecimento */}
         {staticArcs.length > 0 && (
           <FluxArcs
             arcs={staticArcs}
@@ -255,13 +250,9 @@ export function BrasilMap({
           />
         )}
 
-        {/* Arcos dos Boletins Logísticos CONAB (Fase 5) — com tooltip no hover */}
+        {/* Arcos dos Boletins Logísticos CONAB — sem hover (purely informational) */}
         {boletimArcs.length > 0 && (
-          <FluxArcs
-            arcs={boletimArcs}
-            strokeWidth={hasUfSelection ? 6 : 4}
-            onHoverArc={setBoletimTip}
-          />
+          <FluxArcs arcs={boletimArcs} strokeWidth={hasUfSelection ? 6 : 4} />
         )}
 
         {/* Dots individuais por UF */}
@@ -274,8 +265,6 @@ export function BrasilMap({
           const labelRadius = isUfActive ? 30 : isInRegion ? 26 : 18
           const outerGlow = isUfActive ? 35 : isInRegion ? 28 : 0
 
-          // Nome do estado: embaixo por padrão; à direita (alinhado ao
-          // círculo) em regiões densas onde os círculos ficam muito próximos.
           const labelX = uf.labelRight ? uf.cx + labelRadius + 14 : uf.cx
           const labelY = uf.labelRight ? uf.cy : uf.cy + labelRadius + 18
           const labelAnchor = uf.labelRight ? 'start' : 'middle'
@@ -304,7 +293,7 @@ export function BrasilMap({
               whileTap="tap"
               variants={{ hover: {}, tap: {} }}
             >
-              {/* Área de toque transparente — garante hit area >= 44px no menor breakpoint */}
+              {/* Área de toque transparente */}
               <circle
                 cx={uf.cx}
                 cy={uf.cy}
@@ -375,7 +364,7 @@ export function BrasilMap({
                 {uf.uf}
               </motion.text>
 
-              {/* Nome do estado — embaixo do círculo; à direita em regiões densas */}
+              {/* Nome do estado */}
               {(isUfActive || isInRegion || selectedRegion === null) && (
                 <motion.text
                   x={labelX}
@@ -400,15 +389,82 @@ export function BrasilMap({
         })}
       </svg>
 
-      {/* Tooltip das rotas dos boletins CONAB */}
-      {boletimTip && (
-        <div
-          className="pointer-events-none absolute z-20 max-w-[220px] rounded-lg border border-outline-variant bg-surface/95 px-3 py-1.5 text-[11px] font-medium text-on-surface shadow-clay-dark backdrop-blur-md"
-          style={{ left: Math.min(boletimTip.x, 240), top: boletimTip.y + 12 }}
+      {/* Botão Bandeira 🇧🇷 → Tabela — canto superior direito */}
+      {onTableNavigate && (
+        <button
+          onClick={onTableNavigate}
+          className="group absolute right-4 top-4 z-10 flex flex-col items-center gap-1 rounded-2xl border border-outline-variant bg-surface-container/90 p-3 shadow-clay-dark backdrop-blur-md transition-all duration-150 hover:shadow-clay-pressed active:scale-95"
+          title="Ver Tabela Nacional"
         >
-          {boletimTip.text}
-        </div>
+          <span className="text-2xl">🇧🇷</span>
+          <span className="text-[10px] font-semibold text-on-surface-variant transition-colors group-hover:text-primary">
+            Tabela
+          </span>
+          <svg
+            className="h-3 w-3 text-primary"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
       )}
+
+      {/* Floating Region Filter — canto inferior esquerdo */}
+      <div className="absolute bottom-4 left-4 z-10">
+        <motion.button
+          onClick={() => setRegionMenuOpen((v) => !v)}
+          className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-2xl border border-outline-variant bg-surface-container/90 p-3 shadow-clay-dark backdrop-blur-md transition-all duration-150 hover:shadow-clay-pressed active:scale-95"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Filtrar por região"
+          aria-expanded={regionMenuOpen}
+        >
+          <span className="text-xl">🗺️</span>
+        </motion.button>
+
+        <AnimatePresence>
+          {regionMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="absolute bottom-16 left-0 flex flex-col gap-1.5 rounded-2xl border border-outline-variant bg-surface-container/95 p-2 shadow-clay-dark backdrop-blur-md"
+            >
+              {REGIOES.map((reg) => {
+                const isActive = selectedRegion === reg.id
+                return (
+                  <motion.button
+                    key={reg.id}
+                    onClick={() => {
+                      onRegionClick(reg.id)
+                      setRegionMenuOpen(false)
+                    }}
+                    className={cn(
+                      'flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-medium transition-colors',
+                      isActive ? 'text-white' : 'text-on-surface hover:bg-surface-container',
+                    )}
+                    style={{
+                      backgroundColor: isActive ? reg.cor : 'transparent',
+                    }}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: isActive ? '#fff' : reg.cor }}
+                    />
+                    {formatLabel(reg.id)}
+                  </motion.button>
+                )
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Badge flutuante — aparece ao selecionar uma UF */}
       {selectedUF &&
@@ -446,104 +502,50 @@ export function BrasilMap({
           )
         })()}
 
-      {/* Botão Bandeira 🇧🇷 → Tabela */}
-      {onTableNavigate && (
-        <button
-          onClick={onTableNavigate}
-          className="group absolute bottom-4 right-4 z-10 flex flex-col items-center gap-1 rounded-2xl border border-outline-variant bg-surface-container/90 p-3 shadow-clay-dark backdrop-blur-md transition-all duration-150 hover:shadow-clay-pressed active:scale-95"
-          title="Ver Tabela Nacional"
-        >
-          <span className="text-2xl">🇧🇷</span>
-          <span className="text-[10px] font-semibold text-on-surface-variant transition-colors group-hover:text-primary">
-            Tabela
+      {/* Legenda de cores — receita/envio */}
+      {hasUfSelection && (
+        <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container/80 px-3 py-1.5 text-[11px] font-medium text-on-surface shadow-clay-dark backdrop-blur-sm">
+          <span className="flex items-center gap-1">
+            <span className="h-2 w-2 rounded-full bg-blue-500" />
+            Recebe
           </span>
+          <span className="flex items-center gap-1">
+            <span className="h-2 w-2 rounded-full bg-green-500" />
+            Envia
+          </span>
+        </div>
+      )}
+
+      {/* Toggle Fluxos (quando há fluxos e sem UF selecionada) */}
+      {hasFluxos && !hasUfSelection && (
+        <motion.button
+          onClick={() => setShowFluxos((v) => !v)}
+          className={cn(
+            'absolute bottom-4 left-16 z-10 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium transition-colors',
+            showFluxos
+              ? 'border-indigo-600 bg-indigo-600 text-white'
+              : 'border-indigo-400 bg-surface-container/90 text-indigo-500',
+          )}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
           <svg
-            className="h-3 w-3 text-primary"
+            className="h-3 w-3"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth={2.5}
+            strokeWidth={2}
           >
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </button>
+          {showFluxos ? 'Ocultar Fluxos' : `Fluxos (${fluxos?.length ?? 0})`}
+        </motion.button>
       )}
-
-      {/* Controles do mapa / info */}
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-        {hasUfSelection && (
-          <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-            <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-blue-500" />
-              Recebe
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-green-500" />
-              Envia
-            </span>
-          </span>
-        )}
-        {hasFluxos && !hasUfSelection && (
-          <motion.button
-            onClick={() => setShowFluxos((v) => !v)}
-            className={cn(
-              'inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-4 text-[11px] font-medium transition-colors',
-              showFluxos
-                ? 'border-indigo-600 bg-indigo-600 text-white'
-                : 'border-indigo-400 text-indigo-500',
-            )}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <svg
-              className="h-3 w-3"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-            {showFluxos ? 'Ocultar Fluxos' : `Fluxos (${fluxos?.length ?? 0})`}
-          </motion.button>
-        )}
-      </div>
-
-      {/* Legenda interativa abaixo do mapa */}
-      <div className="mt-2 flex flex-wrap justify-center gap-2">
-        {REGIOES.map((reg) => {
-          const isActive = selectedRegion === reg.id
-          return (
-            <motion.button
-              key={reg.id}
-              onClick={() => onRegionClick(reg.id)}
-              className={cn(
-                'inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-4 text-[11px] font-medium',
-                'border transition-colors',
-              )}
-              style={{
-                backgroundColor: isActive ? reg.cor : 'transparent',
-                borderColor: reg.cor,
-                color: isActive ? '#fff' : reg.cor,
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span
-                className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: reg.cor }}
-              />
-              {formatLabel(reg.id)}
-            </motion.button>
-          )
-        })}
-      </div>
     </div>
   )
 }
 
 function buildRegionPath(ufs: UFDot[]): string {
-  // Ordena os pontos por ângulo em torno do centroide para criar um polígono convexo
   const cx = ufs.reduce((s, u) => s + u.cx, 0) / ufs.length
   const cy = ufs.reduce((s, u) => s + u.cy, 0) / ufs.length
 
@@ -570,22 +572,20 @@ interface FluxArcsProps<T extends { origem_uf: string; destino_uf: string }> {
 }
 
 /**
- * Renderiza os arcos origem→destino do mapa (machinery compartilhada entre
- * fluxos históricos e rotas dos boletins CONAB). `onHoverArc` ativa um path
- * transparente de captura de hover (tooltip) apenas para os boletins.
+ * Renderiza os arcos origem→destino do mapa. Arcos são puramente
+ * informativos — sem hover/tooltip (pointer-events removidos).
  */
 function FluxArcs<T extends { origem_uf: string; destino_uf: string }>({
   arcs,
   strokeWidth,
   dashed = false,
-  onHoverArc,
 }: FluxArcsProps<T>) {
   return (
     <g className="pointer-events-none">
       {arcs.map((arc, idx) => {
-        const { from, to, flow, isIncoming } = arc
+        const { from, to, isIncoming } = arc
         const d = arcPath(from, to)
-        const cor = isIncoming ? '#3B82F6' : '#10B981' // azul — recebe / verde — envia
+        const cor = isIncoming ? '#3B82F6' : '#10B981'
         return (
           <g key={`arc-${from.uf}-${to.uf}-${idx}`}>
             {/* Sombra do arco */}
@@ -609,26 +609,6 @@ function FluxArcs<T extends { origem_uf: string; destino_uf: string }>({
               animate={{ pathLength: 1 }}
               transition={{ duration: 0.8, delay: idx * 0.08, ease: 'easeInOut' }}
             />
-            {/* Hit path transparente — hover/tooltip (somente boletins) */}
-            {onHoverArc && (
-              <path
-                d={d}
-                fill="none"
-                stroke="transparent"
-                strokeWidth={strokeWidth + 16}
-                style={{ pointerEvents: 'stroke', cursor: 'pointer' }}
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect()
-                  if (!rect) return
-                  onHoverArc({
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top,
-                    text: formatBoletimTooltip(flow as unknown as BoletimFlowItem),
-                  })
-                }}
-                onMouseLeave={() => onHoverArc(null)}
-              />
-            )}
           </g>
         )
       })}

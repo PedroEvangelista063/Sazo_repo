@@ -271,11 +271,13 @@ describe('BrasilMap — onTableNavigate', () => {
   })
 })
 
-/* ── Legendas das regiões ─────────────────────────────────────────────────── */
+/* ── Legendas das regiões (floating menu) ───────────────────────────────── */
 
 describe('BrasilMap — legendas das regiões', () => {
-  it('renderiza os 5 botões de região', () => {
+  it('renderiza os 5 botões de região ao abrir o menu flutuante', () => {
     render(<BrasilMap {...baseProps} />)
+    // Open the floating region filter menu
+    fireEvent.click(screen.getByLabelText('Filtrar por região'))
     expect(screen.getByText('Norte')).toBeTruthy()
     expect(screen.getByText('Nordeste')).toBeTruthy()
     expect(screen.getByText('Centro-Oeste')).toBeTruthy()
@@ -286,6 +288,8 @@ describe('BrasilMap — legendas das regiões', () => {
   it('chama onRegionClick ao clicar em uma região', () => {
     const onRegionClick = vi.fn()
     render(<BrasilMap {...baseProps} onRegionClick={onRegionClick} />)
+    // Open the floating region filter menu
+    fireEvent.click(screen.getByLabelText('Filtrar por região'))
     fireEvent.click(screen.getByText('Sul'))
     expect(onRegionClick).toHaveBeenCalledWith('sul')
   })

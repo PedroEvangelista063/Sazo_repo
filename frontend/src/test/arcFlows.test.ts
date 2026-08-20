@@ -84,11 +84,11 @@ describe('arcPath', () => {
 })
 
 describe('formatBoletimTooltip', () => {
-  it('usa polos quando presentes', () => {
-    expect(formatBoletimTooltip(fluxoBase())).toBe('milho • SORRISO → MIRITITUBA • 07/2026')
+  it('exibe apenas UF (sem polos/municípios)', () => {
+    expect(formatBoletimTooltip(fluxoBase())).toBe('milho • MT → PA • 07/2026')
   })
 
-  it('faz fallback para UF quando polo ausente (null safety)', () => {
+  it('mantém formato mesmo com polo ausente (null safety)', () => {
     expect(formatBoletimTooltip(fluxoBase({ origem_polo: null, destino_polo: null }))).toBe(
       'milho • MT → PA • 07/2026',
     )
@@ -98,8 +98,6 @@ describe('formatBoletimTooltip', () => {
   })
 
   it('padroniza mês com zero à esquerda', () => {
-    expect(formatBoletimTooltip(fluxoBase({ mes_referencia: 3 }))).toBe(
-      'milho • SORRISO → MIRITITUBA • 03/2026',
-    )
+    expect(formatBoletimTooltip(fluxoBase({ mes_referencia: 3 }))).toBe('milho • MT → PA • 03/2026')
   })
 })

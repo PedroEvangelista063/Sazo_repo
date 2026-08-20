@@ -670,7 +670,7 @@ export function SupermercadoView() {
                   )}
                 </div>
 
-                <div className="clay-card relative flex w-full flex-col items-center justify-center overflow-hidden p-2 sm:p-lg">
+                <div className="relative w-full overflow-hidden rounded-2xl">
                   <BrasilMap
                     selectedRegion={selectedRegion}
                     onRegionClick={(id) => {
@@ -688,14 +688,6 @@ export function SupermercadoView() {
                       setSelectedUF('BR')
                     }}
                   />
-                  <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container/80 p-2 backdrop-blur-sm">
-                    <div className="relative flex h-8 w-8 items-center justify-center rounded-full border border-primary/50 bg-primary/20 text-primary">
-                      <span className="material-symbols-outlined text-sm">public</span>
-                    </div>
-                    <span className="font-label-sm text-label-sm text-on-surface">
-                      Rotas dos Boletins CONAB
-                    </span>
-                  </div>
                 </div>
 
                 <BoletimFluxoDetalhe

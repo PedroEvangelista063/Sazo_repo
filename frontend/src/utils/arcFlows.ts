@@ -52,12 +52,10 @@ export function arcPath(from: ArcPoint, to: ArcPoint, lift = 60): string {
 }
 
 /**
- * Tooltip de uma rota do boletim CONAB. Nul-safe: polo ausente cai para a UF.
- * Ex: "milho • SORRISO → MIRITITUBA • 07/2026"
+ * Tooltip de uma rota do boletim CONAB. Apenas UF (sem polos/municípios).
+ * Ex: "milho • MT → PA • 07/2026"
  */
 export function formatBoletimTooltip(f: BoletimFlowItem): string {
-  const origem = f.origem_polo ?? f.origem_uf
-  const destino = f.destino_polo ?? f.destino_uf
-  const periodo = `${String(f.mes_referencia).padStart(2, '0')}/${f.ano_referencia}`
-  return `${f.produto} • ${origem} → ${destino} • ${periodo}`
+  const periodo = `${String(f.mes_referencia ?? 0).padStart(2, '0')}/${f.ano_referencia ?? '----'}`
+  return `${f.produto ?? 'Produto'} • ${f.origem_uf} → ${f.destino_uf} • ${periodo}`
 }

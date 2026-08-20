@@ -8,25 +8,18 @@ from __future__ import annotations
 import asyncio
 import logging
 import uuid
+from datetime import UTC
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException
-from typing import Optional
+from fastapi import APIRouter, BackgroundTasks, Depends
 
-from backend.app.core.events import broadcaster
 from backend.app.core.cache import clear_cache
+from backend.app.core.events import broadcaster
+from backend.app.core.security import require_internal_api_key
 from backend.app.db.session import get_etl_pool
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
-
-
-async def _verify_api_key(x_api_key: Optional[str] = Header(None)) -> None:
-    from backend.app.core.config import get_settings
-
-    settings = get_settings()
-    if settings.internal_api_key and x_api_key != settings.internal_api_key:
-        raise HTTPException(status_code=403, detail="Forbidden")
 
 
 def _normalizar_competencia(ano: int, mes: int) -> str:
@@ -47,10 +40,15 @@ async def _rodar_pipeline_background(
     5. Refresh MV
     6. Notifica SSE
     """
-    from pipeline.scraper.orchestrator import AutonomousOrchestrator, SCRAPER_TIMEOUT_SEC
-    from pipeline.scraper.persistence import persistir_coleta_bruta, executar_ciclo_medalhao
+    from pipeline.scraper.orchestrator import SCRAPER_TIMEOUT_SEC, AutonomousOrchestrator
+    from pipeline.scraper.persistence import executar_ciclo_medalhao, persistir_coleta_bruta
 
-    logger.info("[ADMIN JOB=%s] Pipeline iniciado: %d UFs x %d competências", job_id, len(ufs), len(competencias))
+    logger.info(
+        "[ADMIN JOB=%s] Pipeline iniciado: %d UFs x %d competências",
+        job_id,
+        len(ufs),
+        len(competencias),
+    )
 
     pool = await get_etl_pool()
     total_persistidos = 0
@@ -67,9 +65,11 @@ async def _rodar_pipeline_background(
                     total_persistidos += inseridos
                     logger.info(
                         "[ADMIN JOB=%s] Global %s → %d registros",
-                        job_id, competencia, inseridos,
+                        job_id,
+                        competencia,
+                        inseridos,
                     )
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 logger.warning("[ADMIN JOB=%s] Global %s TIMEOUT", job_id, competencia)
             except Exception:
                 logger.exception("[ADMIN JOB=%s] Global %s ERRO", job_id, competencia)
@@ -85,33 +85,37 @@ async def _rodar_pipeline_background(
                         total_persistidos += inseridos
                         logger.info(
                             "[ADMIN JOB=%s] UF=%s %s → %d registros",
-                            job_id, uf, competencia, inseridos,
+                            job_id,
+                            uf,
+                            competencia,
+                            inseridos,
                         )
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     logger.warning("[ADMIN JOB=%s] UF=%s %s TIMEOUT", job_id, uf, competencia)
                 except Exception:
                     logger.exception("[ADMIN JOB=%s] UF=%s %s ERRO", job_id, uf, competencia)
 
     if total_persistidos == 0:
         logger.info("[ADMIN JOB=%s] Nenhum dado coletado — pulando medalhao.", job_id)
-        await broadcaster.publish("PIPELINE_DONE", f"{{\"job_id\":\"{job_id}\",\"total\":0}}")
+        await broadcaster.publish("PIPELINE_DONE", f'{{"job_id":"{job_id}","total":0}}')
         return
 
     logger.info(
         "[ADMIN JOB=%s] Coleta concluída: %d registros. Executando ciclo medalhao...",
-        job_id, total_persistidos,
+        job_id,
+        total_persistidos,
     )
     await executar_ciclo_medalhao(pool)
     await broadcaster.publish(
         "PIPELINE_DONE",
-        f"{{\"job_id\":\"{job_id}\",\"total\":{total_persistidos}}}",
+        f'{{"job_id":"{job_id}","total":{total_persistidos}}}',
     )
     logger.info("[ADMIN JOB=%s] Pipeline concluído — MV atualizada.", job_id)
 
 
 @router.post(
     "/trigger-pipeline",
-    dependencies=[Depends(_verify_api_key)],
+    dependencies=[Depends(require_internal_api_key)],
 )
 async def trigger_pipeline(background_tasks: BackgroundTasks):
     """
@@ -122,12 +126,37 @@ async def trigger_pipeline(background_tasks: BackgroundTasks):
     """
     job_id = str(uuid.uuid4())
     ufs = [
-        "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
-        "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN",
-        "RO", "RR", "RS", "SC", "SE", "SP", "TO",
+        "AC",
+        "AL",
+        "AM",
+        "AP",
+        "BA",
+        "CE",
+        "DF",
+        "ES",
+        "GO",
+        "MA",
+        "MG",
+        "MS",
+        "MT",
+        "PA",
+        "PB",
+        "PE",
+        "PI",
+        "PR",
+        "RJ",
+        "RN",
+        "RO",
+        "RR",
+        "RS",
+        "SC",
+        "SE",
+        "SP",
+        "TO",
     ]
     from datetime import datetime
-    hoje = datetime.now()
+
+    hoje = datetime.now(UTC)
     competencias = [
         _normalizar_competencia(a, m)
         for a in range(2024, hoje.year + 1)
@@ -150,7 +179,7 @@ async def trigger_pipeline(background_tasks: BackgroundTasks):
 
 @router.post(
     "/cache/clear",
-    dependencies=[Depends(_verify_api_key)],
+    dependencies=[Depends(require_internal_api_key)],
 )
 async def admin_clear_cache():
     """Limpa todo o cache da aplicação (InMemory ou Redis)."""

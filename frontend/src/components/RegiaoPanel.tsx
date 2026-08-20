@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { X, MapPin, ShoppingBasket, Package, Truck, FileText } from 'lucide-react'
@@ -5,7 +6,7 @@ import { cn } from '@/lib/utils'
 import SpotlightCard from '@/components/SpotlightCard'
 import type { RegiaoInfo, ProdutoVarejo, FlowItem, BoletimFlowItem } from '@/types/domain'
 import { normalizarStatusCor } from '@/utils/statusCor'
-import { buildBoletimResumo } from '@/utils/boletimResumo'
+import { mergeFlows, type UnifiedFlowItem } from '@/utils/mergeFlows'
 
 function groupBy<T>(arr: T[], keyFn: (item: T) => string): Record<string, T[]> {
   return arr.reduce(
@@ -57,6 +58,9 @@ export function RegiaoPanel({
   className,
 }: RegiaoPanelProps) {
   const totalUfsComDado = new Set(produtos.map((p) => p.uf)).size
+
+  // Fluxos unificados (estáticos + boletins CONAB) para as seções Recebe/Envia
+  const unifiedFlows = useMemo(() => mergeFlows(fluxos, boletimFlows), [fluxos, boletimFlows])
 
   return (
     <AnimatePresence mode="wait">
@@ -163,58 +167,8 @@ export function RegiaoPanel({
               ))}
             </div>
 
-            {/* Fluxos de Abastecimento */}
-            {fluxos && fluxos.length > 0 && (
-              <div className="mt-4 space-y-1.5">
-                <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  <Truck size={12} />
-                  Fluxos de Abastecimento
-                </p>
-                {fluxos.map((flow) => (
-                  <div
-                    key={flow.id}
-                    className="flex items-center gap-2 rounded-lg bg-gray-50 px-2.5 py-1.5 dark:bg-gray-700/30"
-                  >
-                    <div
-                      className="h-2 w-2 shrink-0 rounded-full"
-                      style={{ backgroundColor: flow.cor_indicadora }}
-                    />
-                    <Package size={12} className="shrink-0 text-gray-400" />
-                    <span className="flex-1 truncate text-xs text-gray-700 dark:text-gray-300">
-                      {flow.item}
-                    </span>
-                    <span className="shrink-0 text-[10px] text-gray-400">
-                      {flow.origem_uf} → {flow.destino_uf}
-                    </span>
-                    <span
-                      className={cn(
-                        'shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-medium',
-                        flow.tipo === 'autossuficiente'
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                          : flow.tipo === 'exportado'
-                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                            : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-                      )}
-                    >
-                      {flow.tipo === 'autossuficiente'
-                        ? 'local'
-                        : flow.tipo === 'exportado'
-                          ? 'exporta'
-                          : 'importa'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Boletins Logísticos CONAB (Fase 5) */}
-            {boletimFlows && (
-              <BoletimResumoSecao
-                flows={boletimFlows}
-                regionUfs={regiao.ufs}
-                selectedUf={selectedUF}
-              />
-            )}
+            {/* Fluxos unificados (estáticos + boletins CONAB) */}
+            <UnifiedFlowSection flows={unifiedFlows} regionUfs={regiao.ufs} />
 
             {regiao.id === 'sudeste' && totalUfsComDado < 4 && (
               <p className="mt-3 rounded-md bg-amber-50 px-2 py-1 text-[10px] text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
@@ -252,112 +206,8 @@ export function RegiaoPanel({
               </button>
             </div>
 
-            {fluxos && fluxos.length > 0 ? (
-              <div className="space-y-4">
-                {/* Recebe de */}
-                {(() => {
-                  const incoming = fluxos.filter(
-                    (f) => f.destino_uf === selectedUF && f.origem_uf !== selectedUF,
-                  )
-                  if (incoming.length === 0) return null
-                  const porOrigem = groupBy(incoming, (f) => f.origem_uf)
-                  return (
-                    <div>
-                      <p className="mb-1.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-blue-600 dark:text-blue-400">
-                        <Truck size={12} />
-                        Recebe de
-                      </p>
-                      <div className="space-y-1">
-                        {Object.entries(porOrigem).map(([origemUf, flows]) => (
-                          <div
-                            key={origemUf}
-                            className="flex items-start gap-2 rounded-lg bg-blue-50 px-2.5 py-1.5 dark:bg-blue-900/20"
-                          >
-                            <span className="mt-0.5 w-6 shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300">
-                              {origemUf}
-                            </span>
-                            <div className="flex flex-wrap gap-1">
-                              {flows.map((f) => (
-                                <span
-                                  key={f.id}
-                                  className="rounded bg-white px-1.5 py-0.5 text-[10px] text-gray-700 shadow-sm dark:bg-gray-700 dark:text-gray-300"
-                                >
-                                  {f.item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })()}
-
-                {/* Envia para */}
-                {(() => {
-                  const outgoing = fluxos.filter(
-                    (f) => f.origem_uf === selectedUF && f.destino_uf !== selectedUF,
-                  )
-                  if (outgoing.length === 0) return null
-                  const porDestino = groupBy(outgoing, (f) => f.destino_uf)
-                  return (
-                    <div>
-                      <p className="mb-1.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-green-600 dark:text-green-400">
-                        <Truck size={12} />
-                        Envia para
-                      </p>
-                      <div className="space-y-1">
-                        {Object.entries(porDestino).map(([destinoUf, flows]) => (
-                          <div
-                            key={destinoUf}
-                            className="flex items-start gap-2 rounded-lg bg-green-50 px-2.5 py-1.5 dark:bg-green-900/20"
-                          >
-                            <span className="mt-0.5 w-6 shrink-0 text-xs font-bold text-green-700 dark:text-green-300">
-                              {destinoUf}
-                            </span>
-                            <div className="flex flex-wrap gap-1">
-                              {flows.map((f) => (
-                                <span
-                                  key={f.id}
-                                  className="rounded bg-white px-1.5 py-0.5 text-[10px] text-gray-700 shadow-sm dark:bg-gray-700 dark:text-gray-300"
-                                >
-                                  {f.item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })()}
-
-                {/* Produção local */}
-                {(() => {
-                  const local = fluxos.filter(
-                    (f) => f.origem_uf === selectedUF && f.destino_uf === selectedUF,
-                  )
-                  if (local.length === 0) return null
-                  return (
-                    <div>
-                      <p className="mb-1.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                        <Package size={12} />
-                        Produção local
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {local.map((f) => (
-                          <span
-                            key={f.id}
-                            className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-600 shadow-sm dark:bg-gray-700 dark:text-gray-300"
-                          >
-                            {f.item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })()}
-              </div>
+            {unifiedFlows.length > 0 ? (
+              <UnifiedFlowSection flows={unifiedFlows} selectedUf={selectedUF} />
             ) : (
               <div className="flex items-center justify-center py-6">
                 <p className="text-xs text-gray-400">Nenhum fluxo registrado para {selectedUF}.</p>
@@ -387,76 +237,207 @@ export function RegiaoPanel({
   )
 }
 
-function BoletimResumoSecao({
+/**
+ * Seção unificada de fluxos (estáticos + boletins CONAB).
+ * Agrupa por "Recebe de" / "Envia para" / "Produção local".
+ */
+function UnifiedFlowSection({
   flows,
   regionUfs,
   selectedUf,
 }: {
-  flows: BoletimFlowItem[]
-  regionUfs: string[]
+  flows: UnifiedFlowItem[]
+  regionUfs?: string[]
   selectedUf?: string | null
 }) {
-  const resumo = buildBoletimResumo(flows, regionUfs, selectedUf)
+  const filtered = useMemo(() => {
+    if (selectedUf) {
+      return flows.filter((f) => f.origem_uf === selectedUf || f.destino_uf === selectedUf)
+    }
+    if (regionUfs && regionUfs.length > 0) {
+      const set = new Set(regionUfs)
+      return flows.filter((f) => set.has(f.origem_uf) || set.has(f.destino_uf))
+    }
+    return flows
+  }, [flows, regionUfs, selectedUf])
 
-  if (resumo.total === 0) {
+  const filterUf = selectedUf ?? null
+
+  const incoming = filtered.filter(
+    (f) => filterUf && f.destino_uf === filterUf && f.origem_uf !== filterUf,
+  )
+  const outgoing = filtered.filter(
+    (f) => filterUf && f.origem_uf === filterUf && f.destino_uf !== filterUf,
+  )
+  const local = filtered.filter(
+    (f) => filterUf && f.origem_uf === filterUf && f.destino_uf === filterUf,
+  )
+
+  // Sem UF selecionada: lista plana por região
+  if (!filterUf) {
+    if (filtered.length === 0) return null
     return (
       <div className="mt-4 space-y-1.5">
         <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          <FileText size={12} />
-          Boletins Logísticos CONAB
+          <Truck size={12} />
+          Fluxos de Abastecimento
+          <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+            {filtered.length} rotas
+          </span>
         </p>
-        <p className="rounded-lg bg-gray-100 px-2.5 py-2 text-[10px] text-gray-400 dark:bg-gray-700/30 dark:text-gray-500">
-          Sem rotas no período selecionado (CINZA).
-        </p>
+        {filtered.slice(0, 20).map((flow) => (
+          <div
+            key={flow.id}
+            className="flex items-center gap-2 rounded-lg bg-gray-50 px-2.5 py-1.5 dark:bg-gray-700/30"
+          >
+            {flow.fonte === 'estatico' && flow.cor_indicadora ? (
+              <div
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: flow.cor_indicadora }}
+              />
+            ) : (
+              <FileText size={12} className="shrink-0 text-gray-400" />
+            )}
+            <Package size={12} className="shrink-0 text-gray-400" />
+            <span className="flex-1 truncate text-xs text-gray-700 dark:text-gray-300">
+              {flow.produto}
+            </span>
+            <span className="shrink-0 text-[10px] text-gray-400">
+              {flow.origem_uf} → {flow.destino_uf}
+            </span>
+            {flow.tipo && (
+              <span
+                className={cn(
+                  'shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-medium',
+                  flow.tipo === 'autossuficiente'
+                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                    : flow.tipo === 'exportado'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+                )}
+              >
+                {flow.tipo === 'autossuficiente'
+                  ? 'local'
+                  : flow.tipo === 'exportado'
+                    ? 'exporta'
+                    : 'importa'}
+              </span>
+            )}
+            {flow.fonte === 'boletim' && (
+              <span className="shrink-0 rounded-full bg-purple-100 px-1.5 py-0.5 text-[9px] font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
+                boletim
+              </span>
+            )}
+          </div>
+        ))}
+        {filtered.length > 20 && (
+          <p className="text-center text-[10px] text-gray-400">
+            +{filtered.length - 20} rotas adicionais
+          </p>
+        )}
       </div>
     )
   }
 
-  return (
-    <div className="mt-4 space-y-1.5">
-      <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-        <FileText size={12} />
-        Boletins Logísticos CONAB
-        <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-          {resumo.total} rotas
-        </span>
-      </p>
+  // Com UF selecionada: agrupado por Recebe/Envia/Local
+  const hasAnyFlows = incoming.length > 0 || outgoing.length > 0 || local.length > 0
+  if (!hasAnyFlows) return null
 
-      {resumo.topProdutos.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          {resumo.topProdutos.map((p) => (
-            <span
-              key={p.produto}
-              className="rounded bg-white px-1.5 py-0.5 text-[10px] text-gray-700 shadow-sm dark:bg-gray-700 dark:text-gray-300"
-            >
-              {p.produto || 'sem produto'} · {p.quantidade}
+  const porOrigem = groupBy(incoming, (f) => f.origem_uf)
+  const porDestino = groupBy(outgoing, (f) => f.destino_uf)
+
+  return (
+    <div className="space-y-4">
+      {/* Recebe de */}
+      {incoming.length > 0 && (
+        <div>
+          <p className="mb-1.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-blue-600 dark:text-blue-400">
+            <Truck size={12} />
+            Recebe de
+            <span className="ml-auto text-[9px] font-normal text-blue-400">
+              {incoming.length} rota{incoming.length === 1 ? '' : 's'}
             </span>
-          ))}
+          </p>
+          <div className="space-y-1">
+            {Object.entries(porOrigem).map(([origemUf, flows]) => (
+              <div
+                key={origemUf}
+                className="flex items-start gap-2 rounded-lg bg-blue-50 px-2.5 py-1.5 dark:bg-blue-900/20"
+              >
+                <span className="mt-0.5 w-6 shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300">
+                  {origemUf}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {flows.map((f) => (
+                    <span
+                      key={f.id}
+                      className="rounded bg-white px-1.5 py-0.5 text-[10px] text-gray-700 shadow-sm dark:bg-gray-700 dark:text-gray-300"
+                    >
+                      {f.produto}
+                      {f.fonte === 'boletim' && <span className="ml-0.5 text-purple-500">•</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
-      {resumo.origens.length > 0 && (
-        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] text-gray-500 dark:text-gray-400">
-          <span className="font-semibold">Origem:</span>
-          {resumo.origens.slice(0, 4).map((o) => (
-            <span key={o.uf}>
-              {o.uf} ({o.quantidade})
+      {/* Envia para */}
+      {outgoing.length > 0 && (
+        <div>
+          <p className="mb-1.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-green-600 dark:text-green-400">
+            <Truck size={12} />
+            Envia para
+            <span className="ml-auto text-[9px] font-normal text-green-400">
+              {outgoing.length} rota{outgoing.length === 1 ? '' : 's'}
             </span>
-          ))}
-          {resumo.origens.length > 4 && <span>…</span>}
-        </p>
+          </p>
+          <div className="space-y-1">
+            {Object.entries(porDestino).map(([destinoUf, flows]) => (
+              <div
+                key={destinoUf}
+                className="flex items-start gap-2 rounded-lg bg-green-50 px-2.5 py-1.5 dark:bg-green-900/20"
+              >
+                <span className="mt-0.5 w-6 shrink-0 text-xs font-bold text-green-700 dark:text-green-300">
+                  {destinoUf}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {flows.map((f) => (
+                    <span
+                      key={f.id}
+                      className="rounded bg-white px-1.5 py-0.5 text-[10px] text-gray-700 shadow-sm dark:bg-gray-700 dark:text-gray-300"
+                    >
+                      {f.produto}
+                      {f.fonte === 'boletim' && <span className="ml-0.5 text-purple-500">•</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
-      {resumo.destinos.length > 0 && (
-        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] text-gray-500 dark:text-gray-400">
-          <span className="font-semibold">Destino:</span>
-          {resumo.destinos.slice(0, 4).map((d) => (
-            <span key={d.uf}>
-              {d.uf} ({d.quantidade})
-            </span>
-          ))}
-          {resumo.destinos.length > 4 && <span>…</span>}
-        </p>
+      {/* Produção local */}
+      {local.length > 0 && (
+        <div>
+          <p className="mb-1.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <Package size={12} />
+            Produção local
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {local.map((f) => (
+              <span
+                key={f.id}
+                className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-600 shadow-sm dark:bg-gray-700 dark:text-gray-300"
+              >
+                {f.produto}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )

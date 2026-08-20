@@ -135,23 +135,17 @@ export function BrasilMap({
   onUfNavigate,
   onTableNavigate,
 }: BrasilMapProps) {
-  const [showFluxos, setShowFluxos] = useState(false)
-
   const [regionMenuOpen, setRegionMenuOpen] = useState(false)
-  const hasFluxos = fluxos && fluxos.length > 0
 
   const ufMap = new Map(UFS.map((u) => [u.uf, u]))
 
   const hasUfSelection = selectedUF !== null && selectedUF !== undefined
 
-  const staticArcs =
-    (hasUfSelection || showFluxos) && fluxos
-      ? buildArcs(fluxos, ufMap, hasUfSelection ? selectedUF : null)
-      : []
+  const staticArcs = hasUfSelection && fluxos ? buildArcs(fluxos, ufMap, selectedUF) : []
 
   const boletimArcs =
-    boletimFlows && boletimFlows.length > 0
-      ? buildArcs(boletimFlows, ufMap, hasUfSelection ? selectedUF : null)
+    hasUfSelection && boletimFlows && boletimFlows.length > 0
+      ? buildArcs(boletimFlows, ufMap, selectedUF)
       : []
 
   return (
@@ -453,32 +447,6 @@ export function BrasilMap({
             Envia
           </span>
         </div>
-      )}
-
-      {/* Toggle Fluxos (quando há fluxos e sem UF selecionada) */}
-      {hasFluxos && !hasUfSelection && (
-        <motion.button
-          onClick={() => setShowFluxos((v) => !v)}
-          className={cn(
-            'absolute bottom-4 left-16 z-10 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium transition-colors',
-            showFluxos
-              ? 'border-indigo-600 bg-indigo-600 text-white'
-              : 'border-indigo-400 bg-surface-container/90 text-indigo-500',
-          )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <svg
-            className="h-3 w-3"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-          {showFluxos ? 'Ocultar Fluxos' : `Fluxos (${fluxos?.length ?? 0})`}
-        </motion.button>
       )}
     </div>
   )

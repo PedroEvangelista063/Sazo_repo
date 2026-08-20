@@ -425,12 +425,7 @@ export function SupermercadoView() {
             <NavigationTabs activeTab={viewMode} onTabChange={handleTabChange} />
 
             {/* Select UF inline com as abas */}
-            <select
-              value={selectedUF}
-              onChange={handleUfChange}
-              aria-label="Selecionar UF"
-              className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
-            >
+            <select value={selectedUF} onChange={handleUfChange} aria-label="Selecionar UF">
               {ufOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -443,7 +438,6 @@ export function SupermercadoView() {
               value={selectedMonth ?? ''}
               onChange={handleMonthChange}
               aria-label="Selecionar mês"
-              className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
             >
               <option value="">📅 Mês: Todos</option>
               {MESES_NOME.map((nome, idx) => (
@@ -627,7 +621,6 @@ export function SupermercadoView() {
                     value={boletimProduto}
                     onChange={(e) => setBoletimProduto(e.target.value)}
                     aria-label="Produto do boletim"
-                    className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
                   >
                     <option value="">📦 Produto: Todos</option>
                     {boletimProdutos.map((p) => (
@@ -640,7 +633,6 @@ export function SupermercadoView() {
                     value={boletimAno}
                     onChange={(e) => setBoletimAno(e.target.value ? Number(e.target.value) : '')}
                     aria-label="Ano do boletim"
-                    className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
                   >
                     <option value="">🗓️ Ano: Todos</option>
                     {boletimAnos.map((a) => (
@@ -653,7 +645,6 @@ export function SupermercadoView() {
                     value={boletimMes}
                     onChange={(e) => setBoletimMes(e.target.value ? Number(e.target.value) : '')}
                     aria-label="Mês do boletim"
-                    className="h-12 shrink-0 rounded-full bg-clay-surface px-3 text-sm font-semibold text-on-surface shadow-clay-rest outline-none transition-colors focus:ring-2 focus:ring-primary/50 dark:bg-surface-container dark:shadow-clay-dark"
                   >
                     <option value="">🗓️ Mês: Todos</option>
                     {MESES_NOME.map((nome, idx) => (
@@ -810,7 +801,7 @@ function BoletimFluxoDetalhe({
   const resumo = buildBoletimResumo(flows)
 
   return (
-    <div className="clay-card p-lg">
+    <div>
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <span className="material-symbols-outlined text-sm text-primary">import_export</span>
         <h3 className="font-label-sm text-label-sm text-on-surface">Fluxo dos Boletins CONAB</h3>

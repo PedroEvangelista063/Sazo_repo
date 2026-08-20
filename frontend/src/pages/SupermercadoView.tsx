@@ -13,8 +13,6 @@ import { useFluxosBoletins } from '@/hooks/useFluxosBoletins'
 import { hapticLight, hapticSuccess } from '@/utils/haptics'
 import { temGradeCompleta } from '@/utils/gradeCompleta'
 import { normalizarStatusCor } from '@/utils/statusCor'
-import { buildBoletimResumo } from '@/utils/boletimResumo'
-import type { BoletimFlowItem } from '@/types/domain'
 
 // Layout Components
 import { TopAppBar } from '@/components/layout/TopAppBar'
@@ -130,10 +128,6 @@ export function SupermercadoView() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
   const [selectedMapUF, setSelectedMapUF] = useState<string | null>(null)
 
-  const [boletimProduto, setBoletimProduto] = useState('')
-  const [boletimMes, setBoletimMes] = useState<number | ''>('')
-  const [boletimAno, setBoletimAno] = useState<number | ''>(new Date().getFullYear())
-
   // Paginação híbrida (lote 20 + Carregar mais) sobre dados já obtidos
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const prevVisibleCountRef = useRef(visibleCount)
@@ -161,41 +155,8 @@ export function SupermercadoView() {
   const { data: ufsDisponiveis } = useUfs()
   const { data: fluxos } = useFluxos()
 
-  const {
-    data: boletins,
-    isLoading: boletinsLoading,
-    isError: boletinsError,
-  } = useFluxosBoletins({
-    produto: boletimProduto || undefined,
-    mesReferencia: boletimMes === '' ? undefined : Number(boletimMes),
-    anoReferencia: boletimAno === '' ? undefined : Number(boletimAno),
-    limit: 200,
-  })
-
+  const { data: boletins } = useFluxosBoletins({ limit: 200 })
   const boletimFlows = useMemo(() => boletins?.data ?? [], [boletins])
-
-  // Rotas visíveis no detalhe: seguem a UF/região selecionada no mapa,
-  // mantendo a lista concisa (mesmos critérios do RegiaoPanel).
-  const boletimFlowsVisiveis = useMemo(() => {
-    if (!selectedMapUF && !selectedRegion) return boletimFlows
-    const ufs = selectedMapUF
-      ? [selectedMapUF]
-      : (regioes?.find((r) => r.id === selectedRegion)?.ufs ?? [])
-    const ufsSet = new Set(ufs)
-    return boletimFlows.filter((f) => ufsSet.has(f.origem_uf) || ufsSet.has(f.destino_uf))
-  }, [boletimFlows, selectedMapUF, selectedRegion, regioes])
-
-  const boletimProdutos = useMemo(() => {
-    const set = new Set<string>(['milho', 'soja', 'café', 'carnes'])
-    for (const f of boletimFlows) if (f.produto) set.add(f.produto)
-    return [...set].sort()
-  }, [boletimFlows])
-
-  const boletimAnos = useMemo(() => {
-    const set = new Set<number>([2025, 2026])
-    for (const f of boletimFlows) set.add(f.ano_referencia)
-    return [...set].sort()
-  }, [boletimFlows])
 
   // Quality Gate de grade (regra de apresentação): a grade BR Nacional exibe
   // SOMENTE produtos cujos dados cobrem os 12 meses. Produtos com gap
@@ -615,49 +576,6 @@ export function SupermercadoView() {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col gap-lg"
               >
-                {/* Filtros dos boletins CONAB (produto / ano / mês) */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <select
-                    value={boletimProduto}
-                    onChange={(e) => setBoletimProduto(e.target.value)}
-                  >
-                    <option value="">📦 Produto: Todos</option>
-                    {boletimProdutos.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={boletimAno}
-                    onChange={(e) => setBoletimAno(e.target.value ? Number(e.target.value) : '')}
-                  >
-                    <option value="">🗓️ Ano: Todos</option>
-                    {boletimAnos.map((a) => (
-                      <option key={a} value={a}>
-                        {a}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={boletimMes}
-                    onChange={(e) => setBoletimMes(e.target.value ? Number(e.target.value) : '')}
-                  >
-                    <option value="">🗓️ Mês: Todos</option>
-                    {MESES_NOME.map((nome, idx) => (
-                      <option key={nome} value={idx + 1}>
-                        {nome}
-                      </option>
-                    ))}
-                  </select>
-                  {boletinsLoading && (
-                    <span className="text-xs text-on-surface-variant">Carregando boletins…</span>
-                  )}
-                  {boletinsError && (
-                    <span className="text-xs text-error">Erro ao carregar boletins.</span>
-                  )}
-                </div>
-
                 <div className="relative w-full overflow-hidden rounded-2xl">
                   <BrasilMap
                     selectedRegion={selectedRegion}
@@ -677,12 +595,6 @@ export function SupermercadoView() {
                     }}
                   />
                 </div>
-
-                <BoletimFluxoDetalhe
-                  flows={boletimFlowsVisiveis}
-                  isLoading={boletinsLoading}
-                  isError={boletinsError}
-                />
 
                 <div className="w-full">
                   <RegiaoPanel
@@ -777,107 +689,5 @@ export function SupermercadoView() {
         }
       />
     </>
-  )
-}
-
-/**
- * Detalhe das rotas dos Boletins Logísticos CONAB (Fase 5 — view enriquecida).
- * Exibe quem envia (UF/polo de origem), quem recebe (UF/polo de destino),
- * produto e mês/ano de referência. Null-safe em todos os campos opcionais:
- * polo ausente cai para a UF; sem dados, estado neutro (CINZA).
- */
-function BoletimFluxoDetalhe({
-  flows,
-  isLoading,
-  isError,
-}: {
-  flows: BoletimFlowItem[]
-  isLoading: boolean
-  isError: boolean
-}) {
-  const resumo = buildBoletimResumo(flows)
-
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <span className="material-symbols-outlined text-sm text-primary">import_export</span>
-        <h3 className="font-label-sm text-label-sm text-on-surface">Fluxo dos Boletins CONAB</h3>
-        {!isLoading && !isError && flows.length > 0 && (
-          <span className="ml-auto rounded-full bg-surface-container px-2.5 py-1 text-xs font-semibold text-on-surface-variant">
-            {resumo.total} rotas
-          </span>
-        )}
-      </div>
-
-      {isLoading && (
-        <div
-          className="flex animate-pulse flex-col gap-2"
-          role="status"
-          aria-label="Carregando rotas dos boletins"
-        >
-          <div className="h-12 rounded-xl bg-surface-container" />
-          <div className="h-12 rounded-xl bg-surface-container" />
-          <div className="h-12 rounded-xl bg-surface-container" />
-        </div>
-      )}
-
-      {!isLoading && isError && (
-        <p className="text-sm text-error">Erro ao carregar as rotas do boletim.</p>
-      )}
-
-      {!isLoading && !isError && flows.length === 0 && (
-        <p className="text-sm text-on-surface-variant">
-          Sem rotas de fluxo para os filtros selecionados. (CINZA)
-        </p>
-      )}
-
-      {!isLoading && !isError && flows.length > 0 && (
-        <>
-          <p className="mb-2 text-xs text-on-surface-variant">
-            {resumo.produtosUnicos} produto{resumo.produtosUnicos === 1 ? '' : 's'} ·{' '}
-            {resumo.ufsEnvolvidas} UFs envolvidas
-          </p>
-          <ul className="flex max-h-72 flex-col gap-2 overflow-y-auto pr-1">
-            {flows.map((f) => (
-              <li key={f.id} className="rounded-2xl bg-surface-container p-3">
-                <div className="flex items-center gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-on-surface">
-                      {f.origem_polo || f.origem_uf}
-                    </p>
-                    <p className="text-[11px] text-on-surface-variant">
-                      {f.origem_polo ? `Envia · ${f.origem_uf}` : 'Envia (UF)'}
-                    </p>
-                  </div>
-                  <span
-                    className="material-symbols-outlined shrink-0 text-base text-outline"
-                    aria-hidden="true"
-                  >
-                    arrow_forward
-                  </span>
-                  <div className="min-w-0 flex-1 text-right">
-                    <p className="truncate text-sm font-semibold text-on-surface">
-                      {f.destino_polo || f.destino_uf}
-                    </p>
-                    <p className="text-[11px] text-on-surface-variant">
-                      {f.destino_polo ? `Recebe · ${f.destino_uf}` : 'Recebe (UF)'}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                  <span className="rounded-full bg-surface px-2 py-0.5 text-[11px] font-medium text-on-surface">
-                    {f.produto ?? 'Produto não informado'}
-                  </span>
-                  <span className="rounded-full bg-surface px-2 py-0.5 text-[11px] font-medium text-on-surface-variant">
-                    📅 {String(f.mes_referencia ?? '--').padStart(2, '0')}/
-                    {f.ano_referencia ?? '----'}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
   )
 }

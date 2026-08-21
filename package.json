@@ -50,5 +50,8 @@
     "smoke:staging": "bash scripts/smoke_staging.sh",
     "db:test:local": "DATABASE_URL=$DATABASE_URL_LOCAL_BACKUP python -m pytest tests/ -v",
     "db:test:remote": "DATABASE_URL=$DATABASE_URL python -m pytest tests/ -v"
+  },
+  "dependencies": {
+    "opencode-mem": "^2.24.3"
   }
 }

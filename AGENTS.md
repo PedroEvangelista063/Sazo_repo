@@ -52,3 +52,57 @@ Qualquer nova view agregada ou projeção de dados (BR ou UF) NÃO pode preenche
 ### Null Safety E2E (React)
 
 Sempre implemente null safety operators (`?.`, `??`) no Frontend ao lidar com dados do backend, devido ao status CINZA (meses sem dados reais chegam com campos nulos — `ano_referencia`, `tipo_dado`, `mensagem_transparencia`).
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+When the user types `/graphify`, use the installed graphify skill or instructions before doing anything else.
+
+Rules:
+
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+### Obsidian Auto-Sync (ALWAYS ACTIVE)
+
+Graphify automatically syncs to Obsidian after significant changes. This is MANDATORY — not optional.
+
+**Obsidian Vault Path**: `/home/pedroeduardo/Documentos/Obsidian Vault/Graphify_SAZO-REPO/`
+
+**When to sync** (proactive triggers — do NOT wait for user to ask):
+
+- After completing a feature, fix, or refactor
+- After modifying 3+ files in a single task
+- After architecture or design decisions
+- After database schema changes
+- After significant documentation updates
+- At session end (before saying "done")
+
+**How to sync**:
+
+```bash
+# Full rebuild with Obsidian output
+graphify . --obsidian --obsidian-dir "/home/pedroeduardo/Documentos/Obsidian Vault/Graphify_SAZO-REPO"
+
+# Or incremental update (faster, code-only)
+graphify update . --obsidian --obsidian-dir "/home/pedroeduardo/Documentos/Obsidian Vault/Graphify_SAZO-REPO"
+```
+
+**What gets synced**:
+
+- `graph.html` — interactive visualization
+- `GRAPH_REPORT.md` — plain-language architecture report
+- `graph.json` — GraphRAG-ready JSON
+- `manifest.json` — audit trail
+
+**Post-commit hook**: The graphify post-commit hook auto-rebuilds the graph after every git commit. The Obsidian sync runs as part of this hook when `GRAPHIFY_OBSIDIAN_DIR` is set.
+
+**Verification**: After syncing, confirm files exist:
+
+```bash
+ls -la "/home/pedroeduardo/Documentos/Obsidian Vault/Graphify_SAZO-REPO/"
+```
